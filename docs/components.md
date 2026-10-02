@@ -149,6 +149,61 @@
 
 `dismissable` по умолчанию включён. Свойство `false` или атрибут `dismissable="false"` оставляет только явное `close()`. На узком viewport (до 30rem) окно занимает экран.
 
+## vui-menu
+
+Контекстное и вложенное меню. Слой, фокус, клавиатура и команды берутся из Interaction Layer. Приложение регистрирует команды само.
+
+```html
+<vui-menu id="file-menu" label="Файл">
+  <vui-menu-item label="Сохранить" command="file.save"></vui-menu-item>
+  <vui-menu-item label="Поделиться">
+    <vui-menu slot="submenu" label="Поделиться">
+      <vui-menu-item label="Копировать ссылку"></vui-menu-item>
+    </vui-menu>
+  </vui-menu-item>
+</vui-menu>
+```
+
+```ts
+import { CommandRegistry } from 'vui/interaction';
+
+const commands = new CommandRegistry();
+commands.register({
+  id: 'file.save',
+  label: 'Сохранить',
+  shortcut: 'Ctrl+S',
+  execute: () => save(),
+});
+menu.commands = commands;
+menu.bindTo(target);
+menu.showAt(x, y);
+```
+
+| vui-menu | attribute и property `label`. Property `commands` — `CommandRegistry` или `null`. Методы `showAt(x, y)`, `close()`, `bindTo(target)`. Событие `close` не всплывает, чтобы внешний dialog не принял его за своё закрытие. Слот — пункты. Part `menu` |
+| vui-menu-item | attributes `label`, `command`, `shortcut`, `disabled`, `checked`. Событие `click`. Вложенный `vui-menu` со `slot="submenu"`. Parts `check`, `label`, `shortcut`, `caret` |
+| Keyboard | стрелки, Home, End, PageUp, PageDown, Enter, Space, Escape, Tab. Shift+F10 и правый щелчок через `bindTo` |
+| Accessibility | `role="menu"` / `menuitem`, `aria-disabled`, `aria-checked` у отмеченного пункта, `aria-haspopup` и `aria-expanded` у пункта с подменю |
+| Responsive | меню не шире viewport и прокручивается, если пунктов больше, чем помещается по высоте |
+
+`command` — id из реестра, который приложение положило в `commands`. VUI не создаёт команды `file.save` сам. Пункт без `command` просто шлёт `click`. Отключённая команда (`enabled: false`) не активируется.
+
+## Interaction
+
+Публичные функции без custom element: `import { CommandRegistry, ShortcutRegistry, SelectionModel } from 'vui/interaction'`.
+
+| API | Назначение |
+| --- | --- |
+| `CommandRegistry` | регистрация и `execute(id)` |
+| `ShortcutRegistry` | `register`, `pushContext`, `attach(target)`, `handle` |
+| `SelectionModel` | `none` / `single` / `multiple`, жесты `replace`, `toggle`, `range` |
+| `openFocusScope` | сохранить и вернуть фокус, вложенные scope |
+| `pushOverlay` / `placeLayer` | стек слоёв и позиция popup |
+| `bindContextMenu` | правый щелчок и Shift+F10 |
+| `draggable` / `dropTarget` | перенос. `beginDrag` и `completeDrop` — тот же контракт с клавиатуры |
+| `copyText` / `cutText` / `pasteText` | текст. `writeClipboard({ items })` — structured data рядом с текстом |
+
+Реестры не глобальные. Shortcut с тем же аккордом в том же `context` регистрировать нельзя. Разные context могут делить `Ctrl+S`.
+
 ## vui-tabs
 
 ```html
@@ -300,7 +355,7 @@
 
 | vui-file-tree | `label`. Событие `change`. Слот — пункты. Part `tree`. Свойство `selectedItem` |
 | vui-tree-item | attributes `label`, `kind` file \| folder, `expanded`, `selected`, `value`. Properties `label`, `kind`, `expanded`, `selected`. `itemValue` — `value` или `label`. Parts `row`, `icon`, `label` |
-| Keyboard | Arrow Up/Down/Left/Right, Home, End, Enter, Space |
+| Keyboard | Arrow Up/Down/Left/Right, Home, End, PageUp, PageDown, Enter, Space. Ctrl/Cmd+C копирует `itemValue` |
 | Accessibility | `tree` / `treeitem`, `aria-expanded` у папки, `aria-selected` |
 
 ## vui-data-grid
@@ -323,7 +378,7 @@ grid.selectedId = '1';
 | Events | `change` при смене выбранной строки |
 | Slots | нет, данные задаются свойствами |
 | Parts | `frame` |
-| Keyboard | стрелки, Home, End |
+| Keyboard | стрелки, Home, End, PageUp, PageDown. Ctrl/Cmd+C копирует текст активной ячейки |
 | Accessibility | `role="grid"`, `aria-rowcount`, `aria-selected` на строке. Фокус ячейки — `:focus-visible` |
 | Responsive | горизонтальная прокрутка. Колонка `priority: "secondary"` скрывается на ширине до `--vui-layout-medium`, и клавиатура её пропускает |
 

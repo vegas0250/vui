@@ -237,6 +237,26 @@ main {
   padding: var(--vui-space-md);
 }
 
+.menu-target,
+.drag-chip,
+.drop-well {
+  min-width: 0;
+  max-width: 100%;
+  padding: var(--vui-space-sm) var(--vui-space-md);
+  border: var(--vui-border-width) dashed var(--vui-color-border);
+  border-radius: var(--vui-radius);
+}
+
+.row-gap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vui-space-sm);
+  align-items: center;
+}
+
+.drag-chip { cursor: grab; }
+.drop-well[data-vui-drag-over] { background: var(--vui-color-surface-hover); }
+
 @media (max-width: 720px) {
   main {
     width: min(1120px, calc(100% - var(--vui-space-md)));

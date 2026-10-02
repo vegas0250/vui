@@ -3,6 +3,9 @@ import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { emitChange } from '../../core/events';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
+import { copyText } from '../../interaction/clipboard';
+import { applyRovingTabIndex, moveInList } from '../../interaction/keyboard';
+import { SelectionModel } from '../../interaction/selection';
 import type { VIcon } from '../foundation/icon';
 
 const chevron = `
@@ -110,6 +113,8 @@ export class VFileTree extends VuiElement {
 
   static shadowDelegatesFocus = false;
 
+  private readonly selection = new SelectionModel<VTreeItem>('single');
+
   static get observedAttributes(): string[] {
     return ['label'];
   }
@@ -162,23 +167,27 @@ export class VFileTree extends VuiElement {
     return result;
   }
 
-  private refreshTabStops(): void {
+  private refreshTabStops(active?: VTreeItem): void {
     const visible = this.visibleItems();
-    const current = visible.find((item) => item.tabIndex === 0) ?? visible[0];
+    const current =
+      (active && visible.includes(active) ? active : undefined) ??
+      visible.find((item) => item.tabIndex === 0) ??
+      visible.find((item) => this.selection.isSelected(item)) ??
+      visible[0];
+    applyRovingTabIndex(visible, current ? visible.indexOf(current) : -1);
     for (const item of this.querySelectorAll('vui-tree-item')) {
-      if (item instanceof VTreeItem) item.tabIndex = item === current ? 0 : -1;
+      if (item instanceof VTreeItem && !visible.includes(item)) item.tabIndex = -1;
     }
   }
 
   private selectItem(item: VTreeItem): void {
     const previous = this.selectedItem;
+    this.selection.setOrder(this.visibleItems());
+    this.selection.select(item);
     for (const candidate of this.querySelectorAll('vui-tree-item')) {
-      if (candidate instanceof VTreeItem) candidate.toggleAttribute('selected', candidate === item);
+      if (candidate instanceof VTreeItem) candidate.toggleAttribute('selected', this.selection.isSelected(candidate));
     }
-    item.tabIndex = 0;
-    for (const candidate of this.querySelectorAll('vui-tree-item')) {
-      if (candidate instanceof VTreeItem && candidate !== item) candidate.tabIndex = -1;
-    }
+    this.refreshTabStops(item);
     if (previous !== item) emitChange(this);
   }
 
@@ -195,22 +204,24 @@ export class VFileTree extends VuiElement {
       visible[0];
     if (!current) return;
     const index = visible.indexOf(current);
-    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'c' && !event.altKey) {
       event.preventDefault();
-      const next = visible[index + (event.key === 'ArrowDown' ? 1 : -1)];
+      void copyText((this.selectedItem ?? current).itemValue);
+      return;
+    }
+    const nextIndex = moveInList(index, visible.length, event.key, { orientation: 'vertical', pageSize: 5 });
+    if (
+      event.key === 'ArrowDown' ||
+      event.key === 'ArrowUp' ||
+      event.key === 'Home' ||
+      event.key === 'End' ||
+      event.key === 'PageUp' ||
+      event.key === 'PageDown'
+    ) {
+      if (nextIndex === null) return;
+      event.preventDefault();
+      const next = visible[nextIndex];
       if (next) this.focusItem(next);
-      return;
-    }
-    if (event.key === 'Home') {
-      event.preventDefault();
-      const first = visible[0];
-      if (first) this.focusItem(first);
-      return;
-    }
-    if (event.key === 'End') {
-      event.preventDefault();
-      const last = visible[visible.length - 1];
-      if (last) this.focusItem(last);
       return;
     }
     if (event.key === 'ArrowRight') {

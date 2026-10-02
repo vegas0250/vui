@@ -24,7 +24,8 @@ TypeScript, Custom Elements, DOM, CSS custom properties, Vite, Vitest, Playwrigh
 ```text
 src/components/{foundation,layout,actions,forms,feedback,overlay,navigation,data,desktop}
 src/categories/     точки входа категорий
-src/core/           VuiElement, defineElement, reflect, стек overlay, помощники фокуса, общие стили, события, responsive
+src/core/           VuiElement, defineElement, reflect, общие стили, события, responsive
+src/interaction/    focus, keyboard, selection, commands, shortcuts, overlay, context menu, drag & drop, clipboard, pointer
 src/icons/          реестр иконок
 src/theme/          setTheme, setDensity, установка стилей
 src/tokens/         примитивные токены и плотность
@@ -35,6 +36,7 @@ tests/e2e           playwright: showcase, responsive, a11y, visual
 index.html          оболочка showcase
 visual.html         стенд visual regression и accessibility
 ARCHITECTURE.md     публичный архитектурный контракт
+PLATFORM.md         граница платформы и карта слоёв
 CONTRIBUTING.md     процесс нового компонента
 docs/components.md  каталог публичного API
 ```
@@ -47,7 +49,9 @@ docs/components.md  каталог публичного API
 
 Категория: `vui/foundation`, `vui/layout`, `vui/actions`, `vui/forms`, `vui/feedback`, `vui/overlay`, `vui/navigation`, `vui/data`, `vui/desktop`.
 
-Компонент: `vui/icon`, `vui/button`, `vui/icon-button`, `vui/input`, `vui/checkbox`, `vui/switch`, `vui/select`, `vui/dialog`, `vui/tabs`, `vui/tooltip`, `vui/alert`, `vui/toast`, `vui/panel`, `vui/stack`, `vui/hstack`, `vui/vstack`, `vui/grid`, `vui/split-panel`, `vui/toolbar`, `vui/status-bar`, `vui/file-tree`, `vui/data-grid`.
+Компонент: `vui/icon`, `vui/button`, `vui/icon-button`, `vui/input`, `vui/checkbox`, `vui/switch`, `vui/select`, `vui/dialog`, `vui/menu`, `vui/tabs`, `vui/tooltip`, `vui/alert`, `vui/toast`, `vui/panel`, `vui/stack`, `vui/hstack`, `vui/vstack`, `vui/grid`, `vui/split-panel`, `vui/toolbar`, `vui/status-bar`, `vui/file-tree`, `vui/data-grid`.
+
+`vui/interaction` — primitives без регистрации элементов: focus, keyboard, selection, commands, shortcuts, overlay, context menu, drag & drop, clipboard, pointer. `vui/menu` включает `vui-menu-item`.
 
 `vui/stack`, `vui/hstack` и `vui/vstack` — один модуль. `vui/select` включает `vui-option`. `vui/tabs` включает `vui-tab` и `vui-tab-panel`. `vui/file-tree` включает `vui-tree-item`. `vui/toast` включает `vui-toaster` и `toast()`. `vui/desktop` реэкспортирует toolbar и split panel; их исходники остаются в navigation и layout.
 
@@ -65,6 +69,8 @@ docs/components.md  каталог публичного API
 VButton         → <vui-button>
 VIconButton     → <vui-icon-button>
 VDialog         → <vui-dialog>
+VMenu           → <vui-menu>
+VMenuItem       → <vui-menu-item>
 VDataGrid       → <vui-data-grid>
 VSplitPanel     → <vui-split-panel>
 VFileTree       → <vui-file-tree>
@@ -130,7 +136,8 @@ Responsive — часть компонента, отдельно от темы �
 - `vui-input`: `label`, `value`, `type`, `placeholder`, `hint`, `invalid`, `disabled`, `readonly`, `required`, `name`. Слоты `prefix`, `suffix`. Form-associated. Подпись, контрол и hint стоят столбиком, пока контейнер поля уже 36rem.
 - `vui-checkbox`, `vui-switch`: `checked`, `disabled`, `name`, `value`. У switch на input стоит `role="switch"`.
 - `vui-select`: `label`, `value`, `placeholder`, `disabled`, `invalid`. Дети `vui-option`. Клавиатура открывает, двигает и фиксирует значение. Form-associated.
-- `vui-dialog`: `label`, `open`, `size` small|medium|large, `close-label`. `dismissable="false"` не даёт закрыть окно по Escape и backdrop. Методы `show()` и `close()`. Нативный `<dialog>`. При открытии фокус переходит внутрь dialog, при закрытии возвращается на прежний элемент. Escape, блокировка прокрутки и порядок слоёв идут через `src/core/overlay.ts`. Select, открытый внутри dialog, закрывается первым. `close()` из скрипта обновляет и host: dialog внутри shadow DOM может не послать нативное событие `close`. Слушатели на `vui-dialog` всё равно получают `close`. Ширина и высота ограничены viewport, тело прокручивается, до 30rem поверхность занимает весь экран. `aria-modal="true"` только пока окно открыто.
+- `vui-dialog`: `label`, `open`, `size` small|medium|large, `close-label`. `dismissable="false"` не даёт закрыть окно по Escape и backdrop. Методы `show()` и `close()`. Нативный `<dialog>`. При открытии фокус переходит внутрь dialog, при закрытии возвращается на прежний элемент. Escape, блокировка прокрутки и порядок слоёв идут через `src/interaction/overlay.ts`. Select или menu, открытые внутри dialog, закрываются первыми. `close()` из скрипта обновляет и host: dialog внутри shadow DOM может не послать нативное событие `close`. Слушатели на `vui-dialog` всё равно получают `close`. Ширина и высота ограничены viewport, тело прокручивается, до 30rem поверхность занимает весь экран. `aria-modal="true"` только пока окно открыто.
+- `vui-menu`: `label`. Property `commands`. Методы `showAt(x, y)`, `close()`, `bindTo(target)`. `vui-menu-item`: `label`, `command`, `shortcut`, `disabled`, `checked`, вложенный `vui-menu` в `slot="submenu"`. Команды регистрирует приложение. Клавиатура, фокус и слой — общие primitives. Escape закрывает верхнее меню. Меню не шире viewport.
 - `vui-tabs`: `label`. `vui-tab` (`panel`, `selected`, `disabled`) и `vui-tab-panel` (`name`). Стрелки, Home, End.
 - `vui-tooltip`: `text`, `placement` top|bottom. Показ по hover и focus, скрытие по Escape. Пока подсказка видна, у сфокусированного контрола стоит `aria-describedby` на `role="tooltip"`.
 - `vui-alert`: `variant` info|success|warning|danger, `closable`, `close-label`.
@@ -148,7 +155,7 @@ Responsive — часть компонента, отдельно от темы �
 
 Строковые и булевы attributes отражаются в properties с тем же именем через `src/core/reflect.ts`. Не добавляйте второй атрибут с тем же смыслом. `VInput.value` и `VSelect.value` хранят живое значение. `checked` остаётся у checkbox и switch. `VDialog.dismissable` инвертирован относительно голого boolean: отсутствие атрибута значит, что закрыть можно, `dismissable="false"` — нельзя. `VSplitPanel.position` — число от 10 до 90. `VTreeItem.itemValue` подставляет `label`, если своего `value` нет. Полный каталог: `docs/components.md`.
 
-`src/core/overlay.ts` — единственный стек overlay (`popup`, `modal`, `toast`, `tooltip`): z-index, Escape, указатель снаружи, возврат фокуса, блокировка прокрутки, вложенные слои. Это внутренний модуль. Dialog, select, tooltip и toaster регистрируются в нём. Не заводите второй менеджер Escape или z-index. Tab внутри `vui-dialog` по-прежнему удерживает нативный `<dialog>`.
+`src/interaction/overlay.ts` — единственный стек overlay (`popup`, `modal`, `toast`, `tooltip`): z-index, Escape, указатель снаружи, возврат фокуса, блокировка прокрутки, вложенные слои и группы. `src/core/overlay.ts` его реэкспортирует. Dialog, select, tooltip, toaster и menu регистрируются в нём. Не заводите второй менеджер Escape или z-index. Tab внутри `vui-dialog` по-прежнему удерживает нативный `<dialog>`. Фокус — `src/interaction/focus.ts`, клавиатура списков — `src/interaction/keyboard.ts`, выбор — `SelectionModel`. Команды и shortcuts не глобальные.
 
 Shadow DOM открытый. У layout-компонентов на host стоит `display: flex|grid`, чтобы слотированные дети участвовали в раскладке. Вкладки, пункты дерева и grid выставляют роли на host. Кольцо фокуса полей — `:focus-visible`. `hint` у input связан через `aria-describedby`.
 
@@ -166,12 +173,12 @@ Shadow DOM открытый. У layout-компонентов на host стои
 
 ## Тесты
 
-Vitest + happy-dom: `tests/unit`. Покрывайте границы регистрации, карту `V*` ↔ `vui-*`, отражённые properties, стек overlay, возврат фокуса dialog, клавиатуру, установку темы, регистрацию иконок и responsive-правила, которым не нужна реальная раскладка. Playwright: `tests/e2e/showcase.spec.ts`, `tests/e2e/responsive.spec.ts`, `tests/e2e/a11y.spec.ts` и `tests/e2e/visual.spec.ts`. Визуальные baseline — четыре сочетания темы, плотности и viewport плюс кадры hover, focus и dialog. Не умножайте снимки на все комбинации. Большой набор тестов не заменяет showcase. Архитектура — в `ARCHITECTURE.md`, процесс компонента — в `CONTRIBUTING.md`.
+Vitest + happy-dom: `tests/unit`. Покрывайте границы регистрации, карту `V*` ↔ `vui-*`, отражённые properties, стек overlay, возврат фокуса dialog, клавиатуру, interaction primitives, установку темы, регистрацию иконок и responsive-правила, которым не нужна реальная раскладка. Playwright: `tests/e2e/showcase.spec.ts`, `tests/e2e/responsive.spec.ts`, `tests/e2e/a11y.spec.ts`, `tests/e2e/interaction.spec.ts` и `tests/e2e/visual.spec.ts`. Визуальные baseline — четыре сочетания темы, плотности и viewport плюс кадры hover, focus, dialog и меню. Не умножайте снимки на все комбинации. Большой набор тестов не заменяет showcase. Архитектура — в `ARCHITECTURE.md`, граница платформы — в `PLATFORM.md`, процесс компонента — в `CONTRIBUTING.md`.
 
 ## Правила разработки
 
 - Компоненты независимы. Контрол не должен требовать, чтобы пользователь импортировал посторонний компонент. Внутреннее использование `vui-icon` допустимо.
-- Сначала нативные DOM и CSS, потом помощник. Общий код попадает в `src/core` только когда он нужен хотя бы двум компонентам.
+- Сначала нативные DOM и CSS, потом помощник. Общий код элемента остаётся в `src/core`, когда он нужен хотя бы двум компонентам. Общее взаимодействие — в `src/interaction`, без второго менеджера фокуса, клавиатуры или overlay внутри компонента.
 - Не создавайте вторую систему тем для desktop. Desktop использует те же токены, темы и плотность.
 - Не добавляйте компонент, которого нет в showcase в рабочем виде.
 - Не вводите фреймворк, конструктор, роутер или слой состояния приложения.
@@ -180,6 +187,8 @@ Vitest + happy-dom: `tests/unit`. Покрывайте границы регис
 
 ## Ещё не реализовано
 
-Container, divider, scroll area, button group, dropdown, menu, context menu, command, textarea, combobox, radio, slider, выбор даты, времени, файла и цвета, notification, progress, spinner, skeleton, modal как отдельный элемент, drawer, popover, breadcrumbs, pagination, sidebar, navigation menu, tab bar, table, list, virtual list, tree, tree grid, empty state, window header, window controls, application layout, dock, inspector, property grid, file list, path bar, file browser, command palette, desktop context menu.
+Container, divider, scroll area, button group, dropdown, textarea, combobox, radio, slider, выбор даты, времени, файла и цвета, notification, progress, spinner, skeleton, modal как отдельный элемент, drawer, popover, breadcrumbs, pagination, sidebar, navigation menu, tab bar, table, list, virtual list, tree, tree grid, empty state, window header, window controls, application layout, dock, inspector, property grid, file list, path bar, file browser, command palette.
+
+`vui-menu` уже покрывает context menu. Команды и shortcuts — infrastructure в `src/interaction`, не готовые бизнес-команды.
 
 Добавляйте это только как настоящие компоненты, по одному, со showcase и с обновлением этого файла.

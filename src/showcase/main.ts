@@ -1,4 +1,8 @@
 import {
+  CommandRegistry,
+  ShortcutRegistry,
+  draggable,
+  dropTarget,
   getDensity,
   getTheme,
   iconNames,
@@ -12,6 +16,7 @@ import './showcase.css';
 import type { VDataGrid } from '../components/data/data-grid';
 import type { VFileTree } from '../components/desktop/file-tree';
 import type { VDialog } from '../components/overlay/dialog';
+import type { VMenu } from '../components/overlay/menu';
 import { showcaseMarkup } from './markup';
 
 const app = document.querySelector('#app');
@@ -214,6 +219,58 @@ if (stage instanceof HTMLElement && handle instanceof HTMLElement) {
 
 updateResponsiveReadout();
 window.addEventListener('resize', updateResponsiveReadout);
+
+const commands = new CommandRegistry();
+const note = (id: string, text: string): void => {
+  const node = document.querySelector(id);
+  if (node) node.textContent = text;
+};
+commands.register({
+  id: 'file.save',
+  label: 'Сохранить',
+  shortcut: 'Ctrl+S',
+  execute: () => note('#menu-result', 'Команда file.save выполнена.'),
+});
+commands.register({
+  id: 'file.delete',
+  label: 'Удалить',
+  enabled: false,
+  execute: () => note('#menu-result', 'Удаление не должно выполняться.'),
+});
+commands.register({
+  id: 'file.copyLink',
+  label: 'Копировать ссылку',
+  execute: () => note('#menu-result', 'Команда file.copyLink выполнена.'),
+});
+const demoMenu = document.querySelector('#demo-menu');
+if (demoMenu instanceof HTMLElement && 'showAt' in demoMenu && 'bindTo' in demoMenu) {
+  const menu = demoMenu as VMenu;
+  menu.commands = commands;
+  const target = document.querySelector('#menu-target');
+  if (target instanceof HTMLElement) menu.bindTo(target);
+  document.querySelector('#open-menu')?.addEventListener('click', () => {
+    const anchor = document.querySelector('#open-menu');
+    if (!(anchor instanceof HTMLElement)) return;
+    const rect = anchor.getBoundingClientRect();
+    menu.showAt(rect.left, rect.bottom);
+  });
+}
+const shortcuts = new ShortcutRegistry(commands);
+shortcuts.attach(document);
+shortcuts.register({ keys: 'Ctrl+S', command: 'file.save', context: 'showcase' });
+shortcuts.pushContext('showcase');
+
+const dragSource = document.querySelector('#drag-source');
+const dropZone = document.querySelector('#drop-target');
+if (dragSource instanceof HTMLElement) {
+  draggable(dragSource, () => ({ type: 'chip', data: 'sample' }));
+}
+if (dropZone instanceof HTMLElement) {
+  dropTarget(dropZone, {
+    accept: (payload) => payload.type === 'chip',
+    onDrop: () => note('#drop-result', 'Элемент отпущен. Смысл переноса задаёт приложение.'),
+  });
+}
 
 const tree = document.querySelector('#demo-tree');
 tree?.addEventListener('change', () => {

@@ -2,7 +2,7 @@ import '../foundation/icon';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { emitClose } from '../../core/events';
-import { pushOverlay } from '../../core/overlay';
+import { pushOverlay } from '../../interaction/overlay';
 import { reflectStrings } from '../../core/reflect';
 import type { VIcon } from '../foundation/icon';
 

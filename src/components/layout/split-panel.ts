@@ -2,6 +2,7 @@ import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { reflectStrings } from '../../core/reflect';
 import { inlineThreshold, observeInlineSize } from '../../core/responsive';
+import { trackPointer } from '../../interaction/pointer';
 
 export class VSplitPanel extends VuiElement {
   declare orientation: string;
@@ -11,8 +12,8 @@ export class VSplitPanel extends VuiElement {
     return ['orientation', 'position', 'label'];
   }
 
-  private dragging = false;
   private stopWatch: (() => void) | null = null;
+  private releasePointer: (() => void) | null = null;
 
   protected template(): string {
     return `
@@ -73,17 +74,9 @@ export class VSplitPanel extends VuiElement {
 
   protected afterRender(): void {
     const sep = this.separator;
-    sep.addEventListener('pointerdown', (event) => {
-      this.dragging = true;
-      sep.setPointerCapture(event.pointerId);
-      this.updateFromPointer(event);
-    });
-    sep.addEventListener('pointermove', (event) => {
-      if (!this.dragging) return;
-      this.updateFromPointer(event);
-    });
-    sep.addEventListener('pointerup', () => {
-      this.dragging = false;
+    this.releasePointer = trackPointer(sep, {
+      onStart: (event) => this.updateFromPointer(event),
+      onMove: (drag) => this.updateFromPointer(drag.current),
     });
     sep.addEventListener('keydown', (event) => {
       const step = event.shiftKey ? 10 : 2;
@@ -102,6 +95,8 @@ export class VSplitPanel extends VuiElement {
   }
 
   disconnectedCallback(): void {
+    this.releasePointer?.();
+    this.releasePointer = null;
     this.stopWatch?.();
     this.stopWatch = null;
   }

@@ -30,5 +30,21 @@ export { VHStack, VStack, VVStack } from './components/layout/stack';
 export { VTab, VTabPanel, VTabs } from './components/navigation/tabs';
 export { VToolbar } from './components/navigation/toolbar';
 export { VDialog } from './components/overlay/dialog';
+export { VMenu, VMenuItem } from './components/overlay/menu';
+export {
+  CommandRegistry,
+  SelectionModel,
+  ShortcutConflictError,
+  ShortcutRegistry,
+  bindContextMenu,
+  copyText,
+  cutText,
+  draggable,
+  dropTarget,
+  pasteText,
+  formatShortcut,
+  normalizeShortcut,
+} from './interaction/index';
+export type { Command, Shortcut, SelectionMode } from './interaction/index';
 export { getDensity, getTheme, setDensity, setTheme } from './theme/index';
 export type { VuiDensity, VuiTheme } from './theme/index';

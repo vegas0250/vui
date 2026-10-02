@@ -1,10 +1,14 @@
 # Архитектура VUI
 
-VUI — библиотека Web Components. Один и тот же компонент работает в обычном HTML, SPA и Electron. Vue, React, Angular и Svelte в ядро не входят.
+VUI — UI/Application Interaction Platform на Web Components. Один и тот же компонент работает в обычном HTML, SPA и Electron. Vue, React, Angular и Svelte в ядро не входят.
+
+> VUI owns the UI. The application owns the meaning.
+
+Граница платформы, UI state и список того, что в VUI не входит, — в [PLATFORM.md](PLATFORM.md).
 
 Публичный контракт важнее внутренней реализации. Реализацию можно менять. Уже опубликованные attributes, properties, events, slots и CSS parts нельзя менять молча: изменение описывается в этом документе и в `CHANGELOG.md`.
 
-Не добавляйте второй способ сделать то же самое. Не вводите DI, event bus и доменные слои: общего базового класса, отражения атрибутов и стека overlay достаточно.
+Не добавляйте второй способ сделать то же самое. Не вводите DI, event bus, роутер, менеджер состояния приложения и доменные слои. Общие механизмы взаимодействия живут в `src/interaction` и используются компонентами, а не копируются.
 
 ## Именование
 
@@ -57,7 +61,7 @@ VVStack      → <vui-vstack>
 
 ### Events
 
-Сначала стандартные события: `click`, `input`, `change`, `close`. Они всплывают и composed, поэтому слушатель на custom element их получает. Своё имя события — только когда стандартного нет. Сейчас таких нет.
+Сначала стандартные события: `click`, `input`, `change`, `close`. Они всплывают и composed, поэтому слушатель на custom element их получает. Своё имя события — только когда стандартного нет. Сейчас таких нет. `close` у `vui-menu` не всплывает: слушатель ставится на само меню, и dialog вокруг него не получает чужое закрытие.
 
 ### Slots и parts
 
@@ -96,7 +100,7 @@ ARIA ставится только на фактическое состояни�
 | --- | --- |
 | `aria-label` / `aria-labelledby` | icon button, dialog, select, tabs, toolbar, tree, grid, split separator |
 | `aria-describedby` | hint поля; tooltip указывает на свой `role="tooltip"` |
-| `aria-expanded` | select, пункт-папка дерева |
+| `aria-expanded` | select, пункт-папка дерева, пункт меню с вложенным меню |
 | `aria-selected` | option, tab, строка grid, пункт дерева |
 | `aria-checked` | нативный checkbox; switch — это checkbox с `role="switch"` |
 | `aria-disabled` | вкладка и пункт select, которые не являются нативным disabled-контролом |
@@ -121,18 +125,22 @@ ARIA ставится только на фактическое состояни�
 | Dialog | Tab не выходит из модального `dialog`. Escape закрывает, если `dismissable` не равен `false` |
 | Tooltip | Escape скрывает |
 | Tabs | Arrow Left/Right, Home, End. Автоматически выбирает вкладку |
-| File tree | Arrow Up/Down/Left/Right, Home, End, Enter, Space |
-| Data grid | Arrow Up/Down/Left/Right, Home, End. Скрытая вторичная колонка пропускается |
+| File tree | Arrow Up/Down/Left/Right, Home, End, PageUp, PageDown, Enter, Space. Ctrl/Cmd+C копирует значение пункта |
+| Data grid | Arrow Up/Down/Left/Right, Home, End, PageUp, PageDown. Скрытая вторичная колонка пропускается. Ctrl/Cmd+C копирует текст ячейки |
+| Menu | Arrow Up/Down, Home, End, PageUp, PageDown, Arrow Right открывает вложенное меню, Arrow Left закрывает его, Enter и Space выполняют пункт, Escape и Tab закрывают |
 | Split panel | стрелки меняют `position` на 2, Shift — на 10, Home = 10, End = 90 |
 
 Alert, toast, panel, stack, grid и status bar клавиатурного поведения сверх обычного Tab не добавляют. У toast есть кнопка закрытия.
 
 ## Focus
 
+Реализация — `src/interaction/focus.ts`. `src/core/focus.ts` только реэкспортирует её.
+
 - Обычный контрол получает фокус через нативный элемент в shadow и `delegatesFocus`.
-- Кольцо — `outline: var(--vui-focus-ring)` на `:focus-visible`.
-- Overlay при открытии запоминает `document.activeElement`, если это не `body` и не сам overlay.
-- Модальный слой возвращает фокус туда после закрытия.
+- Кольцо — `outline: var(--vui-focus-ring)` на `:focus-visible`. Программный фокус внутри меню дополнительно подсвечивает пункт через `:focus`, потому что roving tabindex переносит фокус из обработчика клавиши.
+- `openFocusScope()` запоминает `document.activeElement`, если это не `body` и не сам владелец. Вложенные scope закрываются по одному и возвращают фокус на предыдущий уровень.
+- Если сфокусированный потомок удалён, верхний scope переносит фокус на следующий доступный элемент внутри владельца.
+- `cycleTab()` циклически переносит Tab. У `vui-dialog` он выключен: ловушку делает нативный `<dialog>`.
 - `vui-dialog` после открытия фокусирует сам `<dialog>` (`tabindex="-1"`), чтобы имя диалога было объявлено. Следующий Tab идёт по кнопке закрытия и содержимому. Нативный modal dialog не выпускает Tab наружу.
 
 Цикл dialog:
@@ -147,19 +155,57 @@ show / open
 
 ## Overlay
 
-Один стек: `src/core/overlay.ts`. Это не компонент и не публичный пакетный экспорт. Dialog, select, tooltip и toaster уже регистрируются в нём. Будущие dropdown, popover, drawer, context menu и command palette должны использовать его, а не заводить второй менеджер.
+Один стек: `src/interaction/overlay.ts`. `src/core/overlay.ts` реэкспортирует его. Dialog, select, tooltip, toaster и menu регистрируются в нём. Будущие dropdown, popover, drawer и command palette должны использовать его, а не заводить второй менеджер.
 
 `pushOverlay()` кладёт слой в стек и возвращает функцию закрытия.
 
 - `kind`: `popup` (1000), `modal` (1300), `toast` (1400), `tooltip` (1500). К базе прибавляется позиция в стеке, поэтому более поздний слой того же вида оказывается выше. Переменная на слое — `--vui-overlay-z`, с запасным значением из токена.
 - Escape закрывает верхний слой, который можно закрыть. Toast пропускается. Незакрываемый modal или popup останавливает Escape и не закрывает то, что под ним.
 - Pointerdown снаружи закрывает верхний `popup` с `dismissOnOutside`. Modal этот жест не перехватывает: backdrop dialog обрабатывает сам dialog.
-- `restoreFocus` запоминает предыдущий элемент и возвращает фокус после снятия со стека. Включён у dialog.
+- `restoreFocus` открывает focus scope и возвращает фокус после снятия со стека. Включён у dialog и menu.
+- `group` связывает вложенные слои. Указатель снаружи закрывает всю группу сверху вниз. Escape по-прежнему закрывает только верхний слой. Так закрывается цепочка Dialog → Menu → вложенное меню.
 - `lockScroll` ставит `data-vui-scroll-lock` на `<html>`, пока открыт хотя бы один такой слой. Скролл страницы скрыт. У dialog это включено вместе с нативным modal.
 - `trapFocus` циклически переносит Tab внутри владельца. У dialog он выключен: ловушку делает платформенный `<dialog>`. Для будущего drawer, у которого нет нативного dialog, ловушка уже есть.
 - Несколько слоёв живут в одном стеке. Select, открытый внутри dialog, закрывается первым Escape. Следующий Escape закрывает dialog.
 
-Z-index токены остаются в `src/tokens/tokens.css`: `--vui-z-dropdown`, `--vui-z-sticky`, `--vui-z-overlay`, `--vui-z-dialog`, `--vui-z-toast`, `--vui-z-tooltip`.
+Z-index токены остаются в `src/tokens/tokens.css`: `--vui-z-dropdown`, `--vui-z-sticky`, `--vui-z-overlay`, `--vui-z-dialog`, `--vui-z-toast`, `--vui-z-tooltip`. `placeLayer()` ставит popup у якоря и не выпускает его за viewport.
+
+## Interaction
+
+```text
+Component
+   ↓
+Interaction Primitive
+   ↓
+DOM / Browser API
+```
+
+```text
+Application
+   ↓
+Command / Selection / Data
+   ↓
+VUI
+```
+
+Импорт: `vui/interaction` или именованный импорт из `vui`. Примитивы не регистрируют custom elements. Глобального singleton и event bus нет: приложение создаёт `CommandRegistry` и `ShortcutRegistry` само и вешает shortcut на нужный элемент.
+
+| Модуль | Контракт |
+| --- | --- |
+| `focus.ts` | `openFocusScope`, `cycleTab`, `focusableElements`, `deepestActiveElement`, `isWithin` |
+| `keyboard.ts` | `moveInList`, `stepIndex`, `nextEnabled`, `applyRovingTabIndex`, `isActivation`. Стрелки, Home, End, PageUp, PageDown. Tab остаётся платформенным, кроме `cycleTab` у слоя с `trapFocus` |
+| `selection.ts` | `SelectionModel`: `none`, `single`, `multiple`; жесты `replace`, `toggle`, `range`. Идентификатор выбирает компонент. Смысл идентификатора — у приложения |
+| `commands.ts` | `Command`: `id`, `label`, `description?`, `icon?`, `enabled`, `visible`, `checked?`, `shortcut?`, `execute`. `CommandRegistry.register / get / list / execute` |
+| `shortcuts.ts` | `ShortcutRegistry` на свой `CommandRegistry`. `keys`, `command`, `context?`, `enabled`. `Mod` — Ctrl, на Apple — Meta. Конфликт в одном context отклоняется. Внутренний context побеждает запись без context. Неперехваченная буква из текстового поля не забирается |
+| `overlay.ts` | `pushOverlay`, `placeLayer`, `overlayDepth` |
+| `context-menu.ts` | `bindContextMenu`: правый щелчок, ContextMenu и Shift+F10. Позицию и меню даёт вызывающий код |
+| `drag-drop.ts` | `draggable`, `dropTarget`, `beginDrag`, `completeDrop`, `cancelDrag`. Тип и данные задаёт приложение. Клавиатурный путь — те же `beginDrag` / `completeDrop`, без отдельного gesture engine |
+| `clipboard.ts` | `copyText`, `cutText`, `pasteText`, `writeClipboard`, `readClipboard`. Текст уходит в Clipboard API, structured `items` остаются в памяти вызова |
+| `pointer.ts` | `trackPointer` для захвата указателя, `pointerClickKind` для click / double / context |
+
+`vui-tabs`, `vui-select`, `vui-file-tree` и `vui-data-grid` ходят по клавиатуре через `keyboard.ts`. Таблица и дерево держат текущий выбор в `SelectionModel` и по-прежнему сообщают его через `selectedId`, `selectedItem` и `change`. Ctrl/Cmd+C копирует видимый текст ячейки или `itemValue`. `vui-split-panel` двигает разделитель через `trackPointer`. `vui-menu` собирает overlay, focus, keyboard и commands.
+
+Active descendant остаётся только у `vui-select`: фокус держит кнопка, список не забирает его. Остальные композиты используют roving tabindex.
 
 ## Responsive
 
@@ -226,7 +272,7 @@ Component
 - Light + Compact + desktop;
 - Dark + Compact + mobile;
 
-Плюс отдельные кадры hover, focus и открытого dialog на desktop и mobile. Dense и high-contrast не порождают новых раскладок: dense масштабирует compact, high-contrast меняет те же токены. Их проверяет showcase и unit-тест установки темы.
+Плюс отдельные кадры hover, focus, открытого dialog и меню (фокус, disabled, checked) на desktop и узком viewport. Dense и high-contrast не порождают новых раскладок: dense масштабирует compact, high-contrast меняет те же токены. Их проверяет showcase и unit-тест установки темы.
 
 Состояния в кадре — только существующие: default, hover, focus, disabled, invalid. `active` у кнопки есть, но стабильный кадр `:active` не фиксируется. `loading` в библиотеке нет.
 

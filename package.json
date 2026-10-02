@@ -62,6 +62,14 @@
       "types": "./dist/components/overlay/dialog.d.ts",
       "import": "./dist/components/overlay/dialog.js"
     },
+    "./menu": {
+      "types": "./dist/components/overlay/menu.d.ts",
+      "import": "./dist/components/overlay/menu.js"
+    },
+    "./interaction": {
+      "types": "./dist/interaction/index.d.ts",
+      "import": "./dist/interaction/index.js"
+    },
     "./tabs": {
       "types": "./dist/components/navigation/tabs.d.ts",
       "import": "./dist/components/navigation/tabs.js"

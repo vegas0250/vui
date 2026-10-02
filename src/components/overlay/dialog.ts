@@ -1,7 +1,7 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { emitClose } from '../../core/events';
-import { pushOverlay } from '../../core/overlay';
+import { pushOverlay } from '../../interaction/overlay';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
 
 const closeIcon = `

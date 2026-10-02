@@ -3,6 +3,9 @@ import { VuiElement } from '../../core/element';
 import { emitChange } from '../../core/events';
 import { reflectStrings } from '../../core/reflect';
 import { inlineThreshold, observeInlineSize } from '../../core/responsive';
+import { copyText } from '../../interaction/clipboard';
+import { applyRovingTabIndex, moveInList, stepIndex } from '../../interaction/keyboard';
+import { SelectionModel } from '../../interaction/selection';
 
 export interface VDataGridColumn {
   key: string;
@@ -36,6 +39,7 @@ export class VDataGrid extends VuiElement {
   private activeRow = 0;
   private activeCol = 0;
   private stopWatch: (() => void) | null = null;
+  private readonly selection = new SelectionModel<string>('single');
 
   get columns(): VDataGridColumn[] {
     return this.gridColumns;
@@ -158,11 +162,13 @@ export class VDataGrid extends VuiElement {
         this.activeCol = Number(cell.dataset.col ?? 0);
       }
       const id = row.dataset.id ?? '';
+      this.selection.setOrder(this.gridRows.map((item) => item.id));
+      this.selection.select(id);
       if (id === this.selectedId) {
         this.applyCursor();
         return;
       }
-      this.selectedId = id;
+      this.selectedId = this.selection.selected[0] ?? id;
       emitChange(this);
     });
     this.addEventListener('keydown', (event) => this.onKeydown(event));
@@ -203,6 +209,9 @@ export class VDataGrid extends VuiElement {
     );
     head.replaceChildren(headerRow);
     body.replaceChildren();
+    this.selection.setOrder(this.gridRows.map((row) => row.id));
+    if (this.selectedId && this.gridRows.some((row) => row.id === this.selectedId)) this.selection.select(this.selectedId);
+    else this.selection.clear();
 
     if (!this.gridRows.length) {
       const row = document.createElement('tr');
@@ -267,57 +276,60 @@ export class VDataGrid extends VuiElement {
   }
 
   private stepColumn(from: number, delta: number): number {
-    if (delta === 0) return this.columnVisible(from) ? from : this.firstVisibleColumn();
-    let index = from;
-    for (let step = 0; step < this.gridColumns.length; step += 1) {
-      index += delta;
-      if (index < 0 || index >= this.gridColumns.length) return from;
-      if (this.columnVisible(index)) return index;
-    }
-    return from;
+    return stepIndex(from, delta, this.gridColumns.length, (index) => this.columnVisible(index));
   }
 
   private applyCursor(): void {
     const cells = [...this.shadow.querySelectorAll<HTMLElement>('[role="gridcell"]')];
-    for (const cell of cells) cell.tabIndex = -1;
     this.activeRow = Math.min(this.activeRow, Math.max(0, this.gridRows.length - 1));
     this.activeCol = this.stepColumn(Math.min(this.activeCol, Math.max(0, this.gridColumns.length - 1)), 0);
     const active = cells.find(
       (cell) => Number(cell.dataset.row) === this.activeRow && Number(cell.dataset.col) === this.activeCol,
     );
-    if (active) {
-      active.tabIndex = 0;
-      active.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
-    }
+    applyRovingTabIndex(cells, active ? cells.indexOf(active) : -1);
+    active?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
   }
 
-  private move(rowDelta: number, colDelta: number, edge?: 'start' | 'end'): void {
-    if (!this.gridRows.length || !this.gridColumns.length) return;
-    this.activeRow = Math.min(this.gridRows.length - 1, Math.max(0, this.activeRow + rowDelta));
-    if (edge === 'start') this.activeCol = this.firstVisibleColumn();
-    else if (edge === 'end') this.activeCol = this.lastVisibleColumn();
-    else this.activeCol = this.stepColumn(this.activeCol, colDelta);
+  private commitRow(): void {
     const row = this.gridRows[this.activeRow];
+    if (!row) return;
+    this.selection.setOrder(this.gridRows.map((item) => item.id));
     const previous = this.selectedId;
-    if (row && row.id !== previous) {
-      this.selectedId = row.id;
+    this.selection.select(row.id);
+    const next = this.selection.selected[0] ?? '';
+    if (next !== previous) {
+      this.selectedId = next;
       emitChange(this);
-    } else {
-      this.applyCursor();
-    }
+    } else this.applyCursor();
     this.shadow.querySelector<HTMLElement>('[role="gridcell"][tabindex="0"]')?.focus();
   }
 
   private onKeydown(event: KeyboardEvent): void {
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'c' && !event.altKey && !event.shiftKey) {
+      const row = this.gridRows[this.activeRow];
+      const column = this.gridColumns[this.activeCol];
+      if (!row || !column || !this.columnVisible(this.activeCol)) return;
+      event.preventDefault();
+      void copyText(row[column.key] ?? '');
+      return;
+    }
     const key = event.key;
-    if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(key)) return;
-    event.preventDefault();
-    if (key === 'ArrowUp') this.move(-1, 0);
-    if (key === 'ArrowDown') this.move(1, 0);
-    if (key === 'ArrowLeft') this.move(0, -1);
-    if (key === 'ArrowRight') this.move(0, 1);
-    if (key === 'Home') this.move(0, 0, 'start');
-    if (key === 'End') this.move(0, 0, 'end');
+    if (!this.gridRows.length || !this.gridColumns.length) return;
+    if (key === 'ArrowUp' || key === 'ArrowDown' || key === 'PageUp' || key === 'PageDown') {
+      const next = moveInList(this.activeRow, this.gridRows.length, key, { orientation: 'vertical', pageSize: 5 });
+      if (next === null) return;
+      event.preventDefault();
+      this.activeRow = next;
+      this.commitRow();
+      return;
+    }
+    if (key === 'ArrowLeft' || key === 'ArrowRight' || key === 'Home' || key === 'End') {
+      event.preventDefault();
+      if (key === 'Home') this.activeCol = this.firstVisibleColumn();
+      else if (key === 'End') this.activeCol = this.lastVisibleColumn();
+      else this.activeCol = this.stepColumn(this.activeCol, key === 'ArrowLeft' ? -1 : 1);
+      this.commitRow();
+    }
   }
 }
 

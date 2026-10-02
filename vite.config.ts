@@ -12,6 +12,8 @@ const entries = [
   resolve('src/components/forms/switch.ts'),
   resolve('src/components/forms/select.ts'),
   resolve('src/components/overlay/dialog.ts'),
+  resolve('src/components/overlay/menu.ts'),
+  resolve('src/interaction/index.ts'),
   resolve('src/components/navigation/tabs.ts'),
   resolve('src/components/feedback/tooltip.ts'),
   resolve('src/components/feedback/alert.ts'),

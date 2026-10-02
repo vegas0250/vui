@@ -1,6 +1,7 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
+import { moveInList } from '../../interaction/keyboard';
 
 let tabSeq = 0;
 
@@ -213,12 +214,8 @@ export class VTabs extends VuiElement {
     const tabs = this.tabs().filter((tab) => !tab.hasAttribute('disabled'));
     const index = tabs.indexOf(current);
     if (index < 0) return;
-    let next = index;
-    if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
-    else if (event.key === 'ArrowLeft') next = (index - 1 + tabs.length) % tabs.length;
-    else if (event.key === 'Home') next = 0;
-    else if (event.key === 'End') next = tabs.length - 1;
-    else return;
+    const next = moveInList(index, tabs.length, event.key, { orientation: 'horizontal', loop: true });
+    if (next === null) return;
     event.preventDefault();
     const tab = tabs[next];
     if (!tab) return;

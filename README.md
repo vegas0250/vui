@@ -87,7 +87,9 @@ import 'vui/desktop';
 ```ts
 import 'vui/button';
 import 'vui/dialog';
+import 'vui/menu';
 import 'vui/data-grid';
+import { CommandRegistry } from 'vui/interaction';
 ```
 
 Тема и плотность из кода:
@@ -107,7 +109,9 @@ import 'vui/themes/dark';
 import 'vui/themes/high-contrast';
 ```
 
-`vui/stack` регистрирует `vui-stack`, `vui-hstack` и `vui-vstack`. `vui/select` регистрирует `vui-select` и `vui-option`. `vui/tabs` регистрирует `vui-tabs`, `vui-tab` и `vui-tab-panel`. `vui/file-tree` регистрирует `vui-file-tree` и `vui-tree-item`. `vui/toast` регистрирует `vui-toast`, `vui-toaster` и экспортирует функцию `toast()`.
+`vui/stack` регистрирует `vui-stack`, `vui-hstack` и `vui-vstack`. `vui/select` регистрирует `vui-select` и `vui-option`. `vui/tabs` регистрирует `vui-tabs`, `vui-tab` и `vui-tab-panel`. `vui/file-tree` регистрирует `vui-file-tree` и `vui-tree-item`. `vui/toast` регистрирует `vui-toast`, `vui-toaster` и экспортирует функцию `toast()`. `vui/menu` регистрирует `vui-menu` и `vui-menu-item`.
+
+`vui/interaction` экспортирует фокус, клавиатуру, selection, команды, shortcuts, overlay, context menu, drag & drop, clipboard и pointer. Команды и сочетания клавиш регистрирует приложение. Граница платформы — в [PLATFORM.md](PLATFORM.md).
 
 ## Категории
 
@@ -120,7 +124,7 @@ import 'vui/themes/high-contrast';
 | Actions | `vui-button`, `vui-icon-button` |
 | Forms | `vui-input`, `vui-checkbox`, `vui-switch`, `vui-select` |
 | Feedback | `vui-alert`, `vui-toast`, `vui-tooltip` |
-| Overlay | `vui-dialog` |
+| Overlay | `vui-dialog`, `vui-menu` |
 | Navigation | `vui-tabs`, `vui-toolbar` |
 | Data | `vui-data-grid` |
 | Desktop | `vui-toolbar`, `vui-status-bar`, `vui-file-tree`, `vui-split-panel` |
@@ -208,6 +212,7 @@ vui/
 │   ├── components/
 │   ├── categories/
 │   ├── core/
+│   ├── interaction/  focus, keyboard, selection, commands, shortcuts, overlay, context menu, drag & drop, clipboard, pointer
 │   ├── icons/
 │   ├── theme/
 │   ├── tokens/
@@ -219,6 +224,7 @@ vui/
 │   └── e2e/          showcase, responsive, a11y, visual
 ├── visual.html       харнес снимков и accessibility
 ├── ARCHITECTURE.md
+├── PLATFORM.md
 ├── CONTRIBUTING.md
 ├── CHANGELOG.md
 ├── docs/components.md

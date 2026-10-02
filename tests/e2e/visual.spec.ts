@@ -35,6 +35,21 @@ test('button hover and focus', async ({ page }) => {
   await expect(page.locator('#input-invalid')).toHaveScreenshot('input-focus-invalid.png');
 });
 
+test('menu open focus disabled and checked', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/visual.html?theme=light&density=comfortable&states=menu');
+  await page.evaluate(() => document.fonts.ready);
+  const menu = page.locator('#state-menu');
+  await expect(menu).toHaveAttribute('open', '');
+  await page.locator('#menu-save').focus();
+  await expect(page.locator('#menu-states')).toHaveScreenshot('menu-open-focus.png');
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/visual.html?theme=dark&density=compact&states=menu');
+  await page.evaluate(() => document.fonts.ready);
+  await expect(page.locator('#menu-states')).toHaveScreenshot('menu-open-dark-compact.png');
+});
+
 test('dialog light desktop and dark compact mobile', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/visual.html?theme=light&density=comfortable');

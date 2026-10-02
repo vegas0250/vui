@@ -1,7 +1,7 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
-import { deepestActiveElement, isWithin } from '../../core/focus';
-import { pushOverlay } from '../../core/overlay';
+import { deepestActiveElement, isWithin } from '../../interaction/focus';
+import { pushOverlay } from '../../interaction/overlay';
 import { reflectStrings } from '../../core/reflect';
 
 let tooltipSeq = 0;

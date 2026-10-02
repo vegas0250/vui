@@ -18,10 +18,14 @@ style.textContent = `
     color: var(--vui-color-text);
     font-family: var(--vui-font-sans);
   }
-  #board, #keyboard-fixture {
+  #board, #keyboard-fixture, #menu-states {
     width: min(720px, 100%);
     box-sizing: border-box;
     padding: 16px;
+  }
+  #menu-states vui-menu {
+    position: static;
+    margin-top: 8px;
   }
   #keyboard-fixture { padding-top: 0; }
   section { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
@@ -106,6 +110,20 @@ fixture.innerHTML = `
 `;
 
 document.body.append(board, fixture);
+
+if (params.get('states') === 'menu') {
+  const menuStates = document.createElement('section');
+  menuStates.id = 'menu-states';
+  menuStates.innerHTML = `
+    <h2>Menu</h2>
+    <vui-menu id="state-menu" label="Actions" open>
+      <vui-menu-item id="menu-save" label="Save" shortcut="Ctrl+S"></vui-menu-item>
+      <vui-menu-item label="Disabled" disabled></vui-menu-item>
+      <vui-menu-item label="Checked" checked></vui-menu-item>
+    </vui-menu>
+  `;
+  document.body.append(menuStates);
+}
 
 const grid = document.querySelector('#grid');
 if (grid instanceof VDataGrid) {

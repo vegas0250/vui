@@ -112,4 +112,38 @@ describe('overlay stack', () => {
     await Promise.resolve();
     expect(document.activeElement).toBe(opener);
   });
+
+  it('closes every layer in a group on an outside pointer and keeps Escape to one layer', () => {
+    const parent = document.createElement('div');
+    const nested = document.createElement('div');
+    const outside = document.createElement('button');
+    document.body.append(outside, parent, nested);
+    const dismissed: string[] = [];
+    const closeParent = pushOverlay({
+      owner: parent,
+      kind: 'popup',
+      group: 'menu',
+      dismissOnOutside: true,
+      onDismiss: (reason) => {
+        dismissed.push(`parent:${reason}`);
+        closeParent();
+      },
+    });
+    const closeNested = pushOverlay({
+      owner: nested,
+      kind: 'popup',
+      group: 'menu',
+      dismissOnOutside: true,
+      onDismiss: (reason) => {
+        dismissed.push(`nested:${reason}`);
+        closeNested();
+      },
+    });
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+    expect(dismissed).toEqual(['nested:escape']);
+    expect(overlayDepth()).toBe(1);
+    outside.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true }));
+    expect(dismissed).toEqual(['nested:escape', 'parent:outside']);
+    expect(overlayDepth()).toBe(0);
+  });
 });

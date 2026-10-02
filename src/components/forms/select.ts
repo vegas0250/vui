@@ -1,7 +1,8 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { emitChange } from '../../core/events';
-import { pushOverlay } from '../../core/overlay';
+import { nextEnabled } from '../../interaction/keyboard';
+import { pushOverlay } from '../../interaction/overlay';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
 import { controlStyles, fieldStyles } from '../../core/styles';
 
@@ -321,12 +322,7 @@ export class VSelect extends VuiElement {
   private move(delta: number): void {
     const options = this.optionElements();
     if (!options.length) return;
-    let index = this.activeIndex;
-    for (let step = 0; step < options.length; step += 1) {
-      index = (index + delta + options.length) % options.length;
-      if (!options[index]?.optionDisabled) break;
-    }
-    this.activeIndex = index;
+    this.activeIndex = nextEnabled(options.length, this.activeIndex, delta, (index) => !options[index]?.optionDisabled);
     this.renderOptions();
   }
 

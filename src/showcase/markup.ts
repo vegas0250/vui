@@ -240,6 +240,28 @@ toast({ title: "Готово", message: "Проект собран", variant: "s
   &lt;/div&gt;
 &lt;/vui-dialog&gt;</pre>
         </vui-panel>
+        <vui-panel heading="Context menu">
+          <vui-button id="open-menu" variant="secondary">Открыть меню</vui-button>
+          <div id="menu-target" class="menu-target" tabindex="0">Правый щелчок или Shift+F10</div>
+          <p id="menu-result" class="demo-note">Команда file.save ещё не выполнялась. Ctrl+S выполняет её в этом showcase.</p>
+          <vui-menu id="demo-menu" label="Файл">
+            <vui-menu-item label="Сохранить" command="file.save"></vui-menu-item>
+            <vui-menu-item label="Удалить" command="file.delete"></vui-menu-item>
+            <vui-menu-item label="Поделиться">
+              <vui-menu slot="submenu" label="Поделиться">
+                <vui-menu-item label="Копировать ссылку" command="file.copyLink"></vui-menu-item>
+              </vui-menu>
+            </vui-menu-item>
+          </vui-menu>
+          <div class="row-gap">
+            <div id="drag-source" class="drag-chip" tabindex="0">Перетащить</div>
+            <div id="drop-target" class="drop-well">Отпустите здесь</div>
+          </div>
+          <p id="drop-result" class="demo-note">Перенос ещё не завершён.</p>
+          <pre class="code">&lt;vui-menu label="Файл"&gt;
+  &lt;vui-menu-item label="Сохранить" command="file.save"&gt;&lt;/vui-menu-item&gt;
+&lt;/vui-menu&gt;</pre>
+        </vui-panel>
         <vui-dialog id="demo-dialog" label="Сохранить изменения" close-label="Закрыть">
           <p style="margin: 0">Диалог использует нативный элемент dialog: модальный режим, Escape и ловушку фокуса.</p>
           <div slot="footer">

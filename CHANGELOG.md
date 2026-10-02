@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Interaction Layer: фокус, клавиатура, selection, команды, shortcuts, общий overlay, context menu, drag & drop, clipboard и pointer. Граница платформы описана в `PLATFORM.md`.
+- `vui-menu` и `vui-menu-item` используют этот слой. Приложение регистрирует свои команды.
+- Tabs, select, file tree, data grid и split panel переведены на общие primitives. Публичные attributes этих компонентов не заменены.
 - Публичные properties отражают уже существующие attributes. Набор attributes не заменён.
 - `vui-dialog` возвращает фокус на элемент, который его открыл, держит общий стек overlay и ставит `aria-modal` только пока открыт.
 - Escape вложенного select закрывает список раньше dialog.
