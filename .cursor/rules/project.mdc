@@ -1,0 +1,122 @@
+---
+description: Single source of truth for VUI architecture, public API, components, themes, and agent rules
+alwaysApply: true
+---
+
+# VUI
+
+Personal visual component library for Web, SPA, and Desktop/Electron. Not a production-ready commercial UI framework. No compatibility or bug-free guarantee.
+
+Before a substantial code change, read this file. If the change affects architecture, directories, public API, component list or status, themes, density, build, package exports, stack, or project rules, update this file in the same change.
+
+## Status
+
+`0.1.0`. First working set is implemented. Do not add empty placeholder components for the planned list.
+
+## Stack
+
+TypeScript, Custom Elements, DOM, CSS custom properties, Vite, Vitest, Playwright, pnpm. No Vue, React, Angular, or Svelte in the core. No AI, schema, visual designer, router, state manager, backend, or Electron main-process layer.
+
+## Directory
+
+```text
+src/components/{foundation,layout,actions,forms,feedback,overlay,navigation,data,desktop}
+src/categories/     category entry points
+src/core/           VuiElement, defineElement, shared styles, events
+src/icons/          icon registry
+src/theme/          setTheme, setDensity, style install
+src/tokens/         primitive tokens and density
+src/showcase/       showcase markup and behavior
+themes/             light, dark, high-contrast, system
+tests/unit          vitest
+tests/e2e           playwright
+index.html          showcase shell
+```
+
+One component module registers its elements as a side effect. Category modules only import components that exist. `src/index.ts` loads every category.
+
+## Public imports
+
+`import 'vui'` registers the full implemented set.
+
+Category: `vui/foundation`, `vui/layout`, `vui/actions`, `vui/forms`, `vui/feedback`, `vui/overlay`, `vui/navigation`, `vui/data`, `vui/desktop`.
+
+Component: `vui/icon`, `vui/button`, `vui/icon-button`, `vui/input`, `vui/checkbox`, `vui/switch`, `vui/select`, `vui/dialog`, `vui/tabs`, `vui/tooltip`, `vui/alert`, `vui/toast`, `vui/panel`, `vui/stack`, `vui/hstack`, `vui/vstack`, `vui/grid`, `vui/split-panel`, `vui/toolbar`, `vui/status-bar`, `vui/file-tree`, `vui/data-grid`.
+
+`vui/stack`, `vui/hstack`, and `vui/vstack` are one module. `vui/select` includes `vui-option`. `vui/tabs` includes `vui-tab` and `vui-tab-panel`. `vui/file-tree` includes `vui-tree-item`. `vui/toast` includes `vui-toaster` and `toast()`. `vui/desktop` re-exports toolbar and split panel; their source stays in navigation and layout.
+
+Theme API: `vui/theme` (`setTheme`, `setDensity`, `getTheme`, `getDensity`). CSS: `vui/themes/tokens`, `vui/themes/density`, `vui/themes/light`, `vui/themes/dark`, `vui/themes/high-contrast`, `vui/themes/system`.
+
+Built files live in `dist/` with `preserveModules`. Declarations come from `tsc -p tsconfig.build.json`. A selective entry must not import `src/index.ts`.
+
+## Themes and density
+
+Attributes, usually on `<html>`:
+
+```html
+<html data-vui-theme="light|dark|high-contrast|system" data-vui-density="comfortable|compact|dense">
+```
+
+`system` uses `prefers-color-scheme`. Dark values in `themes/system.css` must stay aligned with `themes/dark.css`.
+
+Components use semantic tokens (`--vui-color-*`, `--vui-space-*`, `--vui-size-control`, `--vui-font-*`, `--vui-radius*`, `--vui-shadow-*`, `--vui-z-*`, `--vui-toolbar-height`, `--vui-statusbar-height`, `--vui-row-height`). Do not hardcode colors in component CSS. A custom theme overrides the same custom properties.
+
+Importing any component calls `installVuiStyles()`, which appends one `#vui-styles` tag. CSS source files remain usable on their own.
+
+## Component API
+
+Prefix `vui-`. Prefer attributes, properties, slots, and standard events (`click`, `input`, `change`, `close`). Custom events only when no standard event fits.
+
+- `vui-button`: `variant` primary|secondary|ghost|danger, `size` small|medium|large, `disabled`, `type`.
+- `vui-icon-button`: `name`, `label` (accessible name), `variant` default ghost, `size`, `disabled`.
+- `vui-input`: `label`, `value`, `type`, `placeholder`, `hint`, `invalid`, `disabled`, `readonly`, `required`, `name`. Slots `prefix`, `suffix`. Form-associated.
+- `vui-checkbox`, `vui-switch`: `checked`, `disabled`, `name`, `value`. Switch input has `role="switch"`.
+- `vui-select`: `label`, `value`, `placeholder`, `disabled`, `invalid`. Children `vui-option`. Keyboard opens, moves, and commits. Form-associated.
+- `vui-dialog`: `label`, `open`, `size` small|medium|large, `close-label`, `dismissable="false"` keeps Escape and backdrop from closing. Methods `show()` and `close()`. Uses a native `<dialog>`. Script-initiated `close()` also updates the host, because a dialog inside shadow DOM may not emit the native `close` event. Listeners on `vui-dialog` still receive `close`.
+- `vui-tabs`: `label`. `vui-tab` (`panel`, `selected`, `disabled`) and `vui-tab-panel` (`name`). Arrows, Home, End.
+- `vui-tooltip`: `text`, `placement` top|bottom. Shows on hover and focus, hides on Escape.
+- `vui-alert`: `variant` info|success|warning|danger, `closable`, `close-label`.
+- `vui-toast`: `variant`, `heading`, `duration` (`0` stays). `toast({ title, message, variant, duration })` uses or creates `vui-toaster`.
+- `vui-panel`: `heading`. Slots default, `header`, `footer`.
+- `vui-stack` / `vui-hstack` / `vui-vstack`: `gap` 2xs|xs|sm|md|lg|xl|2xl, `align`, `justify`, `wrap`, `direction`.
+- `vui-grid`: `columns` 1–12 or `min` length (`px|rem|em|%`), `gap`.
+- `vui-split-panel`: `orientation` horizontal|vertical, `position` 10–90, `label`. Slots `start`, `end`. Separator is keyboard accessible.
+- `vui-toolbar`: `label`, `wrap`. Slots `start`, default, `end`.
+- `vui-status-bar`: `label`. Slots default, `end`.
+- `vui-file-tree`: `label`. `vui-tree-item`: `label`, `kind` file|folder, `expanded`, `selected`, `value`. Arrow keys, Home, End, Enter, Space. `change` and `selectedItem`.
+- `vui-data-grid`: properties `columns`, `rows`, `selectedId`. `label`, `empty-label`. Arrow keys, Home, End. `change`.
+
+`columns`: `{ key, title, width?, align? }`. `rows`: `{ id, [key]: string }`. `width` accepts only a simple length.
+
+Shadow DOM is open. Layout components put `display: flex|grid` on the host so slotted children participate. Tabs, tree items, and the grid expose roles on the host element.
+
+## Icons
+
+`vui-icon` `name` and optional `label`. Built-in paths come from the `lucide` dependency. `registerIcon(name, svg)` is the extension API and does not expose Lucide types. Add a built-in name in `src/icons/registry.ts` and show it in the showcase gallery.
+
+## Accessibility
+
+Visible focus, `prefers-reduced-motion`, `forced-colors` on buttons and checks, high-contrast theme with 2px borders and no shadow-only meaning. Dialog uses native modal behavior. Select, tabs, tree, split separator, and data grid implement the keyboard behavior listed above. Default accessible names in components are English; the showcase is Russian and passes translated labels where needed.
+
+## Showcase
+
+`pnpm dev` serves `index.html`. The page is built from VUI elements. Every implemented component has a working example there. A component is not done without that example. Theme and density controls call `setTheme` and `setDensity`.
+
+## Testing
+
+Vitest + happy-dom: `tests/unit`. Cover registration boundaries, keyboard behavior, theme installation, and icon registration. Playwright smoke: `tests/e2e/showcase.spec.ts`. Do not treat a large suite as a substitute for the showcase.
+
+## Development rules
+
+- Keep components independent. A control must not require an unrelated component to be imported by the user. Internal use of `vui-icon` is acceptable.
+- Use native DOM and CSS before adding a helper. Shared code belongs in `src/core` only when at least two components need it.
+- Do not create a second desktop theme system. Desktop UI uses the same tokens, themes, and density.
+- Do not add a component that is not rendered and operable in the showcase.
+- Do not introduce a framework, builder, router, or application state layer.
+- After changing public behavior, update this file and the README examples if the documented usage changed.
+
+## Not implemented yet
+
+Container, divider, scroll area, button group, dropdown, menu, context menu, command, textarea, combobox, radio, slider, date/time/file/color pickers, notification, progress, spinner, skeleton, modal as a separate element, drawer, popover, breadcrumbs, pagination, sidebar, navigation menu, tab bar, table, list, virtual list, tree, tree grid, empty state, window header, window controls, application layout, dock, inspector, property grid, file list, path bar, file browser, command palette, desktop context menu.
+
+Add these only as real components, one at a time, with showcase coverage and an update to this file.

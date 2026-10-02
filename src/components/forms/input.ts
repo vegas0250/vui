@@ -1,0 +1,98 @@
+import { defineElement } from '../../core/define';
+import { VuiElement } from '../../core/element';
+import { controlStyles, fieldStyles } from '../../core/styles';
+
+export class VuiInput extends VuiElement {
+  static formAssociated = true;
+
+  static get observedAttributes(): string[] {
+    return ['label', 'value', 'placeholder', 'type', 'disabled', 'invalid', 'name', 'required', 'size', 'hint', 'readonly'];
+  }
+
+  private internals: ElementInternals | null = null;
+
+  constructor() {
+    super();
+    try {
+      this.internals = this.attachInternals();
+    } catch {
+      this.internals = null;
+    }
+  }
+
+  get value(): string {
+    return this.shadow.querySelector('input')?.value ?? this.getAttribute('value') ?? '';
+  }
+
+  set value(next: string) {
+    this.setAttribute('value', next);
+  }
+
+  protected template(): string {
+    return `
+      <div class="field">
+        <label class="label" part="label"></label>
+        <div class="control" part="control">
+          <slot name="prefix"></slot>
+          <input part="input" />
+          <slot name="suffix"></slot>
+        </div>
+        <div class="hint" part="hint"></div>
+      </div>
+    `;
+  }
+
+  protected componentStyles(): string {
+    return `
+      ${fieldStyles}
+      ${controlStyles}
+      :host { display: inline-flex; min-width: 12rem; }
+      input {
+        flex: 1 1 auto;
+        width: 100%;
+        min-width: 0;
+        border: 0;
+        outline: none;
+        background: transparent;
+        padding: 0;
+        height: calc(var(--vui-size-control) - (var(--vui-border-width) * 2));
+      }
+      .label:empty, .hint:empty { display: none; }
+      :host([readonly]) input { cursor: default; }
+    `;
+  }
+
+  protected afterRender(): void {
+    const input = this.qs<HTMLInputElement>('input');
+    input.id = `vui-input-${Math.random().toString(36).slice(2, 9)}`;
+    input.addEventListener('input', () => {
+      this.internals?.setFormValue(input.value);
+      if (this.getAttribute('value') !== input.value) {
+        this.setAttribute('value', input.value);
+      }
+    });
+  }
+
+  protected sync(): void {
+    const input = this.qs<HTMLInputElement>('input');
+    const label = this.qs<HTMLLabelElement>('label');
+    const hint = this.qs<HTMLElement>('.hint');
+    const type = this.getAttribute('type') ?? 'text';
+    const allowed = ['text', 'password', 'email', 'search', 'number', 'url', 'tel'];
+    input.type = allowed.includes(type) ? type : 'text';
+    const next = this.getAttribute('value') ?? '';
+    if (input.value !== next) input.value = next;
+    input.placeholder = this.getAttribute('placeholder') ?? '';
+    input.disabled = this.isDisabled();
+    input.required = this.hasAttribute('required');
+    input.readOnly = this.hasAttribute('readonly');
+    input.setAttribute('aria-invalid', this.hasAttribute('invalid') ? 'true' : 'false');
+    const text = this.getAttribute('label') ?? '';
+    label.textContent = text;
+    label.htmlFor = input.id;
+    hint.textContent = this.getAttribute('hint') ?? '';
+    this.internals?.setFormValue(input.value);
+  }
+}
+
+defineElement('vui-input', VuiInput);

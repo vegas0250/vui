@@ -1,0 +1,84 @@
+:root,
+[data-vui-density="comfortable"] {
+  --vui-space-2xs: 2px;
+  --vui-space-xs: 4px;
+  --vui-space-sm: 8px;
+  --vui-space-md: 12px;
+  --vui-space-lg: 16px;
+  --vui-space-xl: 24px;
+  --vui-space-2xl: 32px;
+  --vui-size-control: 32px;
+  --vui-size-control-sm: 26px;
+  --vui-size-control-lg: 40px;
+  --vui-font-size: 14px;
+  --vui-font-size-sm: 12px;
+  --vui-font-size-lg: 16px;
+  --vui-line-height: 1.45;
+  --vui-heading-1: 28px;
+  --vui-heading-2: 20px;
+  --vui-heading-3: 16px;
+  --vui-radius: 6px;
+  --vui-radius-sm: 4px;
+  --vui-radius-lg: 10px;
+  --vui-toolbar-height: 42px;
+  --vui-statusbar-height: 28px;
+  --vui-row-height: 36px;
+  --vui-icon-size: 16px;
+  --vui-panel-padding: 16px;
+}
+
+[data-vui-density="compact"] {
+  --vui-space-2xs: 2px;
+  --vui-space-xs: 2px;
+  --vui-space-sm: 6px;
+  --vui-space-md: 8px;
+  --vui-space-lg: 12px;
+  --vui-space-xl: 16px;
+  --vui-space-2xl: 24px;
+  --vui-size-control: 28px;
+  --vui-size-control-sm: 24px;
+  --vui-size-control-lg: 34px;
+  --vui-font-size: 13px;
+  --vui-font-size-sm: 12px;
+  --vui-font-size-lg: 15px;
+  --vui-line-height: 1.4;
+  --vui-heading-1: 24px;
+  --vui-heading-2: 18px;
+  --vui-heading-3: 15px;
+  --vui-radius: 4px;
+  --vui-radius-sm: 3px;
+  --vui-radius-lg: 8px;
+  --vui-toolbar-height: 34px;
+  --vui-statusbar-height: 24px;
+  --vui-row-height: 28px;
+  --vui-icon-size: 15px;
+  --vui-panel-padding: 12px;
+}
+
+[data-vui-density="dense"] {
+  --vui-space-2xs: 1px;
+  --vui-space-xs: 2px;
+  --vui-space-sm: 4px;
+  --vui-space-md: 6px;
+  --vui-space-lg: 8px;
+  --vui-space-xl: 12px;
+  --vui-space-2xl: 16px;
+  --vui-size-control: 22px;
+  --vui-size-control-sm: 20px;
+  --vui-size-control-lg: 26px;
+  --vui-font-size: 12px;
+  --vui-font-size-sm: 11px;
+  --vui-font-size-lg: 13px;
+  --vui-line-height: 1.35;
+  --vui-heading-1: 20px;
+  --vui-heading-2: 16px;
+  --vui-heading-3: 13px;
+  --vui-radius: 3px;
+  --vui-radius-sm: 2px;
+  --vui-radius-lg: 4px;
+  --vui-toolbar-height: 28px;
+  --vui-statusbar-height: 22px;
+  --vui-row-height: 22px;
+  --vui-icon-size: 14px;
+  --vui-panel-padding: 8px;
+}

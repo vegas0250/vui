@@ -1,0 +1,185 @@
+{
+  "name": "vui",
+  "version": "0.1.0",
+  "description": "Универсальная модульная UI-система готовых визуальных компонентов для Web, SPA и Desktop/Electron с поддержкой тем и различной плотности интерфейса.",
+  "type": "module",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/vegas0250/vui.git"
+  },
+  "files": [
+    "dist",
+    "themes",
+    "src/tokens"
+  ],
+  "sideEffects": [
+    "./dist/**/*.js",
+    "./themes/**/*.css",
+    "./src/tokens/**/*.css"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./theme": {
+      "types": "./dist/theme/index.d.ts",
+      "import": "./dist/theme/index.js"
+    },
+    "./icon": {
+      "types": "./dist/components/foundation/icon.d.ts",
+      "import": "./dist/components/foundation/icon.js"
+    },
+    "./button": {
+      "types": "./dist/components/actions/button.d.ts",
+      "import": "./dist/components/actions/button.js"
+    },
+    "./icon-button": {
+      "types": "./dist/components/actions/icon-button.d.ts",
+      "import": "./dist/components/actions/icon-button.js"
+    },
+    "./input": {
+      "types": "./dist/components/forms/input.d.ts",
+      "import": "./dist/components/forms/input.js"
+    },
+    "./checkbox": {
+      "types": "./dist/components/forms/checkbox.d.ts",
+      "import": "./dist/components/forms/checkbox.js"
+    },
+    "./switch": {
+      "types": "./dist/components/forms/switch.d.ts",
+      "import": "./dist/components/forms/switch.js"
+    },
+    "./select": {
+      "types": "./dist/components/forms/select.d.ts",
+      "import": "./dist/components/forms/select.js"
+    },
+    "./dialog": {
+      "types": "./dist/components/overlay/dialog.d.ts",
+      "import": "./dist/components/overlay/dialog.js"
+    },
+    "./tabs": {
+      "types": "./dist/components/navigation/tabs.d.ts",
+      "import": "./dist/components/navigation/tabs.js"
+    },
+    "./tooltip": {
+      "types": "./dist/components/feedback/tooltip.d.ts",
+      "import": "./dist/components/feedback/tooltip.js"
+    },
+    "./alert": {
+      "types": "./dist/components/feedback/alert.d.ts",
+      "import": "./dist/components/feedback/alert.js"
+    },
+    "./toast": {
+      "types": "./dist/components/feedback/toast.d.ts",
+      "import": "./dist/components/feedback/toast.js"
+    },
+    "./panel": {
+      "types": "./dist/components/layout/panel.d.ts",
+      "import": "./dist/components/layout/panel.js"
+    },
+    "./stack": {
+      "types": "./dist/components/layout/stack.d.ts",
+      "import": "./dist/components/layout/stack.js"
+    },
+    "./hstack": {
+      "types": "./dist/components/layout/stack.d.ts",
+      "import": "./dist/components/layout/stack.js"
+    },
+    "./vstack": {
+      "types": "./dist/components/layout/stack.d.ts",
+      "import": "./dist/components/layout/stack.js"
+    },
+    "./grid": {
+      "types": "./dist/components/layout/grid.d.ts",
+      "import": "./dist/components/layout/grid.js"
+    },
+    "./split-panel": {
+      "types": "./dist/components/layout/split-panel.d.ts",
+      "import": "./dist/components/layout/split-panel.js"
+    },
+    "./toolbar": {
+      "types": "./dist/components/navigation/toolbar.d.ts",
+      "import": "./dist/components/navigation/toolbar.js"
+    },
+    "./status-bar": {
+      "types": "./dist/components/desktop/status-bar.d.ts",
+      "import": "./dist/components/desktop/status-bar.js"
+    },
+    "./file-tree": {
+      "types": "./dist/components/desktop/file-tree.d.ts",
+      "import": "./dist/components/desktop/file-tree.js"
+    },
+    "./data-grid": {
+      "types": "./dist/components/data/data-grid.d.ts",
+      "import": "./dist/components/data/data-grid.js"
+    },
+    "./foundation": {
+      "types": "./dist/categories/foundation.d.ts",
+      "import": "./dist/categories/foundation.js"
+    },
+    "./layout": {
+      "types": "./dist/categories/layout.d.ts",
+      "import": "./dist/categories/layout.js"
+    },
+    "./actions": {
+      "types": "./dist/categories/actions.d.ts",
+      "import": "./dist/categories/actions.js"
+    },
+    "./forms": {
+      "types": "./dist/categories/forms.d.ts",
+      "import": "./dist/categories/forms.js"
+    },
+    "./feedback": {
+      "types": "./dist/categories/feedback.d.ts",
+      "import": "./dist/categories/feedback.js"
+    },
+    "./overlay": {
+      "types": "./dist/categories/overlay.d.ts",
+      "import": "./dist/categories/overlay.js"
+    },
+    "./navigation": {
+      "types": "./dist/categories/navigation.d.ts",
+      "import": "./dist/categories/navigation.js"
+    },
+    "./data": {
+      "types": "./dist/categories/data.d.ts",
+      "import": "./dist/categories/data.js"
+    },
+    "./desktop": {
+      "types": "./dist/categories/desktop.d.ts",
+      "import": "./dist/categories/desktop.js"
+    },
+    "./themes/tokens": "./src/tokens/tokens.css",
+    "./themes/density": "./src/tokens/density.css",
+    "./themes/light": "./themes/light.css",
+    "./themes/dark": "./themes/dark.css",
+    "./themes/high-contrast": "./themes/high-contrast.css",
+    "./themes/system": "./themes/system.css"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --mode lib && tsc -p tsconfig.build.json",
+    "preview": "vite preview --host 127.0.0.1 --port 4173",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "happy-dom": "^20.0.10",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.12",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "lucide": "^0.545.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

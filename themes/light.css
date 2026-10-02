@@ -1,0 +1,40 @@
+:root,
+[data-vui-theme="light"] {
+  color-scheme: light;
+  --vui-color-background: #f4f6f8;
+  --vui-color-surface: #ffffff;
+  --vui-color-surface-raised: #ffffff;
+  --vui-color-surface-sunken: #eef1f4;
+  --vui-color-surface-hover: #f0f3f6;
+  --vui-color-field: #ffffff;
+  --vui-color-text: #1c2430;
+  --vui-color-text-muted: #5d6b7c;
+  --vui-color-border: #d5dde6;
+  --vui-color-border-strong: #b7c2cf;
+  --vui-color-primary: #1f6feb;
+  --vui-color-primary-hover: #1a5fd0;
+  --vui-color-primary-active: #164eab;
+  --vui-color-on-primary: #ffffff;
+  --vui-color-danger: #c53434;
+  --vui-color-danger-hover: #a82b2b;
+  --vui-color-on-danger: #ffffff;
+  --vui-color-success: #1f7a4d;
+  --vui-color-warning: #8a5a00;
+  --vui-color-info: #1f6feb;
+  --vui-color-danger-surface: #fdecec;
+  --vui-color-success-surface: #e7f6ee;
+  --vui-color-warning-surface: #fff6e0;
+  --vui-color-info-surface: #e8f1fd;
+  --vui-color-backdrop: rgba(20, 28, 38, 0.48);
+  --vui-color-focus: #1f6feb;
+  --vui-color-tooltip-bg: #1c2430;
+  --vui-color-tooltip-text: #ffffff;
+  --vui-color-tooltip-border: transparent;
+  --vui-shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --vui-shadow-md: 0 8px 24px rgba(16, 24, 40, 0.12);
+  --vui-shadow-lg: 0 16px 48px rgba(16, 24, 40, 0.18);
+  --vui-focus-ring: 2px solid var(--vui-color-focus);
+  --vui-focus-offset: 2px;
+  --vui-focus-shadow: 0 0 0 3px color-mix(in srgb, var(--vui-color-focus) 28%, transparent);
+  --vui-border-width: 1px;
+}

@@ -1,0 +1,21 @@
+/* Primitive tokens. Semantic colors live in themes/. Density overrides live in density.css. */
+
+:root {
+  color-scheme: light;
+  --vui-font-sans: "Segoe UI", "Segoe UI Variable", system-ui, sans-serif;
+  --vui-font-mono: "Cascadia Mono", "Cascadia Code", ui-monospace, Consolas, monospace;
+  --vui-font-weight: 400;
+  --vui-font-weight-strong: 600;
+  --vui-duration: 120ms;
+  --vui-easing: cubic-bezier(0.2, 0, 0, 1);
+  --vui-z-dropdown: 1000;
+  --vui-z-sticky: 1100;
+  --vui-z-overlay: 1200;
+  --vui-z-dialog: 1300;
+  --vui-z-toast: 1400;
+  --vui-z-tooltip: 1500;
+  --vui-palette-blue-600: #1f6feb;
+  --vui-palette-blue-700: #1a5fd0;
+  --vui-palette-slate-900: #1c2430;
+  --vui-palette-slate-0: #ffffff;
+}
