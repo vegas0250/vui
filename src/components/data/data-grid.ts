@@ -117,7 +117,7 @@ export class VDataGrid extends VuiElement {
       tbody tr[aria-selected="true"] { background: var(--vui-color-surface-hover); }
       td:focus-visible {
         outline: var(--vui-focus-ring);
-        outline-offset: -2px;
+        outline-offset: calc(var(--vui-focus-offset) * -1);
       }
       .empty {
         text-align: center;
@@ -135,6 +135,7 @@ export class VDataGrid extends VuiElement {
   }
 
   disconnectedCallback(): void {
+    super.disconnectedCallback();
     this.stopWatch?.();
     this.stopWatch = null;
   }

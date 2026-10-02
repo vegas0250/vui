@@ -1,46 +1,45 @@
 /*
   System follows the OS color scheme.
-  Dark values are duplicated from themes/dark.css on purpose:
-  theme files stay plain CSS and do not depend on a preprocessor.
+  Dark assignments use the same palette names as themes/dark.css.
+  Theme files stay plain CSS and do not depend on a preprocessor.
 */
 
 @media (prefers-color-scheme: dark) {
   :root[data-vui-theme="system"] {
     color-scheme: dark;
-    --vui-color-background: #161a20;
-    --vui-color-surface: #1e242c;
-    --vui-color-surface-raised: #262d37;
-    --vui-color-surface-sunken: #12161b;
-    --vui-color-surface-hover: #2c343f;
-    --vui-color-field: #12161b;
-    --vui-color-text: #e7edf4;
-    --vui-color-text-muted: #9aa8b8;
-    --vui-color-border: #3a4553;
-    --vui-color-border-strong: #526173;
-    --vui-color-primary: #6ea8fe;
-    --vui-color-primary-hover: #8bbbff;
-    --vui-color-primary-active: #4f90ea;
-    --vui-color-on-primary: #0d1b2e;
-    --vui-color-danger: #ff8d8d;
-    --vui-color-danger-hover: #ffb1b1;
-    --vui-color-on-danger: #2a0d0d;
-    --vui-color-success: #7dcea0;
-    --vui-color-warning: #f0c36a;
-    --vui-color-info: #8bb8ff;
-    --vui-color-danger-surface: #3a2224;
-    --vui-color-success-surface: #1c3328;
-    --vui-color-warning-surface: #332a16;
-    --vui-color-info-surface: #1c2a3d;
-    --vui-color-backdrop: rgba(0, 0, 0, 0.62);
-    --vui-color-focus: #8bb8ff;
-    --vui-color-tooltip-bg: #e7edf4;
-    --vui-color-tooltip-text: #1c2430;
+    --vui-color-background: var(--vui-palette-ink-900);
+    --vui-color-surface: var(--vui-palette-ink-800);
+    --vui-color-surface-raised: var(--vui-palette-ink-700);
+    --vui-color-surface-sunken: var(--vui-palette-ink-950);
+    --vui-color-surface-hover: var(--vui-palette-ink-600);
+    --vui-color-field: var(--vui-palette-ink-950);
+    --vui-color-text: var(--vui-palette-ink-50);
+    --vui-color-text-muted: var(--vui-palette-ink-200);
+    --vui-color-border: var(--vui-palette-ink-500);
+    --vui-color-border-strong: var(--vui-palette-ink-400);
+    --vui-color-primary: var(--vui-palette-blue-400);
+    --vui-color-primary-hover: var(--vui-palette-blue-350);
+    --vui-color-primary-active: var(--vui-palette-blue-500);
+    --vui-color-on-primary: var(--vui-palette-navy-900);
+    --vui-color-danger: var(--vui-palette-red-400);
+    --vui-color-danger-hover: var(--vui-palette-red-300);
+    --vui-color-on-danger: var(--vui-palette-red-900);
+    --vui-color-success: var(--vui-palette-green-300);
+    --vui-color-warning: var(--vui-palette-amber-300);
+    --vui-color-info: var(--vui-palette-blue-300);
+    --vui-color-danger-surface: var(--vui-palette-danger-900);
+    --vui-color-success-surface: var(--vui-palette-green-900);
+    --vui-color-warning-surface: var(--vui-palette-amber-900);
+    --vui-color-info-surface: var(--vui-palette-info-900);
+    --vui-color-backdrop: var(--vui-palette-backdrop-dark);
+    --vui-color-focus: var(--vui-palette-blue-300);
+    --vui-color-tooltip-bg: var(--vui-palette-ink-50);
+    --vui-color-tooltip-text: var(--vui-palette-slate-900);
     --vui-color-tooltip-border: transparent;
-    --vui-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
-    --vui-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
-    --vui-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
+    --vui-shadow-sm: var(--vui-palette-shadow-dark-sm);
+    --vui-shadow-md: var(--vui-palette-shadow-dark-md);
+    --vui-shadow-lg: var(--vui-palette-shadow-dark-lg);
     --vui-focus-ring: 2px solid var(--vui-color-focus);
-    --vui-focus-offset: 2px;
     --vui-focus-shadow: 0 0 0 3px color-mix(in srgb, var(--vui-color-focus) 35%, transparent);
     --vui-border-width: 1px;
   }

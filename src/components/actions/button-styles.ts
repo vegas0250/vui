@@ -71,7 +71,7 @@ button:disabled,
 }
 @media (forced-colors: active) {
   button {
-    border: 1px solid ButtonText;
+    border: var(--vui-border-width) solid ButtonText;
     background: ButtonFace;
     color: ButtonText;
   }

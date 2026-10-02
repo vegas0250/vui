@@ -28,7 +28,7 @@ export class VTab extends VuiElement {
         flex: 0 0 auto;
         min-height: var(--vui-size-control);
         padding-inline: var(--vui-space-md);
-        border-bottom: 2px solid transparent;
+        border-bottom: var(--vui-border-width-strong) solid transparent;
         color: var(--vui-color-text-muted);
         cursor: pointer;
         user-select: none;
@@ -36,7 +36,7 @@ export class VTab extends VuiElement {
       :host(:hover) { color: var(--vui-color-text); background: var(--vui-color-surface-hover); }
       :host(:focus-visible) {
         outline: var(--vui-focus-ring);
-        outline-offset: -2px;
+        outline-offset: calc(var(--vui-focus-offset) * -1);
       }
       :host([selected]) {
         color: var(--vui-color-text);

@@ -103,6 +103,7 @@ export class VDialog extends VuiElement {
         gap: var(--vui-space-sm);
         border-top: var(--vui-border-width) solid var(--vui-color-border);
       }
+      /* 30rem matches --vui-overlay-full. Media queries cannot read custom properties. */
       @media (max-width: 30rem) {
         dialog {
           width: 100vw;
@@ -172,6 +173,7 @@ export class VDialog extends VuiElement {
   }
 
   disconnectedCallback(): void {
+    super.disconnectedCallback();
     this.releaseOverlay?.();
     this.releaseOverlay = null;
   }

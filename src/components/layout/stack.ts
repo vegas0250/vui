@@ -1,22 +1,23 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
+import { applyAlign, applyJustify, applyOverflow, applySpace, tokenGap } from '../../core/layout';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
 import { inlineThreshold, observeInlineSize } from '../../core/responsive';
-import { flexAlign, flexJustify, tokenGap } from '../../core/styles';
 
 class VStackBase extends VuiElement {
   declare gap: string;
   declare align: string;
   declare justify: string;
   declare direction: string;
+  declare padding: string;
+  declare overflow: string;
   declare wrap: boolean;
 
   static get observedAttributes(): string[] {
-    return ['gap', 'align', 'justify', 'wrap', 'direction'];
+    return ['gap', 'align', 'justify', 'wrap', 'direction', 'padding', 'overflow'];
   }
 
   protected directionFallback = 'column';
-  private stopWatch: (() => void) | null = null;
 
   protected template(): string {
     return `<slot></slot>`;
@@ -26,11 +27,13 @@ class VStackBase extends VuiElement {
     return `
       :host {
         display: flex;
-        flex-direction: var(--vui-stack-direction, column);
-        align-items: var(--vui-stack-align, stretch);
-        justify-content: var(--vui-stack-justify, flex-start);
-        flex-wrap: var(--vui-stack-wrap, nowrap);
-        gap: var(--vui-stack-gap, var(--vui-space-md));
+        flex-direction: var(--vui-layout-direction, column);
+        align-items: var(--vui-layout-align, stretch);
+        justify-content: var(--vui-layout-justify, flex-start);
+        flex-wrap: var(--vui-layout-wrap, nowrap);
+        gap: var(--vui-layout-gap, var(--vui-space-md));
+        padding: var(--vui-layout-padding, 0);
+        overflow: var(--vui-layout-overflow, visible);
         min-width: 0;
         max-width: 100%;
       }
@@ -48,31 +51,30 @@ class VStackBase extends VuiElement {
     this.watchSize();
   }
 
-  disconnectedCallback(): void {
-    this.stopWatch?.();
-    this.stopWatch = null;
-  }
-
   private watchSize(): void {
-    this.stopWatch?.();
-    this.stopWatch = observeInlineSize(this, (width) => {
-      if (width <= 0) return;
-      const limit = inlineThreshold(this);
-      const narrow = width <= limit;
-      if (this.hasAttribute('data-narrow') === narrow) return;
-      this.toggleAttribute('data-narrow', narrow);
-    });
+    this.hold(
+      'size',
+      observeInlineSize(this, (width) => {
+        if (width <= 0) return;
+        const limit = inlineThreshold(this);
+        const narrow = width <= limit;
+        if (this.hasAttribute('data-narrow') === narrow) return;
+        this.toggleAttribute('data-narrow', narrow);
+      }),
+    );
   }
 
   protected sync(): void {
     const direction = this.getAttribute('direction') ?? this.directionFallback;
     const row = direction === 'row';
     this.setAttribute('data-axis', row ? 'row' : 'column');
-    this.style.setProperty('--vui-stack-direction', row ? 'row' : 'column');
-    this.style.setProperty('--vui-stack-gap', tokenGap(this.getAttribute('gap')));
-    this.style.setProperty('--vui-stack-align', flexAlign(this.getAttribute('align'), 'stretch'));
-    this.style.setProperty('--vui-stack-justify', flexJustify(this.getAttribute('justify')));
-    this.style.setProperty('--vui-stack-wrap', this.hasAttribute('wrap') ? 'wrap' : 'nowrap');
+    this.style.setProperty('--vui-layout-direction', row ? 'row' : 'column');
+    this.style.setProperty('--vui-layout-gap', tokenGap(this.getAttribute('gap')));
+    applyAlign(this, this.getAttribute('align'), 'stretch');
+    applyJustify(this, this.getAttribute('justify'));
+    applySpace(this, '--vui-layout-padding', this.getAttribute('padding'), '0');
+    applyOverflow(this, this.getAttribute('overflow'), 'visible');
+    this.style.setProperty('--vui-layout-wrap', this.hasAttribute('wrap') ? 'wrap' : 'nowrap');
   }
 }
 
@@ -86,7 +88,7 @@ export class VVStack extends VStackBase {
   protected directionFallback = 'column';
 }
 
-reflectStrings(VStackBase, ['gap', 'align', 'justify', 'direction']);
+reflectStrings(VStackBase, ['gap', 'align', 'justify', 'direction', 'padding', 'overflow']);
 reflectBooleans(VStackBase, ['wrap']);
 defineElement('vui-stack', VStack);
 defineElement('vui-hstack', VHStack);

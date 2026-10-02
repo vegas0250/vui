@@ -56,7 +56,7 @@ export class VTreeItem extends VuiElement {
       :host([selected]) .row { font-weight: var(--vui-font-weight-strong); }
       :host(:focus-visible) .row {
         outline: var(--vui-focus-ring);
-        outline-offset: -2px;
+        outline-offset: calc(var(--vui-focus-offset) * -1);
       }
       .twist {
         display: inline-flex;

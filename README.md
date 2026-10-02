@@ -23,6 +23,26 @@ VUI — персональная библиотека визуальных ко�
 - desktop-компоненты используют те же tokens, темы и плотность, что и остальные;
 - доступность закладывается в интерактивные компоненты: клавиатура, ARIA, фокус, нативный `dialog`.
 
+Слои, на которых собирается следующий компонент:
+
+```text
+Foundation
+    ↓
+Component Contract
+    ↓
+Accessibility
+    ↓
+Responsive
+    ↓
+Density / Theme
+    ↓
+Layout
+    ↓
+Component
+```
+
+Foundation — primitive palette, semantic tokens тем и шкала плотности. Component Contract — один класс и custom element, attributes, стандартные события, слоты и tokens. Layout — общий словарь `gap`, `padding`, `align`, `justify`, `overflow` у stack, grid, panel и split. Подробности — в [ARCHITECTURE.md](ARCHITECTURE.md).
+
 ## Установка
 
 ```bash
@@ -140,7 +160,7 @@ import 'vui/themes/high-contrast';
 <html data-vui-theme="system">
 ```
 
-`system` следует `prefers-color-scheme`. Своя тема — это набор тех же custom properties (`--vui-color-primary`, `--vui-color-background`, `--vui-color-surface`, `--vui-color-text`, `--vui-color-border` и остальные семантические tokens) с селектором не слабее встроенных тем.
+`system` следует `prefers-color-scheme`. Цвета тем ссылаются на одну primitive palette. Своя тема задаёт те же semantic properties (`--vui-color-primary`, `--vui-color-background`, `--vui-color-surface`, `--vui-color-text`, `--vui-color-border` и остальные) селектором не слабее встроенных тем. Компонент не проверяет, какая тема активна.
 
 ## Плотность
 
@@ -150,7 +170,25 @@ import 'vui/themes/high-contrast';
 <html data-vui-density="dense">
 ```
 
-Плотность меняет высоту контролов, отступы, gaps, toolbar, строку состояния, строки таблиц и панелей. Для desktop-интерфейса обычно удобны `compact` и `dense`.
+Плотность — общая шкала: высота контролов, отступы, gaps, toolbar, панель, строка состояния и строки таблицы. Для desktop-интерфейса обычно удобны `compact` и `dense`. Тема, плотность и ширина контейнера независимы: Dark + Dense + узкий контейнер допустимы так же, как Light + Comfortable + широкий.
+
+## Layout
+
+`vui-stack`, `vui-hstack`, `vui-vstack`, `vui-grid`, `vui-panel` и `vui-split-panel` используют одни имена: `gap`, `padding`, `align`, `justify`, `overflow`. Шаг — `2xs|xs|sm|md|lg|xl|2xl`.
+
+```html
+<vui-hstack gap="sm" align="center" justify="space-between">
+  <vui-button>Слева</vui-button>
+  <vui-button>Справа</vui-button>
+</vui-hstack>
+
+<vui-split-panel position="32" min="15" max="70" label="Боковая панель">
+  <div slot="start">Начало</div>
+  <div slot="end">Конец</div>
+</vui-split-panel>
+```
+
+Без `min` и `max` разделитель остаётся в диапазоне 10–90. Горизонтальный split складывается, когда его контейнер не шире `--vui-layout-narrow`. Вложенные панели меняют только свой `position`.
 
 ## Responsive Design
 
@@ -190,7 +228,7 @@ pnpm install
 pnpm dev
 ```
 
-Откроется `index.html`: демонстрация, короткие примеры использования и ручная проверка тем, плотности и состояний. Showcase собран из компонентов VUI.
+Откроется `index.html`: Foundation, темы, плотность, layout, контракт компонентов и responsive. Showcase собран из компонентов VUI.
 
 ## Скрипты
 

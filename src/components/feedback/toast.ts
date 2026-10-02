@@ -55,11 +55,11 @@ export class VToast extends VuiElement {
         display: flex;
         align-items: flex-start;
         gap: var(--vui-space-sm);
-        width: min(22rem, calc(100vw - var(--vui-overlay-gutter) * 2));
+        width: min(var(--vui-toast-inline), calc(100vw - var(--vui-overlay-gutter) * 2));
         max-width: 100%;
         padding: var(--vui-space-sm) var(--vui-space-md);
         border: var(--vui-border-width) solid var(--vui-color-border);
-        border-left: 3px solid var(--vui-color-info);
+        border-left: var(--vui-border-width-accent) solid var(--vui-color-info);
         border-radius: var(--vui-radius);
         background: var(--vui-color-surface-raised);
         box-shadow: var(--vui-shadow-md);
@@ -99,6 +99,7 @@ export class VToast extends VuiElement {
   }
 
   disconnectedCallback(): void {
+    super.disconnectedCallback();
     window.clearTimeout(this.timer);
   }
 
@@ -153,6 +154,7 @@ export class VToaster extends VuiElement {
   }
 
   disconnectedCallback(): void {
+    super.disconnectedCallback();
     this.releaseOverlay?.();
     this.releaseOverlay = null;
   }
@@ -178,7 +180,7 @@ export class VToaster extends VuiElement {
         flex-direction: column;
         gap: var(--vui-space-sm);
         align-items: stretch;
-        width: min(22rem, 100%);
+        width: min(var(--vui-toast-inline), 100%);
       }
     `;
   }

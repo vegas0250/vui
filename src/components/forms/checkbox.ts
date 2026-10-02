@@ -93,7 +93,7 @@ export class VCheckbox extends VuiElement {
       :host([disabled]) .field { opacity: 0.55; cursor: not-allowed; }
       .text:empty { display: none; }
       @media (forced-colors: active) {
-        .box { border: 1px solid ButtonText; background: Field; }
+        .box { border: var(--vui-border-width) solid ButtonText; background: Field; }
         input:checked + .box { background: Highlight; color: HighlightText; }
       }
     `;

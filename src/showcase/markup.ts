@@ -28,6 +28,10 @@ export const showcaseMarkup = `
 
       <section class="category" id="foundation">
         <h2>Foundation</h2>
+        <p class="section-lead">
+          Палитра, семантические цвета и шкала плотности. Компоненты читают одни и те же tokens.
+          Тема и плотность переключаются на панели сверху и меняют этот раздел вместе со страницей.
+        </p>
         <div class="stack-gap">
           <vui-panel heading="Цвета">
             <div class="swatches">
@@ -48,6 +52,7 @@ export const showcaseMarkup = `
               <p class="type-sample" style="font-size: var(--vui-heading-2); margin: 0">Заголовок H2</p>
               <p class="type-sample" style="font-size: var(--vui-heading-3); margin: 0">Заголовок H3</p>
               <p class="type-sample" style="margin: 0">Основной текст интерфейса. Размер и интервалы меняются вместе с плотностью.</p>
+              <p class="type-sample" style="margin: 0; font-size: var(--vui-font-size-sm); color: var(--vui-color-text-muted)">Мелкий текст и подписи.</p>
               <p class="type-sample" style="margin: 0; font-family: var(--vui-font-mono)">const theme = "dark";</p>
             </vui-vstack>
           </vui-panel>
@@ -61,11 +66,13 @@ export const showcaseMarkup = `
           <vui-grid min="14rem" gap="md">
             <vui-panel heading="Интервалы">
               <div class="token-row">
+                <div class="token-chip"><div class="token-bar" style="width: var(--vui-space-2xs)"></div><span>2xs</span></div>
                 <div class="token-chip"><div class="token-bar" style="width: var(--vui-space-xs)"></div><span>xs</span></div>
                 <div class="token-chip"><div class="token-bar" style="width: var(--vui-space-sm)"></div><span>sm</span></div>
                 <div class="token-chip"><div class="token-bar" style="width: var(--vui-space-md)"></div><span>md</span></div>
                 <div class="token-chip"><div class="token-bar" style="width: var(--vui-space-lg)"></div><span>lg</span></div>
                 <div class="token-chip"><div class="token-bar" style="width: var(--vui-space-xl)"></div><span>xl</span></div>
+                <div class="token-chip"><div class="token-bar" style="width: var(--vui-space-2xl)"></div><span>2xl</span></div>
               </div>
             </vui-panel>
             <vui-panel heading="Радиус">
@@ -73,6 +80,14 @@ export const showcaseMarkup = `
                 <div class="radius-box" style="border-radius: var(--vui-radius-sm)"></div>
                 <div class="radius-box" style="border-radius: var(--vui-radius)"></div>
                 <div class="radius-box" style="border-radius: var(--vui-radius-lg)"></div>
+                <div class="radius-box" style="border-radius: var(--vui-radius-full)"></div>
+              </vui-hstack>
+            </vui-panel>
+            <vui-panel heading="Границы">
+              <vui-hstack gap="sm" align="center">
+                <div class="border-sample" style="border-width: var(--vui-border-width)"></div>
+                <div class="border-sample" style="border-width: var(--vui-border-width-strong)"></div>
+                <div class="border-sample" style="border-width: var(--vui-border-width-accent)"></div>
               </vui-hstack>
             </vui-panel>
             <vui-panel heading="Тени">
@@ -81,6 +96,22 @@ export const showcaseMarkup = `
                 <div class="shadow-box" style="box-shadow: var(--vui-shadow-md)"></div>
                 <div class="shadow-box" style="box-shadow: var(--vui-shadow-lg)"></div>
               </vui-hstack>
+            </vui-panel>
+            <vui-panel heading="Движение и слои">
+              <ul class="token-list">
+                <li><code>--vui-duration</code> <code>--vui-easing</code></li>
+                <li><code>--vui-z-dropdown</code> … <code>--vui-z-tooltip</code></li>
+                <li><code>--vui-size-control</code> <code>--vui-row-height</code></li>
+                <li><code>--vui-toolbar-height</code> <code>--vui-statusbar-height</code></li>
+              </ul>
+            </vui-panel>
+            <vui-panel heading="Пороги контейнера">
+              <ul class="token-list">
+                <li><code>--vui-layout-narrow</code> 22rem</li>
+                <li><code>--vui-field-inline</code> 36rem</li>
+                <li><code>--vui-layout-medium</code> 40rem</li>
+                <li><code>--vui-overlay-full</code> 30rem</li>
+              </ul>
             </vui-panel>
           </vui-grid>
         </div>
@@ -91,19 +122,19 @@ export const showcaseMarkup = `
         <div class="stack-gap">
           <vui-panel heading="Stack, HStack, VStack">
             <vui-grid min="16rem" gap="md">
-              <vui-vstack gap="sm">
+              <vui-vstack gap="sm" padding="sm">
                 <div class="box">Сверху</div>
                 <div class="box">Середина</div>
                 <div class="box">Снизу</div>
               </vui-vstack>
-              <vui-hstack gap="sm" align="center">
+              <vui-hstack gap="sm" align="center" justify="space-between">
                 <div class="box">Слева</div>
                 <div class="box">Центр</div>
                 <div class="box">Справа</div>
               </vui-hstack>
             </vui-grid>
-            <pre class="code">&lt;vui-vstack gap="sm"&gt;...&lt;/vui-vstack&gt;
-&lt;vui-hstack gap="sm" align="center"&gt;...&lt;/vui-hstack&gt;</pre>
+            <pre class="code">&lt;vui-vstack gap="sm" padding="sm"&gt;...&lt;/vui-vstack&gt;
+&lt;vui-hstack gap="sm" align="center" justify="space-between"&gt;...&lt;/vui-hstack&gt;</pre>
           </vui-panel>
 
           <vui-panel heading="Grid">
@@ -119,19 +150,56 @@ export const showcaseMarkup = `
           </vui-panel>
 
           <vui-panel heading="Panel">
-            <p style="margin: 0">Панель группирует содержимое и заголовок. Этот блок сам является <code>vui-panel</code>.</p>
-            <pre class="code">&lt;vui-panel heading="Заголовок"&gt;Содержимое&lt;/vui-panel&gt;</pre>
+            <vui-panel heading="Вложенная панель" padding="md" overflow="auto">
+              <p style="margin: 0">Поверхность, граница, радиус и отступ берутся из tokens. <code>padding</code> и <code>overflow</code> — те же имена, что у stack и grid.</p>
+            </vui-panel>
+            <pre class="code">&lt;vui-panel heading="Заголовок" padding="md" overflow="auto"&gt;Содержимое&lt;/vui-panel&gt;</pre>
           </vui-panel>
 
           <vui-panel heading="Split Panel">
-            <vui-split-panel id="layout-split" position="40" label="Разделить панели" style="height: 180px">
-              <div slot="start" class="box">Начало</div>
-              <div slot="end" class="box">Конец. Разделитель двигается мышью и стрелками.</div>
+            <vui-split-panel id="nested-split" position="55" label="Внешняя панель" style="height: 220px">
+              <vui-split-panel id="nested-split-inner" slot="start" orientation="vertical" position="45" min="20" max="80" label="Внутренняя панель">
+                <div slot="start" class="box">Верх</div>
+                <div slot="end" class="box">Низ. Home и End держатся в min и max.</div>
+              </vui-split-panel>
+              <div slot="end" class="box">Внешний конец. Внутренний разделитель его не двигает.</div>
             </vui-split-panel>
-            <pre class="code">&lt;vui-split-panel position="40"&gt;
-  &lt;div slot="start"&gt;Начало&lt;/div&gt;
+            <pre class="code">&lt;vui-split-panel position="55" label="Внешняя панель"&gt;
+  &lt;vui-split-panel slot="start" orientation="vertical" min="20" max="80"&gt;
+    &lt;div slot="start"&gt;Верх&lt;/div&gt;
+    &lt;div slot="end"&gt;Низ&lt;/div&gt;
+  &lt;/vui-split-panel&gt;
   &lt;div slot="end"&gt;Конец&lt;/div&gt;
 &lt;/vui-split-panel&gt;</pre>
+          </vui-panel>
+        </div>
+      </section>
+
+      <section class="category" id="contract">
+        <h2>Component contract</h2>
+        <p class="section-lead">
+          Состояния, фокус, клавиатура, тема, плотность и ширина контейнера — часть одного контракта.
+          Светлая, тёмная, контрастная и системная темы, а также Comfortable, Compact и Dense, не требуют отдельной версии компонента.
+        </p>
+        <div class="stack-gap">
+          <vui-panel heading="Состояния и фокус">
+            <vui-hstack gap="sm" wrap align="center">
+              <vui-button id="contract-primary" variant="primary">Основная</vui-button>
+              <vui-button variant="danger">Опасная</vui-button>
+              <vui-button disabled>Недоступна</vui-button>
+              <vui-input id="contract-input" label="Поле" invalid hint="Проверьте значение" value="bad@"></vui-input>
+            </vui-hstack>
+            <p class="demo-note">Tab переводит фокус на кнопку и поле. Кольцо — <code>:focus-visible</code> и <code>--vui-focus-ring</code>. Disabled выпадает из Tab.</p>
+          </vui-panel>
+          <vui-panel heading="Клавиатура">
+            <vui-tabs id="contract-tabs" label="Контракт вкладок">
+              <vui-tab panel="states" selected>Состояния</vui-tab>
+              <vui-tab panel="keys">Клавиши</vui-tab>
+              <vui-tab panel="layout-tab">Layout</vui-tab>
+              <vui-tab-panel name="states">Вкладки выбираются стрелками, Home и End.</vui-tab-panel>
+              <vui-tab-panel name="keys">Enter и Space активируют кнопку. Escape закрывает dialog, меню и tooltip.</vui-tab-panel>
+              <vui-tab-panel name="layout-tab">Split двигается стрелками. Shift увеличивает шаг.</vui-tab-panel>
+            </vui-tabs>
           </vui-panel>
         </div>
       </section>

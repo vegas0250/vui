@@ -1,35 +1,126 @@
-/* Primitive tokens. Semantic colors live in themes/. Density overrides live in density.css. */
+/*
+  Primitive tokens and component metrics that do not follow density.
+  Semantic colors, shadows, and border width are assigned in themes/.
+  Space, type, radius, control size, and chrome heights are assigned in density.css.
+  @container cannot read var(); component CSS repeats the threshold lengths below.
+*/
 
 :root {
   color-scheme: light;
+
+  /* Palette. Themes reference these names and do not repeat hex values. */
+  --vui-palette-slate-0: #ffffff;
+  --vui-palette-slate-50: #f4f6f8;
+  --vui-palette-slate-100: #f0f3f6;
+  --vui-palette-slate-150: #eef1f4;
+  --vui-palette-slate-300: #d5dde6;
+  --vui-palette-slate-400: #b7c2cf;
+  --vui-palette-slate-600: #5d6b7c;
+  --vui-palette-slate-900: #1c2430;
+  --vui-palette-blue-50: #e8f1fd;
+  --vui-palette-blue-300: #8bb8ff;
+  --vui-palette-blue-350: #8bbbff;
+  --vui-palette-blue-400: #6ea8fe;
+  --vui-palette-blue-500: #4f90ea;
+  --vui-palette-blue-600: #1f6feb;
+  --vui-palette-blue-700: #1a5fd0;
+  --vui-palette-blue-800: #164eab;
+  --vui-palette-red-50: #fdecec;
+  --vui-palette-red-300: #ffb1b1;
+  --vui-palette-red-400: #ff8d8d;
+  --vui-palette-red-600: #c53434;
+  --vui-palette-red-700: #a82b2b;
+  --vui-palette-red-900: #2a0d0d;
+  --vui-palette-green-50: #e7f6ee;
+  --vui-palette-green-300: #7dcea0;
+  --vui-palette-green-700: #1f7a4d;
+  --vui-palette-green-900: #1c3328;
+  --vui-palette-amber-50: #fff6e0;
+  --vui-palette-amber-300: #f0c36a;
+  --vui-palette-amber-800: #8a5a00;
+  --vui-palette-amber-900: #332a16;
+  --vui-palette-ink-50: #e7edf4;
+  --vui-palette-ink-200: #9aa8b8;
+  --vui-palette-ink-400: #526173;
+  --vui-palette-ink-500: #3a4553;
+  --vui-palette-ink-600: #2c343f;
+  --vui-palette-ink-700: #262d37;
+  --vui-palette-ink-800: #1e242c;
+  --vui-palette-ink-900: #161a20;
+  --vui-palette-ink-950: #12161b;
+  --vui-palette-navy-900: #0d1b2e;
+  --vui-palette-info-900: #1c2a3d;
+  --vui-palette-danger-900: #3a2224;
+  --vui-palette-hc-black: #000000;
+  --vui-palette-hc-white: #ffffff;
+  --vui-palette-hc-yellow: #ffff00;
+  --vui-palette-hc-yellow-soft: #fff6a3;
+  --vui-palette-hc-yellow-deep: #e6e600;
+  --vui-palette-hc-red: #ff8080;
+  --vui-palette-hc-red-soft: #ffb3b3;
+  --vui-palette-hc-green: #5dff9f;
+  --vui-palette-hc-amber: #ffd000;
+  --vui-palette-hc-cyan: #80f0ff;
+  --vui-palette-hc-hover: #1a1a1a;
+  --vui-palette-backdrop-light: rgba(20, 28, 38, 0.48);
+  --vui-palette-backdrop-dark: rgba(0, 0, 0, 0.62);
+  --vui-palette-backdrop-hc: rgba(0, 0, 0, 0.86);
+  --vui-palette-shadow-light-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --vui-palette-shadow-light-md: 0 8px 24px rgba(16, 24, 40, 0.12);
+  --vui-palette-shadow-light-lg: 0 16px 48px rgba(16, 24, 40, 0.18);
+  --vui-palette-shadow-dark-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --vui-palette-shadow-dark-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --vui-palette-shadow-dark-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
+
+  /* Typography */
   --vui-font-sans: "Segoe UI", "Segoe UI Variable", system-ui, sans-serif;
   --vui-font-mono: "Cascadia Mono", "Cascadia Code", ui-monospace, Consolas, monospace;
   --vui-font-weight: 400;
   --vui-font-weight-strong: 600;
+
+  /* Motion */
   --vui-duration: 120ms;
   --vui-easing: cubic-bezier(0.2, 0, 0, 1);
+
+  /* Elevation */
   --vui-z-dropdown: 1000;
   --vui-z-sticky: 1100;
   --vui-z-overlay: 1200;
   --vui-z-dialog: 1300;
   --vui-z-toast: 1400;
   --vui-z-tooltip: 1500;
-  --vui-palette-blue-600: #1f6feb;
-  --vui-palette-blue-700: #1a5fd0;
-  --vui-palette-slate-900: #1c2430;
-  --vui-palette-slate-0: #ffffff;
-  /* Container thresholds. @container cannot read var(); component CSS repeats these lengths. */
+
+  /* Shape and stroke. Themes assign --vui-border-width. */
+  --vui-radius-full: 999px;
+  --vui-stroke-width: 1.5px;
+  --vui-border-width-strong: 2px;
+  --vui-border-width-accent: 3px;
+  --vui-focus-offset: 2px;
+
+  /* Container thresholds. Component CSS repeats 22rem, 36rem, 40rem, and 30rem. */
   --vui-layout-narrow: 22rem;
   --vui-layout-medium: 40rem;
   --vui-field-inline: 36rem;
+  --vui-overlay-full: 30rem;
+  --vui-field-label-min: 7rem;
   --vui-field-label-size: 9rem;
   --vui-column-min: 6rem;
   --vui-control-min-inline: 10rem;
+
+  /* Component metrics that stay outside the density scale. */
   --vui-overlay-gutter: max(0.75rem, var(--vui-space-md, 0.75rem));
+  --vui-overlay-max-block: 70dvh;
   --vui-dialog-block: min(85dvh, calc(100dvh - var(--vui-overlay-gutter) * 2));
   --vui-dialog-inline: min(32rem, calc(100vw - var(--vui-overlay-gutter) * 2));
   --vui-dialog-inline-sm: min(24rem, calc(100vw - var(--vui-overlay-gutter) * 2));
   --vui-dialog-inline-lg: min(48rem, calc(100vw - var(--vui-overlay-gutter) * 2));
+  --vui-menu-inline: 12rem;
+  --vui-menu-block: 24rem;
+  --vui-toast-inline: 22rem;
+  --vui-tooltip-inline: 16rem;
+  --vui-list-block: 16rem;
+  --vui-size-separator: 8px;
+  --vui-split-min-block: 8rem;
 }
 
 html[data-vui-scroll-lock],

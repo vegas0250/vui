@@ -1,3 +1,10 @@
+/*
+  Density is the interface scale.
+  Each step sets space, type, radius, and control size.
+  Chrome metrics alias that scale, or are set here when a formula would change the current size.
+  Components read these tokens and do not carry a second density table.
+*/
+
 :root,
 [data-vui-density="comfortable"] {
   --vui-space-2xs: 2px;
@@ -24,7 +31,7 @@
   --vui-statusbar-height: 28px;
   --vui-row-height: 36px;
   --vui-icon-size: 16px;
-  --vui-panel-padding: 16px;
+  --vui-panel-padding: var(--vui-space-lg);
 }
 
 [data-vui-density="compact"] {
@@ -52,7 +59,7 @@
   --vui-statusbar-height: 24px;
   --vui-row-height: 28px;
   --vui-icon-size: 15px;
-  --vui-panel-padding: 12px;
+  --vui-panel-padding: var(--vui-space-lg);
 }
 
 [data-vui-density="dense"] {
@@ -80,5 +87,5 @@
   --vui-statusbar-height: 22px;
   --vui-row-height: 22px;
   --vui-icon-size: 14px;
-  --vui-panel-padding: 8px;
+  --vui-panel-padding: var(--vui-space-lg);
 }

@@ -6,6 +6,7 @@ export abstract class VuiElement extends HTMLElement {
 
   protected readonly shadow: ShadowRoot;
   private rendered = false;
+  private readonly holds = new Map<string, () => void>();
 
   constructor() {
     super();
@@ -53,5 +54,16 @@ export abstract class VuiElement extends HTMLElement {
 
   protected isDisabled(): boolean {
     return this.hasAttribute('disabled');
+  }
+
+  /** Replace a named teardown. `disconnectedCallback` runs every held function once. */
+  protected hold(name: string, dispose: () => void): void {
+    this.holds.get(name)?.();
+    this.holds.set(name, dispose);
+  }
+
+  disconnectedCallback(): void {
+    for (const dispose of this.holds.values()) dispose();
+    this.holds.clear();
   }
 }

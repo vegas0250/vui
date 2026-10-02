@@ -48,7 +48,7 @@ export class VMenuItem extends VuiElement {
       :host(:focus) { background: var(--vui-color-surface-hover); }
       :host(:focus-visible) {
         outline: var(--vui-focus-ring);
-        outline-offset: -2px;
+        outline-offset: calc(var(--vui-focus-offset) * -1);
       }
       :host([disabled]) { opacity: 0.45; cursor: not-allowed; }
       .mark {
@@ -67,8 +67,8 @@ export class VMenuItem extends VuiElement {
         margin-left: auto;
         width: 0.4em;
         height: 0.4em;
-        border-top: 1.5px solid currentColor;
-        border-right: 1.5px solid currentColor;
+        border-top: var(--vui-stroke-width) solid currentColor;
+        border-right: var(--vui-stroke-width) solid currentColor;
         transform: rotate(45deg);
       }
     `;
@@ -182,9 +182,9 @@ export class VMenu extends VuiElement {
         z-index: var(--vui-overlay-z, var(--vui-z-dropdown));
         box-sizing: border-box;
         width: max-content;
-        min-width: min(12rem, calc(100vw - 1rem));
-        max-width: calc(100vw - 1rem);
-        max-height: min(70dvh, 24rem);
+        min-width: min(var(--vui-menu-inline), calc(100vw - var(--vui-overlay-gutter) * 2));
+        max-width: calc(100vw - var(--vui-overlay-gutter) * 2);
+        max-height: min(var(--vui-overlay-max-block), var(--vui-menu-block));
         margin: 0;
         padding: var(--vui-space-2xs);
         overflow: auto;
@@ -224,6 +224,7 @@ export class VMenu extends VuiElement {
   }
 
   disconnectedCallback(): void {
+    super.disconnectedCallback();
     this.unbind?.();
     this.unbind = null;
     this.hide();

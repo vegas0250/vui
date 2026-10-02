@@ -119,11 +119,29 @@ main {
 }
 
 .radius-box,
-.shadow-box {
+.shadow-box,
+.border-sample {
   width: 5rem;
   height: 3rem;
   background: var(--vui-color-surface-raised);
   border: var(--vui-border-width) solid var(--vui-color-border);
+}
+
+.border-sample {
+  background: var(--vui-color-surface);
+  border-style: solid;
+  border-color: var(--vui-color-border-strong);
+}
+
+.token-list {
+  margin: 0;
+  padding-left: var(--vui-space-lg);
+  color: var(--vui-color-text-muted);
+  font-size: var(--vui-font-size-sm);
+}
+
+.token-list li + li {
+  margin-top: var(--vui-space-2xs);
 }
 
 .icon-cell {
@@ -219,7 +237,7 @@ main {
 
 .resize-handle:focus-visible {
   outline: var(--vui-focus-ring);
-  outline-offset: -2px;
+  outline-offset: calc(var(--vui-focus-offset) * -1);
 }
 
 .resize-desktop {

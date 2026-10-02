@@ -3,6 +3,7 @@ import { VuiElement } from '../../core/element';
 import { deepestActiveElement, isWithin } from '../../interaction/focus';
 import { pushOverlay } from '../../interaction/overlay';
 import { reflectStrings } from '../../core/reflect';
+import { readLength } from '../../core/responsive';
 
 let tooltipSeq = 0;
 
@@ -32,7 +33,7 @@ export class VTooltip extends VuiElement {
       .tip {
         position: fixed;
         z-index: var(--vui-overlay-z, var(--vui-z-tooltip));
-        max-width: min(16rem, calc(100vw - var(--vui-overlay-gutter) * 2));
+        max-width: min(var(--vui-tooltip-inline), calc(100vw - var(--vui-overlay-gutter) * 2));
         overflow-wrap: anywhere;
         padding: var(--vui-space-2xs) var(--vui-space-xs);
         border: var(--vui-border-width) solid var(--vui-color-tooltip-border);
@@ -63,6 +64,7 @@ export class VTooltip extends VuiElement {
   }
 
   disconnectedCallback(): void {
+    super.disconnectedCallback();
     this.hide();
   }
 
@@ -98,10 +100,12 @@ export class VTooltip extends VuiElement {
     const rect = this.getBoundingClientRect();
     const placement = this.getAttribute('placement') === 'bottom' ? 'bottom' : 'top';
     const tipRect = tip.getBoundingClientRect();
-    const left = Math.min(Math.max(8, rect.left), window.innerWidth - tipRect.width - 8);
+    const gutter = readLength(this, '--vui-space-sm', 8);
+    const offset = readLength(this, '--vui-space-xs', 4);
+    const left = Math.min(Math.max(gutter, rect.left), window.innerWidth - tipRect.width - gutter);
     tip.style.left = `${left}px`;
-    if (placement === 'bottom') tip.style.top = `${rect.bottom + 6}px`;
-    else tip.style.top = `${Math.max(8, rect.top - tipRect.height - 6)}px`;
+    if (placement === 'bottom') tip.style.top = `${rect.bottom + offset}px`;
+    else tip.style.top = `${Math.max(gutter, rect.top - tipRect.height - offset)}px`;
   }
 
   private hide(): void {

@@ -290,49 +290,56 @@ menu.showAt(x, y);
 
 ## vui-panel
 
-| Attributes | `heading` |
-| Properties | `heading` |
+Нейтральная поверхность: фон, граница, радиус и тень из tokens. Это контейнер, не сценарий приложения.
+
+| Attributes | `heading`, `padding` 2xs \| xs \| sm \| md \| lg \| xl \| 2xl, `overflow` visible \| auto \| hidden \| scroll |
+| Properties | те же |
 | Events | нет |
 | Slots | `header`, содержимое, `footer` |
 | Parts | `panel`, `header`, `title`, `body`, `footer` |
 | Accessibility | заголовок — `h2`, если не подставлен свой `header` |
+| Responsive | `min-width: 0`, `max-width: 100%`. Тело прокручивается, пока `overflow` не задан иначе |
+
+Без `padding` отступ равен `--vui-panel-padding`.
 
 ## vui-stack, vui-hstack, vui-vstack
 
-| Attributes | `gap` 2xs \| xs \| sm \| md \| lg \| xl \| 2xl, `align` start \| center \| end \| stretch \| baseline, `justify` start \| center \| end \| space-between \| space-around, `wrap`, `direction` row \| column |
+| Attributes | `gap` и `padding` 2xs \| xs \| sm \| md \| lg \| xl \| 2xl, `align` start \| center \| end \| stretch \| baseline, `justify` start \| center \| end \| space-between \| space-around, `wrap`, `direction` row \| column, `overflow` visible \| auto \| hidden \| scroll |
 | Properties | те же; `wrap` — boolean |
 | Events | нет |
 | Slots | дети |
 | Keyboard | нет |
 | Responsive | горизонтальный stack переносит детей на ширине до `--vui-layout-narrow` |
 
-`vui-hstack` по умолчанию row, `vui-vstack` и `vui-stack` — column.
+`vui-hstack` по умолчанию row, `vui-vstack` и `vui-stack` — column. Без `padding` отступа нет. Без `overflow` содержимое видимо.
 
 ## vui-grid
 
-| Attributes | `columns` 1–12, `min` (px, rem, em, %), `gap` |
-| Properties | `columns`, `min`, `gap` — строки |
+| Attributes | `columns` 1–12, `min` (px, rem, em, %), `gap`, `padding`, `align`, `justify`, `overflow` |
+| Properties | те же строки |
 | Events | нет |
 | Slots | дети |
 | Responsive | `columns` — максимум. Треки схлопываются через `auto-fit` и `min(100%, ...)` |
 
+`gap`, `padding`, `align`, `justify` и `overflow` значат то же, что у stack.
+
 ## vui-split-panel
 
 ```html
-<vui-split-panel label="Размер" position="40">
+<vui-split-panel label="Размер" position="40" min="15" max="70">
   <div slot="start">Лево</div>
   <div slot="end">Право</div>
 </vui-split-panel>
 ```
 
-| Attributes | `orientation` horizontal \| vertical, `position`, `label` |
-| Properties | `orientation`, `label`, `position` — число от 10 до 90 |
+| Attributes | `orientation` horizontal \| vertical, `position`, `min`, `max`, `label`, `overflow` |
+| Properties | `orientation`, `label`, `overflow`, `position`, `min`, `max`. Числа. Без `min` и `max` позиция остаётся в 10–90 |
 | Events | нет |
 | Slots | `start`, `end` |
-| Parts | `split`, `separator` |
-| Keyboard | стрелки, Shift+стрелки, Home, End |
+| Parts | `split`, `start`, `separator`, `end` |
+| Keyboard | стрелки меняют позицию на 2, Shift — на 10, Home и End — границы `min` и `max` |
 | Accessibility | separator с `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-orientation`, `aria-label` |
-| Responsive | горизонтальная панель складывается уже `--vui-layout-narrow` |
+| Responsive | горизонтальная панель складывается уже `--vui-layout-narrow`. Вложенный split меняет только свою позицию |
 
 ## vui-status-bar
 

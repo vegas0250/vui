@@ -55,7 +55,7 @@ VVStack      → <vui-vstack>
 - Строковое property читает и пишет атрибут. `null` и `undefined` снимают атрибут. Отсутствующий атрибут читается как `''`.
 - Булево property — это наличие атрибута: `true` ставит атрибут, `false` снимает.
 - Запись property меняет атрибут. `attributeChangedCallback` вызывает `sync()`, и компонент рисует состояние заново.
-- Исключения, которые уже были в API, сохранены: `VInput.value` и `VSelect.value` держат текущее значение; `checked` у checkbox и switch; `VDataGrid.columns`, `rows`, `selectedId`; `VSplitPanel.position` — число 10–90; `VDialog.dismissable` означает «можно закрыть снаружи», поэтому `dismissable="false"` выключает закрытие, а отсутствие атрибута оставляет его включённым; `VTreeItem.itemValue` — значение элемента или, если атрибута `value` нет, его `label`.
+- Исключения, которые уже были в API, сохранены: `VInput.value` и `VSelect.value` держат текущее значение; `checked` у checkbox и switch; `VDataGrid.columns`, `rows`, `selectedId`; `VSplitPanel.position`, `min` и `max` — числа, и без своих границ позиция остаётся в 10–90; `VDialog.dismissable` означает «можно закрыть снаружи», поэтому `dismissable="false"` выключает закрытие, а отсутствие атрибута оставляет его включённым; `VTreeItem.itemValue` — значение элемента или, если атрибута `value` нет, его `label`.
 
 Общий механизм — `src/core/reflect.ts`. Свойство не добавляется компоненту, которому оно не нужно. `loading` нет ни у одного текущего компонента, и добавлять его «для единообразия» не нужно.
 
@@ -69,7 +69,17 @@ VVStack      → <vui-vstack>
 
 ### CSS custom properties
 
-Компоненты не публикуют собственные цветовые переменные. Они читают токены темы и плотности. Исключение для раскладки: `vui-split-panel` выставляет `--vui-split` из `position`. Менять эту переменную снаружи не нужно.
+Компоненты не публикуют собственные цветовые переменные. Они читают токены темы и плотности.
+
+Слои:
+
+- primitive (`src/tokens/tokens.css`) — палитра, семьи шрифтов, motion, z-index, пороги `--vui-layout-narrow`, `--vui-layout-medium`, `--vui-field-inline`, `--vui-overlay-full`;
+- semantic (`themes/`) — `--vui-color-*`, `--vui-shadow-*`, `--vui-border-width`, `--vui-focus-ring`. Своя тема переопределяет эти имена. Файлы тем не содержат собственных hex: цвета берутся из палитры;
+- component — высоты chrome и размеры overlay, которые шкала сама не задаёт: `--vui-toolbar-height`, `--vui-statusbar-height`, `--vui-row-height`, `--vui-panel-padding`, `--vui-dialog-*`, `--vui-menu-*`, `--vui-toast-inline`, `--vui-tooltip-inline`.
+
+`--vui-panel-padding` на каждой плотности равен `--vui-space-lg`. `themes/system.css` в тёмной схеме ссылается на те же имена палитры, что и `themes/dark.css`.
+
+Исключение для раскладки: `vui-split-panel` выставляет `--vui-split` из `position`. Менять эту переменную снаружи не нужно. `--vui-layout-*` на host — внутренняя проводка `gap`, `padding`, `align`, `justify` и `overflow`.
 
 ## Контракт Web Component
 
@@ -128,7 +138,7 @@ ARIA ставится только на фактическое состояни�
 | File tree | Arrow Up/Down/Left/Right, Home, End, PageUp, PageDown, Enter, Space. Ctrl/Cmd+C копирует значение пункта |
 | Data grid | Arrow Up/Down/Left/Right, Home, End, PageUp, PageDown. Скрытая вторичная колонка пропускается. Ctrl/Cmd+C копирует текст ячейки |
 | Menu | Arrow Up/Down, Home, End, PageUp, PageDown, Arrow Right открывает вложенное меню, Arrow Left закрывает его, Enter и Space выполняют пункт, Escape и Tab закрывают |
-| Split panel | стрелки меняют `position` на 2, Shift — на 10, Home = 10, End = 90 |
+| Split panel | стрелки меняют `position` на 2, Shift — на 10, Home и End ставят границы `min` и `max` (по умолчанию 10 и 90) |
 
 Alert, toast, panel, stack, grid и status bar клавиатурного поведения сверх обычного Tab не добавляют. У toast есть кнопка закрытия.
 
@@ -215,7 +225,8 @@ Active descendant остаётся только у `vui-select`: фокус де
 
 - `--vui-layout-narrow` — 22rem;
 - `--vui-layout-medium` — 40rem;
-- `--vui-field-inline` — 36rem.
+- `--vui-field-inline` — 36rem;
+- `--vui-overlay-full` — 30rem, полноэкранный dialog. `@media` повторяет эту длину, потому что не читает `var()`.
 
 `@container` не умеет читать `var()`, поэтому в CSS компонентов те же длины записаны явно. JavaScript читает токены через `inlineThreshold()`.
 
@@ -230,7 +241,7 @@ Active descendant остаётся только у `vui-select`: фокус де
 
 ## Theme
 
-Цвета интерфейса задаются семантическими токенами, не литералами в компоненте.
+Цвета интерфейса задаются семантическими токенами. Hex живёт в primitive palette. Компонент не содержит литералов цвета.
 
 ```html
 <html data-vui-theme="light | dark | high-contrast | system">
@@ -252,7 +263,7 @@ Active descendant остаётся только у `vui-select`: фокус де
 <html data-vui-density="comfortable | compact | dense">
 ```
 
-Плотность меняет токены размера: `--vui-size-control`, `--vui-space-*`, `--vui-font-size*`, `--vui-row-height`, `--vui-toolbar-height`, `--vui-statusbar-height`, `--vui-panel-padding`, `--vui-icon-size`, радиусы. Компонент эти токены читает и для другой плотности не переписывается. По умолчанию — `comfortable`.
+Плотность меняет токены размера: `--vui-size-control`, `--vui-space-*`, `--vui-font-size*`, `--vui-row-height`, `--vui-toolbar-height`, `--vui-statusbar-height`, `--vui-panel-padding`, `--vui-icon-size`, радиусы. `--vui-panel-padding` — это `--vui-space-lg`. Остальные высоты chrome заданы в `density.css` один раз на шаг шкалы. Компонент эти токены читает и для другой плотности не переписывается. По умолчанию — `comfortable`.
 
 ## Матрица качества
 

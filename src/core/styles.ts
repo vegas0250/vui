@@ -1,3 +1,5 @@
+export { applyAlign, applyJustify, applyOverflow, applySpace, flexAlign, flexJustify, layoutOverflow, tokenGap } from './layout';
+
 const sheets = new Map<string, CSSStyleSheet>();
 
 export const baseStyles = `
@@ -64,7 +66,7 @@ export const fieldStyles = `
 @container vui-field (min-width: 36rem) {
   .field {
     display: grid;
-    grid-template-columns: minmax(7rem, var(--vui-field-label-size)) minmax(0, 1fr);
+    grid-template-columns: minmax(var(--vui-field-label-min), var(--vui-field-label-size)) minmax(0, 1fr);
     column-gap: var(--vui-space-md);
     row-gap: var(--vui-space-2xs);
     align-items: center;
@@ -124,30 +126,3 @@ button {
 }
 `;
 
-export function tokenGap(value: string | null, fallback = 'var(--vui-space-md)'): string {
-  const gaps: Record<string, string> = {
-    '2xs': 'var(--vui-space-2xs)',
-    xs: 'var(--vui-space-xs)',
-    sm: 'var(--vui-space-sm)',
-    md: 'var(--vui-space-md)',
-    lg: 'var(--vui-space-lg)',
-    xl: 'var(--vui-space-xl)',
-    '2xl': 'var(--vui-space-2xl)',
-  };
-  if (!value) return fallback;
-  return gaps[value] ?? fallback;
-}
-
-export function flexAlign(value: string | null, fallback: string): string {
-  if (value === 'start') return 'flex-start';
-  if (value === 'end') return 'flex-end';
-  if (value === 'center' || value === 'stretch' || value === 'baseline') return value;
-  return fallback;
-}
-
-export function flexJustify(value: string | null): string {
-  if (value === 'start') return 'flex-start';
-  if (value === 'end') return 'flex-end';
-  if (value === 'center' || value === 'space-between' || value === 'space-around') return value;
-  return 'flex-start';
-}

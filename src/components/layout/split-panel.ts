@@ -1,5 +1,6 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
+import { applyOverflow } from '../../core/layout';
 import { reflectStrings } from '../../core/reflect';
 import { inlineThreshold, observeInlineSize } from '../../core/responsive';
 import { trackPointer } from '../../interaction/pointer';
@@ -7,13 +8,11 @@ import { trackPointer } from '../../interaction/pointer';
 export class VSplitPanel extends VuiElement {
   declare orientation: string;
   declare label: string;
+  declare overflow: string;
 
   static get observedAttributes(): string[] {
-    return ['orientation', 'position', 'label'];
+    return ['orientation', 'position', 'label', 'min', 'max', 'overflow'];
   }
-
-  private stopWatch: (() => void) | null = null;
-  private releasePointer: (() => void) | null = null;
 
   protected template(): string {
     return `
@@ -27,7 +26,12 @@ export class VSplitPanel extends VuiElement {
 
   protected componentStyles(): string {
     return `
-      :host { display: block; min-width: 0; max-width: 100%; min-height: 8rem; }
+      :host {
+        display: block;
+        min-width: 0;
+        max-width: 100%;
+        min-height: var(--vui-split-min-block);
+      }
       :host([data-stacked]) .split { flex-direction: column; }
       :host([data-stacked]) .sep { cursor: row-resize; }
       :host([data-stacked]) .sep::before {
@@ -42,11 +46,15 @@ export class VSplitPanel extends VuiElement {
         min-height: inherit;
       }
       :host([orientation="vertical"]) .split { flex-direction: column; }
-      .pane { min-width: 0; min-height: 0; overflow: auto; }
+      .pane {
+        min-width: 0;
+        min-height: 0;
+        overflow: var(--vui-layout-overflow, auto);
+      }
       .start { flex: 0 0 var(--vui-split, 50%); }
       .end { flex: 1 1 auto; }
       .sep {
-        flex: 0 0 8px;
+        flex: 0 0 var(--vui-size-separator);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -67,23 +75,18 @@ export class VSplitPanel extends VuiElement {
       }
       .sep:focus-visible {
         outline: var(--vui-focus-ring);
-        outline-offset: -2px;
+        outline-offset: calc(var(--vui-focus-offset) * -1);
       }
     `;
   }
 
   protected afterRender(): void {
-    const sep = this.separator;
-    this.releasePointer = trackPointer(sep, {
-      onStart: (event) => this.updateFromPointer(event),
-      onMove: (drag) => this.updateFromPointer(drag.current),
-    });
-    sep.addEventListener('keydown', (event) => {
+    this.separator.addEventListener('keydown', (event) => {
       const step = event.shiftKey ? 10 : 2;
       if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') this.position -= step;
       else if (event.key === 'ArrowRight' || event.key === 'ArrowDown') this.position += step;
-      else if (event.key === 'Home') this.position = 10;
-      else if (event.key === 'End') this.position = 90;
+      else if (event.key === 'Home') this.position = Math.min(this.min, this.max);
+      else if (event.key === 'End') this.position = Math.max(this.min, this.max);
       else return;
       event.preventDefault();
     });
@@ -92,18 +95,25 @@ export class VSplitPanel extends VuiElement {
   override connectedCallback(): void {
     super.connectedCallback();
     this.watchSize();
-  }
-
-  disconnectedCallback(): void {
-    this.releasePointer?.();
-    this.releasePointer = null;
-    this.stopWatch?.();
-    this.stopWatch = null;
+    this.bindPointer();
   }
 
   private watchSize(): void {
-    this.stopWatch?.();
-    this.stopWatch = observeInlineSize(this, () => this.applyStack());
+    this.hold('size', observeInlineSize(this, () => this.applyStack()));
+  }
+
+  private bindPointer(): void {
+    const sep = this.separator;
+    this.hold(
+      'pointer',
+      trackPointer(sep, {
+        onStart: (event) => {
+          event.stopPropagation();
+          this.updateFromPointer(event);
+        },
+        onMove: (drag) => this.updateFromPointer(drag.current),
+      }),
+    );
   }
 
   private get stacked(): boolean {
@@ -125,39 +135,83 @@ export class VSplitPanel extends VuiElement {
   }
 
   protected sync(): void {
+    this.clampPosition();
     const vertical = this.getAttribute('orientation') === 'vertical' || this.stacked;
     this.separator.setAttribute('aria-orientation', vertical ? 'horizontal' : 'vertical');
-    this.separator.setAttribute('aria-valuemin', '10');
-    this.separator.setAttribute('aria-valuemax', '90');
+    const low = Math.min(this.min, this.max);
+    const high = Math.max(this.min, this.max);
+    this.separator.setAttribute('aria-valuemin', String(low));
+    this.separator.setAttribute('aria-valuemax', String(high));
     this.separator.setAttribute('aria-valuenow', String(this.position));
     this.separator.setAttribute('aria-label', this.getAttribute('label') ?? 'Resize');
     this.style.setProperty('--vui-split', `${this.position}%`);
+    applyOverflow(this, this.getAttribute('overflow'), 'auto');
   }
 
   private get separator(): HTMLElement {
     return this.qs<HTMLElement>('.sep');
   }
 
+  get min(): number {
+    return this.limit('min', 10);
+  }
+
+  set min(value: number) {
+    this.setAttribute('min', String(this.limitValue(value, 10)));
+  }
+
+  get max(): number {
+    return this.limit('max', 90);
+  }
+
+  set max(value: number) {
+    this.setAttribute('max', String(this.limitValue(value, 90)));
+  }
+
   get position(): number {
     const value = Number(this.getAttribute('position') ?? 50);
-    if (!Number.isFinite(value)) return 50;
-    return Math.min(90, Math.max(10, value));
+    if (!Number.isFinite(value)) return this.bound(50);
+    return this.bound(value);
   }
 
   set position(value: number) {
-    const next = Math.round(Math.min(90, Math.max(10, Number(value))));
-    this.setAttribute('position', String(Number.isFinite(next) ? next : 50));
+    const next = Math.round(this.bound(Number.isFinite(value) ? value : 50));
+    this.setAttribute('position', String(next));
+  }
+
+  private clampPosition(): void {
+    if (!this.hasAttribute('position')) return;
+    const raw = Number(this.getAttribute('position'));
+    const next = Math.round(this.bound(Number.isFinite(raw) ? raw : 50));
+    if (this.getAttribute('position') !== String(next)) this.setAttribute('position', String(next));
+  }
+
+  private limit(name: 'min' | 'max', fallback: number): number {
+    const raw = this.getAttribute(name);
+    if (raw == null || raw.trim() === '') return fallback;
+    return this.limitValue(Number(raw), fallback);
+  }
+
+  private limitValue(value: number, fallback: number): number {
+    if (!Number.isFinite(value)) return fallback;
+    return Math.min(100, Math.max(0, Math.round(value)));
+  }
+
+  private bound(value: number): number {
+    const low = Math.min(this.min, this.max);
+    const high = Math.max(this.min, this.max);
+    return Math.min(high, Math.max(low, value));
   }
 
   private updateFromPointer(event: PointerEvent): void {
     const rect = this.getBoundingClientRect();
     const vertical = this.getAttribute('orientation') === 'vertical' || this.stacked;
-    const ratio = vertical
-      ? (event.clientY - rect.top) / rect.height
-      : (event.clientX - rect.left) / rect.width;
+    const size = vertical ? rect.height : rect.width;
+    if (size <= 0) return;
+    const ratio = vertical ? (event.clientY - rect.top) / size : (event.clientX - rect.left) / size;
     this.position = ratio * 100;
   }
 }
 
-reflectStrings(VSplitPanel, ['orientation', 'label']);
+reflectStrings(VSplitPanel, ['orientation', 'label', 'overflow']);
 defineElement('vui-split-panel', VSplitPanel);

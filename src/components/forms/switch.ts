@@ -66,18 +66,18 @@ export class VSwitch extends VuiElement {
         position: relative;
         width: calc(var(--vui-size-control) * 1.2);
         height: calc(var(--vui-size-control) * 0.66);
-        border-radius: 999px;
+        border-radius: var(--vui-radius-full);
         border: var(--vui-border-width) solid var(--vui-color-border-strong);
         background: var(--vui-color-surface-sunken);
         flex: 0 0 auto;
       }
       .thumb {
         position: absolute;
-        top: 2px;
-        left: 2px;
-        width: calc(var(--vui-size-control) * 0.66 - 6px);
-        height: calc(var(--vui-size-control) * 0.66 - 6px);
-        border-radius: 50%;
+        top: var(--vui-space-2xs);
+        left: var(--vui-space-2xs);
+        width: calc(var(--vui-size-control) * 0.66 - (var(--vui-space-2xs) + var(--vui-border-width)) * 2);
+        height: calc(var(--vui-size-control) * 0.66 - (var(--vui-space-2xs) + var(--vui-border-width)) * 2);
+        border-radius: var(--vui-radius-full);
         background: var(--vui-color-text-muted);
         transition: transform var(--vui-duration) var(--vui-easing), background var(--vui-duration) var(--vui-easing);
       }
@@ -96,7 +96,7 @@ export class VSwitch extends VuiElement {
       :host([disabled]) .field { opacity: 0.55; cursor: not-allowed; }
       .text:empty { display: none; }
       @media (forced-colors: active) {
-        .track { border: 1px solid ButtonText; background: Field; }
+        .track { border: var(--vui-border-width) solid ButtonText; background: Field; }
         .thumb { background: ButtonText; }
         input:checked + .track { background: Highlight; }
         input:checked + .track .thumb { background: HighlightText; }

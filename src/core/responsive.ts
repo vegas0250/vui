@@ -11,10 +11,14 @@ export function lengthToPx(value: string, fallback: number): number {
   return amount * base;
 }
 
-export function inlineThreshold(element: Element, token = '--vui-layout-narrow', fallback = 352): number {
+export function readLength(element: Element, token: string, fallback: number): number {
   const raw = getComputedStyle(element).getPropertyValue(token).trim();
   if (!raw) return fallback;
   return lengthToPx(raw, fallback);
+}
+
+export function inlineThreshold(element: Element, token = '--vui-layout-narrow', fallback = 352): number {
+  return readLength(element, token, fallback);
 }
 
 export function observeInlineSize(element: Element, onChange: (width: number) => void): () => void {

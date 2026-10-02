@@ -4,6 +4,7 @@ import { emitChange } from '../../core/events';
 import { nextEnabled } from '../../interaction/keyboard';
 import { pushOverlay } from '../../interaction/overlay';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
+import { readLength } from '../../core/responsive';
 import { controlStyles, fieldStyles } from '../../core/styles';
 
 const chevron = `
@@ -133,7 +134,7 @@ export class VSelect extends VuiElement {
         margin: 0;
         padding: var(--vui-space-2xs);
         list-style: none;
-        max-height: 16rem;
+        max-height: var(--vui-list-block);
         overflow: auto;
         background: var(--vui-color-surface-raised);
         color: var(--vui-color-text);
@@ -182,6 +183,7 @@ export class VSelect extends VuiElement {
   }
 
   disconnectedCallback(): void {
+    super.disconnectedCallback();
     this.close();
     this.observer?.disconnect();
   }
@@ -274,8 +276,8 @@ export class VSelect extends VuiElement {
   private position(): void {
     const rect = this.trigger.getBoundingClientRect();
     const list = this.listbox;
-    const margin = 4;
-    const gutter = 8;
+    const margin = readLength(this, '--vui-space-xs', 4);
+    const gutter = readLength(this, '--vui-space-sm', 8);
     const width = Math.max(0, Math.min(rect.width, window.innerWidth - gutter * 2));
     const left = Math.min(Math.max(gutter, rect.left), Math.max(gutter, window.innerWidth - width - gutter));
     list.style.left = `${left}px`;

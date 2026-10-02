@@ -1,12 +1,15 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
+import { applyOverflow, applySpace } from '../../core/layout';
 import { reflectStrings } from '../../core/reflect';
 
 export class VPanel extends VuiElement {
   declare heading: string;
+  declare padding: string;
+  declare overflow: string;
 
   static get observedAttributes(): string[] {
-    return ['heading'];
+    return ['heading', 'padding', 'overflow'];
   }
 
   protected template(): string {
@@ -30,9 +33,14 @@ export class VPanel extends VuiElement {
         border: var(--vui-border-width) solid var(--vui-color-border);
         border-radius: var(--vui-radius-lg);
         box-shadow: var(--vui-shadow-sm);
+        min-width: 0;
+        max-width: 100%;
       }
-      header, .body, footer { padding: var(--vui-panel-padding); min-width: 0; }
-      .body { overflow: auto; }
+      header, .body, footer {
+        padding: var(--vui-layout-padding, var(--vui-panel-padding));
+        min-width: 0;
+      }
+      .body { overflow: var(--vui-layout-overflow, auto); }
       header {
         border-bottom: var(--vui-border-width) solid var(--vui-color-border);
       }
@@ -64,8 +72,12 @@ export class VPanel extends VuiElement {
     const footer = this.qs('footer');
     header.classList.toggle('hidden', !heading && headerSlot.assignedNodes({ flatten: true }).length === 0);
     footer.classList.toggle('hidden', footerSlot.assignedNodes({ flatten: true }).length === 0);
+    const padding = this.getAttribute('padding');
+    if (padding) applySpace(this, '--vui-layout-padding', padding, 'var(--vui-panel-padding)');
+    else this.style.removeProperty('--vui-layout-padding');
+    applyOverflow(this, this.getAttribute('overflow'), 'auto');
   }
 }
 
-reflectStrings(VPanel, ['heading']);
+reflectStrings(VPanel, ['heading', 'padding', 'overflow']);
 defineElement('vui-panel', VPanel);

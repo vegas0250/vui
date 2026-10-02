@@ -24,15 +24,15 @@ TypeScript, Custom Elements, DOM, CSS custom properties, Vite, Vitest, Playwrigh
 ```text
 src/components/{foundation,layout,actions,forms,feedback,overlay,navigation,data,desktop}
 src/categories/     точки входа категорий
-src/core/           VuiElement, defineElement, reflect, общие стили, события, responsive
+src/core/           VuiElement, defineElement, reflect, layout, общие стили, события, responsive
 src/interaction/    focus, keyboard, selection, commands, shortcuts, overlay, context menu, drag & drop, clipboard, pointer
 src/icons/          реестр иконок
 src/theme/          setTheme, setDensity, установка стилей
-src/tokens/         примитивные токены и плотность
+src/tokens/         primitive tokens, пороги контейнера, плотность
 src/showcase/       разметка и поведение showcase
 themes/             light, dark, high-contrast, system
 tests/unit          vitest
-tests/e2e           playwright: showcase, responsive, a11y, visual
+tests/e2e           playwright: showcase, foundation, responsive, a11y, visual
 index.html          оболочка showcase
 visual.html         стенд visual regression и accessibility
 ARCHITECTURE.md     публичный архитектурный контракт
@@ -80,7 +80,33 @@ VHStack         → <vui-hstack>
 VVStack         → <vui-vstack>
 ```
 
-`VuiElement` — внутренний базовый класс, не custom element. `VuiTheme` и `VuiDensity` — типы API темы, не компоненты. Части, которые не являются самостоятельными элементами, остаются в модуле родителя: `VOption` → `vui-option`, `VTab` → `vui-tab`, `VTabPanel` → `vui-tab-panel`, `VTreeItem` → `vui-tree-item`, `VToaster` → `vui-toaster`.
+`VuiElement` — внутренний базовый класс, не custom element. Он держит открытый shadow, один шаблон на первое подключение, `sync()` и `hold(name, dispose)` для снятия слушателей в `disconnectedCallback`. `VuiTheme` и `VuiDensity` — типы API темы, не компоненты. Части, которые не являются самостоятельными элементами, остаются в модуле родителя: `VOption` → `vui-option`, `VTab` → `vui-tab`, `VTabPanel` → `vui-tab-panel`, `VTreeItem` → `vui-tree-item`, `VToaster` → `vui-toaster`.
+
+## Foundation
+
+Новый компонент наследует правила в этом порядке: Foundation → Component Contract → Accessibility → Responsive → Density / Theme → Layout → Component.
+
+Tokens разделены на три слоя:
+
+- primitive — палитра, шрифтовые семьи, motion, z-index, пороги контейнера (`src/tokens/tokens.css`);
+- semantic — цвета, тени, `--vui-border-width`, `--vui-focus-ring` (`themes/`);
+- component — только там, где шкала сама не выражает размер: `--vui-toolbar-height`, `--vui-statusbar-height`, `--vui-row-height`, `--vui-icon-size`, `--vui-panel-padding`, размеры dialog, menu, toast, tooltip и split.
+
+`--vui-panel-padding` равен `--vui-space-lg` на каждой плотности. Высоты toolbar, status bar, строки и иконки задаёт density, не CSS компонента. Своя тема переопределяет semantic tokens, а не палитру и не имена.
+
+## Component Contract
+
+Публичный контракт компонента — attributes, properties, methods, events, slots, CSS parts и общие tokens. Внутренние классы shadow и `--vui-layout-*` контрактом не являются. Исключение раскладки: `vui-split-panel` выставляет `--vui-split` из `position`.
+
+- Класс и custom element — одна сущность. Декларативный API — HTML.
+- Строка отражает атрибут. Boolean — наличие атрибута. `sync()` приводит DOM к атрибутам.
+- События — стандартные `click`, `input`, `change`, `close`, пока стандартного имени хватает.
+- `disabled` — нативный контрол и выход из Tab. `invalid` — `aria-invalid` и `--vui-color-danger`.
+- Фокус виден через `:focus-visible` и `--vui-focus-ring`. ARIA не дублирует нативный элемент.
+- Тема и плотность читаются только через tokens. Компонент не ветвится по имени темы.
+- Responsive читает ширину контейнера. Пороги не зависят от темы и плотности.
+
+Общий словарь layout (`src/core/layout.ts`): `gap`, `padding`, `align`, `justify`, `overflow`. Значения шага — `2xs|xs|sm|md|lg|xl|2xl`. `align` — `start|center|end|stretch|baseline`. `justify` — `start|center|end|space-between|space-around`. `overflow` — `visible|auto|hidden|scroll`. Свойство, которого у компонента нет, не добавляется ради симметрии.
 
 ## Responsive
 
@@ -95,7 +121,7 @@ Responsive — часть компонента, отдельно от темы �
 - `--vui-layout-narrow` (22rem) — перенос ряда stack, складывание split, status bar
 - `--vui-layout-medium` (40rem) — группы toolbar в столбец, вторичные колонки data-grid
 - `--vui-field-inline` (36rem) — подпись рядом с контролом; иначе подпись, контрол и hint столбиком
-- `--vui-column-min`, `--vui-field-label-size`, `--vui-dialog-inline*`, `--vui-dialog-block`, `--vui-overlay-gutter`
+- `--vui-column-min`, `--vui-field-label-min`, `--vui-field-label-size`, `--vui-dialog-inline*`, `--vui-dialog-block`, `--vui-overlay-gutter`, `--vui-overlay-full` (30rem)
 
 `@container` не читает `var()`. CSS компонентов повторяет 22rem, 36rem и 40rem. JavaScript читает токены через `inlineThreshold()`.
 
@@ -108,7 +134,7 @@ Responsive — часть компонента, отдельно от темы �
 - `vui-hstack` и ряд `vui-stack` переносятся, когда host не шире `--vui-layout-narrow`.
 - `vui-split-panel` ставит `data-stacked` ниже этого порога, если нет `orientation="vertical"`. Перетаскивание идёт по сложенной оси.
 - `vui-data-grid` прокручивается по горизонтали. `priority: "secondary"` скрывает колонку на ширине не больше `--vui-layout-medium`, и клавиатура её пропускает.
-- `vui-dialog` ограничен viewport, прокручивает тело и на ширине до 30rem занимает весь экран.
+- `vui-dialog` ограничен viewport, прокручивает тело и на ширине до 30rem (`--vui-overlay-full`) занимает весь экран. В `@media` длина записана явно.
 - `vui-status-bar`, `vui-panel`, `vui-file-tree`, `vui-alert` и `vui-toast` сжимаются и переносятся, а не растягивают страницу.
 
 `prefers-reduced-motion` задан в общих базовых стилях. Не кодируйте responsive-размеры так, будто 1 CSS-пиксель — это пиксель устройства. Новый компонент определяет API, тему, плотность, responsive и accessibility вместе.
@@ -121,9 +147,9 @@ Responsive — часть компонента, отдельно от темы �
 <html data-vui-theme="light|dark|high-contrast|system" data-vui-density="comfortable|compact|dense">
 ```
 
-`system` использует `prefers-color-scheme`. Тёмные значения в `themes/system.css` совпадают с `themes/dark.css`.
+`system` использует `prefers-color-scheme`. Тёмная ветка `themes/system.css` ссылается на те же primitive palette names, что и `themes/dark.css`.
 
-Компоненты берут семантические токены (`--vui-color-*`, `--vui-space-*`, `--vui-size-control`, `--vui-font-*`, `--vui-radius*`, `--vui-shadow-*`, `--vui-z-*`, `--vui-toolbar-height`, `--vui-statusbar-height`, `--vui-row-height`). Не зашивайте цвета в CSS компонента. Своя тема переопределяет те же custom properties.
+Компоненты берут semantic и component tokens (`--vui-color-*`, `--vui-space-*`, `--vui-size-control`, `--vui-font-*`, `--vui-radius*`, `--vui-shadow-*`, `--vui-border-width`, `--vui-z-*`, `--vui-toolbar-height`, `--vui-statusbar-height`, `--vui-row-height`). Не зашивайте цвета, отступы и радиусы в CSS компонента, если token уже есть. Своя тема переопределяет те же semantic properties. Плотность — шкала интерфейса: controls, spacing, gaps, toolbar, panel, status bar и строки data-grid. Компонент не хранит свою таблицу плотности.
 
 Импорт любого компонента вызывает `installVuiStyles()`, который добавляет один тег `#vui-styles`. Исходные CSS-файлы остаются пригодными сами по себе.
 
@@ -142,10 +168,10 @@ Responsive — часть компонента, отдельно от темы �
 - `vui-tooltip`: `text`, `placement` top|bottom. Показ по hover и focus, скрытие по Escape. Пока подсказка видна, у сфокусированного контрола стоит `aria-describedby` на `role="tooltip"`.
 - `vui-alert`: `variant` info|success|warning|danger, `closable`, `close-label`.
 - `vui-toast`: `variant`, `heading`, `duration` (`0` не скрывает сам). `toast({ title, message, variant, duration })` использует или создаёт `vui-toaster`.
-- `vui-panel`: `heading`. Слоты по умолчанию, `header`, `footer`.
-- `vui-stack` / `vui-hstack` / `vui-vstack`: `gap` 2xs|xs|sm|md|lg|xl|2xl, `align`, `justify`, `wrap`, `direction`.
-- `vui-grid`: `columns` 1–12 или `min` как длина (`px|rem|em|%`), `gap`. `columns` — наибольшее число колонок; треки схлопываются, когда контейнер уже.
-- `vui-split-panel`: `orientation` horizontal|vertical, `position` 10–90, `label`. Слоты `start`, `end`. Разделитель доступен с клавиатуры. Горизонтальный split складывается ниже `--vui-layout-narrow`.
+- `vui-panel`: `heading`, `padding`, `overflow`. Слоты по умолчанию, `header`, `footer`. Поверхность, граница и радиус — tokens. Без `padding` отступ равен `--vui-panel-padding`.
+- `vui-stack` / `vui-hstack` / `vui-vstack`: `gap`, `padding`, `align`, `justify`, `wrap`, `direction`, `overflow`.
+- `vui-grid`: `columns` 1–12 или `min` как длина (`px|rem|em|%`), `gap`, `padding`, `align`, `justify`, `overflow`. `columns` — наибольшее число колонок; треки схлопываются, когда контейнер уже.
+- `vui-split-panel`: `orientation` horizontal|vertical, `position`, `min`, `max`, `label`, `overflow`. Без `min`/`max` позиция остаётся в 10–90. Слоты `start`, `end`. Разделитель доступен с клавиатуры. Горизонтальный split складывается ниже `--vui-layout-narrow`. Вложенные панели двигаются независимо.
 - `vui-toolbar`: `label`, `wrap`. Слоты `start`, по умолчанию, `end`. На ширине до 40rem каждая группа занимает свою строку. `wrap` по-прежнему включает перенос на любой ширине.
 - `vui-status-bar`: `label`. Слоты по умолчанию, `end`.
 - `vui-file-tree`: `label`. `vui-tree-item`: `label`, `kind` file|folder, `expanded`, `selected`, `value`. Стрелки, Home, End, Enter, Space. `change` и `selectedItem`.
@@ -153,7 +179,7 @@ Responsive — часть компонента, отдельно от темы �
 
 `columns`: `{ key, title, width?, align?, priority? }`. `priority` — `primary` или `secondary`. `rows`: `{ id, [key]: string }`. `width` принимает только простую длину.
 
-Строковые и булевы attributes отражаются в properties с тем же именем через `src/core/reflect.ts`. Не добавляйте второй атрибут с тем же смыслом. `VInput.value` и `VSelect.value` хранят живое значение. `checked` остаётся у checkbox и switch. `VDialog.dismissable` инвертирован относительно голого boolean: отсутствие атрибута значит, что закрыть можно, `dismissable="false"` — нельзя. `VSplitPanel.position` — число от 10 до 90. `VTreeItem.itemValue` подставляет `label`, если своего `value` нет. Полный каталог: `docs/components.md`.
+Строковые и булевы attributes отражаются в properties с тем же именем через `src/core/reflect.ts`. Не добавляйте второй атрибут с тем же смыслом. `VInput.value` и `VSelect.value` хранят живое значение. `checked` остаётся у checkbox и switch. `VDialog.dismissable` инвертирован относительно голого boolean: отсутствие атрибута значит, что закрыть можно, `dismissable="false"` — нельзя. `VSplitPanel.position`, `min` и `max` — числа. Без своих `min` и `max` позиция ограничена 10–90. `VTreeItem.itemValue` подставляет `label`, если своего `value` нет. Полный каталог: `docs/components.md`.
 
 `src/interaction/overlay.ts` — единственный стек overlay (`popup`, `modal`, `toast`, `tooltip`): z-index, Escape, указатель снаружи, возврат фокуса, блокировка прокрутки, вложенные слои и группы. `src/core/overlay.ts` его реэкспортирует. Dialog, select, tooltip, toaster и menu регистрируются в нём. Не заводите второй менеджер Escape или z-index. Tab внутри `vui-dialog` по-прежнему удерживает нативный `<dialog>`. Фокус — `src/interaction/focus.ts`, клавиатура списков — `src/interaction/keyboard.ts`, выбор — `SelectionModel`. Команды и shortcuts не глобальные.
 
@@ -169,11 +195,11 @@ Shadow DOM открытый. У layout-компонентов на host стои
 
 ## Showcase
 
-`pnpm dev` отдаёт `index.html`. Страница собрана из элементов VUI. У каждого реализованного компонента там есть рабочий пример. Без примера компонент не считается готовым. Переключатели темы и плотности вызывают `setTheme` и `setDensity`. В разделе Responsive Design есть пресеты wide, medium и narrow и ручка изменения ширины. Табло показывает текущие тему, плотность и ширину контейнера.
+`pnpm dev` отдаёт `index.html`. Страница собрана из элементов VUI и показывает Foundation, темы, плотность, Layout, контракт компонента и Responsive Design. У каждого реализованного компонента там есть рабочий пример. Без примера компонент не считается готовым. Переключатели темы и плотности вызывают `setTheme` и `setDensity`. В разделе Responsive Design есть пресеты wide, medium и narrow и ручка изменения ширины. Табло показывает текущие тему, плотность и ширину контейнера.
 
 ## Тесты
 
-Vitest + happy-dom: `tests/unit`. Покрывайте границы регистрации, карту `V*` ↔ `vui-*`, отражённые properties, стек overlay, возврат фокуса dialog, клавиатуру, interaction primitives, установку темы, регистрацию иконок и responsive-правила, которым не нужна реальная раскладка. Playwright: `tests/e2e/showcase.spec.ts`, `tests/e2e/responsive.spec.ts`, `tests/e2e/a11y.spec.ts`, `tests/e2e/interaction.spec.ts` и `tests/e2e/visual.spec.ts`. Визуальные baseline — четыре сочетания темы, плотности и viewport плюс кадры hover, focus, dialog и меню. Не умножайте снимки на все комбинации. Большой набор тестов не заменяет showcase. Архитектура — в `ARCHITECTURE.md`, граница платформы — в `PLATFORM.md`, процесс компонента — в `CONTRIBUTING.md`.
+Vitest + happy-dom: `tests/unit`. Покрывайте границы регистрации, карту `V*` ↔ `vui-*`, отражённые properties, tokens, layout, стек overlay, возврат фокуса dialog, клавиатуру, interaction primitives, установку темы, регистрацию иконок и responsive-правила, которым не нужна реальная раскладка. Playwright: `tests/e2e/showcase.spec.ts`, `tests/e2e/responsive.spec.ts`, `tests/e2e/foundation.spec.ts`, `tests/e2e/a11y.spec.ts`, `tests/e2e/interaction.spec.ts` и `tests/e2e/visual.spec.ts`. Визуальные baseline — четыре сочетания темы, плотности и viewport плюс кадры hover, focus, dialog и меню. Не умножайте снимки на все комбинации. Большой набор тестов не заменяет showcase. Архитектура — в `ARCHITECTURE.md`, граница платформы — в `PLATFORM.md`, процесс компонента — в `CONTRIBUTING.md`.
 
 ## Правила разработки
 
