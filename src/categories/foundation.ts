@@ -1,3 +1,3 @@
 import '../components/foundation/icon';
 
-export { VuiIcon, iconNames, registerIcon } from '../components/foundation/icon';
+export { VIcon, iconNames, registerIcon } from '../components/foundation/icon';

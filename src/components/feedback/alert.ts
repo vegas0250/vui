@@ -2,7 +2,7 @@ import '../foundation/icon';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { emitClose } from '../../core/events';
-import type { VuiIcon } from '../foundation/icon';
+import type { VIcon } from '../foundation/icon';
 
 const icons: Record<string, string> = {
   info: 'info',
@@ -11,7 +11,7 @@ const icons: Record<string, string> = {
   danger: 'circle-alert',
 };
 
-export class VuiAlert extends VuiElement {
+export class VAlert extends VuiElement {
   static get observedAttributes(): string[] {
     return ['variant', 'closable', 'close-label'];
   }
@@ -30,7 +30,7 @@ export class VuiAlert extends VuiElement {
 
   protected componentStyles(): string {
     return `
-      :host { display: block; }
+      :host { display: block; min-width: 0; max-width: 100%; }
       :host([hidden]) { display: none; }
       .alert {
         display: flex;
@@ -41,7 +41,7 @@ export class VuiAlert extends VuiElement {
         border-radius: var(--vui-radius);
         background: var(--vui-color-info-surface);
       }
-      .content { flex: 1 1 auto; min-width: 0; }
+      .content { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
       :host([variant="success"]) .alert {
         border-color: var(--vui-color-success);
         background: var(--vui-color-success-surface);
@@ -85,7 +85,7 @@ export class VuiAlert extends VuiElement {
 
   protected sync(): void {
     const variant = this.getAttribute('variant') ?? 'info';
-    const icon = this.qs<VuiIcon>('vui-icon');
+    const icon = this.qs<VIcon>('vui-icon');
     icon.setAttribute('name', icons[variant] ?? 'info');
     const assertive = variant === 'warning' || variant === 'danger';
     this.qs('.alert').setAttribute('role', assertive ? 'alert' : 'status');
@@ -95,4 +95,4 @@ export class VuiAlert extends VuiElement {
   }
 }
 
-defineElement('vui-alert', VuiAlert);
+defineElement('vui-alert', VAlert);

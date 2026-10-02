@@ -11,8 +11,11 @@ button {
   justify-content: center;
   gap: var(--vui-space-xs);
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   min-height: var(--vui-size-control);
   padding-inline: var(--vui-space-md);
+  overflow-wrap: anywhere;
   border-radius: var(--vui-radius);
   border: var(--vui-border-width) solid transparent;
   background: var(--vui-color-primary);

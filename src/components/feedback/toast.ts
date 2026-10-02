@@ -2,7 +2,7 @@ import '../foundation/icon';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { emitClose } from '../../core/events';
-import type { VuiIcon } from '../foundation/icon';
+import type { VIcon } from '../foundation/icon';
 
 const icons: Record<string, string> = {
   info: 'info',
@@ -18,7 +18,7 @@ export interface ToastOptions {
   duration?: number;
 }
 
-export class VuiToast extends VuiElement {
+export class VToast extends VuiElement {
   static get observedAttributes(): string[] {
     return ['variant', 'heading', 'duration', 'close-label'];
   }
@@ -48,7 +48,8 @@ export class VuiToast extends VuiElement {
         display: flex;
         align-items: flex-start;
         gap: var(--vui-space-sm);
-        width: min(22rem, calc(100vw - var(--vui-space-xl)));
+        width: min(22rem, calc(100vw - var(--vui-overlay-gutter) * 2));
+        max-width: 100%;
         padding: var(--vui-space-sm) var(--vui-space-md);
         border: var(--vui-border-width) solid var(--vui-color-border);
         border-left: 3px solid var(--vui-color-info);
@@ -59,7 +60,7 @@ export class VuiToast extends VuiElement {
       :host([variant="success"]) .toast { border-left-color: var(--vui-color-success); }
       :host([variant="warning"]) .toast { border-left-color: var(--vui-color-warning); }
       :host([variant="danger"]) .toast { border-left-color: var(--vui-color-danger); }
-      .copy { flex: 1 1 auto; min-width: 0; }
+      .copy { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
       .title:empty { display: none; }
       .title { display: block; font-size: var(--vui-font-size); }
       .message { color: var(--vui-color-text); }
@@ -96,7 +97,7 @@ export class VuiToast extends VuiElement {
 
   protected sync(): void {
     const variant = this.getAttribute('variant') ?? 'info';
-    this.qs<VuiIcon>('vui-icon').setAttribute('name', icons[variant] ?? 'info');
+    this.qs<VIcon>('vui-icon').setAttribute('name', icons[variant] ?? 'info');
     this.qs('.toast').setAttribute('role', variant === 'danger' || variant === 'warning' ? 'alert' : 'status');
     this.qs('.title').textContent = this.getAttribute('heading') ?? '';
     this.qs('button.close').setAttribute('aria-label', this.getAttribute('close-label') ?? 'Close');
@@ -129,7 +130,7 @@ export class VuiToast extends VuiElement {
   }
 }
 
-export class VuiToaster extends VuiElement {
+export class VToaster extends VuiElement {
   protected template(): string {
     return `<div class="stack" part="stack"><slot></slot></div>`;
   }
@@ -139,22 +140,25 @@ export class VuiToaster extends VuiElement {
       :host {
         position: fixed;
         z-index: var(--vui-z-toast);
-        right: var(--vui-space-lg);
-        bottom: var(--vui-space-lg);
-        display: block;
+        right: var(--vui-overlay-gutter);
+        bottom: var(--vui-overlay-gutter);
+        left: var(--vui-overlay-gutter);
+        display: flex;
+        justify-content: flex-end;
         pointer-events: none;
       }
       .stack {
         display: flex;
         flex-direction: column;
         gap: var(--vui-space-sm);
-        align-items: flex-end;
+        align-items: stretch;
+        width: min(22rem, 100%);
       }
     `;
   }
 
-  show(options: ToastOptions): VuiToast {
-    const toast = document.createElement('vui-toast') as VuiToast;
+  show(options: ToastOptions): VToast {
+    const toast = document.createElement('vui-toast') as VToast;
     toast.setAttribute('variant', options.variant ?? 'info');
     if (options.title) toast.setAttribute('heading', options.title);
     if (options.duration !== undefined) toast.setAttribute('duration', String(options.duration));
@@ -166,16 +170,16 @@ export class VuiToaster extends VuiElement {
   }
 }
 
-export function toast(options: ToastOptions | string): VuiToast {
+export function toast(options: ToastOptions | string): VToast {
   const normalized: ToastOptions = typeof options === 'string' ? { message: options } : options;
   const existing = document.querySelector('vui-toaster');
-  const host = existing instanceof VuiToaster ? existing : document.createElement('vui-toaster');
+  const host = existing instanceof VToaster ? existing : document.createElement('vui-toaster');
   if (!existing) document.body.append(host);
-  if (!(host instanceof VuiToaster)) {
+  if (!(host instanceof VToaster)) {
     throw new Error('vui-toaster is not registered');
   }
   return host.show(normalized);
 }
 
-defineElement('vui-toast', VuiToast);
-defineElement('vui-toaster', VuiToaster);
+defineElement('vui-toast', VToast);
+defineElement('vui-toaster', VToaster);

@@ -10,6 +10,7 @@ body {
 
 .page {
   min-height: 100vh;
+  min-width: 0;
 }
 
 .topbar {
@@ -34,6 +35,7 @@ body {
 
 main {
   width: min(1120px, calc(100% - var(--vui-space-xl)));
+  min-width: 0;
   margin: 0 auto;
   padding: var(--vui-space-xl) 0 var(--vui-space-2xl);
 }
@@ -70,6 +72,7 @@ main {
   display: flex;
   flex-direction: column;
   gap: var(--vui-space-md);
+  min-width: 0;
 }
 
 .swatches,
@@ -141,6 +144,8 @@ main {
 
 .code {
   margin: 0;
+  max-width: 100%;
+  min-width: 0;
   padding: var(--vui-space-md);
   overflow: auto;
   border-radius: var(--vui-radius);
@@ -182,8 +187,64 @@ main {
   background: var(--vui-color-surface-sunken);
 }
 
+.resize-shell {
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  max-width: 100%;
+  margin-top: var(--vui-space-md);
+  overflow: hidden;
+  border: var(--vui-border-width) solid var(--vui-color-border);
+  border-radius: var(--vui-radius-lg);
+  background: var(--vui-color-surface-sunken);
+}
+
+.resize-stage {
+  width: calc(100% - 0.75rem);
+  min-width: 10rem;
+  max-width: calc(100% - 0.75rem);
+  overflow: hidden;
+  background: var(--vui-color-background);
+}
+
+.resize-handle {
+  flex: 0 0 0.75rem;
+  width: 0.75rem;
+  padding: 0;
+  border: 0;
+  cursor: ew-resize;
+  touch-action: none;
+  background: var(--vui-color-border-strong);
+}
+
+.resize-handle:focus-visible {
+  outline: var(--vui-focus-ring);
+  outline-offset: -2px;
+}
+
+.resize-desktop {
+  box-shadow: none;
+  border: 0;
+  border-radius: 0;
+  min-width: 0;
+}
+
+.resize-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vui-space-md);
+  min-width: 0;
+  padding: var(--vui-space-md);
+}
+
 @media (max-width: 720px) {
   main {
     width: min(1120px, calc(100% - var(--vui-space-md)));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resize-stage {
+    scroll-behavior: auto;
   }
 }

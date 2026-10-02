@@ -6,7 +6,7 @@ const checkIcon = `
   <path d="M20 6 9 17l-5-5"></path>
 </svg>`;
 
-export class VuiCheckbox extends VuiElement {
+export class VCheckbox extends VuiElement {
   static formAssociated = true;
 
   static get observedAttributes(): string[] {
@@ -44,14 +44,16 @@ export class VuiCheckbox extends VuiElement {
 
   protected componentStyles(): string {
     return `
-      :host { display: inline-flex; vertical-align: middle; }
+      :host { display: inline-flex; vertical-align: middle; max-width: 100%; min-width: 0; }
       .field {
         display: inline-flex;
         align-items: center;
         gap: var(--vui-space-sm);
         cursor: pointer;
         min-height: var(--vui-size-control);
+        max-width: 100%;
       }
+      .text { min-width: 0; overflow-wrap: anywhere; }
       input {
         position: absolute;
         opacity: 0;
@@ -117,4 +119,4 @@ export class VuiCheckbox extends VuiElement {
   }
 }
 
-defineElement('vui-checkbox', VuiCheckbox);
+defineElement('vui-checkbox', VCheckbox);

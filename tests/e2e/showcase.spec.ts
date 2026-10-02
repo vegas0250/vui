@@ -5,7 +5,7 @@ test('showcase switches theme and density', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'VUI Showcase' })).toBeVisible();
   await expect(page.locator('vui-button', { hasText: 'Сохранить' }).first()).toBeVisible();
   await expect(page.locator('vui-file-tree')).toBeVisible();
-  await expect(page.locator('vui-data-grid')).toContainText('Button');
+  await expect(page.locator('#demo-grid')).toContainText('Button');
 
   const theme = page.locator('#theme-select');
   await theme.locator('button').click();

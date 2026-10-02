@@ -2,7 +2,7 @@ import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { controlStyles, fieldStyles } from '../../core/styles';
 
-export class VuiInput extends VuiElement {
+export class VInput extends VuiElement {
   static formAssociated = true;
 
   static get observedAttributes(): string[] {
@@ -46,7 +46,14 @@ export class VuiInput extends VuiElement {
     return `
       ${fieldStyles}
       ${controlStyles}
-      :host { display: inline-flex; min-width: 12rem; }
+      :host {
+        display: flex;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        container-type: inline-size;
+        container-name: vui-field;
+      }
       input {
         flex: 1 1 auto;
         width: 100%;
@@ -95,4 +102,4 @@ export class VuiInput extends VuiElement {
   }
 }
 
-defineElement('vui-input', VuiInput);
+defineElement('vui-input', VInput);

@@ -2,9 +2,9 @@ import '../../components/foundation/icon';
 import { buttonStyles } from './button-styles';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
-import type { VuiIcon } from '../foundation/icon';
+import type { VIcon } from '../foundation/icon';
 
-export class VuiIconButton extends VuiElement {
+export class VIconButton extends VuiElement {
   static get observedAttributes(): string[] {
     return ['name', 'label', 'variant', 'size', 'disabled', 'type'];
   }
@@ -57,7 +57,7 @@ export class VuiIconButton extends VuiElement {
 
   protected sync(): void {
     const button = this.qs<HTMLButtonElement>('button');
-    const icon = this.qs<VuiIcon>('vui-icon');
+    const icon = this.qs<VIcon>('vui-icon');
     const type = this.getAttribute('type');
     button.type = type === 'submit' || type === 'reset' ? type : 'button';
     button.disabled = this.isDisabled();
@@ -68,4 +68,4 @@ export class VuiIconButton extends VuiElement {
   }
 }
 
-defineElement('vui-icon-button', VuiIconButton);
+defineElement('vui-icon-button', VIconButton);

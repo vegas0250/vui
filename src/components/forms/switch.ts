@@ -1,7 +1,7 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 
-export class VuiSwitch extends VuiElement {
+export class VSwitch extends VuiElement {
   static formAssociated = true;
 
   static get observedAttributes(): string[] {
@@ -39,14 +39,16 @@ export class VuiSwitch extends VuiElement {
 
   protected componentStyles(): string {
     return `
-      :host { display: inline-flex; vertical-align: middle; }
+      :host { display: inline-flex; vertical-align: middle; max-width: 100%; min-width: 0; }
       .field {
         display: inline-flex;
         align-items: center;
         gap: var(--vui-space-sm);
         cursor: pointer;
         min-height: var(--vui-size-control);
+        max-width: 100%;
       }
+      .text { min-width: 0; overflow-wrap: anywhere; }
       input {
         position: absolute;
         opacity: 0;
@@ -124,4 +126,4 @@ export class VuiSwitch extends VuiElement {
   }
 }
 
-defineElement('vui-switch', VuiSwitch);
+defineElement('vui-switch', VSwitch);

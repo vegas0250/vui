@@ -3,7 +3,7 @@ import { VuiElement } from '../../core/element';
 
 let tabSeq = 0;
 
-export class VuiTab extends VuiElement {
+export class VTab extends VuiElement {
   static shadowDelegatesFocus = false;
 
   static get observedAttributes(): string[] {
@@ -19,6 +19,7 @@ export class VuiTab extends VuiElement {
       :host {
         display: inline-flex;
         align-items: center;
+        flex: 0 0 auto;
         min-height: var(--vui-size-control);
         padding-inline: var(--vui-space-md);
         border-bottom: 2px solid transparent;
@@ -58,7 +59,7 @@ export class VuiTab extends VuiElement {
   }
 }
 
-export class VuiTabPanel extends VuiElement {
+export class VTabPanel extends VuiElement {
   static get observedAttributes(): string[] {
     return ['name', 'selected'];
   }
@@ -84,7 +85,7 @@ export class VuiTabPanel extends VuiElement {
   }
 }
 
-export class VuiTabs extends VuiElement {
+export class VTabs extends VuiElement {
   static get observedAttributes(): string[] {
     return ['label'];
   }
@@ -100,11 +101,21 @@ export class VuiTabs extends VuiElement {
 
   protected componentStyles(): string {
     return `
-      :host { display: block; }
+      :host {
+        display: block;
+        min-width: 0;
+        max-width: 100%;
+        container-type: inline-size;
+        container-name: vui-tabs;
+      }
       [role="tablist"] {
         display: flex;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         gap: var(--vui-space-2xs);
+        width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        scrollbar-width: thin;
         border-bottom: var(--vui-border-width) solid var(--vui-color-border);
       }
     `;
@@ -131,13 +142,13 @@ export class VuiTabs extends VuiElement {
     this.link();
   }
 
-  private tabs(): VuiTab[] {
-    return [...this.querySelectorAll(':scope > vui-tab')].filter((node): node is VuiTab => node instanceof VuiTab);
+  private tabs(): VTab[] {
+    return [...this.querySelectorAll(':scope > vui-tab')].filter((node): node is VTab => node instanceof VTab);
   }
 
-  private panels(): VuiTabPanel[] {
+  private panels(): VTabPanel[] {
     return [...this.querySelectorAll(':scope > vui-tab-panel')].filter(
-      (node): node is VuiTabPanel => node instanceof VuiTabPanel,
+      (node): node is VTabPanel => node instanceof VTabPanel,
     );
   }
 
@@ -170,20 +181,20 @@ export class VuiTabs extends VuiElement {
     }
   }
 
-  private panelFor(tab: VuiTab, index: number, panels: VuiTabPanel[]): VuiTabPanel | undefined {
+  private panelFor(tab: VTab, index: number, panels: VTabPanel[]): VTabPanel | undefined {
     const name = tab.getAttribute('panel');
     if (name) return panels.find((panel) => panel.getAttribute('name') === name) ?? panels[index];
     return panels[index];
   }
 
-  private select(tab: VuiTab): void {
+  private select(tab: VTab): void {
     for (const item of this.tabs()) item.toggleAttribute('selected', item === tab);
     this.link();
   }
 
-  private tabFromEvent(event: Event): VuiTab | null {
+  private tabFromEvent(event: Event): VTab | null {
     const path = event.composedPath();
-    return (path.find((node) => node instanceof VuiTab) as VuiTab | undefined) ?? null;
+    return (path.find((node) => node instanceof VTab) as VTab | undefined) ?? null;
   }
 
   private onKeydown(event: KeyboardEvent): void {
@@ -206,6 +217,6 @@ export class VuiTabs extends VuiElement {
   }
 }
 
-defineElement('vui-tab', VuiTab);
-defineElement('vui-tab-panel', VuiTabPanel);
-defineElement('vui-tabs', VuiTabs);
+defineElement('vui-tab', VTab);
+defineElement('vui-tab-panel', VTabPanel);
+defineElement('vui-tabs', VTabs);

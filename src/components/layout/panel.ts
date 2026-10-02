@@ -1,7 +1,7 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 
-export class VuiPanel extends VuiElement {
+export class VPanel extends VuiElement {
   static get observedAttributes(): string[] {
     return ['heading'];
   }
@@ -20,7 +20,7 @@ export class VuiPanel extends VuiElement {
 
   protected componentStyles(): string {
     return `
-      :host { display: block; min-width: 0; }
+      :host { display: block; min-width: 0; max-width: 100%; }
       section {
         background: var(--vui-color-surface);
         color: var(--vui-color-text);
@@ -28,7 +28,8 @@ export class VuiPanel extends VuiElement {
         border-radius: var(--vui-radius-lg);
         box-shadow: var(--vui-shadow-sm);
       }
-      header, .body, footer { padding: var(--vui-panel-padding); }
+      header, .body, footer { padding: var(--vui-panel-padding); min-width: 0; }
+      .body { overflow: auto; }
       header {
         border-bottom: var(--vui-border-width) solid var(--vui-color-border);
       }
@@ -38,6 +39,7 @@ export class VuiPanel extends VuiElement {
         font-size: var(--vui-heading-3);
         line-height: var(--vui-line-height);
         font-weight: var(--vui-font-weight-strong);
+        overflow-wrap: anywhere;
       }
       footer { border-top: var(--vui-border-width) solid var(--vui-color-border); }
     `;
@@ -62,4 +64,4 @@ export class VuiPanel extends VuiElement {
   }
 }
 
-defineElement('vui-panel', VuiPanel);
+defineElement('vui-panel', VPanel);

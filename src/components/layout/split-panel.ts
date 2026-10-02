@@ -1,12 +1,14 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
+import { inlineThreshold, observeInlineSize } from '../../core/responsive';
 
-export class VuiSplitPanel extends VuiElement {
+export class VSplitPanel extends VuiElement {
   static get observedAttributes(): string[] {
     return ['orientation', 'position'];
   }
 
   private dragging = false;
+  private stopWatch: (() => void) | null = null;
 
   protected template(): string {
     return `
@@ -20,7 +22,14 @@ export class VuiSplitPanel extends VuiElement {
 
   protected componentStyles(): string {
     return `
-      :host { display: block; min-width: 0; min-height: 8rem; }
+      :host { display: block; min-width: 0; max-width: 100%; min-height: 8rem; }
+      :host([data-stacked]) .split { flex-direction: column; }
+      :host([data-stacked]) .sep { cursor: row-resize; }
+      :host([data-stacked]) .sep::before {
+        width: 100%;
+        height: var(--vui-border-width);
+        align-self: center;
+      }
       .split {
         display: flex;
         width: 100%;
@@ -83,8 +92,41 @@ export class VuiSplitPanel extends VuiElement {
     });
   }
 
-  protected sync(): void {
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.watchSize();
+  }
+
+  disconnectedCallback(): void {
+    this.stopWatch?.();
+    this.stopWatch = null;
+  }
+
+  private watchSize(): void {
+    this.stopWatch?.();
+    this.stopWatch = observeInlineSize(this, () => this.applyStack());
+  }
+
+  private get stacked(): boolean {
+    return this.hasAttribute('data-stacked');
+  }
+
+  private applyStack(): void {
     const vertical = this.getAttribute('orientation') === 'vertical';
+    const width = this.getBoundingClientRect().width;
+    if (width <= 0) return;
+    const narrow = width <= inlineThreshold(this);
+    const stacked = !vertical && narrow;
+    if (this.stacked === stacked) return;
+    this.toggleAttribute('data-stacked', stacked);
+    const separator = this.shadow.querySelector('.sep');
+    if (separator) {
+      separator.setAttribute('aria-orientation', vertical || stacked ? 'horizontal' : 'vertical');
+    }
+  }
+
+  protected sync(): void {
+    const vertical = this.getAttribute('orientation') === 'vertical' || this.stacked;
     this.separator.setAttribute('aria-orientation', vertical ? 'horizontal' : 'vertical');
     this.separator.setAttribute('aria-valuemin', '10');
     this.separator.setAttribute('aria-valuemax', '90');
@@ -110,7 +152,7 @@ export class VuiSplitPanel extends VuiElement {
 
   private updateFromPointer(event: PointerEvent): void {
     const rect = this.getBoundingClientRect();
-    const vertical = this.getAttribute('orientation') === 'vertical';
+    const vertical = this.getAttribute('orientation') === 'vertical' || this.stacked;
     const ratio = vertical
       ? (event.clientY - rect.top) / rect.height
       : (event.clientX - rect.left) / rect.width;
@@ -118,4 +160,4 @@ export class VuiSplitPanel extends VuiElement {
   }
 }
 
-defineElement('vui-split-panel', VuiSplitPanel);
+defineElement('vui-split-panel', VSplitPanel);

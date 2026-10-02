@@ -59,6 +59,17 @@ export const fieldStyles = `
   align-items: stretch;
   gap: var(--vui-space-2xs);
   min-width: 0;
+  width: 100%;
+}
+@container vui-field (min-width: 36rem) {
+  .field {
+    display: grid;
+    grid-template-columns: minmax(7rem, var(--vui-field-label-size)) minmax(0, 1fr);
+    column-gap: var(--vui-space-md);
+    row-gap: var(--vui-space-2xs);
+    align-items: center;
+  }
+  .hint { grid-column: 2; }
 }
 .label {
   color: var(--vui-color-text-muted);

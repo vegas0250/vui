@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import '../../src/components/desktop/file-tree';
-import type { VuiFileTree } from '../../src/components/desktop/file-tree';
+import type { VFileTree } from '../../src/components/desktop/file-tree';
 
 describe('vui-file-tree', () => {
   beforeEach(() => {
@@ -8,7 +8,7 @@ describe('vui-file-tree', () => {
   });
 
   it('expands a folder and selects the next visible item', async () => {
-    const tree = document.createElement('vui-file-tree') as VuiFileTree;
+    const tree = document.createElement('vui-file-tree') as VFileTree;
     tree.innerHTML = `
       <vui-tree-item label="src" kind="folder">
         <vui-tree-item label="index.ts" kind="file"></vui-tree-item>

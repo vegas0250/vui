@@ -3,7 +3,7 @@ import { VuiElement } from '../../core/element';
 
 let tooltipSeq = 0;
 
-export class VuiTooltip extends VuiElement {
+export class VTooltip extends VuiElement {
   static get observedAttributes(): string[] {
     return ['text', 'placement'];
   }
@@ -24,7 +24,8 @@ export class VuiTooltip extends VuiElement {
       .tip {
         position: fixed;
         z-index: var(--vui-z-tooltip);
-        max-width: 16rem;
+        max-width: min(16rem, calc(100vw - var(--vui-overlay-gutter) * 2));
+        overflow-wrap: anywhere;
         padding: var(--vui-space-2xs) var(--vui-space-xs);
         border: var(--vui-border-width) solid var(--vui-color-tooltip-border);
         border-radius: var(--vui-radius-sm);
@@ -93,4 +94,4 @@ export class VuiTooltip extends VuiElement {
   }
 }
 
-defineElement('vui-tooltip', VuiTooltip);
+defineElement('vui-tooltip', VTooltip);

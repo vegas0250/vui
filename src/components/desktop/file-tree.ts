@@ -2,14 +2,14 @@ import '../foundation/icon';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { emitChange } from '../../core/events';
-import type { VuiIcon } from '../foundation/icon';
+import type { VIcon } from '../foundation/icon';
 
 const chevron = `
 <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
   <path d="m9 18 6-6-6-6"></path>
 </svg>`;
 
-export class VuiTreeItem extends VuiElement {
+export class VTreeItem extends VuiElement {
   static shadowDelegatesFocus = false;
 
   static get observedAttributes(): string[] {
@@ -29,7 +29,7 @@ export class VuiTreeItem extends VuiElement {
 
   protected componentStyles(): string {
     return `
-      :host { display: block; }
+      :host { display: block; max-width: 100%; min-width: 0; }
       .row {
         display: flex;
         align-items: center;
@@ -81,7 +81,7 @@ export class VuiTreeItem extends VuiElement {
     const branch = kind === 'folder' || this.hasChildren();
     this.toggleAttribute('branch', branch);
     const iconName = kind === 'folder' || this.hasChildren() ? (expanded ? 'folder-open' : 'folder') : 'file';
-    this.qs<VuiIcon>('vui-icon').setAttribute('name', iconName);
+    this.qs<VIcon>('vui-icon').setAttribute('name', iconName);
     this.setAttribute('role', 'treeitem');
     this.setAttribute('aria-label', label);
     if (branch) this.setAttribute('aria-expanded', expanded ? 'true' : 'false');
@@ -99,7 +99,7 @@ export class VuiTreeItem extends VuiElement {
   }
 }
 
-export class VuiFileTree extends VuiElement {
+export class VFileTree extends VuiElement {
   static shadowDelegatesFocus = false;
 
   static get observedAttributes(): string[] {
@@ -112,8 +112,8 @@ export class VuiFileTree extends VuiElement {
 
   protected componentStyles(): string {
     return `
-      :host { display: block; min-width: 0; }
-      .tree { padding: var(--vui-space-xs); }
+      :host { display: block; min-width: 0; max-width: 100%; min-height: 0; }
+      .tree { min-width: 0; max-width: 100%; overflow: auto; padding: var(--vui-space-xs); }
     `;
   }
 
@@ -132,18 +132,18 @@ export class VuiFileTree extends VuiElement {
     this.qs('[role="tree"]').setAttribute('aria-label', this.getAttribute('label') ?? 'Files');
   }
 
-  get selectedItem(): VuiTreeItem | null {
+  get selectedItem(): VTreeItem | null {
     return this.visibleItems().find((item) => item.hasAttribute('selected')) ?? null;
   }
 
-  private items(root: ParentNode = this): VuiTreeItem[] {
+  private items(root: ParentNode = this): VTreeItem[] {
     return [...root.querySelectorAll(':scope > vui-tree-item')].filter(
-      (node): node is VuiTreeItem => node instanceof VuiTreeItem,
+      (node): node is VTreeItem => node instanceof VTreeItem,
     );
   }
 
-  private visibleItems(): VuiTreeItem[] {
-    const result: VuiTreeItem[] = [];
+  private visibleItems(): VTreeItem[] {
+    const result: VTreeItem[] = [];
     const walk = (parent: ParentNode): void => {
       for (const item of this.items(parent)) {
         result.push(item);
@@ -158,25 +158,25 @@ export class VuiFileTree extends VuiElement {
     const visible = this.visibleItems();
     const current = visible.find((item) => item.tabIndex === 0) ?? visible[0];
     for (const item of this.querySelectorAll('vui-tree-item')) {
-      if (item instanceof VuiTreeItem) item.tabIndex = item === current ? 0 : -1;
+      if (item instanceof VTreeItem) item.tabIndex = item === current ? 0 : -1;
     }
   }
 
-  private selectItem(item: VuiTreeItem): void {
+  private selectItem(item: VTreeItem): void {
     const previous = this.selectedItem;
     for (const candidate of this.querySelectorAll('vui-tree-item')) {
-      if (candidate instanceof VuiTreeItem) candidate.toggleAttribute('selected', candidate === item);
+      if (candidate instanceof VTreeItem) candidate.toggleAttribute('selected', candidate === item);
     }
     item.tabIndex = 0;
     for (const candidate of this.querySelectorAll('vui-tree-item')) {
-      if (candidate instanceof VuiTreeItem && candidate !== item) candidate.tabIndex = -1;
+      if (candidate instanceof VTreeItem && candidate !== item) candidate.tabIndex = -1;
     }
     if (previous !== item) emitChange(this);
   }
 
-  private itemFromEvent(event: Event): VuiTreeItem | null {
-    const match = event.composedPath().find((node) => node instanceof VuiTreeItem);
-    return match instanceof VuiTreeItem ? match : null;
+  private itemFromEvent(event: Event): VTreeItem | null {
+    const match = event.composedPath().find((node) => node instanceof VTreeItem);
+    return match instanceof VTreeItem ? match : null;
   }
 
   private onKeydown(event: KeyboardEvent): void {
@@ -224,7 +224,7 @@ export class VuiFileTree extends VuiElement {
         return;
       }
       const parent = current.parentElement;
-      if (parent instanceof VuiTreeItem) this.focusItem(parent);
+      if (parent instanceof VTreeItem) this.focusItem(parent);
       return;
     }
     if (event.key === 'Enter' || event.key === ' ') {
@@ -234,11 +234,11 @@ export class VuiFileTree extends VuiElement {
     }
   }
 
-  private focusItem(item: VuiTreeItem): void {
+  private focusItem(item: VTreeItem): void {
     this.selectItem(item);
     item.focus();
   }
 }
 
-defineElement('vui-tree-item', VuiTreeItem);
-defineElement('vui-file-tree', VuiFileTree);
+defineElement('vui-tree-item', VTreeItem);
+defineElement('vui-file-tree', VFileTree);

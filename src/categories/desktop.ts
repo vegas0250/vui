@@ -3,7 +3,7 @@ import '../components/desktop/status-bar';
 import '../components/layout/split-panel';
 import '../components/navigation/toolbar';
 
-export { VuiFileTree, VuiTreeItem } from '../components/desktop/file-tree';
-export { VuiStatusBar } from '../components/desktop/status-bar';
-export { VuiSplitPanel } from '../components/layout/split-panel';
-export { VuiToolbar } from '../components/navigation/toolbar';
+export { VFileTree, VTreeItem } from '../components/desktop/file-tree';
+export { VStatusBar } from '../components/desktop/status-bar';
+export { VSplitPanel } from '../components/layout/split-panel';
+export { VToolbar } from '../components/navigation/toolbar';

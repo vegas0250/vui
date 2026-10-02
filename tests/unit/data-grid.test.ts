@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import '../../src/components/data/data-grid';
-import type { VuiDataGrid } from '../../src/components/data/data-grid';
+import type { VDataGrid } from '../../src/components/data/data-grid';
 
 describe('vui-data-grid', () => {
   beforeEach(() => {
@@ -8,7 +8,7 @@ describe('vui-data-grid', () => {
   });
 
   it('renders rows and moves selection with the keyboard', () => {
-    const grid = document.createElement('vui-data-grid') as VuiDataGrid;
+    const grid = document.createElement('vui-data-grid') as VDataGrid;
     document.body.append(grid);
     grid.columns = [
       { key: 'name', title: 'Name' },

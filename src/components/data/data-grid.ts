@@ -1,15 +1,18 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { emitChange } from '../../core/events';
+import { inlineThreshold, observeInlineSize } from '../../core/responsive';
 
-export interface VuiDataGridColumn {
+export interface VDataGridColumn {
   key: string;
   title: string;
   width?: string;
   align?: 'start' | 'center' | 'end';
+  /** Secondary columns stay in the grid and hide when the container is at or below `--vui-layout-medium`. */
+  priority?: 'primary' | 'secondary';
 }
 
-export interface VuiDataGridRow {
+export interface VDataGridRow {
   id: string;
   [key: string]: string;
 }
@@ -19,30 +22,31 @@ function safeWidth(width: string | undefined): string | null {
   return /^(\d+(\.\d+)?)(px|rem|em|%)$/.test(width) ? width : null;
 }
 
-export class VuiDataGrid extends VuiElement {
+export class VDataGrid extends VuiElement {
   static get observedAttributes(): string[] {
     return ['label', 'empty-label', 'selected'];
   }
 
-  private gridColumns: VuiDataGridColumn[] = [];
-  private gridRows: VuiDataGridRow[] = [];
+  private gridColumns: VDataGridColumn[] = [];
+  private gridRows: VDataGridRow[] = [];
   private activeRow = 0;
   private activeCol = 0;
+  private stopWatch: (() => void) | null = null;
 
-  get columns(): VuiDataGridColumn[] {
+  get columns(): VDataGridColumn[] {
     return this.gridColumns;
   }
 
-  set columns(value: VuiDataGridColumn[]) {
+  set columns(value: VDataGridColumn[]) {
     this.gridColumns = value.map((column) => ({ ...column }));
     this.renderGrid();
   }
 
-  get rows(): VuiDataGridRow[] {
+  get rows(): VDataGridRow[] {
     return this.gridRows;
   }
 
-  set rows(value: VuiDataGridRow[]) {
+  set rows(value: VDataGridRow[]) {
     this.gridRows = value.map((row) => ({ ...row }));
     this.renderGrid();
   }
@@ -68,20 +72,25 @@ export class VuiDataGrid extends VuiElement {
 
   protected componentStyles(): string {
     return `
-      :host { display: block; min-width: 0; }
+      :host { display: block; min-width: 0; max-width: 100%; }
       .frame {
+        width: 100%;
+        min-width: 0;
         overflow: auto;
+        max-width: 100%;
         border: var(--vui-border-width) solid var(--vui-color-border);
         border-radius: var(--vui-radius);
         background: var(--vui-color-surface);
       }
       table {
         width: 100%;
+        min-width: max-content;
         border-collapse: collapse;
         font: inherit;
       }
       th, td {
         height: var(--vui-row-height);
+        min-width: var(--vui-column-min);
         padding-inline: var(--vui-space-sm);
         border-bottom: var(--vui-border-width) solid var(--vui-color-border);
         text-align: start;
@@ -110,6 +119,28 @@ export class VuiDataGrid extends VuiElement {
       .align-center { text-align: center; }
       .align-end { text-align: end; }
     `;
+  }
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.watchSize();
+  }
+
+  disconnectedCallback(): void {
+    this.stopWatch?.();
+    this.stopWatch = null;
+  }
+
+  private watchSize(): void {
+    this.stopWatch?.();
+    this.stopWatch = observeInlineSize(this, (width) => {
+      if (width <= 0) return;
+      const limit = inlineThreshold(this, '--vui-layout-medium', 640);
+      const compact = width <= limit;
+      if (this.hasAttribute('data-compact') === compact) return;
+      this.toggleAttribute('data-compact', compact);
+      this.renderGrid();
+    });
   }
 
   protected afterRender(): void {
@@ -159,8 +190,13 @@ export class VuiDataGrid extends VuiElement {
       const width = safeWidth(column.width);
       if (width) cell.style.width = width;
       if (column.align) cell.classList.add(`align-${column.align}`);
+      this.markPriority(cell, column);
       headerRow.append(cell);
     }
+    table.setAttribute(
+      'aria-colcount',
+      String(this.gridColumns.filter((_, index) => this.columnVisible(index)).length),
+    );
     head.replaceChildren(headerRow);
     body.replaceChildren();
 
@@ -189,6 +225,7 @@ export class VuiDataGrid extends VuiElement {
         cell.dataset.col = String(colIndex);
         cell.textContent = data[column.key] ?? '';
         if (column.align) cell.classList.add(`align-${column.align}`);
+        this.markPriority(cell, column);
         row.append(cell);
       });
       body.append(row);
@@ -196,22 +233,66 @@ export class VuiDataGrid extends VuiElement {
     this.applyCursor();
   }
 
+  private get compact(): boolean {
+    return this.hasAttribute('data-compact');
+  }
+
+  private columnVisible(index: number): boolean {
+    const column = this.gridColumns[index];
+    if (!column) return false;
+    return !(this.compact && column.priority === 'secondary');
+  }
+
+  private markPriority(cell: HTMLElement, column: VDataGridColumn): void {
+    const hidden = this.compact && column.priority === 'secondary';
+    cell.classList.toggle('priority-secondary', column.priority === 'secondary');
+    cell.hidden = hidden;
+    cell.toggleAttribute('aria-hidden', hidden);
+  }
+
+  private firstVisibleColumn(): number {
+    const index = this.gridColumns.findIndex((_, column) => this.columnVisible(column));
+    return index < 0 ? 0 : index;
+  }
+
+  private lastVisibleColumn(): number {
+    for (let index = this.gridColumns.length - 1; index >= 0; index -= 1) {
+      if (this.columnVisible(index)) return index;
+    }
+    return 0;
+  }
+
+  private stepColumn(from: number, delta: number): number {
+    if (delta === 0) return this.columnVisible(from) ? from : this.firstVisibleColumn();
+    let index = from;
+    for (let step = 0; step < this.gridColumns.length; step += 1) {
+      index += delta;
+      if (index < 0 || index >= this.gridColumns.length) return from;
+      if (this.columnVisible(index)) return index;
+    }
+    return from;
+  }
+
   private applyCursor(): void {
     const cells = [...this.shadow.querySelectorAll<HTMLElement>('[role="gridcell"]')];
     for (const cell of cells) cell.tabIndex = -1;
-    const columns = Math.max(1, this.gridColumns.length);
     this.activeRow = Math.min(this.activeRow, Math.max(0, this.gridRows.length - 1));
-    this.activeCol = Math.min(this.activeCol, columns - 1);
+    this.activeCol = this.stepColumn(Math.min(this.activeCol, Math.max(0, this.gridColumns.length - 1)), 0);
     const active = cells.find(
       (cell) => Number(cell.dataset.row) === this.activeRow && Number(cell.dataset.col) === this.activeCol,
     );
-    if (active) active.tabIndex = 0;
+    if (active) {
+      active.tabIndex = 0;
+      active.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
+    }
   }
 
-  private move(rowDelta: number, colDelta: number): void {
+  private move(rowDelta: number, colDelta: number, edge?: 'start' | 'end'): void {
     if (!this.gridRows.length || !this.gridColumns.length) return;
     this.activeRow = Math.min(this.gridRows.length - 1, Math.max(0, this.activeRow + rowDelta));
-    this.activeCol = Math.min(this.gridColumns.length - 1, Math.max(0, this.activeCol + colDelta));
+    if (edge === 'start') this.activeCol = this.firstVisibleColumn();
+    else if (edge === 'end') this.activeCol = this.lastVisibleColumn();
+    else this.activeCol = this.stepColumn(this.activeCol, colDelta);
     const row = this.gridRows[this.activeRow];
     const previous = this.selectedId;
     if (row && row.id !== previous) {
@@ -231,9 +312,9 @@ export class VuiDataGrid extends VuiElement {
     if (key === 'ArrowDown') this.move(1, 0);
     if (key === 'ArrowLeft') this.move(0, -1);
     if (key === 'ArrowRight') this.move(0, 1);
-    if (key === 'Home') this.move(0, -this.activeCol);
-    if (key === 'End') this.move(0, this.gridColumns.length - 1 - this.activeCol);
+    if (key === 'Home') this.move(0, 0, 'start');
+    if (key === 'End') this.move(0, 0, 'end');
   }
 }
 
-defineElement('vui-data-grid', VuiDataGrid);
+defineElement('vui-data-grid', VDataGrid);

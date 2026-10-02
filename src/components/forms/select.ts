@@ -8,7 +8,7 @@ const chevron = `
   <path d="m6 9 6 6 6-6"></path>
 </svg>`;
 
-export class VuiOption extends HTMLElement {
+export class VOption extends HTMLElement {
   static get observedAttributes(): string[] {
     return ['value', 'disabled', 'label'];
   }
@@ -32,7 +32,7 @@ export class VuiOption extends HTMLElement {
 
 let selectSeq = 0;
 
-export class VuiSelect extends VuiElement {
+export class VSelect extends VuiElement {
   static formAssociated = true;
 
   static get observedAttributes(): string[] {
@@ -66,14 +66,16 @@ export class VuiSelect extends VuiElement {
 
   protected template(): string {
     return `
-      <div class="field">
-        <label class="label" part="label"></label>
-        <button part="trigger" class="control trigger" type="button" role="combobox" aria-haspopup="listbox" aria-expanded="false">
-          <span class="value"></span>
-          <span class="chevron" aria-hidden="true">${chevron}</span>
-        </button>
-        <ul part="listbox" class="listbox" role="listbox" hidden></ul>
+      <div class="shell">
+        <div class="field">
+          <label class="label" part="label"></label>
+          <button part="trigger" class="control trigger" type="button" role="combobox" aria-haspopup="listbox" aria-expanded="false">
+            <span class="value"></span>
+            <span class="chevron" aria-hidden="true">${chevron}</span>
+          </button>
+        </div>
       </div>
+      <ul part="listbox" class="listbox" role="listbox" hidden></ul>
     `;
   }
 
@@ -81,7 +83,21 @@ export class VuiSelect extends VuiElement {
     return `
       ${fieldStyles}
       ${controlStyles}
-      :host { display: inline-flex; min-width: 12rem; position: relative; }
+      :host {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        position: relative;
+      }
+      .shell {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        container-type: inline-size;
+        container-name: vui-field;
+      }
       .trigger {
         width: 100%;
         cursor: pointer;
@@ -189,9 +205,9 @@ export class VuiSelect extends VuiElement {
     return this.qs<HTMLElement>('.listbox');
   }
 
-  private optionElements(): VuiOption[] {
+  private optionElements(): VOption[] {
     return [...this.querySelectorAll(':scope > vui-option')].filter(
-      (node): node is VuiOption => node instanceof VuiOption,
+      (node): node is VOption => node instanceof VOption,
     );
   }
 
@@ -235,8 +251,11 @@ export class VuiSelect extends VuiElement {
     const rect = this.trigger.getBoundingClientRect();
     const list = this.listbox;
     const margin = 4;
-    list.style.left = `${Math.max(8, rect.left)}px`;
-    list.style.width = `${rect.width}px`;
+    const gutter = 8;
+    const width = Math.max(0, Math.min(rect.width, window.innerWidth - gutter * 2));
+    const left = Math.min(Math.max(gutter, rect.left), Math.max(gutter, window.innerWidth - width - gutter));
+    list.style.left = `${left}px`;
+    list.style.width = `${width}px`;
     const below = window.innerHeight - rect.bottom;
     if (below < 180 && rect.top > below) {
       list.style.top = 'auto';
@@ -342,5 +361,5 @@ export class VuiSelect extends VuiElement {
   }
 }
 
-defineElement('vui-option', VuiOption);
-defineElement('vui-select', VuiSelect);
+defineElement('vui-option', VOption);
+defineElement('vui-select', VSelect);

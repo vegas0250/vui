@@ -2,7 +2,7 @@ import { buttonStyles } from './button-styles';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 
-export class VuiButton extends VuiElement {
+export class VButton extends VuiElement {
   static get observedAttributes(): string[] {
     return ['variant', 'size', 'disabled', 'type', 'name', 'value'];
   }
@@ -37,4 +37,4 @@ export class VuiButton extends VuiElement {
   }
 }
 
-defineElement('vui-button', VuiButton);
+defineElement('vui-button', VButton);

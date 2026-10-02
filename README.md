@@ -45,6 +45,20 @@ pnpm add vui
 <html data-vui-theme="dark" data-vui-density="compact">
 ```
 
+Декларативный API — Custom Elements. Класс TypeScript — то же самое компонент, если он нужен из кода:
+
+```ts
+import { VButton } from 'vui';
+```
+
+Имена связаны однозначно: `V` + PascalCase в TypeScript и `vui-` + kebab-case в HTML.
+
+```text
+VButton    → <vui-button>
+VDialog    → <vui-dialog>
+VDataGrid  → <vui-data-grid>
+```
+
 Кнопка использует обычное событие `click`:
 
 ```ts
@@ -133,6 +147,23 @@ import 'vui/themes/high-contrast';
 ```
 
 Плотность меняет высоту контролов, отступы, gaps, toolbar, строку состояния, строки таблиц и панелей. Для desktop-интерфейса обычно удобны `compact` и `dense`.
+
+## Responsive Design
+
+VUI рассчитан на обычный Web, SPA и Desktop/Electron, включая маленькие и большие окна, split view и вложенные панели. Компонент подстраивается под **ширину своего контейнера**, а не под отдельный mobile-компонент и не только под ширину окна.
+
+```html
+<vui-toolbar>
+  <vui-button slot="start">Файл</vui-button>
+  <vui-icon-button slot="end" name="search" label="Поиск"></vui-icon-button>
+</vui-toolbar>
+```
+
+В широком контейнере панель показывает действия в одну строку. В узком группы переносятся сами: странице не нужно измерять компонент и переключать его режим.
+
+То же относится к layout (`vui-stack`, `vui-grid`, `vui-split-panel`), полям, вкладкам, строке состояния и таблице. `vui-data-grid` оставляет горизонтальную прокрутку и минимальную ширину колонок; колонка с `priority: "secondary"` скрывается, когда контейнер не шире `--vui-layout-medium`. Диалог ограничивается viewport и прокручивает содержимое.
+
+Responsive не заменяет тему и плотность. Сочетания вроде Dark + Compact + узкий контейнер и Light + Comfortable + широкий контейнер одинаково допустимы. Плотность задаёт масштаб контролов, responsive — раскладку в доступном месте.
 
 ## Иконки
 

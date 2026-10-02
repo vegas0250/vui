@@ -1,4 +1,4 @@
 import '../components/data/data-grid';
 
-export { VuiDataGrid } from '../components/data/data-grid';
-export type { VuiDataGridColumn, VuiDataGridRow } from '../components/data/data-grid';
+export { VDataGrid } from '../components/data/data-grid';
+export type { VDataGridColumn, VDataGridRow } from '../components/data/data-grid';

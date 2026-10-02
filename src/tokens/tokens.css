@@ -18,4 +18,16 @@
   --vui-palette-blue-700: #1a5fd0;
   --vui-palette-slate-900: #1c2430;
   --vui-palette-slate-0: #ffffff;
+  /* Container thresholds. @container cannot read var(); component CSS repeats these lengths. */
+  --vui-layout-narrow: 22rem;
+  --vui-layout-medium: 40rem;
+  --vui-field-inline: 36rem;
+  --vui-field-label-size: 9rem;
+  --vui-column-min: 6rem;
+  --vui-control-min-inline: 10rem;
+  --vui-overlay-gutter: max(0.75rem, var(--vui-space-md, 0.75rem));
+  --vui-dialog-block: min(85dvh, calc(100dvh - var(--vui-overlay-gutter) * 2));
+  --vui-dialog-inline: min(32rem, calc(100vw - var(--vui-overlay-gutter) * 2));
+  --vui-dialog-inline-sm: min(24rem, calc(100vw - var(--vui-overlay-gutter) * 2));
+  --vui-dialog-inline-lg: min(48rem, calc(100vw - var(--vui-overlay-gutter) * 2));
 }

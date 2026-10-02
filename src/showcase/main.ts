@@ -1,4 +1,6 @@
 import {
+  getDensity,
+  getTheme,
   iconNames,
   setDensity,
   setTheme,
@@ -7,9 +9,9 @@ import {
   type VuiTheme,
 } from '../index';
 import './showcase.css';
-import type { VuiDataGrid } from '../components/data/data-grid';
-import type { VuiFileTree } from '../components/desktop/file-tree';
-import type { VuiDialog } from '../components/overlay/dialog';
+import type { VDataGrid } from '../components/data/data-grid';
+import type { VFileTree } from '../components/desktop/file-tree';
+import type { VDialog } from '../components/overlay/dialog';
 import { showcaseMarkup } from './markup';
 
 const app = document.querySelector('#app');
@@ -22,10 +24,31 @@ const densities = new Set<VuiDensity>(['comfortable', 'compact', 'dense']);
 const themeSelect = document.querySelector('#theme-select');
 const densitySelect = document.querySelector('#density-select');
 
+const themeLabels: Record<VuiTheme, string> = {
+  light: 'Light',
+  dark: 'Dark',
+  'high-contrast': 'High Contrast',
+  system: 'System',
+};
+const densityLabels: Record<VuiDensity, string> = {
+  comfortable: 'Comfortable',
+  compact: 'Compact',
+  dense: 'Dense',
+};
+
+const updateResponsiveReadout = (): void => {
+  const readout = document.querySelector('#responsive-readout');
+  const stage = document.querySelector('#resize-stage');
+  if (!readout || !(stage instanceof HTMLElement)) return;
+  const width = Math.round(stage.getBoundingClientRect().width);
+  readout.textContent = `${themeLabels[getTheme()]} + ${densityLabels[getDensity()]} + ${width}px`;
+};
+
 if (themeSelect instanceof HTMLElement) {
   themeSelect.addEventListener('change', () => {
     const value = themeSelect.getAttribute('value') ?? '';
     if (themes.has(value as VuiTheme)) setTheme(value as VuiTheme);
+    updateResponsiveReadout();
   });
 }
 
@@ -33,6 +56,7 @@ if (densitySelect instanceof HTMLElement) {
   densitySelect.addEventListener('change', () => {
     const value = densitySelect.getAttribute('value') ?? '';
     if (densities.has(value as VuiDensity)) setDensity(value as VuiDensity);
+    updateResponsiveReadout();
   });
 }
 
@@ -86,20 +110,20 @@ document.querySelector('#toast-button')?.addEventListener('click', () => {
 const dialog = document.querySelector('#demo-dialog');
 document.querySelector('#open-dialog')?.addEventListener('click', () => {
   if (dialog instanceof HTMLElement && 'show' in dialog) {
-    (dialog as VuiDialog).show();
+    (dialog as VDialog).show();
   }
 });
 document.querySelector('#dialog-cancel')?.addEventListener('click', () => {
-  if (dialog instanceof HTMLElement && 'close' in dialog) (dialog as VuiDialog).close();
+  if (dialog instanceof HTMLElement && 'close' in dialog) (dialog as VDialog).close();
 });
 document.querySelector('#dialog-save')?.addEventListener('click', () => {
-  if (dialog instanceof HTMLElement && 'close' in dialog) (dialog as VuiDialog).close();
+  if (dialog instanceof HTMLElement && 'close' in dialog) (dialog as VDialog).close();
   toast({ title: 'Сохранено', message: 'Диалог подтвердил действие.', variant: 'success' });
 });
 
 const grid = document.querySelector('#demo-grid');
 if (grid && 'columns' in grid && 'rows' in grid) {
-  const dataGrid = grid as VuiDataGrid;
+  const dataGrid = grid as VDataGrid;
   dataGrid.columns = [
     { key: 'name', title: 'Компонент', width: '40%' },
     { key: 'category', title: 'Категория' },
@@ -119,10 +143,82 @@ if (grid && 'columns' in grid && 'rows' in grid) {
   });
 }
 
+const responsiveGrid = document.querySelector('#responsive-grid');
+if (responsiveGrid && 'columns' in responsiveGrid && 'rows' in responsiveGrid) {
+  const grid = responsiveGrid as VDataGrid;
+  grid.columns = [
+    { key: 'name', title: 'Компонент', width: '12rem' },
+    { key: 'category', title: 'Категория', width: '10rem' },
+    { key: 'status', title: 'Статус', width: '8rem', priority: 'secondary' },
+    { key: 'note', title: 'Примечание', width: '14rem', priority: 'secondary' },
+  ];
+  grid.rows = [
+    { id: 'button', name: 'Button', category: 'Actions', status: 'Готов', note: 'Всегда виден' },
+    { id: 'toolbar', name: 'Toolbar', category: 'Navigation', status: 'Готов', note: 'Сжимается по контейнеру' },
+    { id: 'grid', name: 'Data Grid', category: 'Data', status: 'Готов', note: 'Лишние колонки скрываются' },
+  ];
+}
+
+const stage = document.querySelector('#resize-stage');
+const handle = document.querySelector('#resize-handle');
+const widths: Record<string, string> = {
+  'size-wide': 'calc(100% - 0.75rem)',
+  'size-medium': '40rem',
+  'size-narrow': '18rem',
+};
+
+if (stage instanceof HTMLElement) {
+  for (const [id, width] of Object.entries(widths)) {
+    document.querySelector(`#${id}`)?.addEventListener('click', () => {
+      stage.style.width = width;
+      updateResponsiveReadout();
+    });
+  }
+}
+
+if (stage instanceof HTMLElement && handle instanceof HTMLElement) {
+  let dragging = false;
+  const resizeTo = (clientX: number): void => {
+    const parent = stage.parentElement;
+    if (!parent) return;
+    const rect = parent.getBoundingClientRect();
+    const next = Math.min(rect.width - 12, Math.max(160, clientX - rect.left));
+    stage.style.width = `${Math.round(next)}px`;
+    updateResponsiveReadout();
+  };
+  handle.addEventListener('pointerdown', (event) => {
+    dragging = true;
+    handle.setPointerCapture(event.pointerId);
+    resizeTo(event.clientX);
+  });
+  handle.addEventListener('pointermove', (event) => {
+    if (dragging) resizeTo(event.clientX);
+  });
+  handle.addEventListener('pointerup', () => {
+    dragging = false;
+  });
+  handle.addEventListener('pointercancel', () => {
+    dragging = false;
+  });
+  handle.addEventListener('keydown', (event) => {
+    const current = stage.getBoundingClientRect().width;
+    const parent = stage.parentElement?.clientWidth ?? current;
+    const step = event.shiftKey ? 80 : 24;
+    if (event.key === 'ArrowLeft') stage.style.width = `${Math.max(160, Math.round(current - step))}px`;
+    else if (event.key === 'ArrowRight') stage.style.width = `${Math.min(parent - 12, Math.round(current + step))}px`;
+    else return;
+    event.preventDefault();
+    updateResponsiveReadout();
+  });
+}
+
+updateResponsiveReadout();
+window.addEventListener('resize', updateResponsiveReadout);
+
 const tree = document.querySelector('#demo-tree');
 tree?.addEventListener('change', () => {
   const status = document.querySelector('#status-selection');
   if (!status || !(tree instanceof HTMLElement) || !('selectedItem' in tree)) return;
-  const item = (tree as VuiFileTree).selectedItem;
+  const item = (tree as VFileTree).selectedItem;
   status.textContent = item?.getAttribute('label') ?? 'Файл не выбран';
 });

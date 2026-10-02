@@ -4,7 +4,7 @@ import { renderIcon } from '../../icons/registry';
 
 export { iconNames, registerIcon } from '../../icons/registry';
 
-export class VuiIcon extends VuiElement {
+export class VIcon extends VuiElement {
   static get observedAttributes(): string[] {
     return ['name', 'label'];
   }
@@ -48,4 +48,4 @@ export class VuiIcon extends VuiElement {
   }
 }
 
-defineElement('vui-icon', VuiIcon);
+defineElement('vui-icon', VIcon);

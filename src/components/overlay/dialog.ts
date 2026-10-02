@@ -8,7 +8,7 @@ const closeIcon = `
   <path d="m6 6 12 12"></path>
 </svg>`;
 
-export class VuiDialog extends VuiElement {
+export class VDialog extends VuiElement {
   static get observedAttributes(): string[] {
     return ['open', 'label', 'dismissable', 'size', 'close-label'];
   }
@@ -42,22 +42,28 @@ export class VuiDialog extends VuiElement {
         margin: auto;
         background: transparent;
         color: inherit;
-        max-width: calc(100vw - var(--vui-space-xl));
+        width: var(--vui-dialog-inline);
+        max-width: calc(100vw - var(--vui-overlay-gutter) * 2);
+        max-height: var(--vui-dialog-block);
       }
       dialog::backdrop {
         background: var(--vui-color-backdrop);
       }
       .surface {
-        width: min(32rem, 100vw);
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-height: var(--vui-dialog-block);
+        min-width: 0;
         background: var(--vui-color-surface-raised);
         color: var(--vui-color-text);
         border: var(--vui-border-width) solid var(--vui-color-border);
         border-radius: var(--vui-radius-lg);
         box-shadow: var(--vui-shadow-lg);
       }
-      :host([size="small"]) .surface { width: min(24rem, 100vw); }
-      :host([size="large"]) .surface { width: min(48rem, 100vw); }
-      header, .body, footer { padding: var(--vui-panel-padding); }
+      :host([size="small"]) dialog { width: var(--vui-dialog-inline-sm); }
+      :host([size="large"]) dialog { width: var(--vui-dialog-inline-lg); }
+      header, .body, footer { padding: var(--vui-panel-padding); min-width: 0; }
       header {
         display: flex;
         align-items: center;
@@ -67,17 +73,39 @@ export class VuiDialog extends VuiElement {
       }
       h2 {
         margin: 0;
+        min-width: 0;
+        overflow-wrap: anywhere;
         font-size: var(--vui-heading-3);
         line-height: var(--vui-line-height);
         font-weight: var(--vui-font-weight-strong);
       }
       h2:focus { outline: none; }
-      .body { padding-top: var(--vui-space-md); }
+      .body {
+        padding-top: var(--vui-space-md);
+        overflow: auto;
+        min-height: 0;
+      }
       footer {
         display: flex;
         justify-content: flex-end;
+        flex-wrap: wrap;
         gap: var(--vui-space-sm);
         border-top: var(--vui-border-width) solid var(--vui-color-border);
+      }
+      @media (max-width: 30rem) {
+        dialog {
+          width: 100vw;
+          max-width: 100vw;
+          height: 100dvh;
+          max-height: 100dvh;
+          margin: 0;
+        }
+        .surface {
+          width: 100%;
+          height: 100%;
+          max-height: 100dvh;
+          border-radius: 0;
+        }
       }
       footer.hidden { display: none; }
       .close {
@@ -194,4 +222,4 @@ export class VuiDialog extends VuiElement {
   }
 }
 
-defineElement('vui-dialog', VuiDialog);
+defineElement('vui-dialog', VDialog);

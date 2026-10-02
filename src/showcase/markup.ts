@@ -22,7 +22,7 @@ export const showcaseMarkup = `
         <h1>VUI Showcase</h1>
         <p>
           Универсальная модульная UI-система для Web, SPA и Desktop/Electron.
-          Эта страница собрана из компонентов VUI и служит демонстрацией, справкой и ручной проверкой тем и плотности.
+          Эта страница собрана из компонентов VUI и служит демонстрацией, справкой и ручной проверкой тем, плотности и responsive-поведения.
         </p>
       </header>
 
@@ -332,7 +332,7 @@ grid.addEventListener("change", () =&gt; grid.selectedId);</pre>
                     <vui-tab panel="readme" selected>README.md</vui-tab>
                     <vui-tab panel="button-file">button.ts</vui-tab>
                     <vui-tab-panel name="readme">Персональная библиотека компонентов. Темы и плотность общие для Web и Desktop.</vui-tab-panel>
-                    <vui-tab-panel name="button-file">export class VuiButton extends VuiElement {}</vui-tab-panel>
+                    <vui-tab-panel name="button-file">export class VButton extends VuiElement {}</vui-tab-panel>
                   </vui-tabs>
                 </div>
               </vui-split-panel>
@@ -357,6 +357,65 @@ grid.addEventListener("change", () =&gt; grid.selectedId);</pre>
 &lt;/vui-status-bar&gt;</pre>
           </vui-panel>
         </div>
+      </section>
+
+      <section class="category" id="responsive">
+        <h2>Responsive Design</h2>
+        <p class="section-lead">
+          Тема, плотность и доступная ширина независимы. Компонент подстраивается под свой контейнер:
+          широкий, средний и узкий. Перетащите правый край или выберите ширину. Сочетания Light, Dark,
+          High Contrast и Comfortable, Compact, Dense переключаются на панели сверху и действуют на этот блок.
+        </p>
+        <p id="responsive-readout" class="demo-note">Light + Comfortable</p>
+        <vui-hstack gap="sm" wrap>
+          <vui-button id="size-wide" variant="secondary" size="small">Широкий</vui-button>
+          <vui-button id="size-medium" variant="secondary" size="small">Средний</vui-button>
+          <vui-button id="size-narrow" variant="secondary" size="small">Узкий</vui-button>
+        </vui-hstack>
+        <div class="resize-shell">
+          <div id="resize-stage" class="resize-stage">
+            <div class="desktop resize-desktop">
+              <vui-toolbar id="responsive-toolbar" label="Адаптивная панель">
+                <vui-icon-button slot="start" name="menu" label="Меню"></vui-icon-button>
+                <vui-button slot="start" size="small" variant="ghost">Файл</vui-button>
+                <vui-button slot="start" size="small" variant="ghost">Правка</vui-button>
+                <vui-button slot="start" size="small" variant="ghost">Вид</vui-button>
+                <span>Документ</span>
+                <vui-button size="small" variant="secondary">Собрать</vui-button>
+                <vui-icon-button slot="end" name="search" label="Поиск"></vui-icon-button>
+                <vui-icon-button slot="end" name="settings" label="Настройки"></vui-icon-button>
+              </vui-toolbar>
+              <div class="resize-body">
+                <vui-tabs id="responsive-tabs" label="Разделы">
+                  <vui-tab panel="home" selected>Главная</vui-tab>
+                  <vui-tab panel="catalog">Каталог</vui-tab>
+                  <vui-tab panel="saved">Избранное</vui-tab>
+                  <vui-tab panel="settings">Настройки</vui-tab>
+                  <vui-tab-panel name="home">Вкладки прокручиваются, если контейнер уже их подписей.</vui-tab-panel>
+                  <vui-tab-panel name="catalog">Каталог</vui-tab-panel>
+                  <vui-tab-panel name="saved">Избранное</vui-tab-panel>
+                  <vui-tab-panel name="settings">Настройки</vui-tab-panel>
+                </vui-tabs>
+                <vui-input id="responsive-input" label="Название" hint="В широком контейнере подпись стоит рядом с полем" value="VUI"></vui-input>
+                <vui-data-grid id="responsive-grid" label="Адаптивная таблица" empty-label="Нет строк"></vui-data-grid>
+                <vui-split-panel id="responsive-split" position="36" label="Панели приложения" style="height: 160px">
+                  <div slot="start" class="box">Боковая панель</div>
+                  <div slot="end" class="box">Содержимое. В узком контейнере панели складываются.</div>
+                </vui-split-panel>
+              </div>
+              <vui-status-bar id="responsive-status" label="Строка состояния">
+                <span>Готово</span>
+                <span slot="end">main</span>
+                <span slot="end">UTF-8</span>
+              </vui-status-bar>
+            </div>
+          </div>
+          <button id="resize-handle" class="resize-handle" type="button" aria-label="Изменить ширину контейнера"></button>
+        </div>
+        <pre class="code">&lt;vui-toolbar&gt;
+  &lt;vui-button slot="start"&gt;Файл&lt;/vui-button&gt;
+  &lt;vui-icon-button slot="end" name="search" label="Поиск"&gt;&lt;/vui-icon-button&gt;
+&lt;/vui-toolbar&gt;</pre>
       </section>
     </main>
   </div>
