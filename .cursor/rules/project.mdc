@@ -13,7 +13,7 @@ alwaysApply: true
 
 ## Статус
 
-`0.1.0`. Первый рабочий набор реализован. Не добавляйте пустые заглушки для запланированного списка.
+`0.2.0`. Публичная граница: компоненты, patterns в Studio, `vui-shell`. Не добавляйте пустые заглушки. Pattern не является компонентом и не входит в exports.
 
 ## Стек
 
@@ -51,15 +51,15 @@ docs/components.md  каталог публичного API
 
 `import 'vui'` регистрирует весь реализованный набор.
 
-Категория: `vui/foundation`, `vui/layout`, `vui/actions`, `vui/forms`, `vui/feedback`, `vui/overlay`, `vui/navigation`, `vui/data`, `vui/desktop`.
+Категория: `vui/foundation`, `vui/layout`, `vui/actions`, `vui/forms`, `vui/feedback`, `vui/overlay`, `vui/navigation`, `vui/data`, `vui/content`, `vui/desktop`.
 
-Компонент: `vui/icon`, `vui/button`, `vui/icon-button`, `vui/input`, `vui/checkbox`, `vui/switch`, `vui/select`, `vui/dialog`, `vui/menu`, `vui/tabs`, `vui/tooltip`, `vui/alert`, `vui/toast`, `vui/panel`, `vui/stack`, `vui/hstack`, `vui/vstack`, `vui/grid`, `vui/split-panel`, `vui/toolbar`, `vui/status-bar`, `vui/file-tree`, `vui/data-grid`.
+Компонент: `vui/icon`, `vui/button`, `vui/button-group`, `vui/icon-button`, `vui/input`, `vui/textarea`, `vui/checkbox`, `vui/radio`, `vui/switch`, `vui/select`, `vui/dialog`, `vui/menu`, `vui/popover`, `vui/tabs`, `vui/breadcrumbs`, `vui/pagination`, `vui/tooltip`, `vui/alert`, `vui/progress`, `vui/spinner`, `vui/skeleton`, `vui/toast`, `vui/panel`, `vui/container`, `vui/scroll-area`, `vui/stack`, `vui/hstack`, `vui/vstack`, `vui/grid`, `vui/split-panel`, `vui/toolbar`, `vui/status-bar`, `vui/shell`, `vui/file-tree`, `vui/data-grid`, `vui/badge`, `vui/avatar`, `vui/separator`.
 
 `vui/interaction` — primitives без регистрации элементов: focus, keyboard, selection, commands, shortcuts, overlay, context menu, drag & drop, clipboard, pointer. `vui/menu` включает `vui-menu-item`.
 
 `vui/runtime` — Foundation runtime: `readFoundation`, `readToken`, `containerBand`, `setTheme`, `setDensity`, `prefersReducedMotion`, `prefersForcedColors`. `vui/contract` — `registerContract`, `listContracts`, `checkCompliance`. `vui/composition` — `registerComposition`, `checkComposition`, `ownedChildren`. `vui/families` — правила Action, Field, Overlay, Navigation и Data. `vui/foundation` по-прежнему регистрирует иконку, а не runtime.
 
-`vui/stack`, `vui/hstack` и `vui/vstack` — один модуль. `vui/select` включает `vui-option`. `vui/tabs` включает `vui-tab` и `vui-tab-panel`. `vui/file-tree` включает `vui-tree-item`. `vui/toast` включает `vui-toaster` и `toast()`. `vui/desktop` реэкспортирует toolbar и split panel; их исходники остаются в navigation и layout.
+`vui/stack`, `vui/hstack` и `vui/vstack` — один модуль. `vui/select` включает `vui-option`. `vui/tabs` включает `vui-tab` и `vui-tab-panel`. `vui/file-tree` включает `vui-tree-item`. `vui/toast` включает `vui-toaster` и `toast()`. `vui/radio` включает `vui-radio-group`. `vui/desktop` реэкспортирует toolbar, split panel и shell; исходники toolbar и split остаются в navigation и layout.
 
 Тема: `vui/theme` (`setTheme`, `setDensity`, `getTheme`, `getDensity`). CSS: `vui/themes/tokens`, `vui/themes/density`, `vui/themes/light`, `vui/themes/dark`, `vui/themes/high-contrast`, `vui/themes/system`.
 
@@ -247,7 +247,7 @@ Interaction contract объявляет клавиши из общего наб�
 
 ## Showcase
 
-`pnpm dev` отдаёт `index.html`. Страница собрана из элементов VUI и показывает Foundation, темы, плотность, Layout, контракт компонента, композицию и Responsive Design. У каждого реализованного компонента там есть рабочий пример. Без примера компонент не считается готовым. Переключатели темы и плотности вызывают `setTheme` и `setDensity`. В разделе Responsive Design есть пресеты wide, medium и narrow и ручка изменения ширины. Табло показывает текущие тему, плотность и ширину контейнера. Раздел Contract показывает lifecycle, состояния, клавиатуру, фокус, две ширины поля и таблицу зарегистрированных контрактов. Раздел Composition показывает форму, вкладки, таблицу и диалог, собранные из тех же контрактов. Снимок Foundation читает `readFoundation()`.
+`pnpm dev` отдаёт VUI Studio (`index.html`). Страница собрана из элементов VUI и показывает Foundation, темы, плотность, направление `dir`, Layout, компоненты, patterns, shell, Platform Validation, контракт и Responsive Design. У каждого реализованного компонента там есть рабочий пример. Без примера компонент не считается готовым. Переключатели темы и плотности вызывают `setTheme` и `setDensity`. В разделе Responsive Design есть пресеты wide, medium и narrow и ручка изменения ширины. Табло показывает текущие тему, плотность и ширину контейнера. Раздел Contract показывает lifecycle, состояния, клавиатуру, фокус, две ширины поля и таблицу зарегистрированных контрактов. Раздел Composition показывает форму, вкладки, таблицу и диалог, собранные из тех же контрактов. Снимок Foundation читает `readFoundation()`.
 
 ## Тесты
 
@@ -265,8 +265,10 @@ Vitest + happy-dom: `tests/unit`. Покрывайте границы регис
 
 ## Ещё не реализовано
 
-Container, divider, scroll area, button group, dropdown, textarea, combobox, radio, slider, выбор даты, времени, файла и цвета, notification, progress, spinner, skeleton, modal как отдельный элемент, drawer, popover, breadcrumbs, pagination, sidebar, navigation menu, tab bar, table, list, virtual list, tree, tree grid, empty state, window header, window controls, application layout, dock, inspector, property grid, file list, path bar, file browser, command palette.
+Combobox, slider, выбор даты, времени, файла и цвета, drawer, modal как отдельный элемент, sidebar как отдельный элемент, navigation menu, tab bar, table как отдельный элемент, list, virtual list, tree grid, empty state, window header, window controls, dock, inspector, property grid, file list, path bar.
 
-`vui-menu` уже покрывает context menu. Команды и shortcuts — infrastructure в `src/interaction`, не готовые бизнес-команды.
+Уже закрыто существующими primitive: dropdown — `vui-select`, `vui-menu` или `vui-popover`; card — `vui-panel`; field — само поле; toolbar item — слоты toolbar; context menu — `vui-menu`; command bar — `vui-toolbar`; resizable region — `vui-split-panel`; application layout — `vui-shell`; command palette и file browser — patterns в Studio, без файловой системы и без своего элемента. Сортировка и фильтр остаются данными страницы: таблица получает уже отфильтрованные `rows`.
+
+`vui-menu` покрывает context menu. Команды и shortcuts — infrastructure в `src/interaction`, не готовые бизнес-команды.
 
 Добавляйте это только как настоящие компоненты, по одному, со showcase и с обновлением этого файла.

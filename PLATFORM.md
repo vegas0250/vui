@@ -30,7 +30,9 @@ VUI предоставляет:
 - drag & drop primitives;
 - clipboard interaction;
 - application UI primitives;
-- data presentation primitives.
+- data presentation primitives;
+- reference UI patterns;
+- application shell.
 
 VUI не предоставляет:
 
@@ -50,7 +52,8 @@ VUI не предоставляет:
 - AI provider implementation;
 - MCP infrastructure;
 - application-specific routing;
-- global application state management.
+- global application state management;
+- a real business application.
 
 Интерфейс для этих возможностей может быть компонентом VUI. Реализация инфраструктуры остаётся у приложения.
 
@@ -163,7 +166,9 @@ Component
    ↓
 Composition
    ↓
-Application UI
+Patterns
+   ↓
+Application Shell
 ```
 
 ```text

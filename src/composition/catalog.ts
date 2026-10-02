@@ -88,6 +88,64 @@ registerComposition({
 });
 
 registerComposition({
+  id: 'radio-group',
+  host: 'vui-radio-group',
+  summary: 'Группа читает прямых vui-radio. Пункт не выбирает соседа: имя, disabled и значение пишет группа.',
+  links: [{ from: 'vui-radio-group', to: 'vui-radio', direction: 'parent-child', channel: 'light-dom' }],
+  emits: ['change'],
+});
+
+registerComposition({
+  id: 'button-group',
+  host: 'vui-button-group',
+  summary: 'Кнопки лежат в слоте. Группа даёт имя и disabled, но не вызывает команды детей.',
+  links: [{ from: 'vui-button-group', to: 'actions', direction: 'parent-child', channel: 'slot', slot: '' }],
+  emits: [],
+});
+
+registerComposition({
+  id: 'popover',
+  host: 'vui-popover',
+  summary: 'Триггер — слот по умолчанию, содержимое — slot panel. Закрытие идёт через общий стек overlay.',
+  links: [
+    { from: 'vui-popover', to: 'trigger', direction: 'parent-child', channel: 'slot', slot: '' },
+    { from: 'vui-popover', to: 'content', direction: 'parent-child', channel: 'slot', slot: 'panel' },
+  ],
+  emits: ['close'],
+});
+
+registerComposition({
+  id: 'breadcrumbs',
+  host: 'vui-breadcrumbs',
+  summary: 'Крошки — светлые дети. Текущую страницу помечает приложение через aria-current.',
+  links: [{ from: 'vui-breadcrumbs', to: 'item', direction: 'parent-child', channel: 'slot', slot: '' }],
+  emits: [],
+});
+
+registerComposition({
+  id: 'scroll-area',
+  host: 'vui-scroll-area',
+  summary: 'Содержимое — слот. Область только прокручивает, она не владеет данными.',
+  links: [{ from: 'vui-scroll-area', to: 'content', direction: 'parent-child', channel: 'slot', slot: '' }],
+  emits: [],
+});
+
+registerComposition({
+  id: 'shell',
+  host: 'vui-shell',
+  summary: 'Шапка, панель, навигация, основное содержимое, боковая панель и статус — слоты. Shell не знает, что в них лежит.',
+  links: [
+    { from: 'vui-shell', to: 'header', direction: 'parent-child', channel: 'slot', slot: 'header' },
+    { from: 'vui-shell', to: 'toolbar', direction: 'parent-child', channel: 'slot', slot: 'toolbar' },
+    { from: 'vui-shell', to: 'nav', direction: 'parent-child', channel: 'slot', slot: 'nav' },
+    { from: 'vui-shell', to: 'main', direction: 'parent-child', channel: 'slot', slot: '' },
+    { from: 'vui-shell', to: 'aside', direction: 'parent-child', channel: 'slot', slot: 'aside' },
+    { from: 'vui-shell', to: 'footer', direction: 'parent-child', channel: 'slot', slot: 'footer' },
+  ],
+  emits: [],
+});
+
+registerComposition({
   id: 'menu',
   host: 'vui-menu',
   summary: 'Пункт — прямой ребёнок. Вложенное меню лежит в slot submenu. Активация идёт через CommandRegistry.',

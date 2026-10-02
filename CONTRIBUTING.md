@@ -24,7 +24,11 @@ VButton → <vui-button> → src/components/actions/button.ts
 
 ## Что не добавлять без отдельной задачи
 
-Card, badge, avatar, chip, charts, rich text, сложный calendar и прочие декоративные или узкоспециальные виджеты. Сначала должен появиться контракт и сценарий в showcase.
+Charts, rich text и сложный calendar. Card уже закрыт `vui-panel`, badge и avatar есть. Новый элемент нужен только если существующий primitive не выражает роль. Pattern в Studio не заменяет компонент и не становится export.
+
+## Component, composition, pattern
+
+Компонент — `vui-*` с контрактом. Composition — связь host и детей. Pattern — пример страницы из публичного API в `src/showcase/studio.ts`. Shell — `vui-shell`, не набор страниц.
 
 ## Проверки
 

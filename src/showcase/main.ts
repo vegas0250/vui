@@ -22,10 +22,11 @@ import type { VFileTree } from '../components/desktop/file-tree';
 import type { VDialog } from '../components/overlay/dialog';
 import type { VMenu } from '../components/overlay/menu';
 import { showcaseMarkup } from './markup';
+import { studioMarkup } from './studio';
 
 const app = document.querySelector('#app');
 if (!app) throw new Error('Showcase root is missing');
-app.innerHTML = showcaseMarkup;
+app.innerHTML = showcaseMarkup.replace('</main>', `${studioMarkup}</main>`);
 
 const themes = new Set<VuiTheme>(['light', 'dark', 'high-contrast', 'system']);
 const densities = new Set<VuiDensity>(['comfortable', 'compact', 'dense']);
@@ -105,6 +106,13 @@ if (densitySelect instanceof HTMLElement) {
     const value = densitySelect.getAttribute('value') ?? '';
     if (densities.has(value as VuiDensity)) setDensity(value as VuiDensity);
     updateResponsiveReadout();
+  });
+}
+
+const dirSelect = document.querySelector('#dir-select');
+if (dirSelect instanceof HTMLElement) {
+  dirSelect.addEventListener('change', () => {
+    document.documentElement.setAttribute('dir', dirSelect.getAttribute('value') === 'rtl' ? 'rtl' : 'ltr');
   });
 }
 
@@ -412,6 +420,80 @@ if (dropZone instanceof HTMLElement) {
     accept: (payload) => payload.type === 'chip',
     onDrop: () => note('#drop-result', 'Элемент отпущен. Смысл переноса задаёт приложение.'),
   });
+}
+
+const shellDemo = document.querySelector('#shell-collapse')?.closest('vui-shell');
+document.querySelector('#shell-collapse')?.addEventListener('click', () => {
+  shellDemo?.toggleAttribute('collapsed');
+});
+
+document.querySelector('#pattern-command')?.addEventListener('click', () => {
+  const palette = document.querySelector('#pattern-palette');
+  if (palette instanceof HTMLElement && 'show' in palette) (palette as VDialog).show();
+});
+
+const platformRows = [
+  { id: 'button', name: 'Button', area: 'Actions' },
+  { id: 'input', name: 'Input', area: 'Forms' },
+  { id: 'shell', name: 'Shell', area: 'Desktop' },
+  { id: 'grid', name: 'Data grid', area: 'Data' },
+];
+
+const platformGrid = document.querySelector('#platform-grid');
+const paintPlatform = (query = ''): void => {
+  if (!(platformGrid instanceof HTMLElement) || !('columns' in platformGrid) || !('rows' in platformGrid)) return;
+  const grid = platformGrid as VDataGrid;
+  const needle = query.trim().toLowerCase();
+  grid.columns = [
+    { key: 'name', title: 'Name', width: '40%' },
+    { key: 'area', title: 'Area' },
+  ];
+  grid.rows = platformRows.filter((row) => row.name.toLowerCase().includes(needle) || row.area.toLowerCase().includes(needle));
+};
+
+if (platformGrid instanceof HTMLElement && 'columns' in platformGrid) {
+  paintPlatform();
+  const grid = platformGrid as VDataGrid;
+  grid.addEventListener('change', () => {
+    const row = platformRows.find((item) => item.id === grid.selectedId);
+    const detail = document.querySelector('#platform-detail');
+    const status = document.querySelector('#platform-status');
+    const text = row ? `${row.name} · ${row.area}` : 'No selection';
+    if (detail) detail.textContent = text;
+    if (status) status.textContent = text;
+  });
+}
+
+const platformSearch = document.querySelector('#platform-search');
+if (platformSearch) {
+  const paintSearch = (): void => paintPlatform(platformSearch.getAttribute('value') ?? '');
+  platformSearch.addEventListener('input', paintSearch);
+  new MutationObserver(paintSearch).observe(platformSearch, { attributes: true, attributeFilter: ['value'] });
+}
+
+const platformShell = document.querySelector('#platform-shell');
+const togglePlatformNav = (): void => {
+  platformShell?.toggleAttribute('collapsed');
+};
+document.querySelector('#platform-collapse')?.addEventListener('click', togglePlatformNav);
+document.querySelector('#platform-palette-sidebar')?.addEventListener('click', togglePlatformNav);
+
+const platformDialog = document.querySelector('#platform-dialog');
+const platformPalette = document.querySelector('#platform-palette');
+document.querySelector('#platform-open')?.addEventListener('click', () => {
+  if (platformDialog instanceof HTMLElement && 'show' in platformDialog) (platformDialog as VDialog).show();
+});
+document.querySelector('#platform-close')?.addEventListener('click', () => {
+  if (platformDialog instanceof HTMLElement && 'close' in platformDialog) (platformDialog as VDialog).close();
+  toast({ title: 'Closed', message: 'The page owns this toast.', variant: 'info' });
+});
+document.querySelector('#platform-command')?.addEventListener('click', () => {
+  if (platformPalette instanceof HTMLElement && 'show' in platformPalette) (platformPalette as VDialog).show();
+});
+
+const platformMenu = document.querySelector('#platform-menu');
+if (platformMenu instanceof HTMLElement && 'bindTo' in platformMenu && platformGrid instanceof HTMLElement) {
+  (platformMenu as VMenu).bindTo(platformGrid);
 }
 
 const tree = document.querySelector('#demo-tree');

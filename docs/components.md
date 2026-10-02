@@ -392,3 +392,79 @@ grid.selectedId = '1';
 | Responsive | горизонтальная прокрутка. Колонка `priority: "secondary"` скрывается на ширине до `--vui-layout-medium`, и клавиатура её пропускает |
 
 `columns`: `{ key, title, width?, align?: start | center | end, priority?: primary | secondary }`. `width` — только простое число с `px`, `rem`, `em` или `%`. `rows`: `{ id, [key]: string }`.
+
+## vui-button-group
+
+Группа действий. Дети остаются обычными кнопками.
+
+| Attributes | `label`, `orientation` horizontal \| vertical, `disabled` |
+| Events | нет |
+| Slots | по умолчанию |
+| Parts | `group` |
+| Keyboard | Tab по детям. `disabled` ставит `inert` на группу |
+
+## vui-textarea
+
+Многострочное поле. Контракт поля такой же, как у `vui-input`: `label`, `value`, `hint`, `invalid`, `disabled`, `readonly`, `required`, `name`, плюс `rows`. События `input` и `change`. Parts `label`, `control`, `input`, `hint`.
+
+## vui-radio
+
+| vui-radio | `checked`, `name`, `value`, `disabled`, `invalid`. Слот — подпись. Событие `change` |
+| vui-radio-group | `label`, `name`, `value`, `hint`, `disabled`, `invalid`, `required`. Стрелки переносят выбор между прямыми `vui-radio` |
+
+Одинаковое `name` снимает `checked` с остальных `vui-radio`. Группа копирует своё `name` на прямых детей.
+
+## vui-badge
+
+`variant`: neutral, info, success, warning, danger. Слот — текст. Part `badge`.
+
+## vui-avatar
+
+`label` — доступное имя и источник инициалов, если слот пуст. `size`: small, medium, large. Parts `avatar`, `initials`.
+
+## vui-separator
+
+`orientation` horizontal \| vertical. Без `label` разделитель декоративный (`aria-hidden`). С `label` это `role="separator"`. Part `rule`.
+
+## vui-progress
+
+`label`, `value`, `max`. Без `value` индикатор неопределённый и `aria-busy`. Part `track` — `progressbar`, part `bar`.
+
+## vui-spinner
+
+`label`, по умолчанию Loading, если в слоте нет текста. `role="status"`. Parts `spinner`, `mark`, `label`.
+
+## vui-skeleton
+
+Декоративный блок. `variant`: block, text, circle. На host стоит `aria-hidden`.
+
+## vui-popover
+
+Якорь — слот по умолчанию, содержимое — `slot="panel"`. `open`, `label`, `placement` bottom \| top. Методы `show()` и `close()`. Событие `close`. Слой — общий overlay: Escape и указатель снаружи закрывают, фокус возвращается.
+
+## vui-breadcrumbs
+
+`label` — имя `nav`. Дети — светлый DOM. Текущую страницу страница помечает `aria-current="page"`. Part `nav`, `list`.
+
+## vui-pagination
+
+`label`, `page`, `pages`. Событие `change`. Клавиатура кнопок — Tab, Enter, Space. Part `nav`, `prev`, `next`, `pages`.
+
+## vui-scroll-area
+
+Слот прокручивается. `label` — имя области. Стрелки, Home, End, PageUp, PageDown. Горизонталь учитывает `dir`. Part `viewport`.
+
+## vui-container
+
+Ограничивает ширину содержимого: `size` small \| medium \| large. `padding` — шаг layout. Part `body`.
+
+## vui-shell
+
+Раскладка приложения. Слоты: `header`, `toolbar`, `nav`, по умолчанию, `aside`, `footer`.
+
+| Attributes | `label`, `nav-label`, `aside-label`, `skip-label`, `collapsed` |
+| Parts | `shell`, `skip`, `header`, `toolbar`, `body`, `nav`, `main`, `aside`, `footer` |
+| Keyboard | Tab. Ссылка skip переносит фокус в main |
+| Responsive | ниже 40rem колонки складываются. `collapsed` скрывает nav |
+
+Пустой слот скрывает свою область. Shell не читает содержимое слотов.

@@ -378,13 +378,13 @@ interaction → command → action
 
 | Семейство | Правила | Кто входит |
 | --- | --- | --- |
-| Action | disabled, focus, keyboard, activation, label; icon, если она есть | button, icon button, menu item |
-| Field | value, disabled, invalid, required, label, description, focus. Ошибка — это `invalid` и `hint`, отдельного `error` нет | input, select, checkbox, switch |
-| Overlay | open, close, Escape, focus restoration, positioning, layering через один стек | dialog, tooltip, menu, toaster |
-| Navigation | roving focus, keyboard, selection | tabs, tab, tab panel, file tree, tree item, menu |
+| Action | disabled, focus, keyboard, activation, label; icon, если она есть | button, button group, icon button, menu item |
+| Field | value, disabled, invalid, required, label, description, focus. Ошибка — это `invalid` и `hint`, отдельного `error` нет | input, textarea, select, checkbox, radio, radio group, switch |
+| Overlay | open, close, Escape, focus restoration, positioning, layering через один стек | dialog, popover, tooltip, menu, toaster |
+| Navigation | roving focus, keyboard, selection | tabs, tab, tab panel, file tree, tree item, menu, breadcrumbs, pagination |
 | Data | keyboard, selection, cursor | data grid |
 
-Импорт: `vui/families`. Radio, textarea, popover и list в семейства не входят, пока их нет как компонентов.
+Импорт: `vui/families`. Отдельного field-элемента нет: подпись, hint и invalid живут на самом поле. Группа взаимоисключающего выбора — `vui-radio-group`.
 
 Эталонные сценарии Form, Navigation, Data и Overlay проверяют фокус, клавиатуру, disabled, invalid, выбор, слои, тему, плотность и ширину контейнера вместе. Смена темы или плотности не меняет полосу контейнера. Showcase показывает те же четыре сборки.
 
@@ -421,3 +421,11 @@ pnpm test:e2e -- tests/e2e/visual.spec.ts --update-snapshots
 `pnpm build` собирает ESM с `preserveModules` и декларации через `tsc -p tsconfig.build.json`. Точка входа не импортирует showcase. Селективный импорт не тянет `src/index.ts`.
 
 Стили тем ставятся побочным эффектом при импорте компонента.
+
+## Patterns и shell
+
+Pattern не регистрирует элемент. Это разметка из публичных компонентов в VUI Studio и в `docs/patterns.md`. `vui-shell` — единственная новая раскладка приложения: слоты header, toolbar, nav, main, aside и footer. Ниже 40rem тело складывается в колонку. `collapsed` скрывает навигацию. Shell не интерпретирует детей.
+
+`src/core`, showcase и `src/showcase/studio.ts` не входят в `package.json` `exports`. Стабильный список ключей держит `tests/unit/exports.test.ts`.
+
+Направление текста задаёт `dir` на документе. Компоненты раскладки используют logical properties. Локаль и формат чисел остаются у страницы.

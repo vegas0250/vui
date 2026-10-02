@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test('showcase switches theme and density', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'VUI Showcase' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'VUI Studio' })).toBeVisible();
   await expect(page.locator('vui-button', { hasText: 'Сохранить' }).first()).toBeVisible();
   await expect(page.locator('vui-file-tree')).toBeVisible();
   await expect(page.locator('#demo-grid')).toContainText('Button');
@@ -16,6 +16,11 @@ test('showcase switches theme and density', async ({ page }) => {
   await density.locator('button').click();
   await density.locator('[role="option"]', { hasText: 'Dense' }).click();
   await expect(page.locator('html')).toHaveAttribute('data-vui-density', 'dense');
+
+  await expect(page.locator('#platform-shell')).toBeVisible();
+  await expect(page.locator('#platform-grid')).toContainText('Button');
+  await page.locator('#platform-collapse').click();
+  await expect(page.locator('#platform-shell')).toHaveAttribute('collapsed', '');
 
   await page.locator('#open-dialog').click();
   const dialog = page.locator('#demo-dialog');

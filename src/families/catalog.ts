@@ -31,6 +31,7 @@ registerFamily({
 });
 
 joinFamily({ element: 'vui-button', family: 'action', rules: ['disabled', 'focus', 'keyboard', 'activation', 'label'] });
+joinFamily({ element: 'vui-button-group', family: 'action', rules: ['disabled', 'focus', 'keyboard', 'label'] });
 joinFamily({
   element: 'vui-icon-button',
   family: 'action',
@@ -50,6 +51,17 @@ joinFamily({
 joinFamily({ element: 'vui-select', family: 'field', rules: ['value', 'disabled', 'invalid', 'label', 'focus'] });
 joinFamily({ element: 'vui-checkbox', family: 'field', rules: ['value', 'disabled', 'invalid', 'label', 'focus'] });
 joinFamily({ element: 'vui-switch', family: 'field', rules: ['value', 'disabled', 'label', 'focus'] });
+joinFamily({
+  element: 'vui-textarea',
+  family: 'field',
+  rules: ['value', 'disabled', 'invalid', 'required', 'label', 'description', 'error', 'focus'],
+});
+joinFamily({ element: 'vui-radio', family: 'field', rules: ['value', 'disabled', 'invalid', 'label', 'focus'] });
+joinFamily({
+  element: 'vui-radio-group',
+  family: 'field',
+  rules: ['value', 'disabled', 'invalid', 'required', 'label', 'description', 'error', 'focus'],
+});
 
 joinFamily({
   element: 'vui-dialog',
@@ -63,6 +75,11 @@ joinFamily({
   rules: ['open', 'close', 'escape', 'focus-restore', 'positioning', 'layering'],
 });
 joinFamily({ element: 'vui-toaster', family: 'overlay', rules: ['layering'] });
+joinFamily({
+  element: 'vui-popover',
+  family: 'overlay',
+  rules: ['open', 'close', 'escape', 'focus-restore', 'positioning', 'layering'],
+});
 
 joinFamily({ element: 'vui-tabs', family: 'navigation', rules: ['roving', 'keyboard', 'selection', 'focus'] });
 joinFamily({ element: 'vui-tab', family: 'navigation', rules: ['keyboard', 'selection', 'focus', 'disabled'] });
@@ -71,5 +88,7 @@ joinFamily({ element: 'vui-file-tree', family: 'navigation', rules: ['roving', '
 joinFamily({ element: 'vui-tree-item', family: 'navigation', rules: ['keyboard', 'selection', 'focus', 'label'] });
 joinFamily({ element: 'vui-menu', family: 'navigation', rules: ['roving', 'keyboard', 'focus'] });
 joinFamily({ element: 'vui-menu-item', family: 'navigation', rules: ['keyboard', 'focus'] });
+joinFamily({ element: 'vui-breadcrumbs', family: 'navigation', rules: ['keyboard', 'focus', 'label'] });
+joinFamily({ element: 'vui-pagination', family: 'navigation', rules: ['keyboard', 'selection', 'focus', 'label'] });
 
 joinFamily({ element: 'vui-data-grid', family: 'data', rules: ['keyboard', 'selection', 'focus', 'roving'] });

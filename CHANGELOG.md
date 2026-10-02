@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 0.2.0
+
+Публичная граница платформы: vocabulary, patterns, application shell и VUI Studio.
+
+- Новые элементы: `vui-button-group`, `vui-textarea`, `vui-radio`, `vui-radio-group`, `vui-badge`, `vui-avatar`, `vui-separator`, `vui-progress`, `vui-spinner`, `vui-skeleton`, `vui-popover`, `vui-breadcrumbs`, `vui-pagination`, `vui-scroll-area`, `vui-container`, `vui-shell`.
+- Категория `vui/content`. Shell входит в `vui/desktop` и `vui/shell`.
+- Patterns и Platform Validation живут в Studio и не являются пакетом. Карта exports проверяется тестом. CI собирает библиотеку и сверяет бюджет размера.
+- `dir` на документе — направление текста. Отдельной i18n-системы нет.
 - Composition contract: слот, light DOM, свойство, атрибут и стандартное событие. Select, tabs, tree, toast, dialog, data grid, toolbar, split и menu собраны одним механизмом.
 - Interaction contract: общая клавиатура, фокус, `SelectionModel.active` и путь `interaction → command → action`.
 - Семейства Action, Field, Overlay, Navigation и Data — общие правила без иерархии классов. Showcase и compliance проверяют сценарии Form, Navigation, Data и Overlay.

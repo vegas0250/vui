@@ -14,23 +14,30 @@ export const showcaseMarkup = `
           <vui-option value="compact">Compact</vui-option>
           <vui-option value="dense">Dense</vui-option>
         </vui-select>
+        <vui-select id="dir-select" label="Направление" size="small" value="ltr">
+          <vui-option value="ltr">LTR</vui-option>
+          <vui-option value="rtl">RTL</vui-option>
+        </vui-select>
       </div>
     </vui-toolbar>
 
     <main>
       <header class="intro">
-        <h1>VUI Showcase</h1>
+        <h1>VUI Studio</h1>
         <p>
-          Универсальная UI-платформа для Web, SPA и Desktop/Electron.
-          Эта страница — документация, playground и ручная проверка Foundation, контракта компонентов и responsive-поведения.
+          Документация, playground и проверка платформы. Компонент — primitive.
+          Pattern — пример сборки. Shell — раскладка приложения без бизнес-логики.
         </p>
-        <nav class="lab-nav" aria-label="Разделы лаборатории">
+        <nav class="lab-nav" aria-label="Разделы студии">
           <a href="#foundation">Foundation</a>
           <a href="#layout">Layout</a>
           <a href="#responsive">Responsive</a>
           <a href="#components">Components</a>
-          <a href="#contract">Contract</a>
-          <a href="#composition">Composition</a>
+          <a href="#content">Content</a>
+          <a href="#patterns">Patterns</a>
+          <a href="#shell">Shell</a>
+          <a href="#platform">Platform</a>
+          <a href="#contract">Contracts</a>
         </nav>
       </header>
 

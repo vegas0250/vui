@@ -2,7 +2,7 @@
 
 Универсальная модульная UI-система готовых визуальных компонентов для Web, SPA и Desktop/Electron с поддержкой тем и различной плотности интерфейса.
 
-VUI — персональная библиотека визуальных компонентов для личного использования автора. Проект не позиционируется как production-ready коммерческий UI framework. Если вы решите использовать VUI в своём проекте, делайте это на свой страх и риск. Обратная совместимость, стабильность API и отсутствие ошибок не гарантируются.
+VUI `0.2.0` — личная UI-платформа с зафиксированной публичной границей: компоненты, темы, взаимодействие, patterns и application shell. Это не коммерческий фреймворк с поддержкой. Ломающие изменения публичного API пишутся в `CHANGELOG.md` и ловятся тестом exports. Домен, данные и маршруты остаются у приложения.
 
 ## Назначение
 
@@ -39,7 +39,7 @@ Component
 Composition
 ```
 
-Foundation runtime читает tokens, тему, плотность и полосу контейнера. Component contract регистрируется через `registerContract()` и проверяется `checkCompliance()`. Композиция и семейства — `vui/composition` и `vui/families`. Подробности — в [ARCHITECTURE.md](ARCHITECTURE.md).
+Foundation runtime читает tokens, тему, плотность и полосу контейнера. Component contract регистрируется через `registerContract()` и проверяется `checkCompliance()`. Композиция и семейства — `vui/composition` и `vui/families`. Как выбрать компонент, pattern или свою сборку — в [docs/guide.md](docs/guide.md) и [docs/patterns.md](docs/patterns.md). Подробности — в [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ```ts
 import { readFoundation, containerBand } from 'vui/runtime';
@@ -145,16 +145,17 @@ import 'vui/themes/high-contrast';
 | Категория | Компоненты |
 | --- | --- |
 | Foundation | `vui-icon`. Цвета, типографика, интервалы, радиус, границы и тени — это tokens, не отдельные элементы |
-| Layout | `vui-stack`, `vui-hstack`, `vui-vstack`, `vui-grid`, `vui-panel`, `vui-split-panel` |
-| Actions | `vui-button`, `vui-icon-button` |
-| Forms | `vui-input`, `vui-checkbox`, `vui-switch`, `vui-select` |
-| Feedback | `vui-alert`, `vui-toast`, `vui-tooltip` |
-| Overlay | `vui-dialog`, `vui-menu` |
-| Navigation | `vui-tabs`, `vui-toolbar` |
+| Layout | `vui-stack`, `vui-hstack`, `vui-vstack`, `vui-grid`, `vui-panel`, `vui-split-panel`, `vui-container`, `vui-scroll-area` |
+| Actions | `vui-button`, `vui-icon-button`, `vui-button-group` |
+| Forms | `vui-input`, `vui-textarea`, `vui-checkbox`, `vui-radio`, `vui-radio-group`, `vui-switch`, `vui-select` |
+| Feedback | `vui-alert`, `vui-toast`, `vui-tooltip`, `vui-progress`, `vui-spinner`, `vui-skeleton` |
+| Overlay | `vui-dialog`, `vui-menu`, `vui-popover` |
+| Navigation | `vui-tabs`, `vui-toolbar`, `vui-breadcrumbs`, `vui-pagination` |
 | Data | `vui-data-grid` |
-| Desktop | `vui-toolbar`, `vui-status-bar`, `vui-file-tree`, `vui-split-panel` |
+| Content | `vui-badge`, `vui-avatar`, `vui-separator` |
+| Desktop | `vui-toolbar`, `vui-status-bar`, `vui-file-tree`, `vui-split-panel`, `vui-shell` |
 
-Остальные компоненты из общей карты библиотеки намеренно не добавлены, пока для них нет полноценной реализации.
+Карточка — это `vui-panel`. Меню действий и контекстное меню — `vui-menu`. Список значений — `vui-select`. Полоса команд — `vui-toolbar`. Окно приложения — `vui-shell`. Что сознательно не стало отдельным элементом, записано в [docs/patterns.md](docs/patterns.md).
 
 ## Темы
 
@@ -226,14 +227,14 @@ import { registerIcon } from 'vui/icon';
 registerIcon('mark', '<svg viewBox="0 0 24 24">...</svg>');
 ```
 
-## Showcase
+## VUI Studio
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
-Откроется `index.html`: Foundation, темы, плотность, layout, контракт компонентов и responsive. Showcase собран из компонентов VUI.
+Откроется `index.html`: Foundation, компоненты, patterns, application shell и раздел Platform Validation. Страница собрана из компонентов VUI.
 
 ## Скрипты
 
@@ -277,4 +278,4 @@ vui/
 
 ## Статус
 
-Версия `0.1.0`, первый рабочий набор компонентов. Архитектурный контракт — в `ARCHITECTURE.md`. Краткий список для изменений в репозитории — в `.cursor/rules/project.mdc`.
+Версия `0.2.0`. Публичная граница и порядок обновления — в [docs/guide.md](docs/guide.md). Архитектурный контракт — в `ARCHITECTURE.md`. Краткий список для изменений в репозитории — в `.cursor/rules/project.mdc`.

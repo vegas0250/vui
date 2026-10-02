@@ -363,3 +363,18 @@ main {
     scroll-behavior: auto;
   }
 }
+
+.platform-frame {
+  height: 36rem;
+  min-width: 0;
+  border: var(--vui-border-width) solid var(--vui-color-border);
+  border-radius: var(--vui-radius-lg);
+  overflow: hidden;
+}
+
+.pattern-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: var(--vui-space-md);
+  min-width: 0;
+}

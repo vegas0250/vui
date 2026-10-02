@@ -151,6 +151,96 @@ registerInteraction({
 });
 
 registerInteraction({
+  element: 'vui-textarea',
+  focus: ['native'],
+  keyboard: ['Tab'],
+  selectionOwner: 'attribute',
+  active: 'none',
+  command: false,
+  primitives: ['native'],
+});
+
+registerInteraction({
+  element: 'vui-radio',
+  focus: ['native'],
+  keyboard: ['Tab', 'Space'],
+  selectionOwner: 'attribute',
+  active: 'none',
+  command: false,
+  primitives: ['native'],
+});
+
+registerInteraction({
+  element: 'vui-radio-group',
+  focus: ['native'],
+  keyboard: ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'],
+  selectionOwner: 'attribute',
+  active: 'selection',
+  command: false,
+  primitives: ['native'],
+});
+
+registerInteraction({
+  element: 'vui-button-group',
+  focus: ['native'],
+  keyboard: ['Tab'],
+  selectionOwner: 'none',
+  active: 'none',
+  command: false,
+  primitives: ['native'],
+});
+
+registerInteraction({
+  element: 'vui-popover',
+  focus: ['native', 'restore', 'nested-overlay'],
+  keyboard: ['Tab', 'Escape'],
+  selectionOwner: 'none',
+  active: 'none',
+  command: false,
+  primitives: ['pushOverlay', 'placeLayer'],
+});
+
+registerInteraction({
+  element: 'vui-breadcrumbs',
+  focus: ['native'],
+  keyboard: ['Tab'],
+  selectionOwner: 'none',
+  active: 'none',
+  command: false,
+  primitives: ['native'],
+});
+
+registerInteraction({
+  element: 'vui-pagination',
+  focus: ['native'],
+  keyboard: ['Tab', 'Enter', 'Space'],
+  selectionOwner: 'attribute',
+  active: 'selection',
+  command: false,
+  primitives: ['native'],
+});
+
+registerInteraction({
+  element: 'vui-scroll-area',
+  focus: ['native'],
+  keyboard: ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'PageUp', 'PageDown'],
+  selectionOwner: 'none',
+  active: 'none',
+  command: false,
+  primitives: ['native'],
+});
+
+registerInteraction({
+  element: 'vui-shell',
+  focus: ['native'],
+  keyboard: ['Tab'],
+  selectionOwner: 'none',
+  active: 'none',
+  command: false,
+  primitives: ['native'],
+});
+
+registerInteraction({
   element: 'vui-split-panel',
   focus: ['native'],
   keyboard: ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End'],

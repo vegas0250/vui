@@ -1,6 +1,6 @@
 {
   "name": "vui",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Универсальная модульная UI-система готовых визуальных компонентов для Web, SPA и Desktop/Electron с поддержкой тем и различной плотности интерфейса.",
   "type": "module",
   "license": "UNLICENSED",
@@ -54,6 +54,22 @@
       "types": "./dist/components/actions/button.d.ts",
       "import": "./dist/components/actions/button.js"
     },
+    "./button-group": {
+      "types": "./dist/components/actions/button-group.d.ts",
+      "import": "./dist/components/actions/button-group.js"
+    },
+    "./avatar": {
+      "types": "./dist/components/content/avatar.d.ts",
+      "import": "./dist/components/content/avatar.js"
+    },
+    "./badge": {
+      "types": "./dist/components/content/badge.d.ts",
+      "import": "./dist/components/content/badge.js"
+    },
+    "./separator": {
+      "types": "./dist/components/content/separator.d.ts",
+      "import": "./dist/components/content/separator.js"
+    },
     "./icon-button": {
       "types": "./dist/components/actions/icon-button.d.ts",
       "import": "./dist/components/actions/icon-button.js"
@@ -61,6 +77,14 @@
     "./input": {
       "types": "./dist/components/forms/input.d.ts",
       "import": "./dist/components/forms/input.js"
+    },
+    "./textarea": {
+      "types": "./dist/components/forms/textarea.d.ts",
+      "import": "./dist/components/forms/textarea.js"
+    },
+    "./radio": {
+      "types": "./dist/components/forms/radio.d.ts",
+      "import": "./dist/components/forms/radio.js"
     },
     "./checkbox": {
       "types": "./dist/components/forms/checkbox.d.ts",
@@ -82,6 +106,10 @@
       "types": "./dist/components/overlay/menu.d.ts",
       "import": "./dist/components/overlay/menu.js"
     },
+    "./popover": {
+      "types": "./dist/components/overlay/popover.d.ts",
+      "import": "./dist/components/overlay/popover.js"
+    },
     "./interaction": {
       "types": "./dist/interaction/index.d.ts",
       "import": "./dist/interaction/index.js"
@@ -89,6 +117,14 @@
     "./tabs": {
       "types": "./dist/components/navigation/tabs.d.ts",
       "import": "./dist/components/navigation/tabs.js"
+    },
+    "./breadcrumbs": {
+      "types": "./dist/components/navigation/breadcrumbs.d.ts",
+      "import": "./dist/components/navigation/breadcrumbs.js"
+    },
+    "./pagination": {
+      "types": "./dist/components/navigation/pagination.d.ts",
+      "import": "./dist/components/navigation/pagination.js"
     },
     "./tooltip": {
       "types": "./dist/components/feedback/tooltip.d.ts",
@@ -98,6 +134,18 @@
       "types": "./dist/components/feedback/alert.d.ts",
       "import": "./dist/components/feedback/alert.js"
     },
+    "./progress": {
+      "types": "./dist/components/feedback/progress.d.ts",
+      "import": "./dist/components/feedback/progress.js"
+    },
+    "./spinner": {
+      "types": "./dist/components/feedback/spinner.d.ts",
+      "import": "./dist/components/feedback/spinner.js"
+    },
+    "./skeleton": {
+      "types": "./dist/components/feedback/skeleton.d.ts",
+      "import": "./dist/components/feedback/skeleton.js"
+    },
     "./toast": {
       "types": "./dist/components/feedback/toast.d.ts",
       "import": "./dist/components/feedback/toast.js"
@@ -105,6 +153,14 @@
     "./panel": {
       "types": "./dist/components/layout/panel.d.ts",
       "import": "./dist/components/layout/panel.js"
+    },
+    "./container": {
+      "types": "./dist/components/layout/container.d.ts",
+      "import": "./dist/components/layout/container.js"
+    },
+    "./scroll-area": {
+      "types": "./dist/components/layout/scroll-area.d.ts",
+      "import": "./dist/components/layout/scroll-area.js"
     },
     "./stack": {
       "types": "./dist/components/layout/stack.d.ts",
@@ -134,6 +190,10 @@
       "types": "./dist/components/desktop/status-bar.d.ts",
       "import": "./dist/components/desktop/status-bar.js"
     },
+    "./shell": {
+      "types": "./dist/components/desktop/shell.d.ts",
+      "import": "./dist/components/desktop/shell.js"
+    },
     "./file-tree": {
       "types": "./dist/components/desktop/file-tree.d.ts",
       "import": "./dist/components/desktop/file-tree.js"
@@ -141,6 +201,10 @@
     "./data-grid": {
       "types": "./dist/components/data/data-grid.d.ts",
       "import": "./dist/components/data/data-grid.js"
+    },
+    "./content": {
+      "types": "./dist/categories/content.d.ts",
+      "import": "./dist/categories/content.js"
     },
     "./foundation": {
       "types": "./dist/categories/foundation.d.ts",
@@ -191,7 +255,8 @@
     "preview": "vite preview --host 127.0.0.1 --port 4173",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "check:budget": "node scripts/budget.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.1",

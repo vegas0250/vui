@@ -1,18 +1,26 @@
 import '../components/actions/button';
+import '../components/actions/button-group';
 import '../components/actions/icon-button';
 import '../components/data/data-grid';
 import '../components/desktop/file-tree';
+import '../components/desktop/shell';
 import '../components/feedback/toast';
 import '../components/feedback/tooltip';
 import '../components/forms/checkbox';
 import '../components/forms/input';
+import '../components/forms/radio';
 import '../components/forms/select';
 import '../components/forms/switch';
+import '../components/forms/textarea';
+import '../components/layout/scroll-area';
 import '../components/layout/split-panel';
+import '../components/navigation/breadcrumbs';
+import '../components/navigation/pagination';
 import '../components/navigation/tabs';
 import '../components/navigation/toolbar';
 import '../components/overlay/dialog';
 import '../components/overlay/menu';
+import '../components/overlay/popover';
 import type { VDataGrid } from '../components/data/data-grid';
 import type { VDialog } from '../components/overlay/dialog';
 import { componentStyleText } from '../contract/compliance';
@@ -240,10 +248,10 @@ export function checkCompositionHosts(): string[] {
 }
 
 const familyHosts: Record<FamilyName, string[]> = {
-  action: ['vui-button', 'vui-icon-button', 'vui-menu-item'],
-  field: ['vui-input', 'vui-select', 'vui-checkbox', 'vui-switch'],
-  overlay: ['vui-dialog', 'vui-tooltip', 'vui-menu', 'vui-toaster'],
-  navigation: ['vui-tabs', 'vui-tab', 'vui-tab-panel', 'vui-file-tree', 'vui-tree-item', 'vui-menu', 'vui-menu-item'],
+  action: ['vui-button', 'vui-button-group', 'vui-icon-button', 'vui-menu-item'],
+  field: ['vui-input', 'vui-textarea', 'vui-select', 'vui-checkbox', 'vui-radio', 'vui-radio-group', 'vui-switch'],
+  overlay: ['vui-dialog', 'vui-popover', 'vui-tooltip', 'vui-menu', 'vui-toaster'],
+  navigation: ['vui-tabs', 'vui-tab', 'vui-tab-panel', 'vui-file-tree', 'vui-tree-item', 'vui-menu', 'vui-menu-item', 'vui-breadcrumbs', 'vui-pagination'],
   data: ['vui-data-grid'],
 };
 
