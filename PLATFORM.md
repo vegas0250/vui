@@ -94,6 +94,16 @@ Application:  selectedFiles = [...]
 VUI
 │
 ├── Foundation
+│   ├── Tokens
+│   ├── Theme
+│   ├── Density
+│   ├── Responsive
+│   ├── Layout
+│   ├── Accessibility
+│   ├── Motion
+│   └── Runtime
+│
+├── Component contract
 │
 ├── Components
 │
@@ -148,3 +158,5 @@ VUI
 ```
 
 Компонент описывает своё поведение через общие primitives. Он не копирует менеджер фокуса, стек overlay или обработку стрелок. Приложение регистрирует команды и читает selection. Глобального event bus нет: наружу выходят DOM-события компонента (`click`, `input`, `change`, `close`).
+
+Foundation runtime (`src/foundation`) собирает tokens, тему, плотность, полосу контейнера, layout, accessibility, motion и z-index в один снимок. Component contract (`src/contract`) описывает, как компонент подключается к этому снимку. Compliance проверяет запись контракта, а не копирует правила внутри каждого теста.

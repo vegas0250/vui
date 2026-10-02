@@ -30,6 +30,14 @@
       "types": "./dist/theme/index.d.ts",
       "import": "./dist/theme/index.js"
     },
+    "./runtime": {
+      "types": "./dist/foundation/index.d.ts",
+      "import": "./dist/foundation/index.js"
+    },
+    "./contract": {
+      "types": "./dist/contract/index.d.ts",
+      "import": "./dist/contract/index.js"
+    },
     "./icon": {
       "types": "./dist/components/foundation/icon.d.ts",
       "import": "./dist/components/foundation/icon.js"

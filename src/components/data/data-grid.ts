@@ -1,8 +1,9 @@
 import { defineElement } from '../../core/define';
+import { registerContract } from '../../contract/registry';
 import { VuiElement } from '../../core/element';
 import { emitChange } from '../../core/events';
 import { reflectStrings } from '../../core/reflect';
-import { inlineThreshold, observeInlineSize } from '../../core/responsive';
+import { containerBand, observeInlineSize } from '../../foundation/responsive';
 import { copyText } from '../../interaction/clipboard';
 import { applyRovingTabIndex, moveInList, stepIndex } from '../../interaction/keyboard';
 import { SelectionModel } from '../../interaction/selection';
@@ -38,7 +39,6 @@ export class VDataGrid extends VuiElement {
   private gridRows: VDataGridRow[] = [];
   private activeRow = 0;
   private activeCol = 0;
-  private stopWatch: (() => void) | null = null;
   private readonly selection = new SelectionModel<string>('single');
 
   get columns(): VDataGridColumn[] {
@@ -134,22 +134,17 @@ export class VDataGrid extends VuiElement {
     this.watchSize();
   }
 
-  disconnectedCallback(): void {
-    super.disconnectedCallback();
-    this.stopWatch?.();
-    this.stopWatch = null;
-  }
-
   private watchSize(): void {
-    this.stopWatch?.();
-    this.stopWatch = observeInlineSize(this, (width) => {
-      if (width <= 0) return;
-      const limit = inlineThreshold(this, '--vui-layout-medium', 640);
-      const compact = width <= limit;
-      if (this.hasAttribute('data-compact') === compact) return;
-      this.toggleAttribute('data-compact', compact);
-      this.renderGrid();
-    });
+    this.hold(
+      'size',
+      observeInlineSize(this, (width) => {
+        if (!(width > 0)) return;
+        const compact = containerBand(width, this) !== 'wide';
+        if (this.hasAttribute('data-compact') === compact) return;
+        this.toggleAttribute('data-compact', compact);
+        this.renderGrid();
+      }),
+    );
   }
 
   protected afterRender(): void {
@@ -336,3 +331,22 @@ export class VDataGrid extends VuiElement {
 
 reflectStrings(VDataGrid, { label: 'label', emptyLabel: 'empty-label' });
 defineElement('vui-data-grid', VDataGrid);
+
+registerContract({
+  element: 'vui-data-grid',
+  className: 'VDataGrid',
+  attributes: [
+    { name: 'label', kind: 'string', reflected: true },
+    { name: 'empty-label', kind: 'string', reflected: true },
+    { name: 'selected', property: 'selectedId', kind: 'string', reflected: true },
+  ],
+  events: ['change'],
+  slots: [],
+  parts: ['frame'],
+  methods: [],
+  keyboard: ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'PageUp', 'PageDown'],
+  states: [],
+  responsive: 'container',
+  focus: 'native',
+  role: 'grid',
+});

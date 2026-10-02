@@ -1,4 +1,5 @@
 import { defineElement } from '../../core/define';
+import { registerContract } from '../../contract/registry';
 import { VuiElement } from '../../core/element';
 import { emitClose } from '../../core/events';
 import { pushOverlay } from '../../interaction/overlay';
@@ -251,3 +252,23 @@ export class VDialog extends VuiElement {
 reflectBooleans(VDialog, ['open']);
 reflectStrings(VDialog, { label: 'label', size: 'size', closeLabel: 'close-label' });
 defineElement('vui-dialog', VDialog);
+
+registerContract({
+  element: 'vui-dialog',
+  className: 'VDialog',
+  attributes: [
+    { name: 'open', kind: 'boolean', reflected: true },
+    { name: 'label', kind: 'string', reflected: true },
+    { name: 'size', kind: 'enum', values: ['small', 'medium', 'large'], reflected: true },
+    { name: 'close-label', kind: 'string', reflected: true },
+    { name: 'dismissable', kind: 'boolean', reflected: true, inverted: true },
+  ],
+  events: ['close'],
+  slots: ['', 'footer'],
+  parts: ['dialog', 'surface', 'header', 'title', 'close', 'body', 'footer'],
+  methods: ['show', 'close'],
+  keyboard: ['Tab', 'Escape'],
+  states: [],
+  responsive: 'viewport',
+  focus: 'native',
+});

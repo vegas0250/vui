@@ -4,8 +4,17 @@ test('foundation, theme, and density share one token contract', async ({ page })
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Foundation' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Tokens' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Пороги контейнера' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Component contract' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Contract', exact: true })).toBeVisible();
+  await expect(page.locator('#foundation-snapshot')).toContainText('light');
+  await expect(page.locator('#compliance-table')).toContainText('vui-button');
+
+  const lifecycle = page.locator('#lifecycle-readout');
+  await expect(lifecycle).toContainText('1');
+  await page.locator('#lifecycle-cycle').click();
+  await expect(lifecycle).toContainText('2');
+  await expect(lifecycle).toContainText('сохранён');
 
   const read = (name: string) =>
     page.evaluate((token) => getComputedStyle(document.documentElement).getPropertyValue(token).trim(), name);

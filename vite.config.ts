@@ -4,6 +4,8 @@ import { defineConfig } from 'vite';
 const entries = [
   resolve('src/index.ts'),
   resolve('src/theme/index.ts'),
+  resolve('src/foundation/index.ts'),
+  resolve('src/contract/index.ts'),
   resolve('src/components/foundation/icon.ts'),
   resolve('src/components/actions/button.ts'),
   resolve('src/components/actions/icon-button.ts'),

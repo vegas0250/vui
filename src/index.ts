@@ -48,3 +48,7 @@ export {
 export type { Command, Shortcut, SelectionMode } from './interaction/index';
 export { getDensity, getTheme, setDensity, setTheme } from './theme/index';
 export type { VuiDensity, VuiTheme } from './theme/index';
+export { containerBand, prefersForcedColors, prefersReducedMotion, readFoundation, readToken } from './foundation/index';
+export type { ContainerBand, FoundationSnapshot } from './foundation/index';
+export { checkCompliance, listContracts, registerContract } from './contract/index';
+export type { ComponentContract } from './contract/index';

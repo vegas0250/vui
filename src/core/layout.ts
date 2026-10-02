@@ -1,14 +1,8 @@
 /** Shared layout vocabulary: gap, padding, align, justify, overflow. */
 
-const spaces: Record<string, string> = {
-  '2xs': 'var(--vui-space-2xs)',
-  xs: 'var(--vui-space-xs)',
-  sm: 'var(--vui-space-sm)',
-  md: 'var(--vui-space-md)',
-  lg: 'var(--vui-space-lg)',
-  xl: 'var(--vui-space-xl)',
-  '2xl': 'var(--vui-space-2xl)',
-};
+export const spaceSteps = ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'] as const;
+
+const spaces: Record<string, string> = Object.fromEntries(spaceSteps.map((step) => [step, `var(--vui-space-${step})`]));
 
 /** A layout step (`2xs` … `2xl`) as a space token. Unknown values use `fallback`. */
 export function tokenGap(value: string | null, fallback = 'var(--vui-space-md)'): string {

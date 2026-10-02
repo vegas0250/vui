@@ -2,7 +2,7 @@ import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { applyAlign, applyJustify, applyOverflow, applySpace, tokenGap } from '../../core/layout';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
-import { inlineThreshold, observeInlineSize } from '../../core/responsive';
+import { containerBand, observeInlineSize } from '../../foundation/responsive';
 
 class VStackBase extends VuiElement {
   declare gap: string;
@@ -55,9 +55,8 @@ class VStackBase extends VuiElement {
     this.hold(
       'size',
       observeInlineSize(this, (width) => {
-        if (width <= 0) return;
-        const limit = inlineThreshold(this);
-        const narrow = width <= limit;
+        if (!(width > 0)) return;
+        const narrow = containerBand(width, this) === 'narrow';
         if (this.hasAttribute('data-narrow') === narrow) return;
         this.toggleAttribute('data-narrow', narrow);
       }),

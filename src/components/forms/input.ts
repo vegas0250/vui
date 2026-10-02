@@ -1,4 +1,5 @@
 import { defineElement } from '../../core/define';
+import { registerContract } from '../../contract/registry';
 import { VuiElement } from '../../core/element';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
 import { controlStyles, fieldStyles } from '../../core/styles';
@@ -118,6 +119,32 @@ export class VInput extends VuiElement {
 reflectStrings(VInput, ['label', 'placeholder', 'type', 'name', 'hint', 'size']);
 reflectBooleans(VInput, ['disabled', 'invalid', 'required', 'readonly']);
 defineElement('vui-input', VInput);
+
+registerContract({
+  element: 'vui-input',
+  className: 'VInput',
+  attributes: [
+    { name: 'label', kind: 'string', reflected: true },
+    { name: 'value', kind: 'string', reflected: true },
+    { name: 'type', kind: 'enum', values: ['text', 'password', 'email', 'search', 'number', 'url', 'tel'], reflected: true },
+    { name: 'placeholder', kind: 'string', reflected: true },
+    { name: 'hint', kind: 'string', reflected: true },
+    { name: 'name', kind: 'string', reflected: true },
+    { name: 'size', kind: 'string', reflected: true },
+    { name: 'disabled', kind: 'boolean', reflected: true },
+    { name: 'invalid', kind: 'boolean', reflected: true },
+    { name: 'required', kind: 'boolean', reflected: true },
+    { name: 'readonly', kind: 'boolean', reflected: true },
+  ],
+  events: ['input', 'change'],
+  slots: ['prefix', 'suffix'],
+  parts: ['label', 'control', 'input', 'hint'],
+  methods: [],
+  keyboard: ['Tab'],
+  states: ['disabled', 'invalid'],
+  responsive: 'container',
+  focus: 'native',
+});
 
 export interface VInput {
   type: string;

@@ -21,18 +21,29 @@ export const showcaseMarkup = `
       <header class="intro">
         <h1>VUI Showcase</h1>
         <p>
-          Универсальная модульная UI-система для Web, SPA и Desktop/Electron.
-          Эта страница собрана из компонентов VUI и служит демонстрацией, справкой и ручной проверкой тем, плотности и responsive-поведения.
+          Универсальная UI-платформа для Web, SPA и Desktop/Electron.
+          Эта страница — документация, playground и ручная проверка Foundation, контракта компонентов и responsive-поведения.
         </p>
+        <nav class="lab-nav" aria-label="Разделы лаборатории">
+          <a href="#foundation">Foundation</a>
+          <a href="#layout">Layout</a>
+          <a href="#responsive">Responsive</a>
+          <a href="#components">Components</a>
+          <a href="#contract">Contract</a>
+        </nav>
       </header>
 
       <section class="category" id="foundation">
         <h2>Foundation</h2>
         <p class="section-lead">
-          Палитра, семантические цвета и шкала плотности. Компоненты читают одни и те же tokens.
-          Тема и плотность переключаются на панели сверху и меняют этот раздел вместе со страницей.
+          Runtime читает tokens, тему, плотность и пороги контейнера. Компонент не заводит свою шкалу.
+          Переключатели темы и плотности на панели сверху меняют этот раздел вместе со страницей.
         </p>
         <div class="stack-gap">
+          <h3 id="foundation-tokens">Tokens</h3>
+          <vui-panel heading="Снимок runtime">
+            <dl id="foundation-snapshot" class="snapshot"></dl>
+          </vui-panel>
           <vui-panel heading="Цвета">
             <div class="swatches">
               <div class="swatch" style="background: var(--vui-color-background)"><span>background</span></div>
@@ -114,6 +125,32 @@ export const showcaseMarkup = `
               </ul>
             </vui-panel>
           </vui-grid>
+
+          <h3 id="foundation-themes">Themes</h3>
+          <vui-panel heading="Тема">
+            <p class="demo-note">Light, Dark, High Contrast и System меняют семантические tokens. Имена свойств остаются теми же. Компонент не ветвится по имени темы.</p>
+          </vui-panel>
+
+          <h3 id="foundation-density">Density</h3>
+          <vui-panel heading="Плотность">
+            <p class="demo-note">Comfortable, Compact и Dense меняют размеры контролов, интервалы и высоты chrome. Пороги контейнера от плотности не зависят.</p>
+          </vui-panel>
+
+          <h3 id="foundation-responsive">Responsive</h3>
+          <vui-panel heading="Контейнер">
+            <p class="demo-note">Полоса narrow, medium или wide считается по ширине контейнера. Полный стенд — в разделе <a href="#responsive">Responsive Design</a>.</p>
+            <p id="foundation-band" class="demo-note">Полоса контейнера появится после измерения.</p>
+          </vui-panel>
+
+          <h3 id="foundation-accessibility">Accessibility</h3>
+          <vui-panel heading="Фокус, движение, forced colors">
+            <p class="demo-note">Кольцо — <code>:focus-visible</code> и <code>--vui-focus-ring</code>. <code>prefers-reduced-motion</code> отключает анимации в базовых стилях. High Contrast не прячет смысл в одной тени.</p>
+            <vui-hstack gap="sm" wrap align="center">
+              <vui-button id="a11y-focus" variant="primary">Фокус</vui-button>
+              <vui-button disabled>Disabled</vui-button>
+            </vui-hstack>
+            <p id="a11y-readout" class="demo-note"></p>
+          </vui-panel>
         </div>
       </section>
 
@@ -176,12 +213,21 @@ export const showcaseMarkup = `
       </section>
 
       <section class="category" id="contract">
-        <h2>Component contract</h2>
+        <h2>Contract</h2>
         <p class="section-lead">
-          Состояния, фокус, клавиатура, тема, плотность и ширина контейнера — часть одного контракта.
-          Светлая, тёмная, контрастная и системная темы, а также Comfortable, Compact и Dense, не требуют отдельной версии компонента.
+          Lifecycle, состояния, клавиатура, фокус и ширина контейнера — один контракт для каждого <code>vui-*</code>.
+          Тема и плотность к этому контракту не добавляют отдельных версий компонента.
+          <code>loading</code> зарезервирован: компонент объявляет его только когда состояние реально есть, и тогда ставит <code>aria-busy</code>.
         </p>
         <div class="stack-gap">
+          <h3>Lifecycle</h3>
+          <vui-panel heading="Подключение">
+            <div id="lifecycle-host"></div>
+            <vui-button id="lifecycle-cycle" variant="secondary">Переподключить</vui-button>
+            <p id="lifecycle-readout" class="demo-note">Образец ещё не подключён.</p>
+          </vui-panel>
+
+          <h3>States</h3>
           <vui-panel heading="Состояния и фокус">
             <vui-hstack gap="sm" wrap align="center">
               <vui-button id="contract-primary" variant="primary">Основная</vui-button>
@@ -189,8 +235,10 @@ export const showcaseMarkup = `
               <vui-button disabled>Недоступна</vui-button>
               <vui-input id="contract-input" label="Поле" invalid hint="Проверьте значение" value="bad@"></vui-input>
             </vui-hstack>
-            <p class="demo-note">Tab переводит фокус на кнопку и поле. Кольцо — <code>:focus-visible</code> и <code>--vui-focus-ring</code>. Disabled выпадает из Tab.</p>
+            <p class="demo-note">Default, hover, focus, active и disabled есть у кнопки. Ошибка поля — <code>invalid</code>. Disabled выпадает из Tab.</p>
           </vui-panel>
+
+          <h3>Keyboard</h3>
           <vui-panel heading="Клавиатура">
             <vui-tabs id="contract-tabs" label="Контракт вкладок">
               <vui-tab panel="states" selected>Состояния</vui-tab>
@@ -201,7 +249,48 @@ export const showcaseMarkup = `
               <vui-tab-panel name="layout-tab">Split двигается стрелками. Shift увеличивает шаг.</vui-tab-panel>
             </vui-tabs>
           </vui-panel>
+
+          <h3>Focus</h3>
+          <vui-panel heading="Кольцо фокуса">
+            <p class="demo-note">Tab ставит фокус на кнопку «Основная», затем на «Опасная». Недоступная кнопка пропускается. Кольцо рисует <code>:focus-visible</code>.</p>
+          </vui-panel>
+
+          <h3>Responsive</h3>
+          <vui-panel heading="Одно поле, две ширины">
+            <div class="band-row">
+              <div class="band">
+                <vui-input label="Узкое поле" hint="Подпись стоит столбиком" value="VUI"></vui-input>
+              </div>
+              <div class="band">
+                <vui-input label="Широкое поле" hint="В широком контейнере подпись может встать рядом" value="VUI"></vui-input>
+              </div>
+            </div>
+          </vui-panel>
+
+          <h3>Compliance</h3>
+          <vui-panel heading="Зарегистрированные контракты">
+            <p class="demo-note">Эти компоненты проходят автоматическую проверку: регистрация, lifecycle, tokens, тема, плотность, responsive, disabled, invalid, ARIA и стандартные события.</p>
+            <div class="table-wrap">
+              <table id="compliance-table" class="contract-table">
+                <thead>
+                  <tr>
+                    <th>Элемент</th>
+                    <th>Класс</th>
+                    <th>Состояния</th>
+                    <th>Responsive</th>
+                    <th>События</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </vui-panel>
         </div>
+      </section>
+
+      <section class="category" id="components">
+        <h2>Components</h2>
+        <p class="section-lead">Реализации одного контракта. Ниже — рабочие примеры, не заглушки.</p>
       </section>
 
       <section class="category" id="actions">

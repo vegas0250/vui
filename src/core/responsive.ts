@@ -1,4 +1,7 @@
-/** Reads a length token. Container queries cannot reference var(), so component CSS repeats these lengths. */
+/**
+ * Reads a length token. Container queries cannot reference var(), so component CSS repeats these lengths.
+ * Container bands live in `src/foundation/responsive.ts` (`containerBand`).
+ */
 
 export function lengthToPx(value: string, fallback: number): number {
   const match = /^(-?\d+(\.\d+)?)(px|rem|em)$/.exec(value.trim());

@@ -26,9 +26,9 @@ VUI — персональная библиотека визуальных ко�
 Слои, на которых собирается следующий компонент:
 
 ```text
-Foundation
+Foundation runtime
     ↓
-Component Contract
+Component contract
     ↓
 Accessibility
     ↓
@@ -41,7 +41,12 @@ Layout
 Component
 ```
 
-Foundation — primitive palette, semantic tokens тем и шкала плотности. Component Contract — один класс и custom element, attributes, стандартные события, слоты и tokens. Layout — общий словарь `gap`, `padding`, `align`, `justify`, `overflow` у stack, grid, panel и split. Подробности — в [ARCHITECTURE.md](ARCHITECTURE.md).
+Foundation runtime читает tokens, тему, плотность и полосу контейнера. Component contract регистрируется через `registerContract()` и проверяется `checkCompliance()`. Подробности — в [ARCHITECTURE.md](ARCHITECTURE.md).
+
+```ts
+import { readFoundation, containerBand } from 'vui/runtime';
+import { registerContract, checkCompliance } from 'vui/contract';
+```
 
 ## Установка
 

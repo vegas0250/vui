@@ -275,6 +275,83 @@ main {
 .drag-chip { cursor: grab; }
 .drop-well[data-vui-drag-over] { background: var(--vui-color-surface-hover); }
 
+.category h3 {
+  margin: var(--vui-space-lg) 0 var(--vui-space-sm);
+  font-size: var(--vui-heading-3);
+  line-height: 1.3;
+}
+
+.lab-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vui-space-sm) var(--vui-space-md);
+  margin-top: var(--vui-space-md);
+}
+
+.lab-nav a {
+  color: var(--vui-color-primary);
+}
+
+.snapshot {
+  display: grid;
+  grid-template-columns: minmax(7rem, 12rem) minmax(0, 1fr);
+  gap: var(--vui-space-2xs) var(--vui-space-md);
+  margin: 0;
+}
+
+.snapshot dt {
+  margin: 0;
+  color: var(--vui-color-text-muted);
+}
+
+.snapshot dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--vui-font-mono);
+}
+
+.band-row {
+  display: grid;
+  grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+  gap: var(--vui-space-md);
+  min-width: 0;
+}
+
+.band {
+  min-width: 0;
+  max-width: 100%;
+  padding: var(--vui-space-sm);
+  border: var(--vui-border-width) solid var(--vui-color-border);
+  border-radius: var(--vui-radius);
+}
+
+.table-wrap {
+  width: 100%;
+  min-width: 0;
+  overflow: auto;
+}
+
+.contract-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.contract-table th,
+.contract-table td {
+  padding: var(--vui-space-2xs) var(--vui-space-sm);
+  border-bottom: var(--vui-border-width) solid var(--vui-color-border);
+  text-align: start;
+  font-size: var(--vui-font-size-sm);
+  white-space: nowrap;
+}
+
+@media (max-width: 40rem) {
+  .band-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 720px) {
   main {
     width: min(1120px, calc(100% - var(--vui-space-md)));

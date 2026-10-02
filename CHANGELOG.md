@@ -2,7 +2,9 @@
 
 ## Unreleased
 
-- Interaction Layer: фокус, клавиатура, selection, команды, shortcuts, общий overlay, context menu, drag & drop, clipboard и pointer. Граница платформы описана в `PLATFORM.md`.
+- Foundation runtime: `readFoundation()`, `containerBand()` и подключение стилей через `VuiElement`. Тема, плотность и ширина контейнера остаются тремя независимыми измерениями.
+- Component contract: `registerContract()` и `checkCompliance()` для button, input, dialog, toast, select, data-grid и file-tree. Повторное подключение не пересоздаёт shadow и снимает слушатели `hold()` / `bind()`.
+- Showcase показывает снимок Foundation, lifecycle и таблицу зарегистрированных контрактов.
 - Foundation: primitive palette, semantic themes и component tokens. Темы ссылаются на палитру, а не на собственные hex. Плотность остаётся одной шкалой; padding панели равен `--vui-space-lg`.
 - Layout использует общие `gap`, `padding`, `align`, `justify` и `overflow`. `vui-split-panel` принимает `min` и `max`; без них позиция по-прежнему 10–90.
 - Showcase показывает Foundation, контракт компонента и вложенный split.

@@ -25,6 +25,8 @@ TypeScript, Custom Elements, DOM, CSS custom properties, Vite, Vitest, Playwrigh
 src/components/{foundation,layout,actions,forms,feedback,overlay,navigation,data,desktop}
 src/categories/     точки входа категорий
 src/core/           VuiElement, defineElement, reflect, layout, общие стили, события, responsive
+src/foundation/     runtime: tokens, theme, density, responsive, layout, accessibility, motion, layers
+src/contract/       контракт компонента, реестр и compliance
 src/interaction/    focus, keyboard, selection, commands, shortcuts, overlay, context menu, drag & drop, clipboard, pointer
 src/icons/          реестр иконок
 src/theme/          setTheme, setDensity, установка стилей
@@ -52,6 +54,8 @@ docs/components.md  каталог публичного API
 Компонент: `vui/icon`, `vui/button`, `vui/icon-button`, `vui/input`, `vui/checkbox`, `vui/switch`, `vui/select`, `vui/dialog`, `vui/menu`, `vui/tabs`, `vui/tooltip`, `vui/alert`, `vui/toast`, `vui/panel`, `vui/stack`, `vui/hstack`, `vui/vstack`, `vui/grid`, `vui/split-panel`, `vui/toolbar`, `vui/status-bar`, `vui/file-tree`, `vui/data-grid`.
 
 `vui/interaction` — primitives без регистрации элементов: focus, keyboard, selection, commands, shortcuts, overlay, context menu, drag & drop, clipboard, pointer. `vui/menu` включает `vui-menu-item`.
+
+`vui/runtime` — Foundation runtime: `readFoundation`, `readToken`, `containerBand`, `setTheme`, `setDensity`, `prefersReducedMotion`, `prefersForcedColors`. `vui/contract` — `registerContract`, `listContracts`, `checkCompliance`. `vui/foundation` по-прежнему регистрирует иконку, а не runtime.
 
 `vui/stack`, `vui/hstack` и `vui/vstack` — один модуль. `vui/select` включает `vui-option`. `vui/tabs` включает `vui-tab` и `vui-tab-panel`. `vui/file-tree` включает `vui-tree-item`. `vui/toast` включает `vui-toaster` и `toast()`. `vui/desktop` реэкспортирует toolbar и split panel; их исходники остаются в navigation и layout.
 
@@ -193,9 +197,41 @@ Shadow DOM открытый. У layout-компонентов на host стои
 
 Видимый фокус, `prefers-reduced-motion`, `forced-colors` у кнопок и флажков, тема high-contrast с границей 2px и без смысла, который держится только на тени. Dialog использует нативное модальное поведение. Select, tabs, tree, разделитель split и data grid реализуют клавиатуру, перечисленную выше. Доступные имена по умолчанию в компонентах — английские; showcase на русском и передаёт переведённые подписи там, где это нужно.
 
+## Foundation runtime
+
+Исполняемый слой — `src/foundation`. Компонент подключается через `connectFoundation()` в `VuiElement` и не держит свою копию темы, плотности или порогов.
+
+```text
+Foundation
+├── Tokens
+├── Theme
+├── Density
+├── Responsive
+├── Layout
+├── Accessibility
+├── Motion
+└── Runtime
+```
+
+`readFoundation()` возвращает текущие тему, плотность, tokens, motion, z-index и пороги контейнера. `containerBand(width)` даёт `narrow`, `medium` или `wide` только по ширине. Theme × density × band не порождают отдельных компонентов: это три независимых измерения одного снимка.
+
+`prefers-reduced-motion` применяется базовыми стилями. Компонент не добавляет вторую политику движения. Z-index tokens читает runtime; стек overlay остаётся в `src/interaction/overlay.ts`.
+
+## Component contract
+
+`registerContract()` описывает attributes, events, slots, parts, methods, keyboard, states, responsive и focus. События — только `click`, `input`, `change`, `close`. `loading` не добавляется для симметрии: если компонент его объявил, compliance требует `aria-busy`.
+
+`VuiElement.connectionCount` считает подключения. Shadow создаётся один раз. `hold()` и `bind()` снимают слушатели в `disconnectedCallback`, повторный mount может подписаться снова.
+
+Новый компонент регистрирует контракт рядом с `defineElement`. Проверка — `checkCompliance()` из `vui/contract`. Показательный набор: button, input, dialog, toast, select, data-grid, file-tree. Остальные подключаются тем же путём, без отдельной системы.
+
+## Compliance
+
+`checkCompliance()` для подключённого элемента проверяет регистрацию, открытый shadow, отсутствие цветовых литералов, использование Foundation tokens, базовые theme/density/reduced-motion стили, responsive-ограничение, слоты, parts, методы, роль, отражение properties, `disabled`, `invalid` и `loading`. `remount()` проверяет, что shadow переживает отключение.
+
 ## Showcase
 
-`pnpm dev` отдаёт `index.html`. Страница собрана из элементов VUI и показывает Foundation, темы, плотность, Layout, контракт компонента и Responsive Design. У каждого реализованного компонента там есть рабочий пример. Без примера компонент не считается готовым. Переключатели темы и плотности вызывают `setTheme` и `setDensity`. В разделе Responsive Design есть пресеты wide, medium и narrow и ручка изменения ширины. Табло показывает текущие тему, плотность и ширину контейнера.
+`pnpm dev` отдаёт `index.html`. Страница собрана из элементов VUI и показывает Foundation, темы, плотность, Layout, контракт компонента и Responsive Design. У каждого реализованного компонента там есть рабочий пример. Без примера компонент не считается готовым. Переключатели темы и плотности вызывают `setTheme` и `setDensity`. В разделе Responsive Design есть пресеты wide, medium и narrow и ручка изменения ширины. Табло показывает текущие тему, плотность и ширину контейнера. Раздел Contract показывает lifecycle, состояния, клавиатуру, фокус, две ширины поля и таблицу зарегистрированных контрактов. Снимок Foundation читает `readFoundation()`.
 
 ## Тесты
 

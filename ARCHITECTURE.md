@@ -265,6 +265,67 @@ Active descendant остаётся только у `vui-select`: фокус де
 
 Плотность меняет токены размера: `--vui-size-control`, `--vui-space-*`, `--vui-font-size*`, `--vui-row-height`, `--vui-toolbar-height`, `--vui-statusbar-height`, `--vui-panel-padding`, `--vui-icon-size`, радиусы. `--vui-panel-padding` — это `--vui-space-lg`. Остальные высоты chrome заданы в `density.css` один раз на шаг шкалы. Компонент эти токены читает и для другой плотности не переписывается. По умолчанию — `comfortable`.
 
+## Foundation runtime
+
+`src/foundation` — исполняемый слой этих правил. `VuiElement` при подключении вызывает `connectFoundation()` и ставит один набор стилей. Компонент не инициализирует тему сам.
+
+`readFoundation()` читает текущие тему, плотность, semantic и component tokens, motion, z-index tokens и пороги контейнера. `containerBand(width)` возвращает `narrow`, `medium` или `wide`. Полоса зависит только от ширины. Смена темы или плотности её не меняет, и смена ширины не выбирает тему.
+
+```text
+Foundation
+├── Tokens          readToken, каталог primitive / semantic / component
+├── Theme           setTheme / getTheme
+├── Density         setDensity / getDensity
+├── Responsive      containerBand, пороги
+├── Layout          gap, padding, align, justify, overflow
+├── Accessibility   prefersReducedMotion, prefersForcedColors, focus ring
+├── Motion          --vui-duration, --vui-easing
+└── Runtime         connectFoundation, readFoundation
+```
+
+Импорт: `vui/runtime`. `vui/foundation` остаётся категорией иконки. Порог в CSS по-прежнему записан явно, потому что `@container` и `@media` не читают `var()`. JavaScript берёт число через runtime, а не второй константой в компоненте.
+
+Z-index tokens читаются здесь. Стек слоёв, Escape и возврат фокуса остаются в `src/interaction/overlay.ts`.
+
+## Контракт компонента
+
+Кроме публичных attributes и событий, каждый новый компонент регистрирует запись:
+
+```ts
+registerContract({
+  element: 'vui-button',
+  className: 'VButton',
+  attributes: [],
+  events: ['click'],
+  slots: [''],
+  parts: ['base'],
+  methods: [],
+  keyboard: ['Tab', 'Enter', 'Space'],
+  states: ['disabled'],
+  responsive: 'flow',
+  focus: 'native',
+});
+```
+
+`events` принимают только `click`, `input`, `change` и `close`. `states` — это то, что компонент реально реализует: `disabled`, `invalid`, и `loading`, если он нужен. Объявленный `loading` обязан выставлять `aria-busy`. Пустой `states` допустим.
+
+`responsive`: `container` или `flow` требуют `min-width: 0` или `max-width: 100%`. `viewport` — для overlay, который ограничен viewport. `focus: 'roving'` означает, что кольцо рисует дочерний элемент, а не stylesheet host.
+
+Lifecycle общий для всех наследников `VuiElement`:
+
+- shadow открывается в конструкторе и заполняется один раз;
+- повторное подключение вызывает `sync()` и не пересоздаёт shadow;
+- `connectionCount` растёт на каждое подключение;
+- `hold(name, dispose)` и `bind(name, target, type, listener)` заменяются по имени и снимаются в `disconnectedCallback`.
+
+Импорт регистрации: `vui/contract`. Показательный набор уже зарегистрирован: button, input, dialog, toast, select, data-grid, file-tree.
+
+## Compliance
+
+`checkCompliance(element, contract)` проверяет подключённый элемент: custom element зарегистрирован, shadow открыт и переживает `remount()`, в CSS нет цветовых литералов, стили ссылаются на Foundation tokens и базовые theme, density и reduced-motion правила, responsive-ограничение на месте, слоты, parts, методы и роль совпадают с записью, reflected properties пишут свои attributes, `disabled` доходит до нативного контрола, `invalid` ставит `aria-invalid`, `loading` ставит `aria-busy`.
+
+Нарушение возвращается строкой. Тест показательного набора падает, если список не пуст. Это путь и для следующего компонента: зарегистрировать контракт и вызвать ту же функцию.
+
 ## Матрица качества
 
 ```text

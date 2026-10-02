@@ -1,10 +1,11 @@
 import { defineElement } from '../../core/define';
+import { registerContract } from '../../contract/registry';
 import { VuiElement } from '../../core/element';
 import { emitChange } from '../../core/events';
 import { nextEnabled } from '../../interaction/keyboard';
 import { pushOverlay } from '../../interaction/overlay';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
-import { readLength } from '../../core/responsive';
+import { readLength } from '../../foundation/responsive';
 import { controlStyles, fieldStyles } from '../../core/styles';
 
 const chevron = `
@@ -59,7 +60,6 @@ export class VSelect extends VuiElement {
   private activeIndex = 0;
   private typeBuffer = '';
   private typeTimer = 0;
-  private observer: MutationObserver | null = null;
   private releaseOverlay: (() => void) | null = null;
   private readonly listId = `vui-select-${++selectSeq}`;
 
@@ -175,17 +175,25 @@ export class VSelect extends VuiElement {
       else this.open();
     });
     trigger.addEventListener('keydown', (event) => this.onKeydown(event));
-    this.observer = new MutationObserver(() => {
+  }
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.watchOptions();
+  }
+
+  private watchOptions(): void {
+    const observer = new MutationObserver(() => {
       if (this.listOpen) this.renderOptions();
       this.sync();
     });
-    this.observer.observe(this, { childList: true, subtree: true, characterData: true, attributes: true });
+    observer.observe(this, { childList: true, subtree: true, characterData: true, attributes: true });
+    this.hold('options', () => observer.disconnect());
   }
 
   disconnectedCallback(): void {
-    super.disconnectedCallback();
     this.close();
-    this.observer?.disconnect();
+    super.disconnectedCallback();
   }
 
   protected sync(): void {
@@ -388,3 +396,26 @@ reflectStrings(VSelect, ['label', 'placeholder', 'name', 'size']);
 reflectBooleans(VSelect, ['disabled', 'invalid']);
 defineElement('vui-option', VOption);
 defineElement('vui-select', VSelect);
+
+registerContract({
+  element: 'vui-select',
+  className: 'VSelect',
+  attributes: [
+    { name: 'label', kind: 'string', reflected: true },
+    { name: 'value', kind: 'string', reflected: true },
+    { name: 'placeholder', kind: 'string', reflected: true },
+    { name: 'name', kind: 'string', reflected: true },
+    { name: 'size', kind: 'string', reflected: true },
+    { name: 'disabled', kind: 'boolean', reflected: true },
+    { name: 'invalid', kind: 'boolean', reflected: true },
+  ],
+  events: ['change'],
+  slots: [],
+  parts: ['label', 'trigger', 'listbox'],
+  methods: [],
+  keyboard: ['ArrowUp', 'ArrowDown', 'Home', 'End', 'Enter', 'Space', 'Escape'],
+  states: ['disabled', 'invalid'],
+  responsive: 'container',
+  focus: 'native',
+  role: 'combobox',
+});

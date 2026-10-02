@@ -6,12 +6,14 @@ import {
   getDensity,
   getTheme,
   iconNames,
+  listContracts,
   setDensity,
   setTheme,
   toast,
   type VuiDensity,
   type VuiTheme,
 } from '../index';
+import { containerBand, prefersForcedColors, prefersReducedMotion, readFoundation } from '../foundation/index';
 import './showcase.css';
 import type { VDataGrid } from '../components/data/data-grid';
 import type { VFileTree } from '../components/desktop/file-tree';
@@ -47,6 +49,45 @@ const updateResponsiveReadout = (): void => {
   if (!readout || !(stage instanceof HTMLElement)) return;
   const width = Math.round(stage.getBoundingClientRect().width);
   readout.textContent = `${themeLabels[getTheme()]} + ${densityLabels[getDensity()]} + ${width}px`;
+  paintFoundation(width);
+};
+
+const paintFoundation = (stageWidth = 0): void => {
+  const list = document.querySelector('#foundation-snapshot');
+  if (!(list instanceof HTMLDListElement)) return;
+  const snapshot = readFoundation();
+  const band = containerBand(stageWidth);
+  const rows: Array<[string, string]> = [
+    ['theme', snapshot.theme],
+    ['density', snapshot.density],
+    ['band', stageWidth > 0 ? band : '—'],
+    ['background', snapshot.tokens['--vui-color-background'] || '—'],
+    ['control', snapshot.tokens['--vui-size-control'] || '—'],
+    ['space-md', snapshot.tokens['--vui-space-md'] || '—'],
+    ['duration', snapshot.motion.duration || '—'],
+    ['dialog z', snapshot.layers.dialog || '—'],
+    ['narrow', `${Math.round(snapshot.thresholds.narrow)}px`],
+    ['medium', `${Math.round(snapshot.thresholds.medium)}px`],
+  ];
+  list.replaceChildren();
+  for (const [name, value] of rows) {
+    const term = document.createElement('dt');
+    term.textContent = name;
+    const detail = document.createElement('dd');
+    detail.textContent = value;
+    list.append(term, detail);
+  }
+  const bandNode = document.querySelector('#foundation-band');
+  if (bandNode) {
+    bandNode.textContent =
+      stageWidth > 0
+        ? `Стенд responsive: ${band}, ${Math.round(stageWidth)}px.`
+        : 'Полоса появится после измерения стенда.';
+  }
+  const motion = document.querySelector('#a11y-readout');
+  if (motion) {
+    motion.textContent = `prefers-reduced-motion: ${prefersReducedMotion() ? 'reduce' : 'no-preference'}. forced-colors: ${prefersForcedColors() ? 'active' : 'none'}.`;
+  }
 };
 
 if (themeSelect instanceof HTMLElement) {
@@ -219,6 +260,51 @@ if (stage instanceof HTMLElement && handle instanceof HTMLElement) {
 
 updateResponsiveReadout();
 window.addEventListener('resize', updateResponsiveReadout);
+
+const lifecycleHost = document.querySelector('#lifecycle-host');
+const lifecycleSample = document.createElement('vui-button');
+lifecycleSample.textContent = 'Образец';
+let lifecycleShadow: ShadowRoot | null = null;
+const paintLifecycle = (): void => {
+  const readout = document.querySelector('#lifecycle-readout');
+  if (!readout) return;
+  const count =
+    'connectionCount' in lifecycleSample && typeof lifecycleSample.connectionCount === 'number'
+      ? lifecycleSample.connectionCount
+      : 0;
+  const same = lifecycleSample.shadowRoot === lifecycleShadow;
+  readout.textContent = `Подключений: ${count}. Shadow ${same ? 'сохранён' : 'пересоздан'}.`;
+};
+if (lifecycleHost) {
+  lifecycleHost.append(lifecycleSample);
+  lifecycleShadow = lifecycleSample.shadowRoot;
+  paintLifecycle();
+}
+document.querySelector('#lifecycle-cycle')?.addEventListener('click', () => {
+  if (!lifecycleHost) return;
+  lifecycleSample.remove();
+  lifecycleHost.append(lifecycleSample);
+  paintLifecycle();
+});
+
+const complianceBody = document.querySelector('#compliance-table tbody');
+if (complianceBody) {
+  for (const contract of listContracts()) {
+    const row = document.createElement('tr');
+    for (const value of [
+      contract.element,
+      contract.className,
+      contract.states.length ? contract.states.join(', ') : '—',
+      contract.responsive,
+      contract.events.join(', '),
+    ]) {
+      const cell = document.createElement('td');
+      cell.textContent = value;
+      row.append(cell);
+    }
+    complianceBody.append(row);
+  }
+}
 
 const commands = new CommandRegistry();
 const note = (id: string, text: string): void => {

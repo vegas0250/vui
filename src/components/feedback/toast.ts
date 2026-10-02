@@ -1,5 +1,6 @@
 import '../foundation/icon';
 import { defineElement } from '../../core/define';
+import { registerContract } from '../../contract/registry';
 import { VuiElement } from '../../core/element';
 import { emitClose } from '../../core/events';
 import { pushOverlay } from '../../interaction/overlay';
@@ -212,3 +213,23 @@ export function toast(options: ToastOptions | string): VToast {
 reflectStrings(VToast, { variant: 'variant', heading: 'heading', duration: 'duration', closeLabel: 'close-label' });
 defineElement('vui-toast', VToast);
 defineElement('vui-toaster', VToaster);
+
+registerContract({
+  element: 'vui-toast',
+  className: 'VToast',
+  attributes: [
+    { name: 'variant', kind: 'enum', values: ['info', 'success', 'warning', 'danger'], reflected: true },
+    { name: 'heading', kind: 'string', reflected: true },
+    { name: 'duration', kind: 'string', reflected: true },
+    { name: 'close-label', kind: 'string', reflected: true },
+  ],
+  events: ['close'],
+  slots: [''],
+  parts: ['toast', 'icon', 'title', 'message', 'close'],
+  methods: ['start'],
+  keyboard: ['Tab'],
+  states: [],
+  responsive: 'flow',
+  focus: 'native',
+  role: 'status',
+});

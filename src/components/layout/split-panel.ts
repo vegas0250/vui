@@ -2,7 +2,7 @@ import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { applyOverflow } from '../../core/layout';
 import { reflectStrings } from '../../core/reflect';
-import { inlineThreshold, observeInlineSize } from '../../core/responsive';
+import { containerBand, observeInlineSize } from '../../foundation/responsive';
 import { trackPointer } from '../../interaction/pointer';
 
 export class VSplitPanel extends VuiElement {
@@ -123,8 +123,8 @@ export class VSplitPanel extends VuiElement {
   private applyStack(): void {
     const vertical = this.getAttribute('orientation') === 'vertical';
     const width = this.getBoundingClientRect().width;
-    if (width <= 0) return;
-    const narrow = width <= inlineThreshold(this);
+    if (!(width > 0)) return;
+    const narrow = containerBand(width, this) === 'narrow';
     const stacked = !vertical && narrow;
     if (this.stacked === stacked) return;
     this.toggleAttribute('data-stacked', stacked);

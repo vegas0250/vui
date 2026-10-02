@@ -1,5 +1,6 @@
 import '../foundation/icon';
 import { defineElement } from '../../core/define';
+import { registerContract } from '../../contract/registry';
 import { VuiElement } from '../../core/element';
 import { emitChange } from '../../core/events';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
@@ -264,3 +265,18 @@ reflectBooleans(VTreeItem, ['expanded', 'selected']);
 reflectStrings(VFileTree, ['label']);
 defineElement('vui-tree-item', VTreeItem);
 defineElement('vui-file-tree', VFileTree);
+
+registerContract({
+  element: 'vui-file-tree',
+  className: 'VFileTree',
+  attributes: [{ name: 'label', kind: 'string', reflected: true }],
+  events: ['change'],
+  slots: [''],
+  parts: ['tree'],
+  methods: [],
+  keyboard: ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'Enter', 'Space'],
+  states: [],
+  responsive: 'flow',
+  focus: 'roving',
+  role: 'tree',
+});

@@ -4,6 +4,8 @@
 
 Общие CSS custom properties — семантические токены (`--vui-color-*`, `--vui-space-*`, `--vui-size-control`, `--vui-font-*`, `--vui-radius*`, `--vui-shadow-*`, `--vui-focus-ring`, `--vui-z-*`). Ни один компонент не добавляет собственный цвет. Строковое property без атрибута равно `''`. Булево property равно наличию атрибута.
 
+`vui/runtime` читает текущий снимок Foundation. `vui/contract` регистрирует и проверяет контракт компонента. У каждого элемента есть `connectionCount`: число подключений. Shadow при повторном mount не пересоздаётся.
+
 События `click`, `input`, `change` и `close` всплывают и проходят через shadow boundary.
 
 ## vui-button
