@@ -1,9 +1,16 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
+import { reflectBooleans, reflectStrings } from '../../core/reflect';
 import { inlineThreshold, observeInlineSize } from '../../core/responsive';
 import { flexAlign, flexJustify, tokenGap } from '../../core/styles';
 
 class VStackBase extends VuiElement {
+  declare gap: string;
+  declare align: string;
+  declare justify: string;
+  declare direction: string;
+  declare wrap: boolean;
+
   static get observedAttributes(): string[] {
     return ['gap', 'align', 'justify', 'wrap', 'direction'];
   }
@@ -79,6 +86,8 @@ export class VVStack extends VStackBase {
   protected directionFallback = 'column';
 }
 
+reflectStrings(VStackBase, ['gap', 'align', 'justify', 'direction']);
+reflectBooleans(VStackBase, ['wrap']);
 defineElement('vui-stack', VStack);
 defineElement('vui-hstack', VHStack);
 defineElement('vui-vstack', VVStack);

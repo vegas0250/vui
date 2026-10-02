@@ -1,6 +1,8 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { emitChange } from '../../core/events';
+import { pushOverlay } from '../../core/overlay';
+import { reflectBooleans, reflectStrings } from '../../core/reflect';
 import { controlStyles, fieldStyles } from '../../core/styles';
 
 const chevron = `
@@ -9,6 +11,10 @@ const chevron = `
 </svg>`;
 
 export class VOption extends HTMLElement {
+  declare value: string;
+  declare label: string;
+  declare disabled: boolean;
+
   static get observedAttributes(): string[] {
     return ['value', 'disabled', 'label'];
   }
@@ -33,6 +39,13 @@ export class VOption extends HTMLElement {
 let selectSeq = 0;
 
 export class VSelect extends VuiElement {
+  declare label: string;
+  declare placeholder: string;
+  declare name: string;
+  declare size: string;
+  declare disabled: boolean;
+  declare invalid: boolean;
+
   static formAssociated = true;
 
   static get observedAttributes(): string[] {
@@ -45,6 +58,7 @@ export class VSelect extends VuiElement {
   private typeBuffer = '';
   private typeTimer = 0;
   private observer: MutationObserver | null = null;
+  private releaseOverlay: (() => void) | null = null;
   private readonly listId = `vui-select-${++selectSeq}`;
 
   constructor() {
@@ -114,7 +128,7 @@ export class VSelect extends VuiElement {
       .chevron { display: inline-flex; width: 1em; height: 1em; color: var(--vui-color-text-muted); }
       .listbox {
         position: fixed;
-        z-index: var(--vui-z-dropdown);
+        z-index: var(--vui-overlay-z, var(--vui-z-dropdown));
         margin: 0;
         padding: var(--vui-space-2xs);
         list-style: none;
@@ -177,8 +191,13 @@ export class VSelect extends VuiElement {
     const text = this.getAttribute('label') ?? '';
     label.textContent = text;
     if (!label.id) label.id = `${this.listId}-label`;
-    if (text) trigger.setAttribute('aria-labelledby', label.id);
-    else trigger.removeAttribute('aria-labelledby');
+    if (text) {
+      trigger.setAttribute('aria-labelledby', label.id);
+      this.listbox.setAttribute('aria-labelledby', label.id);
+    } else {
+      trigger.removeAttribute('aria-labelledby');
+      this.listbox.removeAttribute('aria-labelledby');
+    }
     trigger.disabled = this.isDisabled();
     trigger.setAttribute('aria-invalid', this.hasAttribute('invalid') ? 'true' : 'false');
     const selected = this.optionElements().find((option) => option.optionValue === this.value);
@@ -216,17 +235,26 @@ export class VSelect extends VuiElement {
     this.listOpen = true;
     this.listbox.hidden = false;
     this.trigger.setAttribute('aria-expanded', 'true');
+    this.releaseOverlay = pushOverlay({
+      owner: this,
+      kind: 'popup',
+      layer: this.listbox,
+      dismissable: true,
+      dismissOnOutside: true,
+      onDismiss: () => this.close(),
+    });
     const current = this.optionElements().findIndex((option) => option.optionValue === this.value && !option.optionDisabled);
     this.activeIndex = current >= 0 ? current : this.optionElements().findIndex((option) => !option.optionDisabled);
     this.renderOptions();
     this.position();
-    document.addEventListener('pointerdown', this.onDocumentPointer, true);
     window.addEventListener('resize', this.onReposition);
     document.addEventListener('scroll', this.onReposition, true);
   }
 
   private close(): void {
     this.listOpen = false;
+    this.releaseOverlay?.();
+    this.releaseOverlay = null;
     const list = this.shadow.querySelector<HTMLElement>('.listbox');
     const trigger = this.shadow.querySelector<HTMLButtonElement>('.trigger');
     if (list) list.hidden = true;
@@ -234,14 +262,9 @@ export class VSelect extends VuiElement {
       trigger.setAttribute('aria-expanded', 'false');
       trigger.removeAttribute('aria-activedescendant');
     }
-    document.removeEventListener('pointerdown', this.onDocumentPointer, true);
     window.removeEventListener('resize', this.onReposition);
     document.removeEventListener('scroll', this.onReposition, true);
   }
-
-  private readonly onDocumentPointer = (event: Event): void => {
-    if (!event.composedPath().includes(this)) this.close();
-  };
 
   private readonly onReposition = (): void => {
     if (this.listOpen) this.position();
@@ -361,5 +384,9 @@ export class VSelect extends VuiElement {
   }
 }
 
+reflectStrings(VOption, ['value', 'label']);
+reflectBooleans(VOption, ['disabled']);
+reflectStrings(VSelect, ['label', 'placeholder', 'name', 'size']);
+reflectBooleans(VSelect, ['disabled', 'invalid']);
 defineElement('vui-option', VOption);
 defineElement('vui-select', VSelect);

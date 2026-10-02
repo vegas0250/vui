@@ -98,7 +98,7 @@ export const controlStyles = `
   background: var(--vui-color-field);
   color: var(--vui-color-text);
 }
-.control:focus-within {
+.control:has(:focus-visible) {
   border-color: var(--vui-color-focus);
   box-shadow: var(--vui-focus-shadow);
 }

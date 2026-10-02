@@ -45,7 +45,7 @@ pnpm add vui
 <html data-vui-theme="dark" data-vui-density="compact">
 ```
 
-Декларативный API — Custom Elements. Класс TypeScript — то же самое компонент, если он нужен из кода:
+Декларативный API — Custom Elements. Класс TypeScript — тот же компонент, если он нужен из кода. Строковые и булевы properties пишут те же attributes: `button.disabled = true` равносильно `disabled` в разметке. Полный контракт — в [docs/components.md](docs/components.md), правила — в [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ```ts
 import { VButton } from 'vui';
@@ -192,11 +192,13 @@ pnpm dev
 
 ```bash
 pnpm dev         # showcase
-pnpm test        # vitest
-pnpm test:e2e    # playwright
+pnpm test        # vitest: контракт, клавиатура, overlay
+pnpm test:e2e    # showcase, responsive, accessibility, visual regression
 pnpm typecheck
 pnpm build       # библиотека в dist/
 ```
+
+Проверки идут слоями: unit, связка компонентов, e2e, accessibility, visual regression. Визуальная матрица — Light/Comfortable/desktop, Dark/Comfortable/desktop, Light/Compact/desktop, Dark/Compact/mobile, без перемножения всех тем на все плотности. Как добавлять компонент — в [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Структура
 
@@ -213,10 +215,17 @@ vui/
 │   └── index.ts
 ├── themes/
 ├── tests/
+│   ├── unit/
+│   └── e2e/          showcase, responsive, a11y, visual
+├── visual.html       харнес снимков и accessibility
+├── ARCHITECTURE.md
+├── CONTRIBUTING.md
+├── CHANGELOG.md
+├── docs/components.md
 ├── index.html
 └── .cursor/rules/project.mdc
 ```
 
 ## Статус
 
-Версия `0.1.0`, первый рабочий набор компонентов. Архитектура и фактический список компонентов описаны в `.cursor/rules/project.mdc`.
+Версия `0.1.0`, первый рабочий набор компонентов. Архитектурный контракт — в `ARCHITECTURE.md`. Краткий список для изменений в репозитории — в `.cursor/rules/project.mdc`.

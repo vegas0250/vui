@@ -1,10 +1,14 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
+import { reflectStrings } from '../../core/reflect';
 import { renderIcon } from '../../icons/registry';
 
 export { iconNames, registerIcon } from '../../icons/registry';
 
 export class VIcon extends VuiElement {
+  declare name: string;
+  declare label: string;
+
   static get observedAttributes(): string[] {
     return ['name', 'label'];
   }
@@ -48,4 +52,5 @@ export class VIcon extends VuiElement {
   }
 }
 
+reflectStrings(VIcon, ['name', 'label']);
 defineElement('vui-icon', VIcon);

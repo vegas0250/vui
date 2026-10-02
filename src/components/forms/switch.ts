@@ -1,7 +1,13 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
+import { reflectBooleans, reflectStrings } from '../../core/reflect';
 
 export class VSwitch extends VuiElement {
+  declare name: string;
+  declare value: string;
+  declare label: string;
+  declare disabled: boolean;
+
   static formAssociated = true;
 
   static get observedAttributes(): string[] {
@@ -126,4 +132,6 @@ export class VSwitch extends VuiElement {
   }
 }
 
+reflectStrings(VSwitch, ['name', 'value', 'label']);
+reflectBooleans(VSwitch, ['disabled']);
 defineElement('vui-switch', VSwitch);

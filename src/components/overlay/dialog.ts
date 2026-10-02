@@ -1,6 +1,8 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { emitClose } from '../../core/events';
+import { pushOverlay } from '../../core/overlay';
+import { reflectBooleans, reflectStrings } from '../../core/reflect';
 
 const closeIcon = `
 <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
@@ -9,16 +11,23 @@ const closeIcon = `
 </svg>`;
 
 export class VDialog extends VuiElement {
+  declare open: boolean;
+  declare label: string;
+  declare size: string;
+  declare closeLabel: string;
+
   static get observedAttributes(): string[] {
     return ['open', 'label', 'dismissable', 'size', 'close-label'];
   }
 
+  private releaseOverlay: (() => void) | null = null;
+
   protected template(): string {
     return `
-      <dialog part="dialog">
+      <dialog part="dialog" tabindex="-1">
         <div class="surface" part="surface">
           <header part="header">
-            <h2 tabindex="-1" part="title"></h2>
+            <h2 part="title"></h2>
             <button type="button" class="close" part="close">${closeIcon}</button>
           </header>
           <div class="body" part="body"><slot></slot></div>
@@ -45,6 +54,9 @@ export class VDialog extends VuiElement {
         width: var(--vui-dialog-inline);
         max-width: calc(100vw - var(--vui-overlay-gutter) * 2);
         max-height: var(--vui-dialog-block);
+      }
+      dialog:focus {
+        outline: none;
       }
       dialog::backdrop {
         background: var(--vui-color-backdrop);
@@ -79,7 +91,6 @@ export class VDialog extends VuiElement {
         line-height: var(--vui-line-height);
         font-weight: var(--vui-font-weight-strong);
       }
-      h2:focus { outline: none; }
       .body {
         padding-top: var(--vui-space-md);
         overflow: auto;
@@ -161,34 +172,43 @@ export class VDialog extends VuiElement {
   }
 
   disconnectedCallback(): void {
-    document.removeEventListener('keydown', this.onEscape, true);
+    this.releaseOverlay?.();
+    this.releaseOverlay = null;
   }
 
   get dismissable(): boolean {
     return !this.hasAttribute('dismissable') || this.getAttribute('dismissable') !== 'false';
   }
 
+  set dismissable(value: boolean) {
+    if (value) this.removeAttribute('dismissable');
+    else this.setAttribute('dismissable', 'false');
+  }
+
   show(): void {
     const dialog = this.dialog;
     if (!dialog) return;
+    if (!this.releaseOverlay) {
+      this.releaseOverlay = pushOverlay({
+        owner: this,
+        kind: 'modal',
+        dismissable: () => this.dismissable,
+        lockScroll: true,
+        restoreFocus: true,
+        onDismiss: () => this.close(),
+      });
+    }
     if (!dialog.open) {
       if (typeof dialog.showModal === 'function') dialog.showModal();
       else dialog.setAttribute('open', '');
     }
     if (!this.hasAttribute('open')) this.setAttribute('open', '');
-    document.addEventListener('keydown', this.onEscape, true);
-    this.qs<HTMLElement>('h2').focus();
+    dialog.focus();
   }
 
   close(): void {
     this.finishClose();
   }
-
-  private readonly onEscape = (event: KeyboardEvent): void => {
-    if (event.key !== 'Escape' || !this.dismissable || !this.hasAttribute('open')) return;
-    event.preventDefault();
-    this.finishClose();
-  };
 
   private finishClose(): void {
     if (this.settling) return;
@@ -198,8 +218,10 @@ export class VDialog extends VuiElement {
     this.settling = true;
     if (dialog?.open) dialog.close();
     if (this.hasAttribute('open')) this.removeAttribute('open');
-    document.removeEventListener('keydown', this.onEscape, true);
+    const release = this.releaseOverlay;
+    this.releaseOverlay = null;
     this.settling = false;
+    release?.();
     emitClose(this);
   }
 
@@ -211,6 +233,8 @@ export class VDialog extends VuiElement {
     heading.textContent = title;
     if (!heading.id) heading.id = `vui-dialog-title-${Math.random().toString(36).slice(2, 8)}`;
     dialog.setAttribute('aria-labelledby', heading.id);
+    if (this.hasAttribute('open')) dialog.setAttribute('aria-modal', 'true');
+    else dialog.removeAttribute('aria-modal');
     this.qs('button.close').setAttribute('aria-label', this.getAttribute('close-label') ?? 'Close');
     if (this.settling) return;
     if (this.hasAttribute('open') && !dialog.open) this.show();
@@ -222,4 +246,6 @@ export class VDialog extends VuiElement {
   }
 }
 
+reflectBooleans(VDialog, ['open']);
+reflectStrings(VDialog, { label: 'label', size: 'size', closeLabel: 'close-label' });
 defineElement('vui-dialog', VDialog);

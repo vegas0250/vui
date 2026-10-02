@@ -1,10 +1,14 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
+import { reflectStrings } from '../../core/reflect';
 import { inlineThreshold, observeInlineSize } from '../../core/responsive';
 
 export class VSplitPanel extends VuiElement {
+  declare orientation: string;
+  declare label: string;
+
   static get observedAttributes(): string[] {
-    return ['orientation', 'position'];
+    return ['orientation', 'position', 'label'];
   }
 
   private dragging = false;
@@ -83,10 +87,10 @@ export class VSplitPanel extends VuiElement {
     });
     sep.addEventListener('keydown', (event) => {
       const step = event.shiftKey ? 10 : 2;
-      if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') this.setPosition(this.position - step);
-      else if (event.key === 'ArrowRight' || event.key === 'ArrowDown') this.setPosition(this.position + step);
-      else if (event.key === 'Home') this.setPosition(10);
-      else if (event.key === 'End') this.setPosition(90);
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') this.position -= step;
+      else if (event.key === 'ArrowRight' || event.key === 'ArrowDown') this.position += step;
+      else if (event.key === 'Home') this.position = 10;
+      else if (event.key === 'End') this.position = 90;
       else return;
       event.preventDefault();
     });
@@ -139,15 +143,15 @@ export class VSplitPanel extends VuiElement {
     return this.qs<HTMLElement>('.sep');
   }
 
-  private get position(): number {
+  get position(): number {
     const value = Number(this.getAttribute('position') ?? 50);
     if (!Number.isFinite(value)) return 50;
     return Math.min(90, Math.max(10, value));
   }
 
-  private setPosition(value: number): void {
-    const next = Math.round(Math.min(90, Math.max(10, value)));
-    this.setAttribute('position', String(next));
+  set position(value: number) {
+    const next = Math.round(Math.min(90, Math.max(10, Number(value))));
+    this.setAttribute('position', String(Number.isFinite(next) ? next : 50));
   }
 
   private updateFromPointer(event: PointerEvent): void {
@@ -156,8 +160,9 @@ export class VSplitPanel extends VuiElement {
     const ratio = vertical
       ? (event.clientY - rect.top) / rect.height
       : (event.clientX - rect.left) / rect.width;
-    this.setPosition(ratio * 100);
+    this.position = ratio * 100;
   }
 }
 
+reflectStrings(VSplitPanel, ['orientation', 'label']);
 defineElement('vui-split-panel', VSplitPanel);

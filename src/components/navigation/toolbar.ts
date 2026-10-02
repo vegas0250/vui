@@ -1,7 +1,11 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
+import { reflectBooleans, reflectStrings } from '../../core/reflect';
 
 export class VToolbar extends VuiElement {
+  declare label: string;
+  declare wrap: boolean;
+
   static get observedAttributes(): string[] {
     return ['label', 'wrap'];
   }
@@ -61,4 +65,6 @@ export class VToolbar extends VuiElement {
   }
 }
 
+reflectStrings(VToolbar, ['label']);
+reflectBooleans(VToolbar, ['wrap']);
 defineElement('vui-toolbar', VToolbar);

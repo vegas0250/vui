@@ -1,6 +1,7 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { emitChange } from '../../core/events';
+import { reflectStrings } from '../../core/reflect';
 import { inlineThreshold, observeInlineSize } from '../../core/responsive';
 
 export interface VDataGridColumn {
@@ -23,6 +24,9 @@ function safeWidth(width: string | undefined): string | null {
 }
 
 export class VDataGrid extends VuiElement {
+  declare label: string;
+  declare emptyLabel: string;
+
   static get observedAttributes(): string[] {
     return ['label', 'empty-label', 'selected'];
   }
@@ -107,7 +111,7 @@ export class VDataGrid extends VuiElement {
       }
       tbody tr:last-child td { border-bottom: 0; }
       tbody tr[aria-selected="true"] { background: var(--vui-color-surface-hover); }
-      td:focus {
+      td:focus-visible {
         outline: var(--vui-focus-ring);
         outline-offset: -2px;
       }
@@ -317,4 +321,5 @@ export class VDataGrid extends VuiElement {
   }
 }
 
+reflectStrings(VDataGrid, { label: 'label', emptyLabel: 'empty-label' });
 defineElement('vui-data-grid', VDataGrid);

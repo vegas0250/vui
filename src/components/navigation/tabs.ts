@@ -1,9 +1,14 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
+import { reflectBooleans, reflectStrings } from '../../core/reflect';
 
 let tabSeq = 0;
 
 export class VTab extends VuiElement {
+  declare panel: string;
+  declare selected: boolean;
+  declare disabled: boolean;
+
   static shadowDelegatesFocus = false;
 
   static get observedAttributes(): string[] {
@@ -60,6 +65,9 @@ export class VTab extends VuiElement {
 }
 
 export class VTabPanel extends VuiElement {
+  declare name: string;
+  declare selected: boolean;
+
   static get observedAttributes(): string[] {
     return ['name', 'selected'];
   }
@@ -86,6 +94,8 @@ export class VTabPanel extends VuiElement {
 }
 
 export class VTabs extends VuiElement {
+  declare label: string;
+
   static get observedAttributes(): string[] {
     return ['label'];
   }
@@ -217,6 +227,11 @@ export class VTabs extends VuiElement {
   }
 }
 
+reflectStrings(VTab, ['panel']);
+reflectBooleans(VTab, ['selected', 'disabled']);
+reflectStrings(VTabPanel, ['name']);
+reflectBooleans(VTabPanel, ['selected']);
+reflectStrings(VTabs, ['label']);
 defineElement('vui-tab', VTab);
 defineElement('vui-tab-panel', VTabPanel);
 defineElement('vui-tabs', VTabs);

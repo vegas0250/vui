@@ -2,6 +2,7 @@ import '../foundation/icon';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { emitClose } from '../../core/events';
+import { reflectBooleans, reflectStrings } from '../../core/reflect';
 import type { VIcon } from '../foundation/icon';
 
 const icons: Record<string, string> = {
@@ -12,6 +13,10 @@ const icons: Record<string, string> = {
 };
 
 export class VAlert extends VuiElement {
+  declare variant: string;
+  declare closeLabel: string;
+  declare closable: boolean;
+
   static get observedAttributes(): string[] {
     return ['variant', 'closable', 'close-label'];
   }
@@ -95,4 +100,6 @@ export class VAlert extends VuiElement {
   }
 }
 
+reflectStrings(VAlert, { variant: 'variant', closeLabel: 'close-label' });
+reflectBooleans(VAlert, ['closable']);
 defineElement('vui-alert', VAlert);

@@ -1,5 +1,6 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
+import { reflectBooleans, reflectStrings } from '../../core/reflect';
 
 const checkIcon = `
 <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -7,6 +8,11 @@ const checkIcon = `
 </svg>`;
 
 export class VCheckbox extends VuiElement {
+  declare name: string;
+  declare value: string;
+  declare disabled: boolean;
+  declare invalid: boolean;
+
   static formAssociated = true;
 
   static get observedAttributes(): string[] {
@@ -119,4 +125,6 @@ export class VCheckbox extends VuiElement {
   }
 }
 
+reflectStrings(VCheckbox, ['name', 'value']);
+reflectBooleans(VCheckbox, ['disabled', 'invalid']);
 defineElement('vui-checkbox', VCheckbox);

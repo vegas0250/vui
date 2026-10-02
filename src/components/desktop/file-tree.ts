@@ -2,6 +2,7 @@ import '../foundation/icon';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { emitChange } from '../../core/events';
+import { reflectBooleans, reflectStrings } from '../../core/reflect';
 import type { VIcon } from '../foundation/icon';
 
 const chevron = `
@@ -10,6 +11,11 @@ const chevron = `
 </svg>`;
 
 export class VTreeItem extends VuiElement {
+  declare label: string;
+  declare kind: string;
+  declare expanded: boolean;
+  declare selected: boolean;
+
   static shadowDelegatesFocus = false;
 
   static get observedAttributes(): string[] {
@@ -45,7 +51,7 @@ export class VTreeItem extends VuiElement {
         background: var(--vui-color-surface-hover);
       }
       :host([selected]) .row { font-weight: var(--vui-font-weight-strong); }
-      :host(:focus) .row {
+      :host(:focus-visible) .row {
         outline: var(--vui-focus-ring);
         outline-offset: -2px;
       }
@@ -100,6 +106,8 @@ export class VTreeItem extends VuiElement {
 }
 
 export class VFileTree extends VuiElement {
+  declare label: string;
+
   static shadowDelegatesFocus = false;
 
   static get observedAttributes(): string[] {
@@ -240,5 +248,8 @@ export class VFileTree extends VuiElement {
   }
 }
 
+reflectStrings(VTreeItem, ['label', 'kind']);
+reflectBooleans(VTreeItem, ['expanded', 'selected']);
+reflectStrings(VFileTree, ['label']);
 defineElement('vui-tree-item', VTreeItem);
 defineElement('vui-file-tree', VFileTree);

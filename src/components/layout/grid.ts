@@ -1,8 +1,13 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
+import { reflectStrings } from '../../core/reflect';
 import { tokenGap } from '../../core/styles';
 
 export class VGrid extends VuiElement {
+  declare columns: string;
+  declare min: string;
+  declare gap: string;
+
   static get observedAttributes(): string[] {
     return ['columns', 'min', 'gap'];
   }
@@ -41,4 +46,5 @@ export class VGrid extends VuiElement {
   }
 }
 
+reflectStrings(VGrid, ['columns', 'min', 'gap']);
 defineElement('vui-grid', VGrid);

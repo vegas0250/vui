@@ -5,6 +5,13 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
+  expect: {
+    toHaveScreenshot: {
+      animations: 'disabled',
+      caret: 'hide',
+      maxDiffPixelRatio: 0.02,
+    },
+  },
   use: {
     baseURL: 'http://127.0.0.1:5173',
     trace: 'on-first-retry',

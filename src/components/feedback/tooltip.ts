@@ -1,14 +1,22 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
+import { deepestActiveElement, isWithin } from '../../core/focus';
+import { pushOverlay } from '../../core/overlay';
+import { reflectStrings } from '../../core/reflect';
 
 let tooltipSeq = 0;
 
 export class VTooltip extends VuiElement {
+  declare text: string;
+  declare placement: string;
+
   static get observedAttributes(): string[] {
     return ['text', 'placement'];
   }
 
   private showTimer = 0;
+  private releaseOverlay: (() => void) | null = null;
+  private described: { el: HTMLElement; previous: string | null } | null = null;
   private readonly tooltipId = `vui-tooltip-${++tooltipSeq}`;
 
   protected template(): string {
@@ -23,7 +31,7 @@ export class VTooltip extends VuiElement {
       :host { display: inline-flex; max-width: 100%; }
       .tip {
         position: fixed;
-        z-index: var(--vui-z-tooltip);
+        z-index: var(--vui-overlay-z, var(--vui-z-tooltip));
         max-width: min(16rem, calc(100vw - var(--vui-overlay-gutter) * 2));
         overflow-wrap: anywhere;
         padding: var(--vui-space-2xs) var(--vui-space-xs);
@@ -77,7 +85,16 @@ export class VTooltip extends VuiElement {
     if (!text) return;
     const tip = this.tip;
     tip.hidden = false;
-    this.setAttribute('aria-description', text);
+    this.linkDescription();
+    if (!this.releaseOverlay) {
+      this.releaseOverlay = pushOverlay({
+        owner: this,
+        kind: 'tooltip',
+        layer: tip,
+        dismissable: true,
+        onDismiss: () => this.hide(),
+      });
+    }
     const rect = this.getBoundingClientRect();
     const placement = this.getAttribute('placement') === 'bottom' ? 'bottom' : 'top';
     const tipRect = tip.getBoundingClientRect();
@@ -90,8 +107,29 @@ export class VTooltip extends VuiElement {
   private hide(): void {
     window.clearTimeout(this.showTimer);
     if (this.shadow.querySelector('.tip')) this.tip.hidden = true;
-    this.removeAttribute('aria-description');
+    this.unlinkDescription();
+    this.releaseOverlay?.();
+    this.releaseOverlay = null;
+  }
+
+  private linkDescription(): void {
+    this.unlinkDescription();
+    const active = deepestActiveElement();
+    const target = active && isWithin(this, active) ? active : this;
+    const previous = target.getAttribute('aria-describedby');
+    this.described = { el: target, previous };
+    const next = [previous, this.tooltipId].filter(Boolean).join(' ');
+    target.setAttribute('aria-describedby', next);
+  }
+
+  private unlinkDescription(): void {
+    if (!this.described) return;
+    const { el, previous } = this.described;
+    if (previous) el.setAttribute('aria-describedby', previous);
+    else el.removeAttribute('aria-describedby');
+    this.described = null;
   }
 }
 
+reflectStrings(VTooltip, ['text', 'placement']);
 defineElement('vui-tooltip', VTooltip);

@@ -2,6 +2,8 @@ import '../foundation/icon';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { emitClose } from '../../core/events';
+import { pushOverlay } from '../../core/overlay';
+import { reflectStrings } from '../../core/reflect';
 import type { VIcon } from '../foundation/icon';
 
 const icons: Record<string, string> = {
@@ -19,6 +21,11 @@ export interface ToastOptions {
 }
 
 export class VToast extends VuiElement {
+  declare variant: string;
+  declare heading: string;
+  declare duration: string;
+  declare closeLabel: string;
+
   static get observedAttributes(): string[] {
     return ['variant', 'heading', 'duration', 'close-label'];
   }
@@ -131,6 +138,25 @@ export class VToast extends VuiElement {
 }
 
 export class VToaster extends VuiElement {
+  private releaseOverlay: (() => void) | null = null;
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    if (!this.releaseOverlay) {
+      this.releaseOverlay = pushOverlay({
+        owner: this,
+        kind: 'toast',
+        dismissable: false,
+        layer: this,
+      });
+    }
+  }
+
+  disconnectedCallback(): void {
+    this.releaseOverlay?.();
+    this.releaseOverlay = null;
+  }
+
   protected template(): string {
     return `<div class="stack" part="stack"><slot></slot></div>`;
   }
@@ -139,7 +165,7 @@ export class VToaster extends VuiElement {
     return `
       :host {
         position: fixed;
-        z-index: var(--vui-z-toast);
+        z-index: var(--vui-overlay-z, var(--vui-z-toast));
         right: var(--vui-overlay-gutter);
         bottom: var(--vui-overlay-gutter);
         left: var(--vui-overlay-gutter);
@@ -181,5 +207,6 @@ export function toast(options: ToastOptions | string): VToast {
   return host.show(normalized);
 }
 
+reflectStrings(VToast, { variant: 'variant', heading: 'heading', duration: 'duration', closeLabel: 'close-label' });
 defineElement('vui-toast', VToast);
 defineElement('vui-toaster', VToaster);

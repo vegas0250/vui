@@ -1,8 +1,18 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
+import { reflectBooleans, reflectStrings } from '../../core/reflect';
 import { controlStyles, fieldStyles } from '../../core/styles';
 
 export class VInput extends VuiElement {
+  declare label: string;
+  declare placeholder: string;
+  declare name: string;
+  declare hint: string;
+  declare size: string;
+  declare disabled: boolean;
+  declare invalid: boolean;
+  declare required: boolean;
+
   static formAssociated = true;
 
   static get observedAttributes(): string[] {
@@ -98,8 +108,18 @@ export class VInput extends VuiElement {
     label.textContent = text;
     label.htmlFor = input.id;
     hint.textContent = this.getAttribute('hint') ?? '';
+    if (!hint.id) hint.id = `${input.id}-hint`;
+    if (hint.textContent) input.setAttribute('aria-describedby', hint.id);
+    else input.removeAttribute('aria-describedby');
     this.internals?.setFormValue(input.value);
   }
 }
 
+reflectStrings(VInput, ['label', 'placeholder', 'type', 'name', 'hint', 'size']);
+reflectBooleans(VInput, ['disabled', 'invalid', 'required', 'readonly']);
 defineElement('vui-input', VInput);
+
+export interface VInput {
+  type: string;
+  readonly: boolean;
+}

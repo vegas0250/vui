@@ -1,7 +1,10 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
+import { reflectStrings } from '../../core/reflect';
 
 export class VPanel extends VuiElement {
+  declare heading: string;
+
   static get observedAttributes(): string[] {
     return ['heading'];
   }
@@ -64,4 +67,5 @@ export class VPanel extends VuiElement {
   }
 }
 
+reflectStrings(VPanel, ['heading']);
 defineElement('vui-panel', VPanel);

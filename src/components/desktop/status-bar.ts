@@ -1,7 +1,10 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
+import { reflectStrings } from '../../core/reflect';
 
 export class VStatusBar extends VuiElement {
+  declare label: string;
+
   static get observedAttributes(): string[] {
     return ['label'];
   }
@@ -59,4 +62,5 @@ export class VStatusBar extends VuiElement {
   }
 }
 
+reflectStrings(VStatusBar, ['label']);
 defineElement('vui-status-bar', VStatusBar);

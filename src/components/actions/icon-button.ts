@@ -2,9 +2,16 @@ import '../../components/foundation/icon';
 import { buttonStyles } from './button-styles';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
+import { reflectBooleans, reflectStrings } from '../../core/reflect';
 import type { VIcon } from '../foundation/icon';
 
 export class VIconButton extends VuiElement {
+  declare name: string;
+  declare label: string;
+  declare variant: string;
+  declare size: string;
+  declare disabled: boolean;
+
   static get observedAttributes(): string[] {
     return ['name', 'label', 'variant', 'size', 'disabled', 'type'];
   }
@@ -68,4 +75,10 @@ export class VIconButton extends VuiElement {
   }
 }
 
+reflectStrings(VIconButton, ['name', 'label', 'variant', 'size', 'type']);
+reflectBooleans(VIconButton, ['disabled']);
 defineElement('vui-icon-button', VIconButton);
+
+export interface VIconButton {
+  type: string;
+}

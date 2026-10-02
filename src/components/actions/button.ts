@@ -1,10 +1,18 @@
 import { buttonStyles } from './button-styles';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
+import { reflectBooleans, reflectStrings } from '../../core/reflect';
 
 export class VButton extends VuiElement {
+  declare variant: string;
+  declare size: string;
+  declare name: string;
+  declare value: string;
+  declare form: string;
+  declare disabled: boolean;
+
   static get observedAttributes(): string[] {
-    return ['variant', 'size', 'disabled', 'type', 'name', 'value'];
+    return ['variant', 'size', 'disabled', 'type', 'name', 'value', 'form'];
   }
 
   protected template(): string {
@@ -37,4 +45,10 @@ export class VButton extends VuiElement {
   }
 }
 
+reflectStrings(VButton, ['variant', 'size', 'type', 'name', 'value', 'form']);
+reflectBooleans(VButton, ['disabled']);
 defineElement('vui-button', VButton);
+
+export interface VButton {
+  type: string;
+}

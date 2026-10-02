@@ -31,3 +31,8 @@
   --vui-dialog-inline-sm: min(24rem, calc(100vw - var(--vui-overlay-gutter) * 2));
   --vui-dialog-inline-lg: min(48rem, calc(100vw - var(--vui-overlay-gutter) * 2));
 }
+
+html[data-vui-scroll-lock],
+html[data-vui-scroll-lock] body {
+  overflow: hidden;
+}
