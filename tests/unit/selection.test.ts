@@ -24,6 +24,21 @@ describe('selection model', () => {
     expect(model.anchor).toBe('c');
   });
 
+  it('keeps an active item that can move without changing the selection', () => {
+    const model = new SelectionModel<string>('multiple');
+    model.setOrder(['a', 'b', 'c']);
+    model.select('a');
+    expect(model.active).toBe('a');
+    model.setActive('c');
+    expect(model.active).toBe('c');
+    expect(model.selected).toEqual(['a']);
+    model.select('a', 'toggle');
+    expect(model.selected).toEqual([]);
+    expect(model.active).toBe('a');
+    model.clear();
+    expect(model.active).toBeNull();
+  });
+
   it('ignores selection when the mode is none', () => {
     const model = new SelectionModel<string>('none');
     model.select('a');

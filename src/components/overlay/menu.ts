@@ -1,7 +1,8 @@
+import { ownedChildren } from '../../composition/dom';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
-import type { CommandRegistry } from '../../interaction/commands';
+import { runCommand, type CommandRegistry } from '../../interaction/commands';
 import { bindContextMenu } from '../../interaction/context-menu';
 import { applyRovingTabIndex, isActivation, moveInList } from '../../interaction/keyboard';
 import { placeLayer, pushOverlay, type Placement } from '../../interaction/overlay';
@@ -210,7 +211,7 @@ export class VMenu extends VuiElement {
         return;
       }
       const id = item.getAttribute('command');
-      if (id && this.commands && !this.commands.execute(id)) return;
+      if (id && this.commands && !runCommand(this.commands, id)) return;
       this.root().closeTree();
     });
     this.qs('slot').addEventListener('slotchange', () => this.refreshItems());
@@ -291,7 +292,7 @@ export class VMenu extends VuiElement {
   }
 
   private items(): VMenuItem[] {
-    return [...this.querySelectorAll(':scope > vui-menu-item')].filter((node): node is VMenuItem => node instanceof VMenuItem);
+    return ownedChildren(this, 'vui-menu-item', (node): node is VMenuItem => node instanceof VMenuItem);
   }
 
   private enabledItems(): VMenuItem[] {

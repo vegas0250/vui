@@ -105,6 +105,15 @@ VUI
 │
 ├── Component contract
 │
+├── Interaction contract
+│   фокус, клавиатура, выбор, команда
+│
+├── Component families
+│   Action, Field, Overlay, Navigation, Data
+│
+├── Composition
+│   слот, light DOM, свойство, атрибут, событие
+│
 ├── Components
 │
 ├── Interaction
@@ -142,21 +151,25 @@ NOT PART OF VUI
 ## Как слои соединяются
 
 ```text
+Foundation
+   ↓
+Interaction
+   ↓
+Component Contract
+   ↓
+Component Family
+   ↓
 Component
    ↓
-Interaction Primitive
+Composition
    ↓
-DOM / Browser API
+Application UI
 ```
 
 ```text
-Application
-   ↓
-Command / Selection / Data
-   ↓
-VUI
+interaction → command → action
 ```
 
-Компонент описывает своё поведение через общие primitives. Он не копирует менеджер фокуса, стек overlay или обработку стрелок. Приложение регистрирует команды и читает selection. Глобального event bus нет: наружу выходят DOM-события компонента (`click`, `input`, `change`, `close`).
+Компонент описывает своё поведение через общие primitives. Он не копирует менеджер фокуса, стек overlay или обработку стрелок. Составные части говорят через слот, light DOM, свойство, атрибут или стандартное событие. Приложение регистрирует команды и читает selection. Глобального event bus нет: наружу выходят DOM-события компонента (`click`, `input`, `change`, `close`). VUI не знает о Product, Order, User или Invoice.
 
 Foundation runtime (`src/foundation`) собирает tokens, тему, плотность, полосу контейнера, layout, accessibility, motion и z-index в один снимок. Component contract (`src/contract`) описывает, как компонент подключается к этому снимку. Compliance проверяет запись контракта, а не копирует правила внутри каждого теста.

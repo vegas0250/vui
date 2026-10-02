@@ -52,3 +52,8 @@ export { containerBand, prefersForcedColors, prefersReducedMotion, readFoundatio
 export type { ContainerBand, FoundationSnapshot } from './foundation/index';
 export { checkCompliance, listContracts, registerContract } from './contract/index';
 export type { ComponentContract } from './contract/index';
+export { checkComposition, listCompositions, ownedChildren, registerComposition } from './composition/index';
+export type { CompositionContract } from './composition/index';
+export { listFamilies, familyMembers } from './families/index';
+export type { FamilyContract, FamilyName } from './families/index';
+export { commandPath, listInteractions, platformKeys, runCommand } from './interaction/index';

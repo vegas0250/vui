@@ -6,6 +6,8 @@ const entries = [
   resolve('src/theme/index.ts'),
   resolve('src/foundation/index.ts'),
   resolve('src/contract/index.ts'),
+  resolve('src/composition/index.ts'),
+  resolve('src/families/index.ts'),
   resolve('src/components/foundation/icon.ts'),
   resolve('src/components/actions/button.ts'),
   resolve('src/components/actions/icon-button.ts'),

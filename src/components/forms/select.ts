@@ -2,7 +2,8 @@ import { defineElement } from '../../core/define';
 import { registerContract } from '../../contract/registry';
 import { VuiElement } from '../../core/element';
 import { emitChange } from '../../core/events';
-import { nextEnabled } from '../../interaction/keyboard';
+import { ownedChildren } from '../../composition/dom';
+import { isActivation, nextEnabled } from '../../interaction/keyboard';
 import { pushOverlay } from '../../interaction/overlay';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
 import { readLength } from '../../foundation/responsive';
@@ -236,9 +237,7 @@ export class VSelect extends VuiElement {
   }
 
   private optionElements(): VOption[] {
-    return [...this.querySelectorAll(':scope > vui-option')].filter(
-      (node): node is VOption => node instanceof VOption,
-    );
+    return ownedChildren(this, 'vui-option', (node): node is VOption => node instanceof VOption);
   }
 
   private open(): void {
@@ -362,7 +361,7 @@ export class VSelect extends VuiElement {
       this.close();
       return;
     }
-    if ((key === 'Enter' || key === ' ') && this.listOpen) {
+    if (isActivation(event) && this.listOpen) {
       event.preventDefault();
       const option = this.optionElements()[this.activeIndex];
       if (option && !option.optionDisabled) this.commit(option.optionValue);

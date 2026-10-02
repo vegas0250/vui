@@ -4,6 +4,7 @@ import { registerContract } from '../../contract/registry';
 import { VuiElement } from '../../core/element';
 import { emitChange } from '../../core/events';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
+import { ownedChildren } from '../../composition/dom';
 import { copyText } from '../../interaction/clipboard';
 import { applyRovingTabIndex, moveInList } from '../../interaction/keyboard';
 import { SelectionModel } from '../../interaction/selection';
@@ -151,9 +152,7 @@ export class VFileTree extends VuiElement {
   }
 
   private items(root: ParentNode = this): VTreeItem[] {
-    return [...root.querySelectorAll(':scope > vui-tree-item')].filter(
-      (node): node is VTreeItem => node instanceof VTreeItem,
-    );
+    return ownedChildren(root, 'vui-tree-item', (node): node is VTreeItem => node instanceof VTreeItem);
   }
 
   private visibleItems(): VTreeItem[] {
@@ -274,7 +273,7 @@ registerContract({
   slots: [''],
   parts: ['tree'],
   methods: [],
-  keyboard: ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'Enter', 'Space'],
+  keyboard: ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'PageUp', 'PageDown', 'Enter', 'Space'],
   states: [],
   responsive: 'flow',
   focus: 'roving',

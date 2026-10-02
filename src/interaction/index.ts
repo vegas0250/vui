@@ -1,7 +1,9 @@
+import './profiles';
+
 export { copyText, cutText, pasteText, readClipboard, writeClipboard } from './clipboard';
 export type { ClipboardPayload } from './clipboard';
 
-export { CommandRegistry } from './commands';
+export { CommandRegistry, runCommand } from './commands';
 export type { Command } from './commands';
 
 export { bindContextMenu } from './context-menu';
@@ -27,3 +29,6 @@ export type { SelectionGesture, SelectionMode } from './selection';
 
 export { ShortcutConflictError, ShortcutRegistry, eventShortcut, formatShortcut, normalizeShortcut } from './shortcuts';
 export type { Shortcut } from './shortcuts';
+
+export { checkInteraction, commandPath, interactionFor, listInteractions, platformKeys, registerInteraction, resolvedInteraction } from './contract';
+export type { ActiveItem, FocusBehavior, InteractionContract, InteractionPrimitive, PlatformKey, SelectionOwner } from './contract';

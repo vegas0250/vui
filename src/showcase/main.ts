@@ -5,7 +5,9 @@ import {
   dropTarget,
   getDensity,
   getTheme,
+  familyMembers,
   iconNames,
+  listCompositions,
   listContracts,
   setDensity,
   setTheme,
@@ -286,6 +288,60 @@ document.querySelector('#lifecycle-cycle')?.addEventListener('click', () => {
   lifecycleHost.append(lifecycleSample);
   paintLifecycle();
 });
+
+const compositionGrid = document.querySelector('#composition-grid');
+if (compositionGrid && 'columns' in compositionGrid && 'rows' in compositionGrid) {
+  const dataGrid = compositionGrid as VDataGrid;
+  dataGrid.columns = [
+    { key: 'name', title: 'Часть', width: '40%' },
+    { key: 'role', title: 'Роль' },
+    { key: 'note', title: 'Примечание', priority: 'secondary' },
+  ];
+  dataGrid.rows = [
+    { id: 'field', name: 'Field', role: 'Form', note: 'Label и hint внутри поля' },
+    { id: 'tabs', name: 'Tabs', role: 'Navigation', note: 'Панель связана атрибутом' },
+    { id: 'dialog', name: 'Dialog', role: 'Overlay', note: 'Действия в слоте footer' },
+  ];
+  dataGrid.addEventListener('change', () => {
+    const result = document.querySelector('#composition-grid-result');
+    if (result) result.textContent = `Выбрана строка: ${dataGrid.selectedId || '—'}.`;
+  });
+}
+
+const compositionDialog = document.querySelector('#composition-dialog');
+document.querySelector('#composition-open')?.addEventListener('click', () => {
+  if (compositionDialog instanceof HTMLElement && 'show' in compositionDialog) (compositionDialog as VDialog).show();
+});
+document.querySelector('#composition-dialog-close')?.addEventListener('click', () => {
+  if (compositionDialog instanceof HTMLElement && 'close' in compositionDialog) (compositionDialog as VDialog).close();
+});
+
+const familyBody = document.querySelector('#family-table tbody');
+if (familyBody) {
+  for (const member of familyMembers()) {
+    const row = document.createElement('tr');
+    for (const value of [member.family, member.element, member.rules.join(', ')]) {
+      const cell = document.createElement('td');
+      cell.textContent = value;
+      row.append(cell);
+    }
+    familyBody.append(row);
+  }
+}
+
+const compositionBody = document.querySelector('#composition-table tbody');
+if (compositionBody) {
+  for (const contract of listCompositions()) {
+    const row = document.createElement('tr');
+    const channels = contract.links.map((link) => `${link.direction} ${link.channel}`).join(', ');
+    for (const value of [contract.id, contract.host, channels]) {
+      const cell = document.createElement('td');
+      cell.textContent = value;
+      row.append(cell);
+    }
+    compositionBody.append(row);
+  }
+}
 
 const complianceBody = document.querySelector('#compliance-table tbody');
 if (complianceBody) {

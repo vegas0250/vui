@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Composition contract: слот, light DOM, свойство, атрибут и стандартное событие. Select, tabs, tree, toast, dialog, data grid, toolbar, split и menu собраны одним механизмом.
+- Interaction contract: общая клавиатура, фокус, `SelectionModel.active` и путь `interaction → command → action`.
+- Семейства Action, Field, Overlay, Navigation и Data — общие правила без иерархии классов. Showcase и compliance проверяют сценарии Form, Navigation, Data и Overlay.
 - Foundation runtime: `readFoundation()`, `containerBand()` и подключение стилей через `VuiElement`. Тема, плотность и ширина контейнера остаются тремя независимыми измерениями.
 - Component contract: `registerContract()` и `checkCompliance()` для button, input, dialog, toast, select, data-grid и file-tree. Повторное подключение не пересоздаёт shadow и снимает слушатели `hold()` / `bind()`.
 - Showcase показывает снимок Foundation, lifecycle и таблицу зарегистрированных контрактов.

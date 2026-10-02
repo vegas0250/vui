@@ -326,6 +326,68 @@ Lifecycle общий для всех наследников `VuiElement`:
 
 Нарушение возвращается строкой. Тест показательного набора падает, если список не пуст. Это путь и для следующего компонента: зарегистрировать контракт и вызвать ту же функцию.
 
+## Композиция
+
+Составной компонент — обычная часть платформы. Он не заводит свой канал связи.
+
+Допустимые направления:
+
+- parent → child: слот, прямой light-DOM ребёнок или свойство, которым родитель владеет сам;
+- child → parent: стандартное событие (`click`, `input`, `change`, `close`). Ребёнок не вызывает методы родителя;
+- sibling ↔ sibling: только общий атрибут, который читает родитель. Сосед не вызывает соседа.
+
+Каналы записаны в `src/composition`: `slot`, `light-dom`, `property`, `attribute`, `event`. Прямых детей ищет `ownedChildren()`. Select, tabs, file tree и menu пользуются им. `registerComposition()` описывает host, связи и события наружу. `checkComposition()` проверяет слоты, свойства и что клавиатура host совпадает с interaction profile.
+
+| Сценарий | Как собран |
+| --- | --- |
+| Select → Option | родитель читает прямых `vui-option`. Пункт не знает о select |
+| Tabs → Tab → TabPanel | слоты `tab` и `panel`. Связь `panel` / `name` разрешает родитель |
+| File tree → TreeItem | прямой ребёнок. Вложенный пункт — тот же parent → child |
+| Toast → Toaster | toaster принимает toast слотом. Закрытие — событие `close` |
+| Dialog → content / actions | слоты по умолчанию и `footer`. Кнопка остаётся самостоятельным action |
+| Data grid → rows / cells | `columns` и `rows` — свойства. Ячейка не элемент и не доменная сущность |
+| Toolbar → actions | слоты `start`, по умолчанию и `end`. Протокола toolbar item нет |
+| Split panel → panels | слоты `start` и `end`. Дети не знают о `position` |
+| Menu → MenuItem | прямой ребёнок. Вложенное меню — `slot="submenu"`. Активация идёт через команду |
+
+Импорт: `vui/composition`.
+
+## Interaction contract
+
+`src/interaction/contract.ts` фиксирует клавиатуру, фокус, выбор и путь команды. Компонент объявляет клавиши в component contract. Profile повторяет тот же список и называет primitive, которым клавиша исполняется.
+
+Клавиши платформы: Tab, Shift+Tab, Arrow keys, Enter, Space, Escape, Home, End, PageUp, PageDown. Другое сочетание в profile не принимается.
+
+Фокус: `native`, `roving`, `trap`, `restore`, `active-descendant`, `nested-overlay`. Roving tabindex ставит `applyRovingTabIndex()`. Ловушка dialog — нативный `<dialog>`. Возврат фокуса и вложенные слои — `pushOverlay()`.
+
+Выбор: `none`, `single`, `multiple`, `range` живут в `SelectionModel`, когда идентификатор не является значением поля. `active` — курсор. Он следует за `select()` и может сдвинуться через `setActive()` отдельно от набора. У select и tabs выбор — отражённый атрибут (`value`, `selected`): это значение поля, а не вторая модель. У data grid курсор ячейки двумерный, а выбранная строка — `SelectionModel`.
+
+Команда:
+
+```text
+interaction → command → action
+```
+
+`runCommand()` вызывает `CommandRegistry.execute()`. Компонент не держит свою таблицу shortcuts. Shortcuts остаются у приложения.
+
+Разделитель split меняет число `position`. Это не список, поэтому `moveInList()` ему не нужен. Указатель идёт через `trackPointer()`.
+
+## Семейства
+
+Семейство — общий список правил, не базовый класс. Член называет те правила, которые у него есть. `loading` по-прежнему не добавляется ради симметрии.
+
+| Семейство | Правила | Кто входит |
+| --- | --- | --- |
+| Action | disabled, focus, keyboard, activation, label; icon, если она есть | button, icon button, menu item |
+| Field | value, disabled, invalid, required, label, description, focus. Ошибка — это `invalid` и `hint`, отдельного `error` нет | input, select, checkbox, switch |
+| Overlay | open, close, Escape, focus restoration, positioning, layering через один стек | dialog, tooltip, menu, toaster |
+| Navigation | roving focus, keyboard, selection | tabs, tab, tab panel, file tree, tree item, menu |
+| Data | keyboard, selection, cursor | data grid |
+
+Импорт: `vui/families`. Radio, textarea, popover и list в семейства не входят, пока их нет как компонентов.
+
+Эталонные сценарии Form, Navigation, Data и Overlay проверяют фокус, клавиатуру, disabled, invalid, выбор, слои, тему, плотность и ширину контейнера вместе. Смена темы или плотности не меняет полосу контейнера. Showcase показывает те же четыре сборки.
+
 ## Матрица качества
 
 ```text

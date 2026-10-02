@@ -26,26 +26,26 @@ VUI — персональная библиотека визуальных ко�
 Слои, на которых собирается следующий компонент:
 
 ```text
-Foundation runtime
+Foundation
     ↓
-Component contract
+Interaction
     ↓
-Accessibility
+Component Contract
     ↓
-Responsive
-    ↓
-Density / Theme
-    ↓
-Layout
+Component Family
     ↓
 Component
+    ↓
+Composition
 ```
 
-Foundation runtime читает tokens, тему, плотность и полосу контейнера. Component contract регистрируется через `registerContract()` и проверяется `checkCompliance()`. Подробности — в [ARCHITECTURE.md](ARCHITECTURE.md).
+Foundation runtime читает tokens, тему, плотность и полосу контейнера. Component contract регистрируется через `registerContract()` и проверяется `checkCompliance()`. Композиция и семейства — `vui/composition` и `vui/families`. Подробности — в [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ```ts
 import { readFoundation, containerBand } from 'vui/runtime';
 import { registerContract, checkCompliance } from 'vui/contract';
+import { registerComposition, checkComposition } from 'vui/composition';
+import { listFamilies } from 'vui/families';
 ```
 
 ## Установка

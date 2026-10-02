@@ -27,6 +27,8 @@ src/categories/     точки входа категорий
 src/core/           VuiElement, defineElement, reflect, layout, общие стили, события, responsive
 src/foundation/     runtime: tokens, theme, density, responsive, layout, accessibility, motion, layers
 src/contract/       контракт компонента, реестр и compliance
+src/composition/    контракт композиции: слот, light DOM, свойство, атрибут, событие
+src/families/       общие правила семейств, без иерархии классов
 src/interaction/    focus, keyboard, selection, commands, shortcuts, overlay, context menu, drag & drop, clipboard, pointer
 src/icons/          реестр иконок
 src/theme/          setTheme, setDensity, установка стилей
@@ -55,7 +57,7 @@ docs/components.md  каталог публичного API
 
 `vui/interaction` — primitives без регистрации элементов: focus, keyboard, selection, commands, shortcuts, overlay, context menu, drag & drop, clipboard, pointer. `vui/menu` включает `vui-menu-item`.
 
-`vui/runtime` — Foundation runtime: `readFoundation`, `readToken`, `containerBand`, `setTheme`, `setDensity`, `prefersReducedMotion`, `prefersForcedColors`. `vui/contract` — `registerContract`, `listContracts`, `checkCompliance`. `vui/foundation` по-прежнему регистрирует иконку, а не runtime.
+`vui/runtime` — Foundation runtime: `readFoundation`, `readToken`, `containerBand`, `setTheme`, `setDensity`, `prefersReducedMotion`, `prefersForcedColors`. `vui/contract` — `registerContract`, `listContracts`, `checkCompliance`. `vui/composition` — `registerComposition`, `checkComposition`, `ownedChildren`. `vui/families` — правила Action, Field, Overlay, Navigation и Data. `vui/foundation` по-прежнему регистрирует иконку, а не runtime.
 
 `vui/stack`, `vui/hstack` и `vui/vstack` — один модуль. `vui/select` включает `vui-option`. `vui/tabs` включает `vui-tab` и `vui-tab-panel`. `vui/file-tree` включает `vui-tree-item`. `vui/toast` включает `vui-toaster` и `toast()`. `vui/desktop` реэкспортирует toolbar и split panel; их исходники остаются в navigation и layout.
 
@@ -229,13 +231,27 @@ Foundation
 
 `checkCompliance()` для подключённого элемента проверяет регистрацию, открытый shadow, отсутствие цветовых литералов, использование Foundation tokens, базовые theme/density/reduced-motion стили, responsive-ограничение, слоты, parts, методы, роль, отражение properties, `disabled`, `invalid` и `loading`. `remount()` проверяет, что shadow переживает отключение.
 
+## Композиция и семейства
+
+Компонент самостоятелен и собирается с другими без отдельного канала на каждую пару.
+
+```text
+Foundation → Interaction → Component Contract → Component Family → Component → Composition → Application UI
+```
+
+Направления: parent → child (слот, прямой ребёнок, свойство), child → parent (стандартное событие), sibling ↔ sibling только через атрибут, который читает родитель. `ownedChildren()` — единственный поиск прямых детей. Select, tabs, file tree и menu используют его.
+
+Interaction contract объявляет клавиши из общего набора и primitive, который их исполняет. `SelectionModel.active` — курсор. Путь команды: interaction → command → action через `runCommand()`. Семейство — список правил, не базовый класс. Ошибка поля — `invalid` и `hint`, отдельного `error` нет. `loading` не добавляется для симметрии.
+
+Эталонные сценарии Form, Navigation, Data и Overlay проверяют фокус, клавиатуру, выбор, слои, тему, плотность и полосу контейнера вместе. Смена темы или плотности не меняет полосу.
+
 ## Showcase
 
-`pnpm dev` отдаёт `index.html`. Страница собрана из элементов VUI и показывает Foundation, темы, плотность, Layout, контракт компонента и Responsive Design. У каждого реализованного компонента там есть рабочий пример. Без примера компонент не считается готовым. Переключатели темы и плотности вызывают `setTheme` и `setDensity`. В разделе Responsive Design есть пресеты wide, medium и narrow и ручка изменения ширины. Табло показывает текущие тему, плотность и ширину контейнера. Раздел Contract показывает lifecycle, состояния, клавиатуру, фокус, две ширины поля и таблицу зарегистрированных контрактов. Снимок Foundation читает `readFoundation()`.
+`pnpm dev` отдаёт `index.html`. Страница собрана из элементов VUI и показывает Foundation, темы, плотность, Layout, контракт компонента, композицию и Responsive Design. У каждого реализованного компонента там есть рабочий пример. Без примера компонент не считается готовым. Переключатели темы и плотности вызывают `setTheme` и `setDensity`. В разделе Responsive Design есть пресеты wide, medium и narrow и ручка изменения ширины. Табло показывает текущие тему, плотность и ширину контейнера. Раздел Contract показывает lifecycle, состояния, клавиатуру, фокус, две ширины поля и таблицу зарегистрированных контрактов. Раздел Composition показывает форму, вкладки, таблицу и диалог, собранные из тех же контрактов. Снимок Foundation читает `readFoundation()`.
 
 ## Тесты
 
-Vitest + happy-dom: `tests/unit`. Покрывайте границы регистрации, карту `V*` ↔ `vui-*`, отражённые properties, tokens, layout, стек overlay, возврат фокуса dialog, клавиатуру, interaction primitives, установку темы, регистрацию иконок и responsive-правила, которым не нужна реальная раскладка. Playwright: `tests/e2e/showcase.spec.ts`, `tests/e2e/responsive.spec.ts`, `tests/e2e/foundation.spec.ts`, `tests/e2e/a11y.spec.ts`, `tests/e2e/interaction.spec.ts` и `tests/e2e/visual.spec.ts`. Визуальные baseline — четыре сочетания темы, плотности и viewport плюс кадры hover, focus, dialog и меню. Не умножайте снимки на все комбинации. Большой набор тестов не заменяет showcase. Архитектура — в `ARCHITECTURE.md`, граница платформы — в `PLATFORM.md`, процесс компонента — в `CONTRIBUTING.md`.
+Vitest + happy-dom: `tests/unit`. Покрывайте границы регистрации, карту `V*` ↔ `vui-*`, отражённые properties, tokens, layout, стек overlay, возврат фокуса dialog, клавиатуру, interaction primitives, установку темы, регистрацию иконок и responsive-правила, которым не нужна реальная раскладка. Playwright: `tests/e2e/showcase.spec.ts`, `tests/e2e/responsive.spec.ts`, `tests/e2e/foundation.spec.ts`, `tests/e2e/composition.spec.ts`, `tests/e2e/a11y.spec.ts`, `tests/e2e/interaction.spec.ts` и `tests/e2e/visual.spec.ts`. Визуальные baseline — четыре сочетания темы, плотности и viewport плюс кадры hover, focus, dialog и меню. Не умножайте снимки на все комбинации. Большой набор тестов не заменяет showcase. Архитектура — в `ARCHITECTURE.md`, граница платформы — в `PLATFORM.md`, процесс компонента — в `CONTRIBUTING.md`.
 
 ## Правила разработки
 

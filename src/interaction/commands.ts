@@ -46,3 +46,12 @@ export class CommandRegistry {
     return true;
   }
 }
+
+/**
+ * Interaction → command → component action.
+ * A component calls this instead of keeping its own shortcut table.
+ */
+export function runCommand(registry: CommandRegistry | null | undefined, id: string | null | undefined): boolean {
+  if (!registry || !id) return false;
+  return registry.execute(id);
+}

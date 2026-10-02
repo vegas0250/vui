@@ -30,6 +30,7 @@ export const showcaseMarkup = `
           <a href="#responsive">Responsive</a>
           <a href="#components">Components</a>
           <a href="#contract">Contract</a>
+          <a href="#composition">Composition</a>
         </nav>
       </header>
 
@@ -279,6 +280,94 @@ export const showcaseMarkup = `
                     <th>Состояния</th>
                     <th>Responsive</th>
                     <th>События</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </vui-panel>
+        </div>
+      </section>
+
+      <section class="category" id="composition">
+        <h2>Composition</h2>
+        <p class="section-lead">
+          Составной интерфейс собирается из тех же слотов, атрибутов, событий и interaction primitives.
+          Переключатели темы и плотности сверху действуют и на эти сценарии. Отдельной связи между парами компонентов нет.
+        </p>
+        <div class="stack-gap">
+          <h3>Form</h3>
+          <vui-panel heading="Поле">
+            <div class="band-row">
+              <div class="band">
+                <vui-input id="composition-field" label="Почта" hint="Рабочий адрес" required invalid value="bad@"></vui-input>
+              </div>
+              <div class="band">
+                <vui-input label="Почта" hint="В широком контейнере подпись может встать рядом" value="ada@example.com"></vui-input>
+              </div>
+            </div>
+            <vui-checkbox id="composition-agree">Согласен с правилами</vui-checkbox>
+            <p class="demo-note">Label, контрол, description и error — части поля. <code>invalid</code> ставит <code>aria-invalid</code>. Соседний checkbox не вызывает поле.</p>
+          </vui-panel>
+
+          <h3>Navigation</h3>
+          <vui-panel heading="Вкладки">
+            <vui-tabs id="composition-tabs" label="Разделы">
+              <vui-tab panel="overview" selected>Обзор</vui-tab>
+              <vui-tab panel="details">Детали</vui-tab>
+              <vui-tab panel="locked" disabled>Закрыто</vui-tab>
+              <vui-tab-panel name="overview">Стрелки переносят выбор. Панель связана атрибутом <code>panel</code>.</vui-tab-panel>
+              <vui-tab-panel name="details">Вторая панель. Недоступная вкладка пропускается.</vui-tab-panel>
+              <vui-tab-panel name="locked">Эта панель не выбирается с клавиатуры.</vui-tab-panel>
+            </vui-tabs>
+          </vui-panel>
+
+          <h3>Data</h3>
+          <vui-panel heading="Таблица">
+            <vui-data-grid id="composition-grid" label="Состав"></vui-data-grid>
+            <p id="composition-grid-result" class="demo-note">Строка не выбрана.</p>
+            <p class="demo-note">Стрелки двигают курсор и выбор. Вторичная колонка скрывается, когда контейнер уже 40rem. Сетка не знает, что означают строки.</p>
+          </vui-panel>
+
+          <h3>Overlay</h3>
+          <vui-panel heading="Диалог">
+            <vui-button id="composition-open" variant="primary">Открыть составной диалог</vui-button>
+            <vui-dialog id="composition-dialog" label="Правка">
+              <vui-input label="Название" value="VUI"></vui-input>
+              <vui-select id="composition-status" label="Статус">
+                <vui-option value="ready">Готов</vui-option>
+                <vui-option value="draft">Черновик</vui-option>
+              </vui-select>
+              <vui-button id="composition-dialog-close" slot="footer" variant="secondary">Закрыть</vui-button>
+            </vui-dialog>
+            <p class="demo-note">Содержимое и действие — слоты. Escape закрывает select внутри dialog раньше самого окна и возвращает фокус.</p>
+          </vui-panel>
+
+          <h3>Families</h3>
+          <vui-panel heading="Семейства">
+            <div class="table-wrap">
+              <table id="family-table" class="contract-table">
+                <thead>
+                  <tr>
+                    <th>Семейство</th>
+                    <th>Элемент</th>
+                    <th>Правила</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </vui-panel>
+
+          <h3>Contracts</h3>
+          <vui-panel heading="Композиции">
+            <div class="table-wrap">
+              <table id="composition-table" class="contract-table">
+                <thead>
+                  <tr>
+                    <th>Сценарий</th>
+                    <th>Хост</th>
+                    <th>Как связан</th>
                   </tr>
                 </thead>
                 <tbody></tbody>

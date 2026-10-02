@@ -38,6 +38,14 @@
       "types": "./dist/contract/index.d.ts",
       "import": "./dist/contract/index.js"
     },
+    "./composition": {
+      "types": "./dist/composition/index.d.ts",
+      "import": "./dist/composition/index.js"
+    },
+    "./families": {
+      "types": "./dist/families/index.d.ts",
+      "import": "./dist/families/index.js"
+    },
     "./icon": {
       "types": "./dist/components/foundation/icon.d.ts",
       "import": "./dist/components/foundation/icon.js"

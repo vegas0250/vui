@@ -1,7 +1,8 @@
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
-import { moveInList } from '../../interaction/keyboard';
+import { ownedChildren } from '../../composition/dom';
+import { applyRovingTabIndex, moveInList } from '../../interaction/keyboard';
 
 let tabSeq = 0;
 
@@ -154,13 +155,11 @@ export class VTabs extends VuiElement {
   }
 
   private tabs(): VTab[] {
-    return [...this.querySelectorAll(':scope > vui-tab')].filter((node): node is VTab => node instanceof VTab);
+    return ownedChildren(this, 'vui-tab', (node): node is VTab => node instanceof VTab);
   }
 
   private panels(): VTabPanel[] {
-    return [...this.querySelectorAll(':scope > vui-tab-panel')].filter(
-      (node): node is VTabPanel => node instanceof VTabPanel,
-    );
+    return ownedChildren(this, 'vui-tab-panel', (node): node is VTabPanel => node instanceof VTabPanel);
   }
 
   private link(): void {
@@ -186,6 +185,14 @@ export class VTabs extends VuiElement {
         panel?.toggleAttribute('selected', tab.hasAttribute('selected'));
         if (panel && tab.id) panel.setAttribute('aria-labelledby', tab.id);
         if (panel?.id) tab.setControls(panel.id);
+      }
+      const enabled = tabs.filter((tab) => !tab.hasAttribute('disabled'));
+      applyRovingTabIndex(
+        enabled,
+        enabled.findIndex((tab) => tab.hasAttribute('selected')),
+      );
+      for (const tab of tabs) {
+        if (tab.hasAttribute('disabled')) tab.tabIndex = -1;
       }
     } finally {
       this.linking = false;
