@@ -1,6 +1,6 @@
 {
   "name": "vui",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Универсальная модульная UI-система готовых визуальных компонентов для Web, SPA и Desktop/Electron с поддержкой тем и различной плотности интерфейса.",
   "type": "module",
   "license": "UNLICENSED",

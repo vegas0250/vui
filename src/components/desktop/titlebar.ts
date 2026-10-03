@@ -21,6 +21,7 @@ export class VTitlebar extends VuiElement {
     return `
       <div class="bar" part="bar">
         <span class="mark" part="icon"><slot name="icon"></slot></span>
+        <div class="tabs" part="tabs"><slot name="tabs"></slot></div>
         <div class="title" part="title"></div>
         <div class="tools" part="tools"><slot name="tools"></slot></div>
         <div class="controls" part="controls">
@@ -54,14 +55,42 @@ export class VTitlebar extends VuiElement {
         min-height: var(--vui-toolbar-height);
         padding-inline-start: var(--vui-space-sm);
       }
-      .mark { display: inline-flex; flex: 0 0 auto; color: var(--vui-color-primary); }
+      .mark { display: inline-flex; flex: 0 0 auto; align-self: center; color: var(--vui-color-primary); }
       .mark:empty, .mark:not(:has(*)) { display: none; }
+      .tabs {
+        display: flex;
+        align-items: flex-end;
+        flex: 0 1 auto;
+        align-self: stretch;
+        min-width: 0;
+        max-width: 100%;
+      }
       .title {
         min-width: 0;
+        align-self: center;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         font-weight: var(--vui-font-weight-strong);
+      }
+      .with-tabs {
+        align-items: flex-end;
+        gap: var(--vui-space-2xs);
+        background: var(--vui-color-surface-sunken);
+        border-bottom: 0;
+      }
+      :host(:has(.with-tabs)) {
+        background: var(--vui-color-surface-sunken);
+        border-bottom: 0;
+      }
+      .with-tabs .tabs { flex: 1 1 auto; }
+      .with-tabs .title { display: none; }
+      .with-tabs .tools,
+      .with-tabs .controls,
+      .with-tabs .mark { align-self: center; }
+      slot[name="tabs"]::slotted(vui-icon-button) {
+        align-self: center;
+        margin-inline: var(--vui-space-2xs) var(--vui-space-sm);
       }
       .tools {
         display: inline-flex;
@@ -108,9 +137,23 @@ export class VTitlebar extends VuiElement {
     this.qs('[part="close"]').addEventListener('click', () => {
       this.dispatchEvent(new Event('close', { bubbles: true }));
     });
-    this.qs('[part="title"]').addEventListener('dblclick', () => {
+    this.qs('.bar').addEventListener('dblclick', (event) => {
+      const path = event.composedPath();
+      const interactive = path.some((node) => node instanceof Element && (
+        node.localName === 'button'
+        || node.localName === 'vui-tab'
+        || node.localName === 'vui-tabs'
+        || node.localName === 'vui-icon-button'
+      ));
+      if (interactive) return;
       this.dispatchEvent(new Event('maximize', { bubbles: true }));
     });
+    this.qs<HTMLSlotElement>('slot[name="tabs"]').addEventListener('slotchange', () => this.syncTabs());
+  }
+
+  private syncTabs(): void {
+    const filled = this.qs<HTMLSlotElement>('slot[name="tabs"]').assignedElements().length > 0;
+    this.qs('.bar').classList.toggle('with-tabs', filled);
   }
 
   protected sync(): void {
@@ -125,6 +168,7 @@ export class VTitlebar extends VuiElement {
     this.qs('[part="close"]').setAttribute('aria-label', this.getAttribute('close-label') || 'Close');
     const icon = this.qs<VIcon>('[part="maximize"] vui-icon');
     icon.setAttribute('name', maximized ? 'copy' : 'square');
+    this.syncTabs();
   }
 }
 
@@ -150,8 +194,8 @@ registerContract({
     { name: 'maximized', kind: 'boolean', reflected: true },
   ],
   events: ['minimize', 'maximize', 'close'],
-  slots: ['icon', 'tools'],
-  parts: ['bar', 'icon', 'title', 'tools', 'controls', 'minimize', 'maximize', 'close'],
+  slots: ['icon', 'tabs', 'tools'],
+  parts: ['bar', 'icon', 'tabs', 'title', 'tools', 'controls', 'minimize', 'maximize', 'close'],
   methods: [],
   keyboard: [],
   states: [],

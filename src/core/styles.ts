@@ -64,7 +64,7 @@ export const fieldStyles = `
   width: 100%;
 }
 @container vui-field (min-width: 36rem) {
-  .field {
+  .field:has(.label:not(:empty)) {
     display: grid;
     grid-template-columns: minmax(var(--vui-field-label-min), var(--vui-field-label-size)) minmax(0, 1fr);
     column-gap: var(--vui-space-md);

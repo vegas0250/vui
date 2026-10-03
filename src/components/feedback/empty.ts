@@ -24,6 +24,7 @@ export class VEmpty extends VuiElement {
   protected componentStyles(): string {
     return `
       :host { display: block; min-width: 0; max-width: 100%; }
+      :host([hidden]) { display: none; }
       [part="empty"] {
         display: flex;
         flex-direction: column;

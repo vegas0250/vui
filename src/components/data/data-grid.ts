@@ -126,7 +126,9 @@ export class VDataGrid extends VuiElement {
       :host([fill]) {
         display: flex;
         flex-direction: column;
-        height: 100%;
+        flex: 1 1 auto;
+        min-height: 0;
+        height: auto;
         max-height: 100%;
       }
       .frame {

@@ -356,10 +356,10 @@ menu.showAt(x, y);
 
 | Attributes | `label`, `minimize-label`, `maximize-label`, `restore-label`, `close-label`, `maximized` |
 | Events | `minimize`, `maximize`, `close`. Двойной щелчок по заголовку тоже шлёт `maximize` |
-| Slots | `icon`, `tools` |
-| Parts | `bar`, `icon`, `title`, `tools`, `controls`, `minimize`, `maximize`, `close` |
+| Slots | `icon`, `tabs`, `tools` |
+| Parts | `bar`, `icon`, `tabs`, `title`, `tools`, `controls`, `minimize`, `maximize`, `close` |
 
-`maximized` меняет значок средней кнопки. Область заголовка перетаскивает окно (`app-region: drag`), кнопки и слот `tools` — нет.
+`maximized` меняет значок средней кнопки. Область заголовка перетаскивает окно (`app-region: drag`), кнопки и слоты `tabs` и `tools` — нет. Слот `tabs` прячет текстовый заголовок и сажает полосу вкладок в верхний ряд.
 
 ## vui-status-bar
 
@@ -484,10 +484,10 @@ grid.selectedId = '1';
 
 Раскладка приложения. Слоты: `header`, `toolbar`, `nav`, по умолчанию, `aside`, `footer`.
 
-| Attributes | `label`, `nav-label`, `aside-label`, `skip-label`, `collapsed` |
-| Parts | `shell`, `skip`, `header`, `toolbar`, `body`, `nav`, `main`, `aside`, `footer` |
-| Keyboard | Tab. Ссылка skip переносит фокус в main |
-| Responsive | ниже 40rem колонки складываются. `collapsed` скрывает nav. Слот `main` растягивается на оставшуюся высоту, чтобы вложенный вид мог прокручиваться сам |
+| Attributes | `label`, `nav-label`, `aside-label`, `skip-label`, `resize-label`, `aside-expand-label`, `aside-collapse-label`, `collapsed`, `aside-collapsed` |
+| Parts | `shell`, `skip`, `header`, `toolbar`, `body`, `nav`, `nav-resize`, `main`, `aside`, `aside-toggle`, `footer` |
+| Keyboard | Tab. Ссылка skip переносит фокус в main. Стрелки на `nav-resize` меняют ширину левой панели |
+| Responsive | ниже 40rem колонки складываются. `collapsed` скрывает nav. `aside-collapsed` прячет правую панель и оставляет стрелку. Слот `main` растягивается на оставшуюся высоту, чтобы вложенный вид мог прокручиваться сам |
 
 Пустой слот скрывает свою область. Shell не читает содержимое слотов.
 

@@ -52,6 +52,19 @@ export class VToolbar extends VuiElement {
         max-width: 100%;
       }
       .center { flex: 1 1 auto; justify-content: center; min-width: 0; }
+      .center > slot {
+        display: flex;
+        flex: 1 1 auto;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-width: 0;
+      }
+      .center > slot::slotted(vui-input) {
+        flex: 1 1 auto;
+        width: 100%;
+        min-width: 0;
+      }
       .end { margin-inline-start: auto; flex: 0 0 auto; }
       @container vui-toolbar (max-width: 40rem) {
         .bar { flex-wrap: wrap; }

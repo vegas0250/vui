@@ -46,6 +46,13 @@ export class VIconButton extends VuiElement {
         width: var(--vui-size-control-lg);
         min-width: var(--vui-size-control-lg);
       }
+      :host([size="large"]) vui-icon {
+        width: calc(var(--vui-icon-size) * 1.25);
+        height: calc(var(--vui-icon-size) * 1.25);
+        min-width: calc(var(--vui-icon-size) * 1.25);
+        max-width: calc(var(--vui-icon-size) * 1.25);
+        flex: 0 0 calc(var(--vui-icon-size) * 1.25);
+      }
       :host([variant="primary"]) button {
         background: var(--vui-color-primary);
         color: var(--vui-color-on-primary);

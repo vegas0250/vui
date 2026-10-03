@@ -33,4 +33,17 @@ describe('vui-tabs', () => {
     expect(tabButtons[0]?.hasAttribute('selected')).toBe(true);
     expect(panels[0]?.hasAttribute('hidden')).toBe(false);
   });
+
+  it('projects a tab appended after the strip is connected', async () => {
+    const tabs = document.createElement('vui-tabs');
+    document.body.append(tabs);
+    const tab = document.createElement('vui-tab');
+    tab.textContent = 'Домой';
+    tabs.append(tab);
+    await new Promise((resolve) => queueMicrotask(() => resolve(undefined)));
+
+    expect(tab.getAttribute('slot')).toBe('tab');
+    expect(tab.hasAttribute('selected')).toBe(true);
+    expect(tabs.shadowRoot?.querySelector('slot[name="tab"]')?.assignedElements()).toContain(tab);
+  });
 });

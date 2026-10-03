@@ -34,14 +34,35 @@ export class VTab extends VuiElement {
       :host {
         display: inline-flex;
         align-items: center;
+        gap: var(--vui-space-2xs);
         flex: 0 0 auto;
-        min-height: var(--vui-size-control);
-        padding-inline: var(--vui-space-md);
-        border-bottom: var(--vui-border-width-strong) solid transparent;
+        width: 12rem;
+        height: 2rem;
+        min-height: 2rem;
+        margin: 0;
+        padding-inline: var(--vui-space-sm) var(--vui-space-2xs);
+        border: 0;
+        border-radius: var(--vui-radius) var(--vui-radius) 0 0;
+        background: transparent;
         color: var(--vui-color-text-muted);
-        max-width: 100%;
+        min-width: 0;
+        max-width: 14rem;
         cursor: pointer;
         user-select: none;
+      }
+      [part="label"] {
+        display: flex;
+        align-items: center;
+        gap: var(--vui-space-xs);
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: hidden;
+      }
+      ::slotted(span) {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        min-width: 0;
       }
       :host(:hover) { color: var(--vui-color-text); background: var(--vui-color-surface-hover); }
       :host(:focus-visible) {
@@ -50,8 +71,10 @@ export class VTab extends VuiElement {
       }
       :host([selected]) {
         color: var(--vui-color-text);
-        border-bottom-color: var(--vui-color-primary);
+        background: var(--vui-color-background);
+        box-shadow: inset 0 2px 0 var(--vui-color-primary);
         font-weight: var(--vui-font-weight-strong);
+        z-index: 1;
       }
       :host([disabled]) { opacity: 0.5; cursor: not-allowed; }
       button {
@@ -68,7 +91,10 @@ export class VTab extends VuiElement {
         color: inherit;
         cursor: pointer;
       }
-      :host([closable]) button { display: inline-flex; }
+      :host([closable]) button { display: inline-flex; opacity: 0; }
+      :host([closable][selected]) button,
+      :host([closable]:hover) button,
+      :host([closable]:focus-within) button { opacity: 1; }
       button:hover { background: var(--vui-color-surface-hover); }
       button:focus-visible { outline: var(--vui-focus-ring); outline-offset: calc(var(--vui-focus-offset) * -1); }
       vui-icon { width: 0.85em; height: 0.85em; }
@@ -144,7 +170,10 @@ export class VTabs extends VuiElement {
   protected template(): string {
     return `
       <div class="tabs">
-        <div role="tablist" part="tablist"><slot name="tab"></slot></div>
+        <div role="tablist" part="tablist">
+          <div class="strip"><slot name="tab"></slot></div>
+          <slot name="action"></slot>
+        </div>
         <div class="panels"><slot name="panel"></slot></div>
       </div>
     `;
@@ -154,22 +183,60 @@ export class VTabs extends VuiElement {
     return `
       :host {
         display: block;
+        flex: 1 1 auto;
+        align-self: stretch;
+        width: 100%;
         min-width: 0;
         max-width: 100%;
         container-type: inline-size;
         container-name: vui-tabs;
       }
+      .tabs {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        min-width: 0;
+      }
       [role="tablist"] {
         display: flex;
         flex-wrap: nowrap;
+        align-items: flex-end;
         gap: var(--vui-space-2xs);
         width: 100%;
         min-width: 0;
+        min-height: 2.4rem;
+        padding-top: var(--vui-space-xs);
+        background: transparent;
+      }
+      .strip {
+        display: flex;
+        align-items: flex-end;
+        gap: var(--vui-space-2xs);
+        flex: 0 1 auto;
+        width: max-content;
+        max-width: 100%;
+        min-width: 0;
         overflow-x: auto;
         scrollbar-width: thin;
-        border-bottom: var(--vui-border-width) solid var(--vui-color-border);
+      }
+      ::slotted([slot="action"]) {
+        flex: 0 0 auto;
+        align-self: center;
+        margin-bottom: var(--vui-space-2xs);
+      }
+      [role="tablist"]::after {
+        content: "";
+        flex: 1 1 auto;
+        align-self: stretch;
+        -webkit-app-region: drag;
+        app-region: drag;
       }
     `;
+  }
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.watchChildren();
   }
 
   protected afterRender(): void {
@@ -183,6 +250,13 @@ export class VTabs extends VuiElement {
     this.addEventListener('keydown', (event) => this.onKeydown(event));
     this.link();
     queueMicrotask(() => this.link());
+  }
+
+  /** Named slots do not notify when a tab is appended without `slot`. */
+  private watchChildren(): void {
+    const observer = new MutationObserver(() => this.link());
+    observer.observe(this, { childList: true });
+    this.hold('tabs-children', () => observer.disconnect());
   }
 
   private linking = false;
@@ -322,7 +396,7 @@ registerContract({
   className: 'VTabs',
   attributes: [{ name: 'label', kind: 'string', reflected: true }],
   events: [],
-  slots: ['tab', 'panel'],
+  slots: ['tab', 'action', 'panel'],
   parts: ['tablist'],
   methods: [],
   keyboard: ['ArrowLeft', 'ArrowRight', 'Home', 'End'],
