@@ -13,7 +13,7 @@ describe('stress', () => {
     document.body.replaceChildren();
   });
 
-  it('selects a row in a 1000-row grid without rebuilding every cell', () => {
+  it('windows a 1000-row grid and keeps a visible row node when selecting it', () => {
     const grid = document.createElement('vui-data-grid') as VDataGrid;
     document.body.append(grid);
     grid.columns = [
@@ -25,16 +25,25 @@ describe('stress', () => {
       name: `Row ${index}`,
       area: index % 2 === 0 ? 'Data' : 'Forms',
     }));
-    const cell = grid.shadowRoot?.querySelector('[data-row="10"]');
-    expect(grid.shadowRoot?.querySelectorAll('[role="gridcell"]')).toHaveLength(2000);
+    const cells = grid.shadowRoot?.querySelectorAll('[role="gridcell"]').length ?? 0;
+    expect(cells).toBeGreaterThan(0);
+    expect(cells).toBeLessThan(200);
+    const visible = grid.shadowRoot?.querySelector('[data-row="10"]');
+    expect(visible).toBeTruthy();
 
     const started = performance.now();
-    grid.selectedId = '750';
+    grid.selectedId = '10';
     const elapsed = performance.now() - started;
 
-    expect(grid.shadowRoot?.querySelector('tr[data-id="750"]')?.getAttribute('aria-selected')).toBe('true');
-    expect(grid.shadowRoot?.querySelector('[data-row="10"]')).toBe(cell);
+    expect(grid.shadowRoot?.querySelector('tr[data-id="10"]')?.getAttribute('aria-selected')).toBe('true');
+    expect(grid.shadowRoot?.querySelector('[data-row="10"]')).toBe(visible);
+    expect(grid.shadowRoot?.querySelectorAll('[role="gridcell"]').length).toBeLessThan(200);
     expect(elapsed).toBeLessThan(250);
+
+    grid.selectedId = '750';
+    expect(grid.shadowRoot?.querySelector('tr[data-id="750"]')?.getAttribute('aria-selected')).toBe('true');
+    expect(grid.shadowRoot?.querySelector('[role="grid"]')?.getAttribute('aria-rowcount')).toBe('1001');
+    expect(grid.shadowRoot?.querySelectorAll('[role="gridcell"]').length).toBeLessThan(200);
   });
 
   it('mounts a 1000-item list and disconnects every item with the host', () => {

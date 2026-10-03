@@ -215,7 +215,7 @@ VUI
 | `clipboard.ts` | `copyText`, `cutText`, `pasteText`, `writeClipboard`, `readClipboard`. Текст уходит в Clipboard API, structured `items` остаются в памяти вызова |
 | `pointer.ts` | `trackPointer` для захвата указателя, `pointerClickKind` для click / double / context |
 
-`vui-tabs`, `vui-select`, `vui-file-tree` и `vui-data-grid` ходят по клавиатуре через `keyboard.ts`. Таблица и дерево держат текущий выбор в `SelectionModel` и по-прежнему сообщают его через `selectedId`, `selectedItem` и `change`. Ctrl/Cmd+C копирует видимый текст ячейки или `itemValue`. `vui-split-panel` двигает разделитель через `trackPointer`. `vui-menu` собирает overlay, focus, keyboard и commands.
+`vui-tabs`, `vui-select`, `vui-file-tree` и `vui-data-grid` ходят по клавиатуре через `keyboard.ts`. Таблица и дерево держат текущий выбор в `SelectionModel` и по-прежнему сообщают его через `selectedId`, `selectedItem` и `change`. У `vui-data-grid` атрибут `multiple` переключает ту же модель в `multiple`: `selectedIds` — набор, `selected` — активная строка. От 100 строк таблица монтирует окно, а не все строки; `fill` отдаёт прокрутку внутреннему `frame`. Ctrl/Cmd+C копирует видимый текст ячейки или `itemValue`. `vui-split-panel` двигает разделитель через `trackPointer`. `vui-menu` собирает overlay, focus, keyboard и commands.
 
 Горизонтальные стрелки, разделитель split и вложенное меню следуют `dir`. `ArrowLeft` в `rtl` двигает к концу строки, открывает ветку дерева и вложенное меню. Вертикальные стрелки не меняются. `isRtl()` читает вычисленное `direction`, а если движок не применил `dir`, сам атрибут.
 

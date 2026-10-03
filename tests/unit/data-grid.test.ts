@@ -31,4 +31,20 @@ describe('vui-data-grid', () => {
     expect(selected).toBe('input');
     expect(grid.shadowRoot?.querySelector('tr[data-id="input"]')?.getAttribute('aria-selected')).toBe('true');
   });
+
+  it('extends a range when multiple selection is on', () => {
+    const grid = document.createElement('vui-data-grid') as VDataGrid;
+    grid.multiple = true;
+    document.body.append(grid);
+    grid.columns = [{ key: 'name', title: 'Name' }];
+    grid.rows = [
+      { id: 'a', name: 'A' },
+      { id: 'b', name: 'B' },
+      { id: 'c', name: 'C' },
+    ];
+    grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, shiftKey: true }));
+    expect(grid.selectedIds).toEqual(['b', 'c']);
+    expect(grid.shadowRoot?.querySelector('[role="grid"]')?.getAttribute('aria-multiselectable')).toBe('true');
+  });
 });

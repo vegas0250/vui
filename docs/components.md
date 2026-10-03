@@ -383,16 +383,20 @@ grid.rows = [{ id: '1', name: 'Button', owner: 'Core' }];
 grid.selectedId = '1';
 ```
 
-| Attributes | `label`, `empty-label`, `selected` |
-| Properties | `label`, `emptyLabel`, `selectedId`, `columns`, `rows` |
-| Events | `change` при смене выбранной строки |
+| Attributes | `label`, `empty-label`, `selected`, `multiple`, `fill` |
+| Properties | `label`, `emptyLabel`, `selectedId`, `selectedIds`, `columns`, `rows`, `multiple`, `fill` |
+| Events | `change` при смене набора выбранных строк пользователем |
 | Slots | нет, данные задаются свойствами |
 | Parts | `frame` |
-| Keyboard | стрелки, Home, End, PageUp, PageDown. Ctrl/Cmd+C копирует текст активной ячейки |
-| Accessibility | `role="grid"`, `aria-rowcount`, `aria-selected` на строке. Фокус ячейки — `:focus-visible` |
-| Responsive | горизонтальная прокрутка. Колонка `priority: "secondary"` скрывается на ширине до `--vui-layout-medium`, и клавиатура её пропускает |
+| Keyboard | стрелки, Home, End, PageUp, PageDown. Ctrl/Cmd+C копирует текст активной ячейки. С `multiple` Shift расширяет диапазон, Ctrl/Cmd со стрелкой двигает курсор, Ctrl/Cmd+Space переключает строку |
+| Accessibility | `role="grid"`, `aria-rowcount`, `aria-multiselectable`, `aria-selected` на строке. Фокус ячейки — `:focus-visible` |
+| Responsive | горизонтальная прокрутка. Колонка `priority: "secondary"` скрывается на ширине до `--vui-layout-medium`, и клавиатура её пропускает. `fill` отдаёт таблице высоту родителя, и прокрутка идёт внутри `frame` |
 
 `columns`: `{ key, title, width?, align?: start | center | end, priority?: primary | secondary }`. `width` — только простое число с `px`, `rem`, `em` или `%`. `rows`: `{ id, [key]: string }`.
+
+`selectedIds` — массив id выбранных строк. Это свойство, не атрибут: id может содержать запятую. Запись `selectedIds` и `selectedId` не шлёт `change`. `selected` остаётся id активной строки.
+
+От 100 строк таблица держит в DOM только окно вокруг прокрутки и `aria-rowindex` абсолютной строки. `fill` нужен, чтобы окно считалось по высоте родителя, а не по высоте всех строк.
 
 ## vui-button-group
 
@@ -466,7 +470,7 @@ grid.selectedId = '1';
 | Attributes | `label`, `nav-label`, `aside-label`, `skip-label`, `collapsed` |
 | Parts | `shell`, `skip`, `header`, `toolbar`, `body`, `nav`, `main`, `aside`, `footer` |
 | Keyboard | Tab. Ссылка skip переносит фокус в main |
-| Responsive | ниже 40rem колонки складываются. `collapsed` скрывает nav |
+| Responsive | ниже 40rem колонки складываются. `collapsed` скрывает nav. Слот `main` растягивается на оставшуюся высоту, чтобы вложенный вид мог прокручиваться сам |
 
 Пустой слот скрывает свою область. Shell не читает содержимое слотов.
 

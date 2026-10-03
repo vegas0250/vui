@@ -84,7 +84,21 @@ export class VShell extends VuiElement {
         border-inline-end: var(--vui-border-width) solid var(--vui-color-border);
       }
       aside { border-inline-end: 0; border-inline-start: var(--vui-border-width) solid var(--vui-color-border); }
-      main { flex: 1 1 auto; min-width: 0; overflow: auto; }
+      main {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        min-width: 0;
+        min-height: 0;
+        overflow: auto;
+      }
+      main > slot {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        min-width: 0;
+        min-height: 0;
+      }
       .hidden { display: none; }
       :host([collapsed]) nav { display: none; }
       @container vui-shell (max-width: 40rem) {
