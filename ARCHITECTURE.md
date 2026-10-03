@@ -167,17 +167,17 @@ show / open
 
 ## Overlay
 
-Один стек: `src/interaction/overlay.ts`. `src/core/overlay.ts` реэкспортирует его. Dialog, select, tooltip, toaster и menu регистрируются в нём. Будущие dropdown, popover, drawer и command palette должны использовать его, а не заводить второй менеджер.
+Один стек: `src/interaction/overlay.ts`. `src/core/overlay.ts` реэкспортирует его. Dialog, drawer, select, popover, tooltip, toaster и menu регистрируются в нём. Dropdown — это `vui-select`, `vui-menu` или `vui-popover`. Command palette — pattern из dialog и input, без второго менеджера слоёв.
 
 `pushOverlay()` кладёт слой в стек и возвращает функцию закрытия.
 
 - `kind`: `popup` (1000), `modal` (1300), `toast` (1400), `tooltip` (1500). К базе прибавляется позиция в стеке, поэтому более поздний слой того же вида оказывается выше. Переменная на слое — `--vui-overlay-z`, с запасным значением из токена.
 - Escape закрывает верхний слой, который можно закрыть. Toast пропускается. Незакрываемый modal или popup останавливает Escape и не закрывает то, что под ним.
 - Pointerdown снаружи закрывает верхний `popup` с `dismissOnOutside`. Modal этот жест не перехватывает: backdrop dialog обрабатывает сам dialog.
-- `restoreFocus` открывает focus scope и возвращает фокус после снятия со стека. Включён у dialog и menu.
+- `restoreFocus` открывает focus scope и возвращает фокус после снятия со стека. Включён у dialog, drawer, menu и popover.
 - `group` связывает вложенные слои. Указатель снаружи закрывает всю группу сверху вниз. Escape по-прежнему закрывает только верхний слой. Так закрывается цепочка Dialog → Menu → вложенное меню.
 - `lockScroll` ставит `data-vui-scroll-lock` на `<html>`, пока открыт хотя бы один такой слой. Скролл страницы скрыт. У dialog это включено вместе с нативным modal.
-- `trapFocus` циклически переносит Tab внутри владельца. У dialog он выключен: ловушку делает платформенный `<dialog>`. Для будущего drawer, у которого нет нативного dialog, ловушка уже есть.
+- `trapFocus` циклически переносит Tab внутри владельца. У dialog и drawer он выключен: ловушку делает нативный `<dialog>`. `trapFocus` остаётся для слоя без нативного dialog.
 - Несколько слоёв живут в одном стеке. Select, открытый внутри dialog, закрывается первым Escape. Следующий Escape закрывает dialog.
 
 Z-index токены остаются в `src/tokens/tokens.css`: `--vui-z-dropdown`, `--vui-z-sticky`, `--vui-z-overlay`, `--vui-z-dialog`, `--vui-z-toast`, `--vui-z-tooltip`. `placeLayer()` ставит popup у якоря и не выпускает его за viewport.

@@ -112,7 +112,7 @@ VUI
 │   фокус, клавиатура, выбор, команда
 │
 ├── Component families
-│   Action, Field, Overlay, Navigation, Data
+│   Action, Field, Overlay, Navigation, Data, Feedback, Layout, Content, Desktop
 │
 ├── Composition
 │   слот, light DOM, свойство, атрибут, событие

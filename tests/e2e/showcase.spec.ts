@@ -4,6 +4,8 @@ test('showcase switches theme and density', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'VUI Studio' })).toBeVisible();
   await expect(page.locator('vui-button', { hasText: 'Сохранить' }).first()).toBeVisible();
+  await expect(page.locator('vui-stack').first()).toBeVisible();
+  await expect(page.locator('vui-container').first()).toBeVisible();
   await expect(page.locator('#demo-tree')).toBeVisible();
   await expect(page.locator('#demo-grid')).toContainText('Button');
   await expect(page.locator('vui-window')).toBeVisible();

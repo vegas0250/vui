@@ -44,12 +44,23 @@ describe('developer mistakes', () => {
     expect(warn.mock.calls.map((call) => String(call[0])).join('\n')).toContain('already defined');
   });
 
-  it('warns when a list receives an element it does not own', () => {
+  it('warns when a parent receives an element it does not own', async () => {
+    await import('../../src/components/forms/select');
+    await import('../../src/components/navigation/tabs');
+    await import('../../src/components/overlay/menu');
+    await import('../../src/components/navigation/nav');
+    await import('../../src/components/desktop/file-tree');
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-    const list = document.createElement('vui-list');
-    list.append(document.createElement('div'));
-    document.body.append(list);
-    expect(warn.mock.calls.map((call) => String(call[0])).join('\n')).toContain('ignores <div>');
-    expect(list.querySelector('div')).toBeTruthy();
+    const hosts = ['vui-select', 'vui-tabs', 'vui-menu', 'vui-list', 'vui-nav', 'vui-file-tree'];
+    for (const name of hosts) {
+      const host = document.createElement(name);
+      host.append(document.createElement('div'));
+      document.body.append(host);
+    }
+    const messages = warn.mock.calls.map((call) => String(call[0])).join('\n');
+    for (const name of hosts) {
+      expect(messages, name).toContain(`${name} ignores <div>`);
+      expect(document.querySelector(name)?.querySelector('div')).toBeTruthy();
+    }
   });
 });

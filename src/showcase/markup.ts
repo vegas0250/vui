@@ -178,8 +178,20 @@ export const showcaseMarkup = `
                 <div class="box">Справа</div>
               </vui-hstack>
             </vui-grid>
+            <vui-stack direction="row" gap="sm" align="center">
+              <div class="box">Ряд</div>
+              <div class="box">того же stack</div>
+            </vui-stack>
             <pre class="code">&lt;vui-vstack gap="sm" padding="sm"&gt;...&lt;/vui-vstack&gt;
-&lt;vui-hstack gap="sm" align="center" justify="space-between"&gt;...&lt;/vui-hstack&gt;</pre>
+&lt;vui-hstack gap="sm" align="center" justify="space-between"&gt;...&lt;/vui-hstack&gt;
+&lt;vui-stack direction="row" gap="sm"&gt;...&lt;/vui-stack&gt;</pre>
+          </vui-panel>
+
+          <vui-panel heading="Container">
+            <vui-container size="small" padding="sm">
+              <div class="box">Ширина ограничена контейнером, а не страницей.</div>
+            </vui-container>
+            <pre class="code">&lt;vui-container size="small" padding="sm"&gt;...&lt;/vui-container&gt;</pre>
           </vui-panel>
 
           <vui-panel heading="Grid">

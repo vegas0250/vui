@@ -41,6 +41,21 @@ try {
   <body>
     <vui-button id="save" variant="primary">Save</vui-button>
     <vui-input id="name" label="Name"></vui-input>
+    <vui-select id="kind" label="Kind" value="a">
+      <vui-option value="a" selected>Alpha</vui-option>
+    </vui-select>
+    <vui-dialog id="note" label="Note"></vui-dialog>
+    <vui-tabs id="sections" label="Sections">
+      <vui-tab panel="one" selected>One</vui-tab>
+      <vui-tab-panel name="one">Panel</vui-tab-panel>
+    </vui-tabs>
+    <vui-data-grid id="grid" label="Rows"></vui-data-grid>
+    <vui-list id="items" label="Items">
+      <vui-list-item value="one" selected>One</vui-list-item>
+    </vui-list>
+    <vui-file-tree id="tree" label="Files">
+      <vui-tree-item label="readme" kind="file"></vui-tree-item>
+    </vui-file-tree>
     <script type="module" src="/main.ts"></script>
   </body>
 </html>
@@ -53,7 +68,9 @@ import 'vui/forms';
 import 'vui/navigation';
 import 'vui/data';
 import 'vui/overlay';
+import 'vui/desktop';
 import { VButton } from 'vui/button';
+import { VDataGrid } from 'vui/data-grid';
 import { setDensity, setTheme } from 'vui/theme';
 
 setTheme('dark');
@@ -67,6 +84,10 @@ if (!(button instanceof VButton)) {
 button.addEventListener('click', () => {
   button.textContent = 'Saved';
 });
+const grid = document.querySelector('#grid');
+if (!(grid instanceof VDataGrid)) throw new Error('VDataGrid is not the registered element');
+grid.columns = [{ key: 'name', title: 'Name' }];
+grid.rows = [{ id: '1', name: 'Button' }];
 document.body.dataset.ready = 'yes';
 `,
   );
@@ -99,9 +120,13 @@ document.body.dataset.ready = 'yes';
         dir: document.documentElement.dir,
         shadow: Boolean(button?.shadowRoot?.querySelector('button')),
         input: Boolean(input?.shadowRoot?.querySelector('input')),
-        dialog: Boolean(customElements.get('vui-dialog')),
-        grid: Boolean(customElements.get('vui-data-grid')),
-        tabs: Boolean(customElements.get('vui-tabs')),
+        styles: Boolean(document.getElementById('vui-styles')),
+        select: document.querySelector('#kind')?.shadowRoot?.textContent?.includes('Alpha') ?? false,
+        dialog: Boolean(document.querySelector('#note')?.shadowRoot?.querySelector('dialog')),
+        tabs: Boolean(document.querySelector('#sections')?.shadowRoot?.querySelector('[role="tablist"]')) && (document.querySelector('#sections')?.textContent?.includes('Panel') ?? false),
+        grid: document.querySelector('#grid')?.shadowRoot?.textContent?.includes('Button') ?? false,
+        list: document.querySelector('#items')?.textContent?.includes('One') ?? false,
+        tree: document.querySelector('#tree vui-tree-item')?.shadowRoot?.textContent?.includes('readme') ?? false,
       };
     });
     await page.locator('#save').click();
@@ -111,9 +136,15 @@ document.body.dataset.ready = 'yes';
     if (state.theme !== 'dark') problems.push(`theme ${state.theme}`);
     if (state.density !== 'compact') problems.push(`density ${state.density}`);
     if (state.dir !== 'rtl') problems.push(`dir ${state.dir}`);
+    if (!state.styles) problems.push('theme styles missing');
     if (!state.shadow) problems.push('button shadow missing');
     if (!state.input) problems.push('input shadow missing');
-    if (!state.dialog || !state.grid || !state.tabs) problems.push('category registration missing');
+    if (!state.select) problems.push('select did not render');
+    if (!state.dialog) problems.push('dialog did not render');
+    if (!state.tabs) problems.push('tabs did not render');
+    if (!state.grid) problems.push('data grid did not render');
+    if (!state.list) problems.push('list did not render');
+    if (!state.tree) problems.push('file tree did not render');
     if (problems.length) throw new Error(problems.join(', '));
   } finally {
     await browser.close();

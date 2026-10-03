@@ -17,7 +17,8 @@
 - Контракт зарегистрирован у каждого custom element, кроме `vui-option`. `checkCompliance()` проверяет весь реестр.
 - Цепочка component → category → `import 'vui'` проверяется тестом. Неизвестная тема, плотность, enum и чужой ребёнок дают одно предупреждение и не подменяют значение. Повторная регистрация другого класса не затирает элемент.
 - Выбор строки `vui-data-grid` обновляет выделение на месте. `vui-list` синхронизирует детей одним проходом, а не на каждый `slotchange`. Studio показывает `vui-window`, `vui-field-group` и reference-сборку: список, popover, toast, loading и error.
-- `pnpm check:consumer` ставит собранный пакет во временный Vite-проект и открывает production build в браузере. В пакет не входят tests, showcase и scripts.
+- `pnpm check:consumer` ставит собранный пакет во временный Vite-проект, собирает production build и в браузере рендерит button, input, select, dialog, tabs, data grid, list, file tree и тему. В пакет не входят tests, showcase и scripts.
+- Studio показывает `vui-stack` и `vui-container`. Overlay-стек документирует dialog, drawer, popover, menu, select, tooltip и toaster.
 
 ## 0.2.0
 

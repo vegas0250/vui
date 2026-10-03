@@ -261,6 +261,10 @@ vui/
 │   ├── components/
 │   ├── categories/
 │   ├── core/
+│   ├── foundation/   tokens, theme, density, responsive, layout, accessibility, motion
+│   ├── contract/
+│   ├── composition/
+│   ├── families/
 │   ├── interaction/  focus, keyboard, selection, commands, shortcuts, overlay, context menu, drag & drop, clipboard, pointer
 │   ├── icons/
 │   ├── theme/
