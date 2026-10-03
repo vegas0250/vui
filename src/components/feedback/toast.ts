@@ -60,14 +60,14 @@ export class VToast extends VuiElement {
         max-width: 100%;
         padding: var(--vui-space-sm) var(--vui-space-md);
         border: var(--vui-border-width) solid var(--vui-color-border);
-        border-left: var(--vui-border-width-accent) solid var(--vui-color-info);
+        border-inline-start: var(--vui-border-width-accent) solid var(--vui-color-info);
         border-radius: var(--vui-radius);
         background: var(--vui-color-surface-raised);
         box-shadow: var(--vui-shadow-md);
       }
-      :host([variant="success"]) .toast { border-left-color: var(--vui-color-success); }
-      :host([variant="warning"]) .toast { border-left-color: var(--vui-color-warning); }
-      :host([variant="danger"]) .toast { border-left-color: var(--vui-color-danger); }
+      :host([variant="success"]) .toast { border-inline-start-color: var(--vui-color-success); }
+      :host([variant="warning"]) .toast { border-inline-start-color: var(--vui-color-warning); }
+      :host([variant="danger"]) .toast { border-inline-start-color: var(--vui-color-danger); }
       .copy { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
       .title:empty { display: none; }
       .title { display: block; font-size: var(--vui-font-size); }
@@ -169,13 +169,14 @@ export class VToaster extends VuiElement {
       :host {
         position: fixed;
         z-index: var(--vui-overlay-z, var(--vui-z-toast));
-        right: var(--vui-overlay-gutter);
-        bottom: var(--vui-overlay-gutter);
-        left: var(--vui-overlay-gutter);
+        inset-inline: var(--vui-overlay-gutter);
+        inset-block-end: var(--vui-overlay-gutter);
+        max-width: 100%;
         display: flex;
         justify-content: flex-end;
         pointer-events: none;
       }
+      :host(:focus-visible) { outline: var(--vui-focus-ring); }
       .stack {
         display: flex;
         flex-direction: column;
@@ -232,4 +233,18 @@ registerContract({
   responsive: 'flow',
   focus: 'native',
   role: 'status',
+});
+
+registerContract({
+  element: 'vui-toaster',
+  className: 'VToaster',
+  attributes: [],
+  events: [],
+  slots: [''],
+  parts: ['stack'],
+  methods: ['show'],
+  keyboard: [],
+  states: [],
+  responsive: 'viewport',
+  focus: 'native',
 });

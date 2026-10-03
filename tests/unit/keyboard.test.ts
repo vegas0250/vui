@@ -2,6 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { applyRovingTabIndex, moveInList, nextEnabled, stepIndex } from '../../src/interaction/keyboard';
 
 describe('keyboard primitives', () => {
+  it('reverses horizontal arrows when the inline direction is rtl', () => {
+    expect(moveInList(0, 3, 'ArrowLeft', { orientation: 'horizontal', rtl: true })).toBe(1);
+    expect(moveInList(1, 3, 'ArrowRight', { orientation: 'horizontal', rtl: true })).toBe(0);
+    expect(moveInList(0, 3, 'ArrowDown', { orientation: 'both', rtl: true })).toBe(1);
+  });
+
   it('moves a horizontal list and wraps arrows', () => {
     expect(moveInList(0, 3, 'ArrowLeft', { orientation: 'horizontal', loop: true })).toBe(2);
     expect(moveInList(1, 3, 'ArrowRight', { orientation: 'horizontal', loop: true })).toBe(2);

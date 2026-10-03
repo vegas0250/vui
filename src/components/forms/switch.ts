@@ -1,3 +1,4 @@
+import { registerContract } from '../../contract/registry';
 import { defineElement } from '../../core/define';
 import { emitChange } from '../../core/events';
 import { VuiElement } from '../../core/element';
@@ -74,13 +75,13 @@ export class VSwitch extends VuiElement {
       }
       .thumb {
         position: absolute;
-        top: var(--vui-space-2xs);
-        left: var(--vui-space-2xs);
+        inset-block-start: var(--vui-space-2xs);
+        inset-inline-start: var(--vui-space-2xs);
         width: calc(var(--vui-size-control) * 0.66 - (var(--vui-space-2xs) + var(--vui-border-width)) * 2);
         height: calc(var(--vui-size-control) * 0.66 - (var(--vui-space-2xs) + var(--vui-border-width)) * 2);
         border-radius: var(--vui-radius-full);
         background: var(--vui-color-text-muted);
-        transition: transform var(--vui-duration) var(--vui-easing), background var(--vui-duration) var(--vui-easing);
+        transition: inset-inline var(--vui-duration) var(--vui-easing), background var(--vui-duration) var(--vui-easing);
       }
       input:checked + .track {
         background: var(--vui-color-primary);
@@ -88,7 +89,8 @@ export class VSwitch extends VuiElement {
       }
       input:checked + .track .thumb {
         background: var(--vui-color-on-primary);
-        transform: translateX(calc(var(--vui-size-control) * 0.54));
+        inset-inline-start: auto;
+        inset-inline-end: var(--vui-space-2xs);
       }
       input:focus-visible + .track {
         outline: var(--vui-focus-ring);
@@ -137,3 +139,24 @@ export class VSwitch extends VuiElement {
 reflectStrings(VSwitch, ['name', 'value', 'label']);
 reflectBooleans(VSwitch, ['disabled']);
 defineElement('vui-switch', VSwitch);
+
+registerContract({
+  element: 'vui-switch',
+  className: 'VSwitch',
+  attributes: [
+    { name: 'checked', kind: 'boolean', reflected: true },
+    { name: 'disabled', kind: 'boolean', reflected: true },
+    { name: 'name', kind: 'string', reflected: true },
+    { name: 'value', kind: 'string', reflected: true },
+    { name: 'label', kind: 'string', reflected: true },
+  ],
+  events: ['change'],
+  slots: [''],
+  parts: ['input', 'label'],
+  methods: [],
+  keyboard: ['Tab', 'Space'],
+  states: ['disabled'],
+  responsive: 'flow',
+  focus: 'native',
+  role: 'switch',
+});

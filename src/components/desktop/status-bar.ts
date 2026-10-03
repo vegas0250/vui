@@ -1,3 +1,4 @@
+import { registerContract } from '../../contract/registry';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { reflectStrings } from '../../core/reflect';
@@ -40,6 +41,7 @@ export class VStatusBar extends VuiElement {
         border-top: var(--vui-border-width) solid var(--vui-color-border);
         font-size: var(--vui-font-size-sm);
       }
+      :host(:focus-visible) { outline: var(--vui-focus-ring); }
       .group {
         display: flex;
         align-items: center;
@@ -48,10 +50,10 @@ export class VStatusBar extends VuiElement {
         min-width: 0;
         max-width: 100%;
       }
-      .end { margin-left: auto; }
+      .end { margin-inline-start: auto; }
       @container vui-status-bar (max-width: 22rem) {
         .bar { flex-wrap: wrap; align-items: flex-start; }
-        .end { margin-left: 0; }
+        .end { margin-inline-start: 0; }
       }
     `;
   }
@@ -64,3 +66,18 @@ export class VStatusBar extends VuiElement {
 
 reflectStrings(VStatusBar, ['label']);
 defineElement('vui-status-bar', VStatusBar);
+
+registerContract({
+  element: 'vui-status-bar',
+  className: 'VStatusBar',
+  attributes: [{ name: 'label', kind: 'string', reflected: true }],
+  events: [],
+  slots: ['', 'end'],
+  parts: ['bar'],
+  methods: [],
+  keyboard: [],
+  states: [],
+  responsive: 'container',
+  focus: 'native',
+  role: 'group',
+});

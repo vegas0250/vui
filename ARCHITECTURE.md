@@ -57,7 +57,9 @@ VVStack      → <vui-vstack>
 - Запись property меняет атрибут. `attributeChangedCallback` вызывает `sync()`, и компонент рисует состояние заново.
 - Исключения, которые уже были в API, сохранены: `VInput.value` и `VSelect.value` держат текущее значение; `checked` у checkbox и switch; `VDataGrid.columns`, `rows`, `selectedId`; `VSplitPanel.position`, `min` и `max` — числа, и без своих границ позиция остаётся в 10–90; `VDialog.dismissable` означает «можно закрыть снаружи», поэтому `dismissable="false"` выключает закрытие, а отсутствие атрибута оставляет его включённым; `VTreeItem.itemValue` — значение элемента или, если атрибута `value` нет, его `label`.
 
-Общий механизм — `src/core/reflect.ts`. Свойство не добавляется компоненту, которому оно не нужно. `loading` нет ни у одного текущего компонента, и добавлять его «для единообразия» не нужно.
+Общий механизм — `src/core/reflect.ts`. Свойство не добавляется компоненту, которому оно не нужно. `loading` есть у `vui-button` и `vui-icon-button`: кнопка занята и не активируется. Его не добавляют туда, где ждать нечего.
+
+Неверное значение атрибута не подменяется и не роняет компонент: строка остаётся в атрибуте, а стиль срабатывает только на известный `variant`, `size` или `orientation`. Число вне `min`/`max` у split зажимается в границы. Повторный `defineElement` для того же имени ничего не делает. Чужой ребёнок в слоте остаётся в светлом DOM и не участвует в выборе родителя. Отключение снимает слушатели `hold()` и `bind()`; повторное подключение вызывает `sync()` и не создаёт второй shadow.
 
 ### Events
 
@@ -215,6 +217,8 @@ VUI
 
 `vui-tabs`, `vui-select`, `vui-file-tree` и `vui-data-grid` ходят по клавиатуре через `keyboard.ts`. Таблица и дерево держат текущий выбор в `SelectionModel` и по-прежнему сообщают его через `selectedId`, `selectedItem` и `change`. Ctrl/Cmd+C копирует видимый текст ячейки или `itemValue`. `vui-split-panel` двигает разделитель через `trackPointer`. `vui-menu` собирает overlay, focus, keyboard и commands.
 
+Горизонтальные стрелки, разделитель split и вложенное меню следуют `dir`. `ArrowLeft` в `rtl` двигает к концу строки, открывает ветку дерева и вложенное меню. Вертикальные стрелки не меняются. `isRtl()` читает вычисленное `direction`, а если движок не применил `dir`, сам атрибут.
+
 Active descendant остаётся только у `vui-select`: фокус держит кнопка, список не забирает его. Остальные композиты используют roving tabindex.
 
 ## Responsive
@@ -318,7 +322,7 @@ Lifecycle общий для всех наследников `VuiElement`:
 - `connectionCount` растёт на каждое подключение;
 - `hold(name, dispose)` и `bind(name, target, type, listener)` заменяются по имени и снимаются в `disconnectedCallback`.
 
-Импорт регистрации: `vui/contract`. Показательный набор уже зарегистрирован: button, input, dialog, toast, select, data-grid, file-tree.
+Импорт регистрации: `vui/contract`. Контракт есть у каждого custom element, кроме `vui-option`: это light DOM значение select, без shadow. `checkCompliance()` проходит по всему реестру.
 
 ## Compliance
 
@@ -412,7 +416,7 @@ Component
 
 Плюс отдельные кадры hover, focus, открытого dialog и меню (фокус, disabled, checked) на desktop и узком viewport. Dense и high-contrast не порождают новых раскладок: dense масштабирует compact, high-contrast меняет те же токены. Их проверяет showcase и unit-тест установки темы.
 
-Состояния в кадре — только существующие: default, hover, focus, disabled, invalid. `active` у кнопки есть, но стабильный кадр `:active` не фиксируется. `loading` в библиотеке нет.
+Состояния в кадре — только существующие: default, hover, focus, disabled, invalid. `active` у кнопки есть, но стабильный кадр `:active` не фиксируется. `loading` есть у кнопки и icon button; отдельный кадр спиннера не фиксируется.
 
 Харнес: `visual.html`. Снимки обновляются сознательно:
 
@@ -422,7 +426,7 @@ pnpm test:e2e -- tests/e2e/visual.spec.ts --update-snapshots
 
 ## Сборка и импорты
 
-`pnpm build` собирает ESM с `preserveModules` и декларации через `tsc -p tsconfig.build.json`. Точка входа не импортирует showcase. Селективный импорт не тянет `src/index.ts`.
+`pnpm build` собирает ESM с `preserveModules` и декларации через `tsc -p tsconfig.build.json`. Точка входа не импортирует showcase. Селективный импорт не тянет `src/index.ts`. `pnpm check:shake` после сборки сравнивает три бандла: `import 'vui'`, `import 'vui/forms'` и `import 'vui/button'`. Более узкий импорт должен быть меньше. `lucide` остаётся внешней зависимостью.
 
 Стили тем ставятся побочным эффектом при импорте компонента.
 

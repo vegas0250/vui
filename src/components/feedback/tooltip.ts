@@ -1,3 +1,4 @@
+import { registerContract } from '../../contract/registry';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { deepestActiveElement, isWithin } from '../../interaction/focus';
@@ -45,6 +46,7 @@ export class VTooltip extends VuiElement {
         box-shadow: var(--vui-shadow-md);
         pointer-events: none;
       }
+      :host(:focus-visible) { outline: var(--vui-focus-ring); }
     `;
   }
 
@@ -137,3 +139,21 @@ export class VTooltip extends VuiElement {
 
 reflectStrings(VTooltip, ['text', 'placement']);
 defineElement('vui-tooltip', VTooltip);
+
+registerContract({
+  element: 'vui-tooltip',
+  className: 'VTooltip',
+  attributes: [
+    { name: 'text', kind: 'string', reflected: true },
+    { name: 'placement', kind: 'enum', values: ['top', 'bottom'], reflected: true },
+  ],
+  events: [],
+  slots: [''],
+  parts: ['tooltip'],
+  methods: [],
+  keyboard: ['Escape'],
+  states: [],
+  responsive: 'viewport',
+  focus: 'native',
+  role: 'tooltip',
+});

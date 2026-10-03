@@ -132,6 +132,26 @@ reflectStrings(VCheckbox, ['name', 'value']);
 reflectBooleans(VCheckbox, ['disabled', 'invalid']);
 defineElement('vui-checkbox', VCheckbox);
 
+registerContract({
+  element: 'vui-checkbox',
+  className: 'VCheckbox',
+  attributes: [
+    { name: 'checked', kind: 'boolean', reflected: true },
+    { name: 'disabled', kind: 'boolean', reflected: true },
+    { name: 'invalid', kind: 'boolean', reflected: true },
+    { name: 'name', kind: 'string', reflected: true },
+    { name: 'value', kind: 'string', reflected: true },
+  ],
+  events: ['change'],
+  slots: [''],
+  parts: ['input', 'label'],
+  methods: [],
+  keyboard: ['Tab', 'Space'],
+  states: ['disabled', 'invalid'],
+  responsive: 'flow',
+  focus: 'native',
+});
+
 export class VCheckboxGroup extends VuiElement {
   declare label: string;
   declare name: string;
@@ -201,7 +221,9 @@ export class VCheckboxGroup extends VuiElement {
       const active = document.activeElement;
       let index = boxes.findIndex((box) => box === active);
       if (index < 0) index = 0;
-      const delta = key === 'ArrowUp' || key === 'ArrowLeft' ? -1 : 1;
+      const rtl = getComputedStyle(this).direction === 'rtl';
+      const backward = key === 'ArrowUp' || key === (rtl ? 'ArrowRight' : 'ArrowLeft');
+      const delta = backward ? -1 : 1;
       const next = boxes[(index + delta + boxes.length) % boxes.length];
       if (!next) return;
       event.preventDefault();

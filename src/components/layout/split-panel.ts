@@ -1,8 +1,10 @@
+import { registerContract } from '../../contract/registry';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { applyOverflow } from '../../core/layout';
 import { reflectStrings } from '../../core/reflect';
 import { containerBand, observeInlineSize } from '../../foundation/responsive';
+import { isRtl } from '../../interaction/keyboard';
 import { trackPointer } from '../../interaction/pointer';
 
 export class VSplitPanel extends VuiElement {
@@ -77,14 +79,19 @@ export class VSplitPanel extends VuiElement {
         outline: var(--vui-focus-ring);
         outline-offset: calc(var(--vui-focus-offset) * -1);
       }
+      :host(:focus-visible) { outline: var(--vui-focus-ring); }
     `;
   }
 
   protected afterRender(): void {
     this.separator.addEventListener('keydown', (event) => {
       const step = event.shiftKey ? 10 : 2;
-      if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') this.position -= step;
-      else if (event.key === 'ArrowRight' || event.key === 'ArrowDown') this.position += step;
+      const vertical = this.getAttribute('orientation') === 'vertical' || this.stacked;
+      const rtl = !vertical && isRtl(this);
+      const decrease = event.key === 'ArrowUp' || event.key === (rtl ? 'ArrowRight' : 'ArrowLeft');
+      const increase = event.key === 'ArrowDown' || event.key === (rtl ? 'ArrowLeft' : 'ArrowRight');
+      if (decrease) this.position -= step;
+      else if (increase) this.position += step;
       else if (event.key === 'Home') this.position = Math.min(this.min, this.max);
       else if (event.key === 'End') this.position = Math.max(this.min, this.max);
       else return;
@@ -208,10 +215,34 @@ export class VSplitPanel extends VuiElement {
     const vertical = this.getAttribute('orientation') === 'vertical' || this.stacked;
     const size = vertical ? rect.height : rect.width;
     if (size <= 0) return;
-    const ratio = vertical ? (event.clientY - rect.top) / size : (event.clientX - rect.left) / size;
+    const rtl = !vertical && isRtl(this);
+    const along = vertical ? event.clientY - rect.top : rtl ? rect.right - event.clientX : event.clientX - rect.left;
+    const ratio = along / size;
     this.position = ratio * 100;
   }
 }
 
 reflectStrings(VSplitPanel, ['orientation', 'label', 'overflow']);
 defineElement('vui-split-panel', VSplitPanel);
+
+registerContract({
+  element: 'vui-split-panel',
+  className: 'VSplitPanel',
+  attributes: [
+    { name: 'orientation', kind: 'enum', values: ['horizontal', 'vertical'], reflected: true },
+    { name: 'position', kind: 'number', reflected: true },
+    { name: 'min', kind: 'number', reflected: true },
+    { name: 'max', kind: 'number', reflected: true },
+    { name: 'label', kind: 'string', reflected: true },
+    { name: 'overflow', kind: 'string', reflected: true },
+  ],
+  events: [],
+  slots: ['start', 'end'],
+  parts: ['split', 'start', 'separator', 'end'],
+  methods: [],
+  keyboard: ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End'],
+  states: [],
+  responsive: 'container',
+  focus: 'native',
+  role: 'separator',
+});

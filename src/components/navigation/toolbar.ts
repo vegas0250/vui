@@ -1,3 +1,4 @@
+import { registerContract } from '../../contract/registry';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
@@ -40,6 +41,7 @@ export class VToolbar extends VuiElement {
         color: var(--vui-color-text);
         border-bottom: var(--vui-border-width) solid var(--vui-color-border);
       }
+      :host(:focus-visible) { outline: var(--vui-focus-ring); }
       :host([wrap]) .bar { flex-wrap: wrap; height: auto; }
       .group {
         display: flex;
@@ -50,12 +52,12 @@ export class VToolbar extends VuiElement {
         max-width: 100%;
       }
       .center { flex: 1 1 auto; justify-content: center; min-width: 0; }
-      .end { margin-left: auto; flex: 0 0 auto; }
+      .end { margin-inline-start: auto; flex: 0 0 auto; }
       @container vui-toolbar (max-width: 40rem) {
         .bar { flex-wrap: wrap; }
         .group { flex: 1 1 100%; }
         .center { order: 3; justify-content: flex-start; }
-        .end { margin-left: 0; }
+        .end { margin-inline-start: 0; }
       }
     `;
   }
@@ -68,3 +70,21 @@ export class VToolbar extends VuiElement {
 reflectStrings(VToolbar, ['label']);
 reflectBooleans(VToolbar, ['wrap']);
 defineElement('vui-toolbar', VToolbar);
+
+registerContract({
+  element: 'vui-toolbar',
+  className: 'VToolbar',
+  attributes: [
+    { name: 'label', kind: 'string', reflected: true },
+    { name: 'wrap', kind: 'boolean', reflected: true },
+  ],
+  events: [],
+  slots: ['start', '', 'end'],
+  parts: ['bar'],
+  methods: [],
+  keyboard: ['Tab'],
+  states: [],
+  responsive: 'container',
+  focus: 'native',
+  role: 'toolbar',
+});

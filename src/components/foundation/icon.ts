@@ -1,3 +1,4 @@
+import { registerContract } from '../../contract/registry';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { reflectStrings } from '../../core/reflect';
@@ -23,10 +24,12 @@ export class VIcon extends VuiElement {
         display: inline-flex;
         width: var(--vui-icon-size);
         height: var(--vui-icon-size);
+        max-width: 100%;
         flex: 0 0 auto;
         color: inherit;
         vertical-align: middle;
       }
+      :host(:focus-visible) { outline: var(--vui-focus-ring); }
       .icon, .icon svg {
         width: 100%;
         height: 100%;
@@ -54,3 +57,20 @@ export class VIcon extends VuiElement {
 
 reflectStrings(VIcon, ['name', 'label']);
 defineElement('vui-icon', VIcon);
+
+registerContract({
+  element: 'vui-icon',
+  className: 'VIcon',
+  attributes: [
+    { name: 'name', kind: 'string', reflected: true },
+    { name: 'label', kind: 'string', reflected: true },
+  ],
+  events: [],
+  slots: [],
+  parts: ['base'],
+  methods: [],
+  keyboard: [],
+  states: [],
+  responsive: 'flow',
+  focus: 'native',
+});

@@ -20,7 +20,7 @@
 | Properties | те же имена, типы `string` и `disabled: boolean` |
 | Events | `click` |
 | Slots | по умолчанию — текст; `icon` |
-| Parts | `base` |
+| Parts | `base`, `busy` |
 | Keyboard | Tab, Enter, Space |
 | Accessibility | нативный button, `:focus-visible`, disabled не попадает в Tab |
 
@@ -34,11 +34,11 @@
 <vui-icon-button name="search" label="Поиск"></vui-icon-button>
 ```
 
-| Attributes | `name`, `label`, `variant` (по умолчанию прозрачная; также primary, secondary, danger), `size`, `type`, `disabled` |
+| Attributes | `name`, `label`, `variant` (по умолчанию прозрачная; также primary, secondary, danger), `size`, `type`, `disabled`, `loading` |
 | Properties | те же |
 | Events | `click` |
 | Slots | нет, иконка задаётся `name` |
-| Parts | `base`, `icon` |
+| Parts | `base`, `icon`, `busy` |
 | Keyboard | Tab, Enter, Space |
 | Accessibility | `aria-label` с `label`. Если `label` пуст, используется `name` |
 
@@ -183,7 +183,7 @@ menu.showAt(x, y);
 
 | vui-menu | attribute и property `label`. Property `commands` — `CommandRegistry` или `null`. Методы `showAt(x, y)`, `close()`, `bindTo(target)`. Событие `close` не всплывает, чтобы внешний dialog не принял его за своё закрытие. Слот — пункты. Part `menu` |
 | vui-menu-item | attributes `label`, `command`, `shortcut`, `disabled`, `checked`. Событие `click`. Вложенный `vui-menu` со `slot="submenu"`. Parts `check`, `label`, `shortcut`, `caret` |
-| Keyboard | стрелки, Home, End, PageUp, PageDown, Enter, Space, Escape, Tab. Shift+F10 и правый щелчок через `bindTo` |
+| Keyboard | стрелки, Home, End, PageUp, PageDown, Enter, Space, Escape, Tab. В `dir="rtl"` вложенное меню открывается в сторону inline start. Shift+F10 и правый щелчок через `bindTo` |
 | Accessibility | `role="menu"` / `menuitem`, `aria-disabled`, `aria-checked` у отмеченного пункта, `aria-haspopup` и `aria-expanded` у пункта с подменю |
 | Responsive | меню не шире viewport и прокручивается, если пунктов больше, чем помещается по высоте |
 
@@ -199,6 +199,7 @@ menu.showAt(x, y);
 | `ShortcutRegistry` | `register`, `pushContext`, `attach(target)`, `handle` |
 | `SelectionModel` | `none` / `single` / `multiple`, жесты `replace`, `toggle`, `range` |
 | `openFocusScope` | сохранить и вернуть фокус, вложенные scope |
+| `moveInList` / `isRtl` | стрелки списка. `rtl` разворачивает горизонтальные стрелки по `dir` |
 | `pushOverlay` / `placeLayer` | стек слоёв и позиция popup |
 | `bindContextMenu` | правый щелчок и Shift+F10 |
 | `draggable` / `dropTarget` | перенос. `beginDrag` и `completeDrop` — тот же контракт с клавиатуры |
@@ -221,7 +222,7 @@ menu.showAt(x, y);
 | vui-tab | `panel`, `selected`, `disabled` и те же properties. Part `label`. Роль `tab` |
 | vui-tab-panel | `name`, `selected`. Part `panel`. Роль `tabpanel` |
 | Events | нет, выбор записан в `selected` |
-| Keyboard | Arrow Left/Right, Home, End |
+| Keyboard | Arrow Left/Right, Home, End. В `dir="rtl"` стрелки влево и вправо меняются местами |
 | Accessibility | `tablist` / `tab` / `tabpanel`, `aria-selected`, `aria-controls`, `aria-disabled` на выключенной вкладке. Список вкладок прокручивается, а не сжимает подписи |
 
 ## vui-tooltip

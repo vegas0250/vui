@@ -1,10 +1,11 @@
 import { ownedChildren } from '../../composition/dom';
+import { registerContract } from '../../contract/registry';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
 import { runCommand, type CommandRegistry } from '../../interaction/commands';
 import { bindContextMenu } from '../../interaction/context-menu';
-import { applyRovingTabIndex, isActivation, moveInList } from '../../interaction/keyboard';
+import { applyRovingTabIndex, isActivation, isRtl, moveInList } from '../../interaction/keyboard';
 import { placeLayer, pushOverlay, type Placement } from '../../interaction/overlay';
 
 let menuSeq = 0;
@@ -60,18 +61,19 @@ export class VMenuItem extends VuiElement {
       :host([checked]) .mark::before { content: "✓"; }
       .label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .shortcut {
-        margin-left: auto;
+        margin-inline-start: auto;
         color: var(--vui-color-text-muted);
         font-size: var(--vui-font-size-sm);
       }
       .caret {
-        margin-left: auto;
+        margin-inline-start: auto;
         width: 0.4em;
         height: 0.4em;
-        border-top: var(--vui-stroke-width) solid currentColor;
-        border-right: var(--vui-stroke-width) solid currentColor;
+        border-block-start: var(--vui-stroke-width) solid currentColor;
+        border-inline-end: var(--vui-stroke-width) solid currentColor;
         transform: rotate(45deg);
       }
+      :host-context([dir="rtl"]) .caret { transform: rotate(-135deg); }
     `;
   }
 
@@ -197,6 +199,7 @@ export class VMenu extends VuiElement {
       }
       :host([open]) { display: block; }
       :host(:focus) { outline: none; }
+      :host(:focus-visible) { outline: var(--vui-focus-ring); }
       .menu { display: flex; flex-direction: column; min-width: 0; }
     `;
   }
@@ -321,7 +324,11 @@ export class VMenu extends VuiElement {
     if (!nested) return;
     item.setAttribute('aria-expanded', 'true');
     const rect = item.getBoundingClientRect();
-    nested.showAt(rect.right, rect.top, { group: this.groupId, placement: 'right-start' });
+    const rtl = isRtl(this);
+    nested.showAt(rtl ? rect.left : rect.right, rect.top, {
+      group: this.groupId,
+      placement: rtl ? 'left-start' : 'right-start',
+    });
   }
 
   private onKeydown(event: KeyboardEvent): void {
@@ -339,7 +346,10 @@ export class VMenu extends VuiElement {
     const current = enabled.find((item) => item === document.activeElement) ?? enabled[0];
     if (!current) return;
     const index = enabled.indexOf(current);
-    if (event.key === 'ArrowLeft') {
+    const rtl = isRtl(this);
+    const closeKey = rtl ? 'ArrowRight' : 'ArrowLeft';
+    const openKey = rtl ? 'ArrowLeft' : 'ArrowRight';
+    if (event.key === closeKey) {
       if (!(this.parentElement instanceof VMenuItem)) return;
       event.preventDefault();
       event.stopPropagation();
@@ -348,7 +358,7 @@ export class VMenu extends VuiElement {
       parent.focus();
       return;
     }
-    if (event.key === 'ArrowRight') {
+    if (event.key === openKey) {
       if (!current.submenu()) return;
       event.preventDefault();
       event.stopPropagation();
@@ -377,3 +387,38 @@ reflectBooleans(VMenuItem, ['disabled', 'checked']);
 reflectStrings(VMenu, ['label']);
 defineElement('vui-menu-item', VMenuItem);
 defineElement('vui-menu', VMenu);
+
+registerContract({
+  element: 'vui-menu-item',
+  className: 'VMenuItem',
+  attributes: [
+    { name: 'label', kind: 'string', reflected: true },
+    { name: 'command', kind: 'string', reflected: true },
+    { name: 'shortcut', kind: 'string', reflected: true },
+    { name: 'disabled', kind: 'boolean', reflected: true },
+    { name: 'checked', kind: 'boolean', reflected: true },
+  ],
+  events: ['click'],
+  slots: ['submenu'],
+  parts: ['check', 'label', 'shortcut', 'caret'],
+  methods: [],
+  keyboard: ['Enter', 'Space'],
+  states: ['disabled'],
+  responsive: 'flow',
+  focus: 'roving',
+});
+
+registerContract({
+  element: 'vui-menu',
+  className: 'VMenu',
+  attributes: [{ name: 'label', kind: 'string', reflected: true }],
+  events: ['close'],
+  slots: [''],
+  parts: ['menu'],
+  methods: ['showAt', 'close', 'bindTo'],
+  keyboard: ['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'PageUp', 'PageDown', 'Enter', 'Space', 'Escape'],
+  states: [],
+  responsive: 'viewport',
+  focus: 'roving',
+  role: 'presentation',
+});

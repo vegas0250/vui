@@ -1,8 +1,9 @@
+import { registerContract } from '../../contract/registry';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
 import { ownedChildren } from '../../composition/dom';
-import { applyRovingTabIndex, moveInList } from '../../interaction/keyboard';
+import { applyRovingTabIndex, isRtl, moveInList } from '../../interaction/keyboard';
 
 let tabSeq = 0;
 
@@ -31,6 +32,7 @@ export class VTab extends VuiElement {
         padding-inline: var(--vui-space-md);
         border-bottom: var(--vui-border-width-strong) solid transparent;
         color: var(--vui-color-text-muted);
+        max-width: 100%;
         cursor: pointer;
         user-select: none;
       }
@@ -80,9 +82,9 @@ export class VTabPanel extends VuiElement {
 
   protected componentStyles(): string {
     return `
-      :host { display: block; padding-top: var(--vui-space-md); }
+      :host { display: block; min-width: 0; max-width: 100%; padding-top: var(--vui-space-md); }
       :host([hidden]) { display: none; }
-      :host(:focus) { outline: none; }
+      :host(:focus-visible) { outline: var(--vui-focus-ring); outline-offset: var(--vui-focus-offset); }
     `;
   }
 
@@ -221,7 +223,7 @@ export class VTabs extends VuiElement {
     const tabs = this.tabs().filter((tab) => !tab.hasAttribute('disabled'));
     const index = tabs.indexOf(current);
     if (index < 0) return;
-    const next = moveInList(index, tabs.length, event.key, { orientation: 'horizontal', loop: true });
+    const next = moveInList(index, tabs.length, event.key, { orientation: 'horizontal', loop: true, rtl: isRtl(this) });
     if (next === null) return;
     event.preventDefault();
     const tab = tabs[next];
@@ -239,3 +241,53 @@ reflectStrings(VTabs, ['label']);
 defineElement('vui-tab', VTab);
 defineElement('vui-tab-panel', VTabPanel);
 defineElement('vui-tabs', VTabs);
+
+registerContract({
+  element: 'vui-tab',
+  className: 'VTab',
+  attributes: [
+    { name: 'panel', kind: 'string', reflected: true },
+    { name: 'selected', kind: 'boolean', reflected: true },
+    { name: 'disabled', kind: 'boolean', reflected: true },
+  ],
+  events: [],
+  slots: [''],
+  parts: ['label'],
+  methods: [],
+  keyboard: [],
+  states: ['disabled'],
+  responsive: 'flow',
+  focus: 'roving',
+});
+
+registerContract({
+  element: 'vui-tab-panel',
+  className: 'VTabPanel',
+  attributes: [
+    { name: 'name', kind: 'string', reflected: true },
+    { name: 'selected', kind: 'boolean', reflected: true },
+  ],
+  events: [],
+  slots: [''],
+  parts: ['panel'],
+  methods: [],
+  keyboard: [],
+  states: [],
+  responsive: 'flow',
+  focus: 'native',
+});
+
+registerContract({
+  element: 'vui-tabs',
+  className: 'VTabs',
+  attributes: [{ name: 'label', kind: 'string', reflected: true }],
+  events: [],
+  slots: ['tab', 'panel'],
+  parts: ['tablist'],
+  methods: [],
+  keyboard: ['ArrowLeft', 'ArrowRight', 'Home', 'End'],
+  states: [],
+  responsive: 'container',
+  focus: 'roving',
+  role: 'tablist',
+});

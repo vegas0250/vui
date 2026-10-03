@@ -6,6 +6,31 @@ export interface ListMoveOptions {
   loop?: boolean;
   /** Rows skipped by PageUp and PageDown. Defaults to a third of the list, at least 1. */
   pageSize?: number;
+  /** When set, ArrowLeft and ArrowRight follow the inline direction. */
+  rtl?: boolean;
+}
+
+function nearestDir(element: Element): Element | null {
+  let node: Element | null = element;
+  while (node) {
+    const dir = node.getAttribute('dir');
+    if (dir === 'rtl' || dir === 'ltr') return node;
+    node = node.parentElement;
+  }
+  return null;
+}
+
+/**
+ * Inline direction of `element`. Vertical movement does not use this.
+ * A browser that resolves `dir` is trusted via computed style, so a CSS `direction` between the attribute and the element still wins.
+ * An engine that leaves computed `direction` as `ltr` while `dir="rtl"` is set is trusted via the attribute.
+ */
+export function isRtl(element: Element): boolean {
+  const marked = nearestDir(element);
+  if (!marked) return getComputedStyle(element).direction === 'rtl';
+  const markedDir = marked.getAttribute('dir');
+  if (getComputedStyle(marked).direction === markedDir) return getComputedStyle(element).direction === 'rtl';
+  return markedDir === 'rtl';
 }
 
 /**
@@ -21,9 +46,10 @@ export function moveInList(current: number, count: number, key: string, options:
   const page = options.pageSize ?? Math.max(1, Math.floor(count / 3));
   const index = Number.isFinite(current) ? current : 0;
 
+  const rtl = options.rtl ?? false;
   let next = index;
-  if (horizontal && key === 'ArrowLeft') next = index - 1;
-  else if (horizontal && key === 'ArrowRight') next = index + 1;
+  if (horizontal && key === 'ArrowLeft') next = index + (rtl ? 1 : -1);
+  else if (horizontal && key === 'ArrowRight') next = index + (rtl ? -1 : 1);
   else if (vertical && key === 'ArrowUp') next = index - 1;
   else if (vertical && key === 'ArrowDown') next = index + 1;
   else if (key === 'Home') next = 0;

@@ -316,7 +316,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "check:budget": "node scripts/budget.mjs"
+    "check:budget": "node scripts/budget.mjs",
+    "check:shake": "node scripts/shake.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.1",

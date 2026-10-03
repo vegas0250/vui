@@ -13,6 +13,8 @@
 - Семейства дополнены Feedback, Layout, Content и Desktop. Общие имена состояний — `componentStates`.
 - Studio показывает эти элементы и reference UI: shell, навигация, поиск, фильтр, таблица, дерево, инспектор, drawer, dialog, меню, пустое состояние.
 - Версия пакета — `1.0.0`. Карта exports расширена и по-прежнему заморожена тестом.
+- Горизонтальные стрелки, split, дерево и вложенное меню следуют `dir`. Раскладка toolbar, status bar, toast, switch и дерева использует logical properties.
+- Контракт зарегистрирован у каждого custom element, кроме `vui-option`. `checkCompliance()` проверяет весь реестр.
 
 ## 0.2.0
 

@@ -5,7 +5,7 @@ import { emitChange } from '../../core/events';
 import { reflectStrings } from '../../core/reflect';
 import { containerBand, observeInlineSize } from '../../foundation/responsive';
 import { copyText } from '../../interaction/clipboard';
-import { applyRovingTabIndex, moveInList, stepIndex } from '../../interaction/keyboard';
+import { applyRovingTabIndex, isRtl, moveInList, stepIndex } from '../../interaction/keyboard';
 import { SelectionModel } from '../../interaction/selection';
 
 export interface VDataGridColumn {
@@ -323,7 +323,10 @@ export class VDataGrid extends VuiElement {
       event.preventDefault();
       if (key === 'Home') this.activeCol = this.firstVisibleColumn();
       else if (key === 'End') this.activeCol = this.lastVisibleColumn();
-      else this.activeCol = this.stepColumn(this.activeCol, key === 'ArrowLeft' ? -1 : 1);
+      else {
+        const forward = key === 'ArrowRight';
+        this.activeCol = this.stepColumn(this.activeCol, forward !== isRtl(this) ? 1 : -1);
+      }
       this.commitRow();
     }
   }

@@ -15,7 +15,7 @@ export type { DragPayload, DropTargetOptions } from './drag-drop';
 export { cycleTab, deepestActiveElement, discardFocusScopes, focusableElements, isWithin, openFocusScope } from './focus';
 export type { FocusScopeOptions } from './focus';
 
-export { applyRovingTabIndex, isActivation, moveInList, nextEnabled, stepIndex } from './keyboard';
+export { applyRovingTabIndex, isActivation, isRtl, moveInList, nextEnabled, stepIndex } from './keyboard';
 export type { ListMoveOptions, ListOrientation } from './keyboard';
 
 export { clearOverlays, overlayDepth, placeLayer, pushOverlay } from './overlay';

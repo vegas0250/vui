@@ -225,7 +225,9 @@ export class VRadioGroup extends VuiElement {
       const active = document.activeElement;
       let index = radios.findIndex((radio) => radio === active || radio.hasAttribute('checked'));
       if (index < 0) index = 0;
-      const delta = key === 'ArrowUp' || key === 'ArrowLeft' ? -1 : 1;
+      const rtl = getComputedStyle(this).direction === 'rtl';
+      const backward = key === 'ArrowUp' || key === (rtl ? 'ArrowRight' : 'ArrowLeft');
+      const delta = backward ? -1 : 1;
       const next = radios[(index + delta + radios.length) % radios.length];
       if (!next) return;
       event.preventDefault();

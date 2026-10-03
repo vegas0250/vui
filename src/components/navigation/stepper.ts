@@ -3,7 +3,7 @@ import { registerContract } from '../../contract/registry';
 import { emitChange } from '../../core/events';
 import { VuiElement } from '../../core/element';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
-import { moveInList } from '../../interaction/keyboard';
+import { isRtl, moveInList } from '../../interaction/keyboard';
 
 export class VStep extends VuiElement {
   declare value: string;
@@ -126,7 +126,7 @@ export class VStepper extends VuiElement {
       const steps = this.enabled();
       if (steps.length === 0) return;
       const current = Math.max(0, steps.findIndex((step) => step === document.activeElement || step.hasAttribute('data-current')));
-      const nextIndex = moveInList(current, steps.length, event.key, { orientation: 'horizontal', loop: true });
+      const nextIndex = moveInList(current, steps.length, event.key, { orientation: 'horizontal', loop: true, rtl: isRtl(this) });
       if (nextIndex === null) return;
       const next = steps[nextIndex];
       if (!next) return;

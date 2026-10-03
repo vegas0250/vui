@@ -1,3 +1,4 @@
+import { registerContract } from '../../contract/registry';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { applyOverflow, applySpace } from '../../core/layout';
@@ -27,6 +28,7 @@ export class VPanel extends VuiElement {
   protected componentStyles(): string {
     return `
       :host { display: block; min-width: 0; max-width: 100%; }
+      :host(:focus-visible) { outline: var(--vui-focus-ring); }
       section {
         background: var(--vui-color-surface);
         color: var(--vui-color-text);
@@ -81,3 +83,21 @@ export class VPanel extends VuiElement {
 
 reflectStrings(VPanel, ['heading', 'padding', 'overflow']);
 defineElement('vui-panel', VPanel);
+
+registerContract({
+  element: 'vui-panel',
+  className: 'VPanel',
+  attributes: [
+    { name: 'heading', kind: 'string', reflected: true },
+    { name: 'padding', kind: 'string', reflected: true },
+    { name: 'overflow', kind: 'string', reflected: true },
+  ],
+  events: [],
+  slots: ['header', '', 'footer'],
+  parts: ['panel', 'header', 'title', 'body', 'footer'],
+  methods: [],
+  keyboard: [],
+  states: [],
+  responsive: 'flow',
+  focus: 'native',
+});

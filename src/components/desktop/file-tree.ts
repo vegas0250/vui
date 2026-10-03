@@ -6,7 +6,7 @@ import { emitChange } from '../../core/events';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
 import { ownedChildren } from '../../composition/dom';
 import { copyText } from '../../interaction/clipboard';
-import { applyRovingTabIndex, moveInList } from '../../interaction/keyboard';
+import { applyRovingTabIndex, isRtl, moveInList } from '../../interaction/keyboard';
 import { SelectionModel } from '../../interaction/selection';
 import type { VIcon } from '../foundation/icon';
 
@@ -68,9 +68,10 @@ export class VTreeItem extends VuiElement {
       }
       .twist svg { width: 1em; height: 1em; transition: transform var(--vui-duration) var(--vui-easing); }
       :host([expanded]) .twist svg { transform: rotate(90deg); }
+      :host-context([dir="rtl"]):host(:not([expanded])) .twist svg { transform: scaleX(-1); }
       :host(:not([branch])) .twist { visibility: hidden; }
       .label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-      .children { padding-left: var(--vui-space-md); }
+      .children { padding-inline-start: var(--vui-space-md); }
       .children[hidden] { display: none; }
     `;
   }
@@ -224,7 +225,10 @@ export class VFileTree extends VuiElement {
       if (next) this.focusItem(next);
       return;
     }
-    if (event.key === 'ArrowRight') {
+    const rtl = isRtl(this);
+    const openKey = rtl ? 'ArrowLeft' : 'ArrowRight';
+    const closeKey = rtl ? 'ArrowRight' : 'ArrowLeft';
+    if (event.key === openKey) {
       event.preventDefault();
       if (current.hasChildren() && !current.hasAttribute('expanded')) {
         current.setAttribute('expanded', '');
@@ -235,7 +239,7 @@ export class VFileTree extends VuiElement {
       if (next) this.focusItem(next);
       return;
     }
-    if (event.key === 'ArrowLeft') {
+    if (event.key === closeKey) {
       event.preventDefault();
       if (current.hasAttribute('expanded')) {
         current.removeAttribute('expanded');
@@ -264,6 +268,27 @@ reflectBooleans(VTreeItem, ['expanded', 'selected']);
 reflectStrings(VFileTree, ['label']);
 defineElement('vui-tree-item', VTreeItem);
 defineElement('vui-file-tree', VFileTree);
+
+registerContract({
+  element: 'vui-tree-item',
+  className: 'VTreeItem',
+  attributes: [
+    { name: 'label', kind: 'string', reflected: true },
+    { name: 'kind', kind: 'enum', values: ['file', 'folder'], reflected: true },
+    { name: 'expanded', kind: 'boolean', reflected: true },
+    { name: 'selected', kind: 'boolean', reflected: true },
+    { name: 'value', kind: 'string', reflected: false },
+  ],
+  events: [],
+  slots: [''],
+  parts: ['row', 'icon', 'label'],
+  methods: [],
+  keyboard: [],
+  states: [],
+  responsive: 'flow',
+  focus: 'roving',
+  role: 'group',
+});
 
 registerContract({
   element: 'vui-file-tree',

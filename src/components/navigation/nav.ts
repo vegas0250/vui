@@ -3,7 +3,7 @@ import { registerContract } from '../../contract/registry';
 import { emitChange } from '../../core/events';
 import { VuiElement } from '../../core/element';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
-import { moveInList } from '../../interaction/keyboard';
+import { isRtl, moveInList } from '../../interaction/keyboard';
 
 export class VNavItem extends VuiElement {
   declare href: string;
@@ -129,7 +129,7 @@ export class VNav extends VuiElement {
       if (items.length === 0) return;
       const current = Math.max(0, items.findIndex((item) => item === document.activeElement || item.hasAttribute('data-current')));
       const orientation = this.getAttribute('orientation') === 'horizontal' ? 'horizontal' : 'vertical';
-      const nextIndex = moveInList(current, items.length, event.key, { orientation, loop: true });
+      const nextIndex = moveInList(current, items.length, event.key, { orientation, loop: true, rtl: isRtl(this) });
       if (nextIndex === null) return;
       event.preventDefault();
       const next = items[nextIndex];

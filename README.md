@@ -178,6 +178,8 @@ import 'vui/themes/high-contrast';
 
 Плотность — общая шкала: высота контролов, отступы, gaps, toolbar, панель, строка состояния и строки таблицы. Для desktop-интерфейса обычно удобны `compact` и `dense`. Тема, плотность и ширина контейнера независимы: Dark + Dense + узкий контейнер допустимы так же, как Light + Comfortable + широкий.
 
+Направление текста задаёт `dir` на документе. Горизонтальные стрелки, split и вложенное меню следуют ему. Отдельной системы локали в VUI нет.
+
 ## Layout
 
 `vui-stack`, `vui-hstack`, `vui-vstack`, `vui-grid`, `vui-panel` и `vui-split-panel` используют одни имена: `gap`, `padding`, `align`, `justify`, `overflow`. Шаг — `2xs|xs|sm|md|lg|xl|2xl`.

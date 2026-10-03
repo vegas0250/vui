@@ -1,3 +1,4 @@
+import { registerContract } from '../../contract/registry';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { applyAlign, applyJustify, applyOverflow, applySpace, tokenGap } from '../../core/layout';
@@ -37,6 +38,7 @@ class VStackBase extends VuiElement {
         min-width: 0;
         max-width: 100%;
       }
+      :host(:focus-visible) { outline: var(--vui-focus-ring); }
       :host([data-axis="row"][data-narrow]) { flex-wrap: wrap; }
       ::slotted(*) { max-width: 100%; }
     `;
@@ -92,3 +94,27 @@ reflectBooleans(VStackBase, ['wrap']);
 defineElement('vui-stack', VStack);
 defineElement('vui-hstack', VHStack);
 defineElement('vui-vstack', VVStack);
+
+const stackContract = {
+  attributes: [
+    { name: 'gap', kind: 'string' as const, reflected: true },
+    { name: 'align', kind: 'string' as const, reflected: true },
+    { name: 'justify', kind: 'string' as const, reflected: true },
+    { name: 'direction', kind: 'string' as const, reflected: true },
+    { name: 'padding', kind: 'string' as const, reflected: true },
+    { name: 'overflow', kind: 'string' as const, reflected: true },
+    { name: 'wrap', kind: 'boolean' as const, reflected: true },
+  ],
+  events: [],
+  slots: [''],
+  parts: [],
+  methods: [],
+  keyboard: [],
+  states: [],
+  responsive: 'flow' as const,
+  focus: 'native' as const,
+};
+
+registerContract({ element: 'vui-stack', className: 'VStack', ...stackContract });
+registerContract({ element: 'vui-hstack', className: 'VHStack', ...stackContract });
+registerContract({ element: 'vui-vstack', className: 'VVStack', ...stackContract });
