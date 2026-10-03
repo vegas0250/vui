@@ -169,6 +169,7 @@ export class VDataGrid extends VuiElement {
         font-weight: var(--vui-font-weight-strong);
       }
       tbody tr:last-child td { border-bottom: 0; }
+      tbody tr[data-id] { cursor: pointer; }
       tbody tr[aria-selected="true"] { background: var(--vui-color-surface-hover); }
       td:focus-visible {
         outline: var(--vui-focus-ring);
