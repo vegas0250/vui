@@ -1,6 +1,6 @@
 {
   "name": "vui",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Универсальная модульная UI-система готовых визуальных компонентов для Web, SPA и Desktop/Electron с поддержкой тем и различной плотности интерфейса.",
   "type": "module",
   "license": "UNLICENSED",
@@ -70,9 +70,33 @@
       "types": "./dist/components/content/separator.d.ts",
       "import": "./dist/components/content/separator.js"
     },
+    "./text": {
+      "types": "./dist/components/content/text.d.ts",
+      "import": "./dist/components/content/text.js"
+    },
+    "./link": {
+      "types": "./dist/components/content/link.d.ts",
+      "import": "./dist/components/content/link.js"
+    },
+    "./kbd": {
+      "types": "./dist/components/content/kbd.d.ts",
+      "import": "./dist/components/content/kbd.js"
+    },
+    "./chip": {
+      "types": "./dist/components/content/chip.d.ts",
+      "import": "./dist/components/content/chip.js"
+    },
+    "./avatar-group": {
+      "types": "./dist/components/content/avatar-group.d.ts",
+      "import": "./dist/components/content/avatar-group.js"
+    },
     "./icon-button": {
       "types": "./dist/components/actions/icon-button.d.ts",
       "import": "./dist/components/actions/icon-button.js"
+    },
+    "./toggle": {
+      "types": "./dist/components/actions/toggle.d.ts",
+      "import": "./dist/components/actions/toggle.js"
     },
     "./input": {
       "types": "./dist/components/forms/input.d.ts",
@@ -98,6 +122,14 @@
       "types": "./dist/components/forms/select.d.ts",
       "import": "./dist/components/forms/select.js"
     },
+    "./slider": {
+      "types": "./dist/components/forms/slider.d.ts",
+      "import": "./dist/components/forms/slider.js"
+    },
+    "./field": {
+      "types": "./dist/components/forms/field.d.ts",
+      "import": "./dist/components/forms/field.js"
+    },
     "./dialog": {
       "types": "./dist/components/overlay/dialog.d.ts",
       "import": "./dist/components/overlay/dialog.js"
@@ -109,6 +141,10 @@
     "./popover": {
       "types": "./dist/components/overlay/popover.d.ts",
       "import": "./dist/components/overlay/popover.js"
+    },
+    "./drawer": {
+      "types": "./dist/components/overlay/drawer.d.ts",
+      "import": "./dist/components/overlay/drawer.js"
     },
     "./interaction": {
       "types": "./dist/interaction/index.d.ts",
@@ -125,6 +161,14 @@
     "./pagination": {
       "types": "./dist/components/navigation/pagination.d.ts",
       "import": "./dist/components/navigation/pagination.js"
+    },
+    "./nav": {
+      "types": "./dist/components/navigation/nav.d.ts",
+      "import": "./dist/components/navigation/nav.js"
+    },
+    "./stepper": {
+      "types": "./dist/components/navigation/stepper.d.ts",
+      "import": "./dist/components/navigation/stepper.js"
     },
     "./tooltip": {
       "types": "./dist/components/feedback/tooltip.d.ts",
@@ -145,6 +189,10 @@
     "./skeleton": {
       "types": "./dist/components/feedback/skeleton.d.ts",
       "import": "./dist/components/feedback/skeleton.js"
+    },
+    "./empty": {
+      "types": "./dist/components/feedback/empty.d.ts",
+      "import": "./dist/components/feedback/empty.js"
     },
     "./toast": {
       "types": "./dist/components/feedback/toast.d.ts",
@@ -194,6 +242,10 @@
       "types": "./dist/components/desktop/shell.d.ts",
       "import": "./dist/components/desktop/shell.js"
     },
+    "./window": {
+      "types": "./dist/components/desktop/window.d.ts",
+      "import": "./dist/components/desktop/window.js"
+    },
     "./file-tree": {
       "types": "./dist/components/desktop/file-tree.d.ts",
       "import": "./dist/components/desktop/file-tree.js"
@@ -201,6 +253,14 @@
     "./data-grid": {
       "types": "./dist/components/data/data-grid.d.ts",
       "import": "./dist/components/data/data-grid.js"
+    },
+    "./list": {
+      "types": "./dist/components/data/list.d.ts",
+      "import": "./dist/components/data/list.js"
+    },
+    "./properties": {
+      "types": "./dist/components/data/properties.d.ts",
+      "import": "./dist/components/data/properties.js"
     },
     "./content": {
       "types": "./dist/categories/content.d.ts",

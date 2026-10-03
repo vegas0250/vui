@@ -2,7 +2,7 @@
 
 Универсальная модульная UI-система готовых визуальных компонентов для Web, SPA и Desktop/Electron с поддержкой тем и различной плотности интерфейса.
 
-VUI `0.2.0` — личная UI-платформа с зафиксированной публичной границей: компоненты, темы, взаимодействие, patterns и application shell. Это не коммерческий фреймворк с поддержкой. Ломающие изменения публичного API пишутся в `CHANGELOG.md` и ловятся тестом exports. Домен, данные и маршруты остаются у приложения.
+VUI `1.0.0` — личная UI-платформа с зафиксированной публичной границей: компоненты, темы, взаимодействие, patterns и application shell. Это не коммерческий фреймворк с поддержкой. Ломающие изменения публичного API пишутся в `CHANGELOG.md` и ловятся тестом exports. Домен, данные и маршруты остаются у приложения.
 
 ## Назначение
 
@@ -146,16 +146,16 @@ import 'vui/themes/high-contrast';
 | --- | --- |
 | Foundation | `vui-icon`. Цвета, типографика, интервалы, радиус, границы и тени — это tokens, не отдельные элементы |
 | Layout | `vui-stack`, `vui-hstack`, `vui-vstack`, `vui-grid`, `vui-panel`, `vui-split-panel`, `vui-container`, `vui-scroll-area` |
-| Actions | `vui-button`, `vui-icon-button`, `vui-button-group` |
-| Forms | `vui-input`, `vui-textarea`, `vui-checkbox`, `vui-radio`, `vui-radio-group`, `vui-switch`, `vui-select` |
-| Feedback | `vui-alert`, `vui-toast`, `vui-tooltip`, `vui-progress`, `vui-spinner`, `vui-skeleton` |
-| Overlay | `vui-dialog`, `vui-menu`, `vui-popover` |
-| Navigation | `vui-tabs`, `vui-toolbar`, `vui-breadcrumbs`, `vui-pagination` |
-| Data | `vui-data-grid` |
-| Content | `vui-badge`, `vui-avatar`, `vui-separator` |
-| Desktop | `vui-toolbar`, `vui-status-bar`, `vui-file-tree`, `vui-split-panel`, `vui-shell` |
+| Actions | `vui-button`, `vui-icon-button`, `vui-button-group`, `vui-toggle`, `vui-toggle-group` |
+| Forms | `vui-input`, `vui-textarea`, `vui-checkbox`, `vui-checkbox-group`, `vui-radio`, `vui-radio-group`, `vui-switch`, `vui-select`, `vui-slider`, `vui-field`, `vui-field-group` |
+| Feedback | `vui-alert`, `vui-toast`, `vui-tooltip`, `vui-progress`, `vui-spinner`, `vui-skeleton`, `vui-empty` |
+| Overlay | `vui-dialog`, `vui-drawer`, `vui-menu`, `vui-popover` |
+| Navigation | `vui-tabs`, `vui-toolbar`, `vui-breadcrumbs`, `vui-pagination`, `vui-nav`, `vui-stepper` |
+| Data | `vui-data-grid`, `vui-list`, `vui-properties` |
+| Content | `vui-badge`, `vui-avatar`, `vui-avatar-group`, `vui-separator`, `vui-text`, `vui-link`, `vui-chip`, `vui-kbd` |
+| Desktop | `vui-toolbar`, `vui-status-bar`, `vui-file-tree`, `vui-split-panel`, `vui-shell`, `vui-window` |
 
-Карточка — это `vui-panel`. Меню действий и контекстное меню — `vui-menu`. Список значений — `vui-select`. Полоса команд — `vui-toolbar`. Окно приложения — `vui-shell`. Что сознательно не стало отдельным элементом, записано в [docs/patterns.md](docs/patterns.md).
+Карточка — это `vui-panel`. Меню действий и контекстное меню — `vui-menu`. Список значений — `vui-select`. Полоса команд — `vui-toolbar`. Окно приложения — `vui-shell`. Какое имя словаря каким элементом закрыто — в [docs/vocabulary.md](docs/vocabulary.md).
 
 ## Темы
 
@@ -278,4 +278,4 @@ vui/
 
 ## Статус
 
-Версия `0.2.0`. Публичная граница и порядок обновления — в [docs/guide.md](docs/guide.md). Архитектурный контракт — в `ARCHITECTURE.md`. Краткий список для изменений в репозитории — в `.cursor/rules/project.mdc`.
+Версия `1.0.0`. Публичная граница и порядок обновления — в [docs/guide.md](docs/guide.md). Архитектурный контракт — в `ARCHITECTURE.md`. Краткий список для изменений в репозитории — в `.cursor/rules/project.mdc`.

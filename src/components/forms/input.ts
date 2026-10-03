@@ -96,10 +96,16 @@ export class VInput extends VuiElement {
     const label = this.qs<HTMLLabelElement>('label');
     const hint = this.qs<HTMLElement>('.hint');
     const type = this.getAttribute('type') ?? 'text';
-    const allowed = ['text', 'password', 'email', 'search', 'number', 'url', 'tel'];
+    const allowed = ['text', 'password', 'email', 'search', 'number', 'url', 'tel', 'date', 'time', 'datetime-local', 'color', 'file'];
     input.type = allowed.includes(type) ? type : 'text';
     const next = this.getAttribute('value') ?? '';
-    if (input.value !== next) input.value = next;
+    if (input.type !== 'file' && input.value !== next) {
+      try {
+        input.value = next;
+      } catch {
+        /* file and color reject some assignments */
+      }
+    }
     input.placeholder = this.getAttribute('placeholder') ?? '';
     input.disabled = this.isDisabled();
     input.required = this.hasAttribute('required');
@@ -126,7 +132,12 @@ registerContract({
   attributes: [
     { name: 'label', kind: 'string', reflected: true },
     { name: 'value', kind: 'string', reflected: true },
-    { name: 'type', kind: 'enum', values: ['text', 'password', 'email', 'search', 'number', 'url', 'tel'], reflected: true },
+    {
+      name: 'type',
+      kind: 'enum',
+      values: ['text', 'password', 'email', 'search', 'number', 'url', 'tel', 'date', 'time', 'datetime-local', 'color', 'file'],
+      reflected: true,
+    },
     { name: 'placeholder', kind: 'string', reflected: true },
     { name: 'hint', kind: 'string', reflected: true },
     { name: 'name', kind: 'string', reflected: true },

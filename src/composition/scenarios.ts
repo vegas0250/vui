@@ -1,24 +1,41 @@
 import '../components/actions/button';
 import '../components/actions/button-group';
 import '../components/actions/icon-button';
+import '../components/actions/toggle';
+import '../components/content/badge';
+import '../components/content/chip';
+import '../components/content/kbd';
+import '../components/content/link';
+import '../components/content/text';
 import '../components/data/data-grid';
+import '../components/data/list';
 import '../components/desktop/file-tree';
 import '../components/desktop/shell';
+import '../components/desktop/status-bar';
+import '../components/desktop/window';
+import '../components/feedback/alert';
+import '../components/feedback/empty';
 import '../components/feedback/toast';
 import '../components/feedback/tooltip';
 import '../components/forms/checkbox';
+import '../components/forms/field';
 import '../components/forms/input';
 import '../components/forms/radio';
 import '../components/forms/select';
+import '../components/forms/slider';
 import '../components/forms/switch';
 import '../components/forms/textarea';
 import '../components/layout/scroll-area';
 import '../components/layout/split-panel';
+import '../components/layout/stack';
 import '../components/navigation/breadcrumbs';
+import '../components/navigation/nav';
 import '../components/navigation/pagination';
+import '../components/navigation/stepper';
 import '../components/navigation/tabs';
 import '../components/navigation/toolbar';
 import '../components/overlay/dialog';
+import '../components/overlay/drawer';
 import '../components/overlay/menu';
 import '../components/overlay/popover';
 import type { VDataGrid } from '../components/data/data-grid';
@@ -248,11 +265,15 @@ export function checkCompositionHosts(): string[] {
 }
 
 const familyHosts: Record<FamilyName, string[]> = {
-  action: ['vui-button', 'vui-button-group', 'vui-icon-button', 'vui-menu-item'],
-  field: ['vui-input', 'vui-textarea', 'vui-select', 'vui-checkbox', 'vui-radio', 'vui-radio-group', 'vui-switch'],
-  overlay: ['vui-dialog', 'vui-popover', 'vui-tooltip', 'vui-menu', 'vui-toaster'],
-  navigation: ['vui-tabs', 'vui-tab', 'vui-tab-panel', 'vui-file-tree', 'vui-tree-item', 'vui-menu', 'vui-menu-item', 'vui-breadcrumbs', 'vui-pagination'],
-  data: ['vui-data-grid'],
+  action: ['vui-button', 'vui-button-group', 'vui-icon-button', 'vui-toggle', 'vui-link', 'vui-menu-item'],
+  field: ['vui-input', 'vui-textarea', 'vui-select', 'vui-checkbox', 'vui-checkbox-group', 'vui-radio', 'vui-radio-group', 'vui-switch', 'vui-slider', 'vui-field'],
+  overlay: ['vui-dialog', 'vui-drawer', 'vui-popover', 'vui-tooltip', 'vui-menu', 'vui-toaster'],
+  navigation: ['vui-tabs', 'vui-tab', 'vui-tab-panel', 'vui-nav', 'vui-stepper', 'vui-file-tree', 'vui-tree-item', 'vui-menu', 'vui-menu-item', 'vui-breadcrumbs', 'vui-pagination'],
+  data: ['vui-data-grid', 'vui-list'],
+  feedback: ['vui-alert', 'vui-empty', 'vui-badge'],
+  layout: ['vui-stack'],
+  content: ['vui-text', 'vui-chip', 'vui-kbd'],
+  desktop: ['vui-shell', 'vui-window', 'vui-status-bar'],
 };
 
 /** Every family member matches the rules it claims. */

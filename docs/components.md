@@ -16,7 +16,7 @@
 <vui-button variant="primary" size="medium">Сохранить</vui-button>
 ```
 
-| Attributes | `variant` primary \| secondary \| ghost \| danger, `size` small \| medium \| large, `type` button \| submit \| reset, `disabled`, `name`, `value`, `form` |
+| Attributes | `variant` primary \| secondary \| ghost \| danger, `size` small \| medium \| large, `type` button \| submit \| reset, `disabled`, `loading`, `name`, `value`, `form` |
 | Properties | те же имена, типы `string` и `disabled: boolean` |
 | Events | `click` |
 | Slots | по умолчанию — текст; `icon` |
@@ -66,7 +66,7 @@
 <vui-input label="Email" type="email" hint="Рабочий адрес" required></vui-input>
 ```
 
-| Attributes | `label`, `value`, `type` text \| password \| email \| search \| number \| url \| tel, `placeholder`, `hint`, `name`, `size` small \| medium \| large, `disabled`, `readonly`, `required`, `invalid` |
+| Attributes | `label`, `value`, `type` text \| password \| email \| search \| number \| url \| tel \| date \| time \| datetime-local \| color \| file, `placeholder`, `hint`, `name`, `size` small \| medium \| large, `disabled`, `readonly`, `required`, `invalid` |
 | Properties | те же, плюс `value` — текущий текст |
 | Events | `input` |
 | Slots | `prefix`, `suffix` |
@@ -140,7 +140,7 @@
 </script>
 ```
 
-| Attributes | `open`, `label`, `size` small \| medium \| large, `close-label`, `dismissable="false"` |
+| Attributes | `open`, `label`, `size` small \| medium \| large, `close-label`, `alert`, `dismissable="false"` |
 | Properties | `open`, `label`, `size`, `closeLabel`, `dismissable` |
 | Methods | `show()`, `close()` |
 | Events | `close` |
@@ -468,3 +468,87 @@ grid.selectedId = '1';
 | Responsive | ниже 40rem колонки складываются. `collapsed` скрывает nav |
 
 Пустой слот скрывает свою область. Shell не читает содержимое слотов.
+
+## vui-text
+
+Текст. `variant`: body, heading, caption, code, label. У heading `level` 1–6 задаёт `aria-level`. Размеры 1–3 берут `--vui-heading-*`, остальные — размер текста. `muted`, `truncate`. Part `text`.
+
+## vui-link
+
+Ссылка. `href`, `target`, `rel`, `disabled`, `variant` inline или button. `target="_blank"` получает `rel="noopener noreferrer"`, если свой `rel` не задан. `disabled` ставит `aria-disabled` и не переходит. Part `link`.
+
+## vui-kbd
+
+Клавиша. Слот — подпись. Part `kbd`.
+
+## vui-chip
+
+Метка. `variant` neutral, info, success, warning, danger. `removable` показывает кнопку. `close-label`. Событие `close`. Parts `chip`, `remove`.
+
+## vui-avatar-group
+
+Ряд аватаров. `label` — имя группы. Part `group`.
+
+## vui-toggle
+
+Кнопка с `aria-pressed`. `value`, `pressed`, `disabled`. События `click` и `change`. Внутри `vui-toggle-group` выбор ведёт группа.
+
+## vui-toggle-group
+
+`label`, `value`, `orientation` horizontal или vertical, `disabled`, `multiple`. Событие `change`. Стрелки двигают выбор. Узкий контейнер складывает ряд. Part `group`. `vui-toggle` — прямые дети.
+
+## vui-field
+
+Подпись, слот контрола и hint. `label`, `hint`, `disabled`, `invalid`, `required`. `invalid` красит hint и ставит `aria-invalid`. Отдельного `error` нет. Parts `field`, `label`, `control`, `hint`. На ширине от 36rem подпись встаёт рядом, как у `vui-input`.
+
+## vui-field-group
+
+`fieldset`. `label`, `hint`, `disabled`. Parts `group`, `label`, `body`, `hint`.
+
+## vui-checkbox-group
+
+Как radio group, но можно отметить несколько. `value` — значения через запятую. Модуль `vui/checkbox`.
+
+## vui-slider
+
+`label`, `value`, `min`, `max`, `step`, `hint`, `disabled`, `invalid`. `value-end` показывает второй ползунок. События `input` и `change`. Parts `label`, `control`, `input`, `end`, `hint`.
+
+## vui-nav
+
+`label`, `orientation` vertical или horizontal. Дети `vui-nav-item`: `href`, `selected`, `disabled`. Стрелки меняют текущий пункт (`aria-current="page"`). Событие `change`. Уже 22rem ряд становится столбцом.
+
+## vui-stepper
+
+`label`, `value`. Дети `vui-step`: `value`, `selected`, `disabled`. Текущий шаг — `aria-current="step"`. Событие `change`.
+
+## vui-list
+
+`label`, `value`, `multiple`. Дети `vui-list-item`: `value`, `selected`, `disabled`. Стрелки выбирают. С `multiple` Shift расширяет диапазон, Ctrl или Meta переключает пункт. Идентификатор — `value` пункта, не доменная сущность. Событие `change`. Part `list` — `listbox`.
+
+## vui-properties
+
+`label`. Дети `vui-property` с `label` и слотом значения. Уже 22rem подпись встаёт над значением.
+
+## vui-empty
+
+`heading`, `label`. Слот по умолчанию и `action`. `role="status"`. Parts `empty`, `heading`, `body`, `action`.
+
+## vui-drawer
+
+Боковая панель на нативном dialog и общем стеке overlay. `open`, `label`, `placement` end или start, `close-label`, `dismissable="false"`. Методы `show()` и `close()`. Событие `close`. Слоты по умолчанию и `footer`. До 30rem занимает ширину экрана.
+
+## vui-window
+
+Рамка с заголовком. `label`. Слот `controls` — кнопки страницы, не системные кнопки окна. Parts `window`, `header`, `title`, `controls`, `body`.
+
+## Дополнения существующих элементов
+
+`vui-button` и `vui-icon-button` принимают `loading`: кнопка занята (`aria-busy`) и не активируется.
+
+`vui-dialog alert` ставит `role="alertdialog"`.
+
+`vui-alert` принимает `banner` и `variant="neutral"`.
+
+`vui-input` дополнительно принимает `type` date, time, datetime-local, color и file.
+
+`vui-checkbox` и `vui-switch` шлют `change`, как и остальные поля.

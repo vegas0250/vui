@@ -11,17 +11,18 @@ const closeIcon = `
   <path d="m6 6 12 12"></path>
 </svg>`;
 
-export class VDialog extends VuiElement {
+export class VDrawer extends VuiElement {
   declare open: boolean;
   declare label: string;
-  declare size: string;
+  declare placement: string;
   declare closeLabel: string;
 
   static get observedAttributes(): string[] {
-    return ['open', 'label', 'dismissable', 'size', 'close-label', 'alert'];
+    return ['open', 'label', 'placement', 'close-label', 'dismissable'];
   }
 
   private releaseOverlay: (() => void) | null = null;
+  private settling = false;
 
   protected template(): string {
     return `
@@ -40,42 +41,39 @@ export class VDialog extends VuiElement {
 
   protected componentStyles(): string {
     return `
-      :host {
-        position: fixed;
-        width: 0;
-        height: 0;
-        overflow: visible;
-      }
+      :host { position: fixed; width: 0; height: 0; overflow: visible; }
       dialog {
+        position: fixed;
+        inset-block: 0;
+        inset-inline-end: 0;
+        margin: 0;
         padding: 0;
         border: 0;
-        margin: auto;
+        width: min(24rem, 100%);
+        max-width: 100%;
+        height: 100dvh;
+        max-height: 100dvh;
         background: transparent;
         color: inherit;
-        width: var(--vui-dialog-inline);
-        max-width: calc(100vw - var(--vui-overlay-gutter) * 2);
-        max-height: var(--vui-dialog-block);
       }
-      dialog:focus {
-        outline: none;
+      :host([placement="start"]) dialog {
+        inset-inline-end: auto;
+        inset-inline-start: 0;
       }
-      dialog::backdrop {
-        background: var(--vui-color-backdrop);
-      }
+      dialog:focus { outline: none; }
+      dialog::backdrop { background: var(--vui-color-backdrop); }
       .surface {
         display: flex;
         flex-direction: column;
         width: 100%;
-        max-height: var(--vui-dialog-block);
+        height: 100%;
         min-width: 0;
         background: var(--vui-color-surface-raised);
         color: var(--vui-color-text);
-        border: var(--vui-border-width) solid var(--vui-color-border);
-        border-radius: var(--vui-radius-lg);
+        border-inline-start: var(--vui-border-width) solid var(--vui-color-border);
         box-shadow: var(--vui-shadow-lg);
       }
-      :host([size="small"]) dialog { width: var(--vui-dialog-inline-sm); }
-      :host([size="large"]) dialog { width: var(--vui-dialog-inline-lg); }
+      :host([placement="start"]) .surface { border-inline-start: 0; border-inline-end: var(--vui-border-width) solid var(--vui-color-border); }
       header, .body, footer { padding: var(--vui-panel-padding); min-width: 0; }
       header {
         display: flex;
@@ -84,42 +82,9 @@ export class VDialog extends VuiElement {
         gap: var(--vui-space-sm);
         border-bottom: var(--vui-border-width) solid var(--vui-color-border);
       }
-      h2 {
-        margin: 0;
-        min-width: 0;
-        overflow-wrap: anywhere;
-        font-size: var(--vui-heading-3);
-        line-height: var(--vui-line-height);
-        font-weight: var(--vui-font-weight-strong);
-      }
-      .body {
-        padding-top: var(--vui-space-md);
-        overflow: auto;
-        min-height: 0;
-      }
-      footer {
-        display: flex;
-        justify-content: flex-end;
-        flex-wrap: wrap;
-        gap: var(--vui-space-sm);
-        border-top: var(--vui-border-width) solid var(--vui-color-border);
-      }
-      /* 30rem matches --vui-overlay-full. Media queries cannot read custom properties. */
-      @media (max-width: 30rem) {
-        dialog {
-          width: 100vw;
-          max-width: 100vw;
-          height: 100dvh;
-          max-height: 100dvh;
-          margin: 0;
-        }
-        .surface {
-          width: 100%;
-          height: 100%;
-          max-height: 100dvh;
-          border-radius: 0;
-        }
-      }
+      h2 { margin: 0; min-width: 0; overflow-wrap: anywhere; font-size: var(--vui-heading-3); }
+      .body { overflow: auto; flex: 1 1 auto; min-height: 0; }
+      footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--vui-space-sm); border-top: var(--vui-border-width) solid var(--vui-color-border); }
       footer.hidden { display: none; }
       .close {
         appearance: none;
@@ -128,27 +93,24 @@ export class VDialog extends VuiElement {
         justify-content: center;
         width: var(--vui-size-control);
         height: var(--vui-size-control);
+        border: 0;
         border-radius: var(--vui-radius);
-        border: var(--vui-border-width) solid transparent;
         background: transparent;
         color: inherit;
         cursor: pointer;
       }
       .close:hover { background: var(--vui-color-surface-hover); }
-      .close:focus-visible {
-        outline: var(--vui-focus-ring);
-        outline-offset: var(--vui-focus-offset);
+      .close:focus-visible { outline: var(--vui-focus-ring); outline-offset: var(--vui-focus-offset); }
+      @media (max-width: 30rem) {
+        dialog { width: 100%; }
       }
-      .close svg { width: var(--vui-icon-size); height: var(--vui-icon-size); }
     `;
   }
-
-  private settling = false;
 
   protected afterRender(): void {
     const dialog = this.dialog;
     if (!dialog) return;
-    const footer = this.qs<HTMLElement>('footer');
+    const footer = this.qs('footer');
     const footerSlot = this.qs<HTMLSlotElement>('slot[name="footer"]');
     const syncFooter = (): void => {
       footer.classList.toggle('hidden', footerSlot.assignedNodes({ flatten: true }).length === 0);
@@ -161,19 +123,9 @@ export class VDialog extends VuiElement {
       else queueMicrotask(() => this.finishClose());
     });
     dialog.addEventListener('close', () => this.finishClose());
-    dialog.addEventListener('click', (event) => {
-      if (!this.dismissable) return;
-      const rect = dialog.getBoundingClientRect();
-      const inside =
-        event.clientX >= rect.left &&
-        event.clientX <= rect.right &&
-        event.clientY >= rect.top &&
-        event.clientY <= rect.bottom;
-      if (!inside) this.close();
-    });
   }
 
-  disconnectedCallback(): void {
+  override disconnectedCallback(): void {
     super.disconnectedCallback();
     this.releaseOverlay?.();
     this.releaseOverlay = null;
@@ -234,12 +186,10 @@ export class VDialog extends VuiElement {
     const title = this.getAttribute('label') ?? '';
     const heading = this.qs<HTMLElement>('h2');
     heading.textContent = title;
-    if (!heading.id) heading.id = `vui-dialog-title-${Math.random().toString(36).slice(2, 8)}`;
+    if (!heading.id) heading.id = `vui-drawer-title-${Math.random().toString(36).slice(2, 8)}`;
     dialog.setAttribute('aria-labelledby', heading.id);
     if (this.hasAttribute('open')) dialog.setAttribute('aria-modal', 'true');
     else dialog.removeAttribute('aria-modal');
-    if (this.hasAttribute('alert')) dialog.setAttribute('role', 'alertdialog');
-    else dialog.removeAttribute('role');
     this.qs('button.close').setAttribute('aria-label', this.getAttribute('close-label') ?? 'Close');
     if (this.settling) return;
     if (this.hasAttribute('open') && !dialog.open) this.show();
@@ -251,20 +201,19 @@ export class VDialog extends VuiElement {
   }
 }
 
-reflectBooleans(VDialog, ['open', 'alert']);
-reflectStrings(VDialog, { label: 'label', size: 'size', closeLabel: 'close-label' });
-defineElement('vui-dialog', VDialog);
+reflectBooleans(VDrawer, ['open']);
+reflectStrings(VDrawer, { label: 'label', placement: 'placement', closeLabel: 'close-label' });
+defineElement('vui-drawer', VDrawer);
 
 registerContract({
-  element: 'vui-dialog',
-  className: 'VDialog',
+  element: 'vui-drawer',
+  className: 'VDrawer',
   attributes: [
     { name: 'open', kind: 'boolean', reflected: true },
     { name: 'label', kind: 'string', reflected: true },
-    { name: 'size', kind: 'enum', values: ['small', 'medium', 'large'], reflected: true },
-    { name: 'close-label', kind: 'string', reflected: true },
+    { name: 'placement', kind: 'enum', values: ['end', 'start'], reflected: true },
+    { name: 'close-label', kind: 'string', property: 'closeLabel', reflected: true },
     { name: 'dismissable', kind: 'boolean', reflected: true, inverted: true },
-    { name: 'alert', kind: 'boolean', reflected: true },
   ],
   events: ['close'],
   slots: ['', 'footer'],

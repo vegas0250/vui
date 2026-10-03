@@ -11,12 +11,27 @@ export const studioMarkup = `
         <vui-badge variant="warning">Review</vui-badge>
         <vui-badge variant="danger">Blocked</vui-badge>
         <vui-avatar label="Ada Lovelace"></vui-avatar>
-        <vui-avatar label="VUI" size="small"></vui-avatar>
+        <vui-avatar-group label="People">
+          <vui-avatar label="Ada" size="small"></vui-avatar>
+          <vui-avatar label="VUI" size="small"></vui-avatar>
+        </vui-avatar-group>
+        <vui-chip>Draft</vui-chip>
+        <vui-chip variant="info" removable close-label="Убрать">Filter</vui-chip>
+        <vui-kbd>Ctrl</vui-kbd>
+        <vui-kbd>K</vui-kbd>
         <vui-separator orientation="vertical" label="Section"></vui-separator>
         <span>After separator</span>
       </vui-hstack>
     </vui-panel>
-    <vui-panel heading="Feedback primitives">
+    <vui-panel heading="Typography">
+      <vui-vstack gap="xs">
+        <vui-text variant="heading" level="2">Заголовок</vui-text>
+        <vui-text>Обычный текст интерфейса, который переносится внутри контейнера.</vui-text>
+        <vui-text variant="caption" muted>Подпись</vui-text>
+        <vui-text variant="code">vui-text</vui-text>
+        <vui-link href="#components">К компонентам</vui-link>
+      </vui-vstack>
+    </vui-panel>
       <vui-vstack gap="sm">
         <vui-progress label="Upload" value="40" max="100"></vui-progress>
         <vui-progress label="Waiting"></vui-progress>
@@ -120,8 +135,10 @@ export const studioMarkup = `
         </vui-button-group>
       </vui-toolbar>
       <vui-vstack slot="nav" gap="xs">
-        <vui-button variant="ghost">Library</vui-button>
-        <vui-button variant="ghost">Patterns</vui-button>
+        <vui-nav label="Shell">
+          <vui-nav-item href="#shell" selected>Library</vui-nav-item>
+          <vui-nav-item href="#patterns">Patterns</vui-nav-item>
+        </vui-nav>
       </vui-vstack>
       <vui-panel heading="Main">
         <vui-breadcrumbs label="Path">
@@ -131,7 +148,10 @@ export const studioMarkup = `
         <p>Main content uses the default slot.</p>
       </vui-panel>
       <vui-panel slot="aside" heading="Inspector">
-        <p>Auxiliary panel.</p>
+        <vui-properties label="Inspector">
+          <vui-property label="Area">Main</vui-property>
+          <vui-property label="Mode">Reference</vui-property>
+        </vui-properties>
       </vui-panel>
       <vui-status-bar slot="footer" label="Status">
         <span>Ready</span>
@@ -153,16 +173,28 @@ export const studioMarkup = `
         <strong slot="start">Platform</strong>
         <vui-button id="platform-collapse" slot="end" size="small" variant="ghost">Sidebar</vui-button>
         <vui-button id="platform-command" slot="end" size="small" variant="secondary">Commands</vui-button>
+        <vui-tooltip slot="end" text="Opens the command list">
+          <vui-button id="platform-drawer-open" size="small" variant="ghost">Filters</vui-button>
+        </vui-tooltip>
       </vui-toolbar>
       <vui-toolbar slot="toolbar" label="Search">
         <vui-input id="platform-search" slot="start" type="search" label="Search" placeholder="Filter"></vui-input>
-        <vui-button id="platform-open" slot="end" size="small">Inspect</vui-button>
+        <vui-select id="platform-filter" slot="start" label="Area" size="small" value="all">
+          <vui-option value="all">All</vui-option>
+          <vui-option value="Actions">Actions</vui-option>
+          <vui-option value="Forms">Forms</vui-option>
+          <vui-option value="Data">Data</vui-option>
+          <vui-option value="Desktop">Desktop</vui-option>
+        </vui-select>
+        <vui-button-group slot="end" label="Actions">
+          <vui-button id="platform-open" size="small">Inspect</vui-button>
+        </vui-button-group>
       </vui-toolbar>
-      <vui-vstack slot="nav" gap="xs">
-        <vui-button variant="ghost">Overview</vui-button>
-        <vui-button variant="ghost">Data</vui-button>
-        <vui-button variant="ghost">Settings</vui-button>
-      </vui-vstack>
+      <vui-nav slot="nav" label="Sections">
+        <vui-nav-item href="#platform" selected>Overview</vui-nav-item>
+        <vui-nav-item href="#data">Data</vui-nav-item>
+        <vui-nav-item href="#patterns">Settings</vui-nav-item>
+      </vui-nav>
       <vui-split-panel label="Workspace" position="36" style="min-height: 18rem">
         <vui-file-tree id="platform-tree" slot="start" label="Sources">
           <vui-tree-item label="catalog" kind="folder" expanded>
@@ -171,14 +203,30 @@ export const studioMarkup = `
           </vui-tree-item>
         </vui-file-tree>
         <vui-scroll-area slot="end" label="Records">
-          <vui-data-grid id="platform-grid" label="Records" empty-label="No rows"></vui-data-grid>
-          <vui-pagination id="platform-pages" page="1" pages="3" label="Pages"></vui-pagination>
+          <vui-tabs label="Workspace">
+            <vui-tab panel="records" selected>Records</vui-tab>
+            <vui-tab panel="notes">Notes</vui-tab>
+            <vui-tab-panel name="records">
+              <vui-data-grid id="platform-grid" label="Records" empty-label="No rows"></vui-data-grid>
+              <vui-empty id="platform-empty" heading="No results" label="No results" hidden>Change the filter.</vui-empty>
+              <vui-pagination id="platform-pages" page="1" pages="3" label="Pages"></vui-pagination>
+            </vui-tab-panel>
+            <vui-tab-panel name="notes">
+              <vui-empty heading="No notes" label="No notes">Notes stay on the page.</vui-empty>
+            </vui-tab-panel>
+          </vui-tabs>
         </vui-scroll-area>
       </vui-split-panel>
       <vui-panel slot="aside" heading="Detail">
         <vui-vstack gap="sm">
           <vui-avatar label="Record"></vui-avatar>
-          <p id="platform-detail">Select a row.</p>
+          <vui-properties label="Record">
+            <vui-property id="platform-prop-name" label="Name">Select a row.</vui-property>
+            <vui-property id="platform-prop-area" label="Area">—</vui-property>
+          </vui-properties>
+          <vui-field label="Note" hint="Stored by the page">
+            <vui-input id="platform-note" label="Note"></vui-input>
+          </vui-field>
           <vui-badge id="platform-badge" variant="info">Reference</vui-badge>
         </vui-vstack>
       </vui-panel>
@@ -201,5 +249,12 @@ export const studioMarkup = `
   <vui-menu id="platform-menu" label="Row">
     <vui-menu-item id="platform-inspect" label="Inspect"></vui-menu-item>
   </vui-menu>
+  <vui-drawer id="platform-drawer" label="Filters" close-label="Close">
+    <vui-checkbox-group label="Areas">
+      <vui-checkbox value="actions" checked>Actions</vui-checkbox>
+      <vui-checkbox value="data" checked>Data</vui-checkbox>
+    </vui-checkbox-group>
+    <vui-button id="platform-drawer-close" slot="footer" variant="secondary">Close</vui-button>
+  </vui-drawer>
 </section>
 `;

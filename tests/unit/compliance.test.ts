@@ -90,14 +90,21 @@ describe('component compliance', () => {
     }
   });
 
-  it('detects a declared loading state that never sets aria-busy', () => {
-    const button = document.createElement('vui-button');
-    document.body.append(button);
-    const contract = contractFor('vui-button');
-    expect(contract).toBeTruthy();
-    const failures = checkCompliance(button, {
-      ...(contract as ComponentContract),
-      states: ['disabled', 'loading'],
+  it('requires aria-busy when a contract declares loading and the element does not set it', () => {
+    const probe = document.createElement('vui-lifecycle-probe');
+    document.body.append(probe);
+    const failures = checkCompliance(probe, {
+      element: 'vui-lifecycle-probe',
+      className: 'VLifecycleProbe',
+      attributes: [],
+      events: [],
+      slots: [],
+      parts: [],
+      methods: [],
+      keyboard: [],
+      states: ['loading'],
+      responsive: 'flow',
+      focus: 'native',
     });
     expect(failures.join('\n')).toContain('aria-busy');
   });

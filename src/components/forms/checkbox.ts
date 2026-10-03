@@ -1,4 +1,6 @@
+import { registerContract } from '../../contract/registry';
 import { defineElement } from '../../core/define';
+import { emitChange } from '../../core/events';
 import { VuiElement } from '../../core/element';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
 
@@ -104,6 +106,7 @@ export class VCheckbox extends VuiElement {
       const input = this.qs<HTMLInputElement>('input');
       this.toggleAttribute('checked', input.checked);
       this.writeFormValue();
+      emitChange(this);
     });
   }
 
@@ -128,3 +131,155 @@ export class VCheckbox extends VuiElement {
 reflectStrings(VCheckbox, ['name', 'value']);
 reflectBooleans(VCheckbox, ['disabled', 'invalid']);
 defineElement('vui-checkbox', VCheckbox);
+
+export class VCheckboxGroup extends VuiElement {
+  declare label: string;
+  declare name: string;
+  declare hint: string;
+  declare disabled: boolean;
+  declare invalid: boolean;
+  declare required: boolean;
+
+  private applied = '';
+
+  static get observedAttributes(): string[] {
+    return ['label', 'name', 'hint', 'disabled', 'invalid', 'required', 'value'];
+  }
+
+  get value(): string {
+    return this.boxes()
+      .filter((box) => box.hasAttribute('checked'))
+      .map((box) => box.getAttribute('value') ?? 'on')
+      .join(',');
+  }
+
+  set value(next: string) {
+    this.setAttribute('value', next);
+  }
+
+  protected template(): string {
+    return `
+      <fieldset part="group">
+        <legend part="label"></legend>
+        <div class="options" part="options"><slot></slot></div>
+        <div class="hint" part="hint"></div>
+      </fieldset>
+    `;
+  }
+
+  protected componentStyles(): string {
+    return `
+      :host { display: block; min-width: 0; max-width: 100%; container-type: inline-size; container-name: vui-field; }
+      fieldset {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: var(--vui-space-2xs);
+      }
+      legend { padding: 0; color: var(--vui-color-text-muted); font-size: var(--vui-font-size-sm); }
+      .options { display: flex; flex-wrap: wrap; gap: var(--vui-space-sm); min-width: 0; }
+      .hint { color: var(--vui-color-text-muted); font-size: var(--vui-font-size-sm); }
+      :host([invalid]) .hint { color: var(--vui-color-danger); }
+      legend:empty, .hint:empty { display: none; }
+      :host([disabled]) { opacity: 0.55; }
+      :host(:focus-visible) { outline: var(--vui-focus-ring); }
+      @container vui-field (max-width: 22rem) {
+        .options { flex-direction: column; align-items: flex-start; }
+      }
+    `;
+  }
+
+  protected afterRender(): void {
+    this.addEventListener('keydown', (event) => {
+      const key = event.key;
+      if (key !== 'ArrowUp' && key !== 'ArrowDown' && key !== 'ArrowLeft' && key !== 'ArrowRight') return;
+      const boxes = this.boxes().filter((box) => !box.hasAttribute('disabled'));
+      if (boxes.length === 0) return;
+      const active = document.activeElement;
+      let index = boxes.findIndex((box) => box === active);
+      if (index < 0) index = 0;
+      const delta = key === 'ArrowUp' || key === 'ArrowLeft' ? -1 : 1;
+      const next = boxes[(index + delta + boxes.length) % boxes.length];
+      if (!next) return;
+      event.preventDefault();
+      next.focus();
+    });
+    this.addEventListener('change', (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement) || target.localName !== 'vui-checkbox' || target.parentElement !== this) return;
+      const next = this.value;
+      if (this.getAttribute('value') === next) return;
+      this.applied = next;
+      this.setAttribute('value', next);
+    });
+  }
+
+  protected sync(): void {
+    const legend = this.qs<HTMLElement>('legend');
+    const hint = this.qs<HTMLElement>('.hint');
+    const fieldset = this.qs<HTMLFieldSetElement>('fieldset');
+    const label = this.getAttribute('label') ?? '';
+    legend.textContent = label;
+    hint.textContent = this.getAttribute('hint') ?? '';
+    if (!hint.id) hint.id = `vui-checkbox-group-${Math.random().toString(36).slice(2, 9)}`;
+    fieldset.setAttribute('aria-invalid', this.hasAttribute('invalid') ? 'true' : 'false');
+    fieldset.toggleAttribute('aria-required', this.hasAttribute('required'));
+    const disabled = this.hasAttribute('disabled');
+    fieldset.toggleAttribute('disabled', disabled);
+    fieldset.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+    if (hint.textContent) fieldset.setAttribute('aria-describedby', hint.id);
+    else fieldset.removeAttribute('aria-describedby');
+    const name = this.getAttribute('name');
+    for (const box of this.boxes()) {
+      if (name) box.setAttribute('name', name);
+      if (disabled) {
+        box.setAttribute('disabled', '');
+        box.setAttribute('data-group-disabled', '');
+      } else if (box.hasAttribute('data-group-disabled')) {
+        box.removeAttribute('disabled');
+        box.removeAttribute('data-group-disabled');
+      }
+    }
+    const selected = this.getAttribute('value');
+    if (selected !== null && selected !== this.applied) {
+      this.applied = selected;
+      const picked = new Set(selected.split(',').filter((item) => item.length > 0));
+      for (const box of this.boxes()) {
+        box.toggleAttribute('checked', picked.has(box.getAttribute('value') ?? 'on'));
+      }
+    }
+  }
+
+  private boxes(): HTMLElement[] {
+    return [...this.children].filter((node): node is HTMLElement => node.localName === 'vui-checkbox');
+  }
+}
+
+reflectStrings(VCheckboxGroup, ['label', 'name', 'hint']);
+reflectBooleans(VCheckboxGroup, ['disabled', 'invalid', 'required']);
+defineElement('vui-checkbox-group', VCheckboxGroup);
+
+registerContract({
+  element: 'vui-checkbox-group',
+  className: 'VCheckboxGroup',
+  attributes: [
+    { name: 'label', kind: 'string', reflected: true },
+    { name: 'name', kind: 'string', reflected: true },
+    { name: 'hint', kind: 'string', reflected: true },
+    { name: 'value', kind: 'string', reflected: true },
+    { name: 'disabled', kind: 'boolean', reflected: true },
+    { name: 'invalid', kind: 'boolean', reflected: true },
+    { name: 'required', kind: 'boolean', reflected: true },
+  ],
+  events: ['change'],
+  slots: [''],
+  parts: ['group', 'label', 'options', 'hint'],
+  methods: [],
+  keyboard: ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'],
+  states: ['disabled', 'invalid'],
+  responsive: 'container',
+  focus: 'native',
+});

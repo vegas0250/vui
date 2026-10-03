@@ -1,5 +1,6 @@
 import '../../components/foundation/icon';
 import { buttonStyles } from './button-styles';
+import { registerContract } from '../../contract/registry';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
@@ -11,14 +12,16 @@ export class VIconButton extends VuiElement {
   declare variant: string;
   declare size: string;
   declare disabled: boolean;
+  declare loading: boolean;
 
   static get observedAttributes(): string[] {
-    return ['name', 'label', 'variant', 'size', 'disabled', 'type'];
+    return ['name', 'label', 'variant', 'size', 'disabled', 'loading', 'type'];
   }
 
   protected template(): string {
     return `
       <button part="base" type="button">
+        <span part="busy" hidden></span>
         <vui-icon part="icon"></vui-icon>
       </button>
     `;
@@ -67,7 +70,10 @@ export class VIconButton extends VuiElement {
     const icon = this.qs<VIcon>('vui-icon');
     const type = this.getAttribute('type');
     button.type = type === 'submit' || type === 'reset' ? type : 'button';
-    button.disabled = this.isDisabled();
+    const loading = this.hasAttribute('loading');
+    button.disabled = this.isDisabled() || loading;
+    button.setAttribute('aria-busy', loading ? 'true' : 'false');
+    this.qs('[part="busy"]').toggleAttribute('hidden', !loading);
     const label = this.getAttribute('label') ?? '';
     button.setAttribute('aria-label', label);
     if (!label) button.setAttribute('aria-label', this.getAttribute('name') ?? 'Icon button');
@@ -76,8 +82,30 @@ export class VIconButton extends VuiElement {
 }
 
 reflectStrings(VIconButton, ['name', 'label', 'variant', 'size', 'type']);
-reflectBooleans(VIconButton, ['disabled']);
+reflectBooleans(VIconButton, ['disabled', 'loading']);
 defineElement('vui-icon-button', VIconButton);
+
+registerContract({
+  element: 'vui-icon-button',
+  className: 'VIconButton',
+  attributes: [
+    { name: 'name', kind: 'string', reflected: true },
+    { name: 'label', kind: 'string', reflected: true },
+    { name: 'variant', kind: 'enum', values: ['ghost', 'primary', 'secondary', 'danger'], reflected: true },
+    { name: 'size', kind: 'enum', values: ['small', 'medium', 'large'], reflected: true },
+    { name: 'type', kind: 'enum', values: ['button', 'submit', 'reset'], reflected: true },
+    { name: 'disabled', kind: 'boolean', reflected: true },
+    { name: 'loading', kind: 'boolean', reflected: true },
+  ],
+  events: ['click'],
+  slots: [],
+  parts: ['base', 'busy', 'icon'],
+  methods: [],
+  keyboard: ['Tab', 'Enter', 'Space'],
+  states: ['disabled', 'loading'],
+  responsive: 'flow',
+  focus: 'native',
+});
 
 export interface VIconButton {
   type: string;

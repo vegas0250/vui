@@ -72,7 +72,29 @@ function verifyRule(element: HTMLElement, rule: string): string | null {
       return described ? null : 'description is not linked with aria-describedby';
     }
     case 'activation':
-      return element.shadowRoot?.querySelector('button') || 'command' in element ? null : 'activation control is missing';
+      return element.shadowRoot?.querySelector('button, a') || 'command' in element ? null : 'activation control is missing';
+    case 'loading': {
+      element.setAttribute('loading', '');
+      const busy = Boolean(element.shadowRoot?.querySelector('[aria-busy="true"]'));
+      element.removeAttribute('loading');
+      return busy ? null : 'loading does not set aria-busy';
+    }
+    case 'variant':
+      return 'variant' in element ? null : 'variant is missing';
+    case 'status':
+      return element.shadowRoot?.querySelector('[role="status"], [role="alert"]') ? null : 'status role is missing';
+    case 'level':
+      return 'level' in element ? null : 'level is missing';
+    case 'truncate':
+      return 'truncate' in element ? null : 'truncate is missing';
+    case 'regions':
+      return element.shadowRoot?.querySelector('slot[name]') ? null : 'named region slot is missing';
+    case 'gap':
+    case 'padding':
+    case 'align':
+    case 'justify':
+    case 'overflow':
+      return rule in element ? null : `${rule} is missing`;
     case 'open':
       return 'open' in element || 'show' in element || 'showAt' in element ? null : 'open is missing';
     case 'close':

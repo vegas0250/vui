@@ -1,4 +1,5 @@
 import '../foundation/icon';
+import { registerContract } from '../../contract/registry';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { emitClose } from '../../core/events';
@@ -16,9 +17,10 @@ export class VAlert extends VuiElement {
   declare variant: string;
   declare closeLabel: string;
   declare closable: boolean;
+  declare banner: boolean;
 
   static get observedAttributes(): string[] {
-    return ['variant', 'closable', 'close-label'];
+    return ['variant', 'closable', 'close-label', 'banner'];
   }
 
   protected template(): string {
@@ -58,6 +60,14 @@ export class VAlert extends VuiElement {
       :host([variant="danger"]) .alert {
         border-color: var(--vui-color-danger);
         background: var(--vui-color-danger-surface);
+      }
+      :host([variant="neutral"]) .alert {
+        border-color: var(--vui-color-border);
+        background: var(--vui-color-surface);
+      }
+      :host([banner]) .alert {
+        border-radius: 0;
+        border-inline: 0;
       }
       .close {
         appearance: none;
@@ -101,5 +111,24 @@ export class VAlert extends VuiElement {
 }
 
 reflectStrings(VAlert, { variant: 'variant', closeLabel: 'close-label' });
-reflectBooleans(VAlert, ['closable']);
+reflectBooleans(VAlert, ['closable', 'banner']);
 defineElement('vui-alert', VAlert);
+
+registerContract({
+  element: 'vui-alert',
+  className: 'VAlert',
+  attributes: [
+    { name: 'variant', kind: 'enum', values: ['info', 'success', 'warning', 'danger', 'neutral'], reflected: true },
+    { name: 'closable', kind: 'boolean', reflected: true },
+    { name: 'banner', kind: 'boolean', reflected: true },
+    { name: 'close-label', kind: 'string', property: 'closeLabel', reflected: true },
+  ],
+  events: ['close'],
+  slots: [''],
+  parts: ['alert', 'icon', 'content', 'close'],
+  methods: [],
+  keyboard: ['Tab', 'Enter', 'Space'],
+  states: [],
+  responsive: 'flow',
+  focus: 'native',
+});

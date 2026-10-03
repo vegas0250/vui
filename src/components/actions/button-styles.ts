@@ -40,10 +40,23 @@ button:focus-visible {
   outline-offset: var(--vui-focus-offset);
 }
 button:disabled,
-:host([disabled]) button {
+:host([disabled]) button,
+:host([loading]) button {
   opacity: 0.5;
   cursor: not-allowed;
 }
+[part="busy"] {
+  width: 1em;
+  height: 1em;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  border: var(--vui-border-width) solid var(--vui-color-border);
+  border-inline-start-color: currentColor;
+  border-radius: 50%;
+  animation: vui-spin calc(var(--vui-duration) * 8) linear infinite;
+}
+[part="busy"][hidden] { display: none; }
+@keyframes vui-spin { to { transform: rotate(360deg); } }
 :host([variant="secondary"]) button {
   background: var(--vui-color-surface);
   color: var(--vui-color-text);

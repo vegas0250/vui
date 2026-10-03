@@ -1,4 +1,13 @@
-export type FamilyName = 'action' | 'field' | 'overlay' | 'navigation' | 'data';
+export type FamilyName =
+  | 'action'
+  | 'field'
+  | 'overlay'
+  | 'navigation'
+  | 'data'
+  | 'feedback'
+  | 'layout'
+  | 'content'
+  | 'desktop';
 
 export interface FamilyContract {
   name: FamilyName;

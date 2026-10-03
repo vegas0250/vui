@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## 1.0.0
+
+Первая законченная граница платформы. Дальше компоненты появляются из реального приложения, а не из расширения списка ради полноты.
+
+- Словарь сведён к одному API: карта имён и сознательно не добавленные элементы — в `docs/vocabulary.md`.
+- Новые элементы: text, link, kbd, chip, avatar group, toggle, toggle group, field, field group, checkbox group, slider, nav, stepper, list, properties, empty, drawer, window.
+- Кнопка умеет `loading`. Dialog с `alert` — alertdialog. Alert умеет `banner` и `neutral`. Input принимает date, time, datetime-local, color и file.
+- Checkbox и switch шлют `change`, как остальные поля.
+- Семейства дополнены Feedback, Layout, Content и Desktop. Общие имена состояний — `componentStates`.
+- Studio показывает эти элементы и reference UI: shell, навигация, поиск, фильтр, таблица, дерево, инспектор, drawer, dialog, меню, пустое состояние.
+- Версия пакета — `1.0.0`. Карта exports расширена и по-прежнему заморожена тестом.
+
 ## 0.2.0
 
 Публичная граница платформы: vocabulary, patterns, application shell и VUI Studio.

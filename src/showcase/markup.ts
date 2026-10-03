@@ -401,13 +401,23 @@ export const showcaseMarkup = `
               <vui-button size="small">Маленькая</vui-button>
               <vui-button size="large">Большая</vui-button>
               <vui-button disabled>Недоступна</vui-button>
+              <vui-button loading>Сохраняет</vui-button>
             </vui-hstack>
             <p id="save-result" class="demo-note">Нажмите «Сохранить».</p>
             <pre class="code">&lt;vui-button variant="primary"&gt;Сохранить&lt;/vui-button&gt;
 button.addEventListener("click", handler);</pre>
           </vui-panel>
 
-          <vui-panel heading="Icon Button">
+          <vui-panel heading="Toggle">
+            <vui-toggle-group label="Выравнивание" value="left">
+              <vui-toggle value="left" pressed>Слева</vui-toggle>
+              <vui-toggle value="center">По центру</vui-toggle>
+              <vui-toggle value="right">Справа</vui-toggle>
+            </vui-toggle-group>
+            <pre class="code">&lt;vui-toggle-group label="Выравнивание" value="left"&gt;
+  &lt;vui-toggle value="left" pressed&gt;Слева&lt;/vui-toggle&gt;
+&lt;/vui-toggle-group&gt;</pre>
+          </vui-panel>
             <vui-hstack gap="sm" align="center">
               <vui-icon-button name="save" label="Сохранить" variant="primary"></vui-icon-button>
               <vui-icon-button name="copy" label="Копировать" variant="secondary"></vui-icon-button>
@@ -428,7 +438,13 @@ button.addEventListener("click", handler);</pre>
             <vui-input label="Поиск" type="search" placeholder="Фильтр" value="button"></vui-input>
             <vui-input label="Только чтение" value="Нельзя изменить" readonly></vui-input>
             <vui-input label="Ошибка" value="bad@" invalid hint="Некорректный адрес"></vui-input>
-            <vui-checkbox id="agree">Согласен с условиями</vui-checkbox>
+            <vui-input label="Дата" type="date"></vui-input>
+            <vui-slider id="volume" label="Громкость" value="40" hint="Одно значение"></vui-slider>
+            <vui-slider label="Диапазон" value="20" value-end="70"></vui-slider>
+            <vui-checkbox-group label="Каналы" value="mail">
+              <vui-checkbox value="mail" checked>Почта</vui-checkbox>
+              <vui-checkbox value="push">Push</vui-checkbox>
+            </vui-checkbox-group>
             <vui-switch id="notify" checked>Уведомления</vui-switch>
             <vui-checkbox disabled checked>Недоступный флажок</vui-checkbox>
             <vui-switch disabled>Недоступный переключатель</vui-switch>
@@ -456,7 +472,11 @@ button.addEventListener("click", handler);</pre>
               <vui-alert>Сборка showcase запущена.</vui-alert>
               <vui-alert variant="success">Изменения сохранены.</vui-alert>
               <vui-alert variant="warning">Есть несохранённые правки.</vui-alert>
-              <vui-alert variant="danger" closable close-label="Закрыть">Не удалось записать файл.</vui-alert>
+              <vui-alert variant="neutral" banner>Полоса на всю ширину страницы.</vui-alert>
+              <vui-empty heading="Нет записей" label="Пусто">
+                Измените фильтр.
+                <vui-button slot="action" variant="secondary" size="small">Сбросить</vui-button>
+              </vui-empty>
             </vui-vstack>
             <pre class="code">&lt;vui-alert variant="success"&gt;Изменения сохранены.&lt;/vui-alert&gt;</pre>
           </vui-panel>
@@ -484,7 +504,10 @@ toast({ title: "Готово", message: "Проект собран", variant: "s
       <section class="category" id="overlay">
         <h2>Overlay</h2>
         <vui-panel heading="Dialog">
-          <vui-button id="open-dialog">Открыть диалог</vui-button>
+          <vui-hstack gap="sm" wrap>
+            <vui-button id="open-dialog">Открыть диалог</vui-button>
+            <vui-button id="open-drawer" variant="secondary">Открыть панель</vui-button>
+          </vui-hstack>
           <p class="demo-note">Escape, кнопка закрытия и щелчок по фону закрывают окно. Фокус остаётся внутри.</p>
           <pre class="code">&lt;vui-dialog label="Сохранить изменения"&gt;
   &lt;p&gt;Текст диалога&lt;/p&gt;
@@ -524,6 +547,10 @@ toast({ title: "Готово", message: "Проект собран", variant: "s
             </vui-hstack>
           </div>
         </vui-dialog>
+        <vui-drawer id="demo-drawer" label="Фильтры" close-label="Закрыть">
+          <vui-input label="Статус" placeholder="Любой"></vui-input>
+          <vui-button id="drawer-close" slot="footer" variant="secondary">Закрыть</vui-button>
+        </vui-drawer>
       </section>
 
       <section class="category" id="navigation">
@@ -542,6 +569,19 @@ toast({ title: "Готово", message: "Проект собран", variant: "s
   &lt;vui-tab panel="general" selected&gt;Общие&lt;/vui-tab&gt;
   &lt;vui-tab-panel name="general"&gt;...&lt;/vui-tab-panel&gt;
 &lt;/vui-tabs&gt;</pre>
+          </vui-panel>
+
+          <vui-panel heading="Navigation">
+            <vui-nav label="Разделы">
+              <vui-nav-item href="#components" selected>Компоненты</vui-nav-item>
+              <vui-nav-item href="#patterns">Patterns</vui-nav-item>
+              <vui-nav-item href="#shell">Shell</vui-nav-item>
+            </vui-nav>
+            <vui-stepper label="Шаги" value="review">
+              <vui-step value="draft">Черновик</vui-step>
+              <vui-step value="review" selected>Проверка</vui-step>
+              <vui-step value="done">Готово</vui-step>
+            </vui-stepper>
           </vui-panel>
 
           <vui-panel heading="Toolbar">
@@ -566,6 +606,15 @@ toast({ title: "Готово", message: "Проект собран", variant: "s
         <vui-panel heading="Data Grid">
           <vui-data-grid id="demo-grid" label="Компоненты" empty-label="Нет строк"></vui-data-grid>
           <p id="grid-result" class="demo-note">Клик или стрелки выбирают строку.</p>
+          <vui-list label="Состав" value="button">
+            <vui-list-item value="button" selected>Button</vui-list-item>
+            <vui-list-item value="field">Field</vui-list-item>
+            <vui-list-item value="shell">Shell</vui-list-item>
+          </vui-list>
+          <vui-properties label="Inspector">
+            <vui-property label="Name">Button</vui-property>
+            <vui-property label="Family">Action</vui-property>
+          </vui-properties>
           <pre class="code">grid.columns = [
   { key: "name", title: "Компонент" },
   { key: "category", title: "Категория" }

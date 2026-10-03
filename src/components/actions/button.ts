@@ -11,14 +11,16 @@ export class VButton extends VuiElement {
   declare value: string;
   declare form: string;
   declare disabled: boolean;
+  declare loading: boolean;
 
   static get observedAttributes(): string[] {
-    return ['variant', 'size', 'disabled', 'type', 'name', 'value', 'form'];
+    return ['variant', 'size', 'disabled', 'loading', 'type', 'name', 'value', 'form'];
   }
 
   protected template(): string {
     return `
       <button part="base" type="button">
+        <span part="busy" hidden></span>
         <slot name="icon"></slot>
         <slot></slot>
       </button>
@@ -33,7 +35,10 @@ export class VButton extends VuiElement {
     const button = this.qs<HTMLButtonElement>('button');
     const type = this.getAttribute('type');
     button.type = type === 'submit' || type === 'reset' ? type : 'button';
-    button.disabled = this.isDisabled();
+    const loading = this.hasAttribute('loading');
+    button.disabled = this.isDisabled() || loading;
+    button.setAttribute('aria-busy', loading ? 'true' : 'false');
+    this.qs('[part="busy"]').toggleAttribute('hidden', !loading);
     const name = this.getAttribute('name');
     const value = this.getAttribute('value');
     if (name) button.name = name;
@@ -47,7 +52,7 @@ export class VButton extends VuiElement {
 }
 
 reflectStrings(VButton, ['variant', 'size', 'type', 'name', 'value', 'form']);
-reflectBooleans(VButton, ['disabled']);
+reflectBooleans(VButton, ['disabled', 'loading']);
 defineElement('vui-button', VButton);
 
 registerContract({
@@ -58,16 +63,17 @@ registerContract({
     { name: 'size', kind: 'enum', values: ['small', 'medium', 'large'], reflected: true },
     { name: 'type', kind: 'enum', values: ['button', 'submit', 'reset'], reflected: true },
     { name: 'disabled', kind: 'boolean', reflected: true },
+    { name: 'loading', kind: 'boolean', reflected: true },
     { name: 'name', kind: 'string', reflected: true },
     { name: 'value', kind: 'string', reflected: true },
     { name: 'form', kind: 'string', reflected: true },
   ],
   events: ['click'],
   slots: ['', 'icon'],
-  parts: ['base'],
+  parts: ['base', 'busy'],
   methods: [],
   keyboard: ['Tab', 'Enter', 'Space'],
-  states: ['disabled'],
+  states: ['disabled', 'loading'],
   responsive: 'flow',
   focus: 'native',
 });

@@ -13,7 +13,7 @@ alwaysApply: true
 
 ## Статус
 
-`0.2.0`. Публичная граница: компоненты, patterns в Studio, `vui-shell`. Не добавляйте пустые заглушки. Pattern не является компонентом и не входит в exports.
+`1.0.0`. Публичная граница: компоненты, patterns в Studio, `vui-shell`. Не добавляйте пустые заглушки. Pattern не является компонентом и не входит в exports. После 1.0 новый компонент появляется из требования реального приложения, а не из расширения списка. Карта имён — `docs/vocabulary.md`.
 
 ## Стек
 
@@ -28,7 +28,7 @@ src/core/           VuiElement, defineElement, reflect, layout, общие ст�
 src/foundation/     runtime: tokens, theme, density, responsive, layout, accessibility, motion, layers
 src/contract/       контракт компонента, реестр и compliance
 src/composition/    контракт композиции: слот, light DOM, свойство, атрибут, событие
-src/families/       общие правила семейств, без иерархии классов
+src/families/       общие правила семейств и componentStates, без иерархии классов
 src/interaction/    focus, keyboard, selection, commands, shortcuts, overlay, context menu, drag & drop, clipboard, pointer
 src/icons/          реестр иконок
 src/theme/          setTheme, setDensity, установка стилей
@@ -53,13 +53,13 @@ docs/components.md  каталог публичного API
 
 Категория: `vui/foundation`, `vui/layout`, `vui/actions`, `vui/forms`, `vui/feedback`, `vui/overlay`, `vui/navigation`, `vui/data`, `vui/content`, `vui/desktop`.
 
-Компонент: `vui/icon`, `vui/button`, `vui/button-group`, `vui/icon-button`, `vui/input`, `vui/textarea`, `vui/checkbox`, `vui/radio`, `vui/switch`, `vui/select`, `vui/dialog`, `vui/menu`, `vui/popover`, `vui/tabs`, `vui/breadcrumbs`, `vui/pagination`, `vui/tooltip`, `vui/alert`, `vui/progress`, `vui/spinner`, `vui/skeleton`, `vui/toast`, `vui/panel`, `vui/container`, `vui/scroll-area`, `vui/stack`, `vui/hstack`, `vui/vstack`, `vui/grid`, `vui/split-panel`, `vui/toolbar`, `vui/status-bar`, `vui/shell`, `vui/file-tree`, `vui/data-grid`, `vui/badge`, `vui/avatar`, `vui/separator`.
+Компонент: `vui/icon`, `vui/button`, `vui/button-group`, `vui/icon-button`, `vui/toggle`, `vui/input`, `vui/textarea`, `vui/checkbox`, `vui/radio`, `vui/switch`, `vui/select`, `vui/slider`, `vui/field`, `vui/dialog`, `vui/drawer`, `vui/menu`, `vui/popover`, `vui/tabs`, `vui/breadcrumbs`, `vui/pagination`, `vui/nav`, `vui/stepper`, `vui/tooltip`, `vui/alert`, `vui/progress`, `vui/spinner`, `vui/skeleton`, `vui/empty`, `vui/toast`, `vui/panel`, `vui/container`, `vui/scroll-area`, `vui/stack`, `vui/hstack`, `vui/vstack`, `vui/grid`, `vui/split-panel`, `vui/toolbar`, `vui/status-bar`, `vui/shell`, `vui/window`, `vui/file-tree`, `vui/data-grid`, `vui/list`, `vui/properties`, `vui/badge`, `vui/avatar`, `vui/avatar-group`, `vui/separator`, `vui/text`, `vui/link`, `vui/chip`, `vui/kbd`.
 
 `vui/interaction` — primitives без регистрации элементов: focus, keyboard, selection, commands, shortcuts, overlay, context menu, drag & drop, clipboard, pointer. `vui/menu` включает `vui-menu-item`.
 
-`vui/runtime` — Foundation runtime: `readFoundation`, `readToken`, `containerBand`, `setTheme`, `setDensity`, `prefersReducedMotion`, `prefersForcedColors`. `vui/contract` — `registerContract`, `listContracts`, `checkCompliance`. `vui/composition` — `registerComposition`, `checkComposition`, `ownedChildren`. `vui/families` — правила Action, Field, Overlay, Navigation и Data. `vui/foundation` по-прежнему регистрирует иконку, а не runtime.
+`vui/runtime` — Foundation runtime: `readFoundation`, `readToken`, `containerBand`, `setTheme`, `setDensity`, `prefersReducedMotion`, `prefersForcedColors`. `vui/contract` — `registerContract`, `listContracts`, `checkCompliance`. `vui/composition` — `registerComposition`, `checkComposition`, `ownedChildren`. `vui/families` — правила Action, Field, Overlay, Navigation, Data, Feedback, Layout, Content и Desktop. `componentStates` — общие имена состояний. `vui/foundation` по-прежнему регистрирует иконку, а не runtime.
 
-`vui/stack`, `vui/hstack` и `vui/vstack` — один модуль. `vui/select` включает `vui-option`. `vui/tabs` включает `vui-tab` и `vui-tab-panel`. `vui/file-tree` включает `vui-tree-item`. `vui/toast` включает `vui-toaster` и `toast()`. `vui/radio` включает `vui-radio-group`. `vui/desktop` реэкспортирует toolbar, split panel и shell; исходники toolbar и split остаются в navigation и layout.
+`vui/stack`, `vui/hstack` и `vui/vstack` — один модуль. `vui/checkbox` включает `vui-checkbox-group`. `vui/radio` включает `vui-radio-group`. `vui/toggle` включает `vui-toggle-group`. `vui/field` включает `vui-field-group`. `vui/nav` включает `vui-nav-item`. `vui/stepper` включает `vui-step`. `vui/list` включает `vui-list-item`. `vui/properties` включает `vui-property`. `vui/select` включает `vui-option`. `vui/tabs` включает `vui-tab` и `vui-tab-panel`. `vui/file-tree` включает `vui-tree-item`. `vui/toast` включает `vui-toaster` и `toast()`. `vui/desktop` реэкспортирует toolbar, split panel, shell и window; исходники toolbar и split остаются в navigation и layout.
 
 Тема: `vui/theme` (`setTheme`, `setDensity`, `getTheme`, `getDensity`). CSS: `vui/themes/tokens`, `vui/themes/density`, `vui/themes/light`, `vui/themes/dark`, `vui/themes/high-contrast`, `vui/themes/system`.
 
@@ -163,16 +163,18 @@ Responsive — часть компонента, отдельно от темы �
 
 Префикс `vui-`. Предпочитайте attributes, properties, slots и стандартные события (`click`, `input`, `change`, `close`). Своё событие — только когда стандартного нет.
 
-- `vui-button`: `variant` primary|secondary|ghost|danger, `size` small|medium|large, `disabled`, `type`.
-- `vui-icon-button`: `name`, `label` (доступное имя), `variant` по умолчанию ghost, `size`, `disabled`.
-- `vui-input`: `label`, `value`, `type`, `placeholder`, `hint`, `invalid`, `disabled`, `readonly`, `required`, `name`. Слоты `prefix`, `suffix`. Form-associated. Подпись, контрол и hint стоят столбиком, пока контейнер поля уже 36rem.
+- `vui-button`: `variant` primary|secondary|ghost|danger, `size` small|medium|large, `disabled`, `loading`, `type`. `loading` ставит `aria-busy` и не даёт активировать кнопку.
+- `vui-icon-button`: `name`, `label` (доступное имя), `variant` по умолчанию ghost, `size`, `disabled`, `loading`.
+- `vui-toggle` / `vui-toggle-group`: `pressed` и `aria-pressed`. Группа: `value`, `multiple`, `orientation`. Стрелки двигают выбор.
+- `vui-input`: `label`, `value`, `type`, `placeholder`, `hint`, `invalid`, `disabled`, `readonly`, `required`, `name`. Слоты `prefix`, `suffix`. Form-associated. `type` включает text, password, email, search, number, url, tel, date, time, datetime-local, color, file. Подпись, контрол и hint стоят столбиком, пока контейнер поля уже 36rem.
 - `vui-checkbox`, `vui-switch`: `checked`, `disabled`, `name`, `value`. У switch на input стоит `role="switch"`.
 - `vui-select`: `label`, `value`, `placeholder`, `disabled`, `invalid`. Дети `vui-option`. Клавиатура открывает, двигает и фиксирует значение. Form-associated.
-- `vui-dialog`: `label`, `open`, `size` small|medium|large, `close-label`. `dismissable="false"` не даёт закрыть окно по Escape и backdrop. Методы `show()` и `close()`. Нативный `<dialog>`. При открытии фокус переходит внутрь dialog, при закрытии возвращается на прежний элемент. Escape, блокировка прокрутки и порядок слоёв идут через `src/interaction/overlay.ts`. Select или menu, открытые внутри dialog, закрываются первыми. `close()` из скрипта обновляет и host: dialog внутри shadow DOM может не послать нативное событие `close`. Слушатели на `vui-dialog` всё равно получают `close`. Ширина и высота ограничены viewport, тело прокручивается, до 30rem поверхность занимает весь экран. `aria-modal="true"` только пока окно открыто.
+- `vui-dialog`: `label`, `open`, `size` small|medium|large, `close-label`, `alert`. `dismissable="false"` не даёт закрыть окно по Escape и backdrop. `alert` ставит `role="alertdialog"`. Методы `show()` и `close()`. Нативный `<dialog>`. При открытии фокус переходит внутрь dialog, при закрытии возвращается на прежний элемент. Escape, блокировка прокрутки и порядок слоёв идут через `src/interaction/overlay.ts`. Select или menu, открытые внутри dialog, закрываются первыми. `close()` из скрипта обновляет и host: dialog внутри shadow DOM может не послать нативное событие `close`. Слушатели на `vui-dialog` всё равно получают `close`. Ширина и высота ограничены viewport, тело прокручивается, до 30rem поверхность занимает весь экран. `aria-modal="true"` только пока окно открыто.
+- `vui-drawer`: тот же стек, что у dialog. `placement` start|end. До 30rem занимает ширину экрана.
 - `vui-menu`: `label`. Property `commands`. Методы `showAt(x, y)`, `close()`, `bindTo(target)`. `vui-menu-item`: `label`, `command`, `shortcut`, `disabled`, `checked`, вложенный `vui-menu` в `slot="submenu"`. Команды регистрирует приложение. Клавиатура, фокус и слой — общие primitives. Escape закрывает верхнее меню. Меню не шире viewport.
 - `vui-tabs`: `label`. `vui-tab` (`panel`, `selected`, `disabled`) и `vui-tab-panel` (`name`). Стрелки, Home, End.
 - `vui-tooltip`: `text`, `placement` top|bottom. Показ по hover и focus, скрытие по Escape. Пока подсказка видна, у сфокусированного контрола стоит `aria-describedby` на `role="tooltip"`.
-- `vui-alert`: `variant` info|success|warning|danger, `closable`, `close-label`.
+- `vui-alert`: `variant` info|success|warning|danger|neutral, `closable`, `banner`, `close-label`.
 - `vui-toast`: `variant`, `heading`, `duration` (`0` не скрывает сам). `toast({ title, message, variant, duration })` использует или создаёт `vui-toaster`.
 - `vui-panel`: `heading`, `padding`, `overflow`. Слоты по умолчанию, `header`, `footer`. Поверхность, граница и радиус — tokens. Без `padding` отступ равен `--vui-panel-padding`.
 - `vui-stack` / `vui-hstack` / `vui-vstack`: `gap`, `padding`, `align`, `justify`, `wrap`, `direction`, `overflow`.
@@ -182,6 +184,11 @@ Responsive — часть компонента, отдельно от темы �
 - `vui-status-bar`: `label`. Слоты по умолчанию, `end`.
 - `vui-file-tree`: `label`. `vui-tree-item`: `label`, `kind` file|folder, `expanded`, `selected`, `value`. Стрелки, Home, End, Enter, Space. `change` и `selectedItem`.
 - `vui-data-grid`: properties `columns`, `rows`, `selectedId`. `label`, `empty-label`. Стрелки, Home, End. `change`.
+- `vui-field` / `vui-field-group`: `label`, `hint`, `invalid`, `disabled`. Ошибка — `invalid` и `hint`.
+- `vui-slider`: `value`, необязательный `value-end`, `min`, `max`, `step`.
+- `vui-nav`, `vui-stepper`: roving tabindex и `change`.
+- `vui-list`: светлый DOM, `multiple`, диапазон через Shift. `vui-properties` — пары подпись/значение.
+- `vui-empty`, `vui-text`, `vui-link`, `vui-chip`, `vui-kbd`, `vui-window`: см. `docs/components.md`.
 
 `columns`: `{ key, title, width?, align?, priority? }`. `priority` — `primary` или `secondary`. `rows`: `{ id, [key]: string }`. `width` принимает только простую длину.
 
@@ -265,10 +272,10 @@ Vitest + happy-dom: `tests/unit`. Покрывайте границы регис
 
 ## Ещё не реализовано
 
-Combobox, slider, выбор даты, времени, файла и цвета, drawer, modal как отдельный элемент, sidebar как отдельный элемент, navigation menu, tab bar, table как отдельный элемент, list, virtual list, tree grid, empty state, window header, window controls, dock, inspector, property grid, file list, path bar.
+Виртуальный список, tree grid, собственный календарь и отдельный цветовой popup. Их не добавлять, пока реальное приложение не измерит нужду. Остальные имена карты закрыты существующим API: см. `docs/vocabulary.md`.
 
-Уже закрыто существующими primitive: dropdown — `vui-select`, `vui-menu` или `vui-popover`; card — `vui-panel`; field — само поле; toolbar item — слоты toolbar; context menu — `vui-menu`; command bar — `vui-toolbar`; resizable region — `vui-split-panel`; application layout — `vui-shell`; command palette и file browser — patterns в Studio, без файловой системы и без своего элемента. Сортировка и фильтр остаются данными страницы: таблица получает уже отфильтрованные `rows`.
+Уже закрыто существующими primitive: dropdown — `vui-select`, `vui-menu` или `vui-popover`; card — `vui-panel`; field — `vui-field` или само поле; toolbar item — слоты toolbar; context menu — `vui-menu`; command bar — `vui-toolbar`; resizable region — `vui-split-panel`; application layout — `vui-shell`; command palette и file browser — patterns в Studio, без файловой системы и без своего элемента. Сортировка и фильтр остаются данными страницы: таблица получает уже отфильтрованные `rows`.
 
 `vui-menu` покрывает context menu. Команды и shortcuts — infrastructure в `src/interaction`, не готовые бизнес-команды.
 
-Добавляйте это только как настоящие компоненты, по одному, со showcase и с обновлением этого файла.
+Добавляйте это только как настоящие компоненты, по одному, со showcase и с обновлением этого файла, и только когда сценарий нельзя закрыть словарём 1.0.

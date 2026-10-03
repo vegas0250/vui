@@ -177,6 +177,14 @@ document.querySelector('#dialog-save')?.addEventListener('click', () => {
   toast({ title: 'Сохранено', message: 'Диалог подтвердил действие.', variant: 'success' });
 });
 
+const drawer = document.querySelector('#demo-drawer');
+document.querySelector('#open-drawer')?.addEventListener('click', () => {
+  if (drawer instanceof HTMLElement && 'show' in drawer) (drawer as VDialog).show();
+});
+document.querySelector('#drawer-close')?.addEventListener('click', () => {
+  if (drawer instanceof HTMLElement && 'close' in drawer) (drawer as VDialog).close();
+});
+
 const grid = document.querySelector('#demo-grid');
 if (grid && 'columns' in grid && 'rows' in grid) {
   const dataGrid = grid as VDataGrid;
@@ -440,7 +448,7 @@ const platformRows = [
 ];
 
 const platformGrid = document.querySelector('#platform-grid');
-const paintPlatform = (query = ''): void => {
+const paintPlatform = (query = '', area = 'all'): void => {
   if (!(platformGrid instanceof HTMLElement) || !('columns' in platformGrid) || !('rows' in platformGrid)) return;
   const grid = platformGrid as VDataGrid;
   const needle = query.trim().toLowerCase();
@@ -448,7 +456,13 @@ const paintPlatform = (query = ''): void => {
     { key: 'name', title: 'Name', width: '40%' },
     { key: 'area', title: 'Area' },
   ];
-  grid.rows = platformRows.filter((row) => row.name.toLowerCase().includes(needle) || row.area.toLowerCase().includes(needle));
+  grid.rows = platformRows.filter((row) => {
+    const matchesText = row.name.toLowerCase().includes(needle) || row.area.toLowerCase().includes(needle);
+    const matchesArea = area === 'all' || row.area === area;
+    return matchesText && matchesArea;
+  });
+  const empty = document.querySelector('#platform-empty');
+  if (empty instanceof HTMLElement) empty.hidden = grid.rows.length > 0;
 };
 
 if (platformGrid instanceof HTMLElement && 'columns' in platformGrid) {
@@ -456,19 +470,31 @@ if (platformGrid instanceof HTMLElement && 'columns' in platformGrid) {
   const grid = platformGrid as VDataGrid;
   grid.addEventListener('change', () => {
     const row = platformRows.find((item) => item.id === grid.selectedId);
-    const detail = document.querySelector('#platform-detail');
+    const name = document.querySelector('#platform-prop-name');
+    const area = document.querySelector('#platform-prop-area');
     const status = document.querySelector('#platform-status');
-    const text = row ? `${row.name} · ${row.area}` : 'No selection';
-    if (detail) detail.textContent = text;
-    if (status) status.textContent = text;
+    const nameText = row?.name ?? 'Select a row.';
+    const areaText = row?.area ?? '—';
+    if (name) name.textContent = nameText;
+    if (area) area.textContent = areaText;
+    if (status) status.textContent = row ? `${row.name} · ${row.area}` : 'No selection';
   });
 }
 
 const platformSearch = document.querySelector('#platform-search');
+const platformFilter = document.querySelector('#platform-filter');
+const readPlatform = (): void => {
+  const query = platformSearch?.getAttribute('value') ?? '';
+  const area = platformFilter?.getAttribute('value') || 'all';
+  paintPlatform(query, area);
+};
 if (platformSearch) {
-  const paintSearch = (): void => paintPlatform(platformSearch.getAttribute('value') ?? '');
-  platformSearch.addEventListener('input', paintSearch);
-  new MutationObserver(paintSearch).observe(platformSearch, { attributes: true, attributeFilter: ['value'] });
+  platformSearch.addEventListener('input', readPlatform);
+  new MutationObserver(readPlatform).observe(platformSearch, { attributes: true, attributeFilter: ['value'] });
+}
+if (platformFilter) {
+  platformFilter.addEventListener('change', readPlatform);
+  new MutationObserver(readPlatform).observe(platformFilter, { attributes: true, attributeFilter: ['value'] });
 }
 
 const platformShell = document.querySelector('#platform-shell');
@@ -489,6 +515,14 @@ document.querySelector('#platform-close')?.addEventListener('click', () => {
 });
 document.querySelector('#platform-command')?.addEventListener('click', () => {
   if (platformPalette instanceof HTMLElement && 'show' in platformPalette) (platformPalette as VDialog).show();
+});
+
+const platformDrawer = document.querySelector('#platform-drawer');
+document.querySelector('#platform-drawer-open')?.addEventListener('click', () => {
+  if (platformDrawer instanceof HTMLElement && 'show' in platformDrawer) (platformDrawer as VDialog).show();
+});
+document.querySelector('#platform-drawer-close')?.addEventListener('click', () => {
+  if (platformDrawer instanceof HTMLElement && 'close' in platformDrawer) (platformDrawer as VDialog).close();
 });
 
 const platformMenu = document.querySelector('#platform-menu');

@@ -374,19 +374,23 @@ interaction → command → action
 
 ## Семейства
 
-Семейство — общий список правил, не базовый класс. Член называет те правила, которые у него есть. `loading` по-прежнему не добавляется ради симметрии.
+Семейство — общий список правил, не базовый класс. Член называет те правила, которые у него есть. `loading` есть у кнопки, потому что действие может ждать. Его не добавляют туда, где ждать нечего.
 
 | Семейство | Правила | Кто входит |
 | --- | --- | --- |
-| Action | disabled, focus, keyboard, activation, label; icon, если она есть | button, button group, icon button, menu item |
-| Field | value, disabled, invalid, required, label, description, focus. Ошибка — это `invalid` и `hint`, отдельного `error` нет | input, textarea, select, checkbox, radio, radio group, switch |
-| Overlay | open, close, Escape, focus restoration, positioning, layering через один стек | dialog, popover, tooltip, menu, toaster |
-| Navigation | roving focus, keyboard, selection | tabs, tab, tab panel, file tree, tree item, menu, breadcrumbs, pagination |
-| Data | keyboard, selection, cursor | data grid |
+| Action | disabled, loading, focus, keyboard, activation, label; icon, если она есть | button, icon button, button group, toggle, link, menu item |
+| Field | value, disabled, invalid, required, label, description, focus. Ошибка — это `invalid` и `hint`, отдельного `error` нет | input, textarea, select, checkbox, radio, switch, slider, field, группы |
+| Overlay | open, close, Escape, focus restoration, positioning, layering через один стек | dialog, drawer, popover, tooltip, menu, toaster |
+| Navigation | roving focus, keyboard, selection | tabs, nav, stepper, file tree, menu, breadcrumbs, pagination |
+| Data | keyboard, selection, cursor | data grid, list, properties |
+| Feedback | variant, status | alert, empty, badge, toast |
+| Layout | общий словарь раскладки | stack, grid, panel и соседи |
+| Content | текст и метки | text, chip, kbd |
+| Desktop | области без прикладного смысла | shell, window, status bar |
 
-Импорт: `vui/families`. Отдельного field-элемента нет: подпись, hint и invalid живут на самом поле. Группа взаимоисключающего выбора — `vui-radio-group`.
+Импорт: `vui/families`. `componentStates` — общий словарь состояний. Поле с собственной подписью — `vui-input`, `vui-textarea`, `vui-select`, `vui-slider`. `vui-field` оборачивает контрол, у которого подписи нет. Группа взаимоисключающего выбора — `vui-radio-group`. Несколько флажков — `vui-checkbox-group`.
 
-Эталонные сценарии Form, Navigation, Data и Overlay проверяют фокус, клавиатуру, disabled, invalid, выбор, слои, тему, плотность и ширину контейнера вместе. Смена темы или плотности не меняет полосу контейнера. Showcase показывает те же четыре сборки.
+Эталонные сценарии Form, Navigation, Data и Overlay проверяют фокус, клавиатуру, disabled, invalid, выбор, слои, тему, плотность и ширину контейнера вместе. Смена темы или плотности не меняет полосу контейнера. Showcase показывает те же сборки и reference UI в разделе Platform.
 
 ## Матрица качества
 

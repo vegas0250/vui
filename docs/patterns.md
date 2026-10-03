@@ -18,6 +18,15 @@ Pattern — не компонент. Это пример, как собрать 
 
 Фильтрация строк в Platform Validation живёт в странице студии: поле пишет `value`, страница заново задаёт `rows`. Таблица не знает запрос.
 
-Командная палитра — `vui-dialog` и `vui-input`, не новый виджет. Контекстное меню — `vui-menu` и `bindTo()`. Карточка — `vui-panel`. Выпадающий список значений — `vui-select`. Меню действий — `vui-menu`. Произвольный якорь — `vui-popover`. Полоса команд — `vui-toolbar`. Изменяемая область — `vui-split-panel`. Окно приложения — `vui-shell`; модальное окно — `vui-dialog`.
+Командная палитра — `vui-dialog` и `vui-input`, не новый виджет. Контекстное меню — `vui-menu` и `bindTo()`. Карточка — `vui-panel`. Выпадающий список значений — `vui-select`. Меню действий — `vui-menu`. Произвольный якорь — `vui-popover`. Полоса команд — `vui-toolbar`. Изменяемая область — `vui-split-panel`. Окно приложения — `vui-shell`; модальное окно — `vui-dialog`; боковая панель — `vui-drawer`.
 
-Дерево — `vui-file-tree`. Оно показывает переданные пункты и не читает файловую систему.
+Дерево — `vui-file-tree`. Оно показывает переданные пункты и не читает файловую систему. Заголовок рабочей поверхности — `vui-window`. Инспектор — `vui-properties`. Пустой результат — `vui-empty`. Полная карта «имя из словаря → элемент» — в [vocabulary.md](vocabulary.md).
+
+Сборки, которые Studio показывает целиком:
+
+- Form: поле, подпись, hint, invalid;
+- Search: `vui-input type="search"`, фильтр и действия страницы;
+- Navigation: `vui-nav` внутри слота shell;
+- Data: toolbar, таблица, пагинация, пустое состояние;
+- Settings: группа полей и сохранение;
+- Desktop: shell, sidebar, split, tree, grid, inspector, status bar.

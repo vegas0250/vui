@@ -8,6 +8,7 @@ VUI — UI-платформа на Web Components для обычного HTML, 
 - [ARCHITECTURE.md](../ARCHITECTURE.md) — контракты;
 - [PLATFORM.md](../PLATFORM.md) — граница платформы;
 - [components.md](components.md) — API элементов;
+- [vocabulary.md](vocabulary.md) — какое имя из карты каким элементом закрыто;
 - [patterns.md](patterns.md) — когда собирать самому, а когда брать pattern;
 - [CONTRIBUTING.md](../CONTRIBUTING.md) — новый компонент.
 
@@ -57,7 +58,7 @@ Foundation: tokens, theme, density, responsive, motion, a11y runtime. Interactio
 
 Контракт элемента: attributes, properties, methods, events, slots, parts. События — `click`, `input`, `change`, `close`.
 
-Семейства Action, Field, Overlay, Navigation, Data задают общие правила без базового класса.
+Семейства Action, Field, Overlay, Navigation, Data, Feedback, Layout, Content и Desktop задают общие правила без базового класса. Общие имена состояний — `componentStates`.
 
 Composition — как host связан с детьми: слот, light DOM, свойство, атрибут, событие. Дети не вызывают методы соседей.
 
@@ -83,9 +84,9 @@ Pattern — страница из этих primitive для типового с�
 Unit → Compliance → Interaction → Composition → Accessibility → Visual → Build / package
 ```
 
-`pnpm test` гоняет unit, compliance и composition. `pnpm test:e2e` гоняет Studio, responsive, accessibility и короткую visual matrix в `visual.html`. Снимки не умножаются на все темы и плотности.
+`pnpm test` гоняет unit, compliance, interaction и composition. `pnpm test:e2e` гоняет Studio, responsive, accessibility и короткую visual matrix в `visual.html`. Снимки не умножаются на все темы и плотности. Показательный compliance-набор — button, input, dialog, toast, select, data-grid, file-tree. Новые элементы 1.0 проверяются тем же `checkCompliance()` в `tests/unit/platform.test.ts`.
 
-Публичная карта exports заморожена тестом `tests/unit/exports.test.ts`. Удаление ключа — ломающее изменение.
+Публичная карта exports заморожена тестом `tests/unit/exports.test.ts`. Удаление ключа — ломающее изменение. CI: TypeScript, unit, сборка, бюджет размера, Playwright. Отдельного runtime-бюджета кадров нет: сначала замер в приложении, потом оптимизация. Дымовая проверка — монтирование длинного списка и снятие слушателей.
 
 ## Packaging, tree shaking, public API
 
@@ -109,6 +110,6 @@ vui/themes/*
 
 ## Migration / versioning
 
-Текущая публичная граница — `0.2.0`. Несовместимое изменение attributes, events, slots, parts или ключа exports описывается в `CHANGELOG.md` и обновляет список в `tests/unit/exports.test.ts`. Добавление компонента список расширяет в том же изменении.
+Текущая публичная граница — `1.0.0`. Несовместимое изменение attributes, events, slots, parts или ключа exports описывается в `CHANGELOG.md` и обновляет список в `tests/unit/exports.test.ts`. Добавление компонента список расширяет в том же изменении.
 
 Дальше библиотека меняется от реального приложения: ограничение в приложении → правка VUI → выпуск → обновление приложения.

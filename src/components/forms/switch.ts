@@ -1,4 +1,5 @@
 import { defineElement } from '../../core/define';
+import { emitChange } from '../../core/events';
 import { VuiElement } from '../../core/element';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
 
@@ -109,6 +110,7 @@ export class VSwitch extends VuiElement {
       const input = this.qs<HTMLInputElement>('input');
       this.toggleAttribute('checked', input.checked);
       this.writeFormValue();
+      emitChange(this);
     });
   }
 

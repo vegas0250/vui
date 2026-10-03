@@ -1,4 +1,5 @@
 import '../components/feedback/alert';
+import '../components/feedback/empty';
 import '../components/feedback/progress';
 import '../components/feedback/skeleton';
 import '../components/feedback/spinner';
@@ -6,6 +7,7 @@ import '../components/feedback/toast';
 import '../components/feedback/tooltip';
 
 export { VAlert } from '../components/feedback/alert';
+export { VEmpty } from '../components/feedback/empty';
 export { VProgress } from '../components/feedback/progress';
 export { VSkeleton } from '../components/feedback/skeleton';
 export { VSpinner } from '../components/feedback/spinner';
