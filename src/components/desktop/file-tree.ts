@@ -5,6 +5,7 @@ import { VuiElement } from '../../core/element';
 import { emitChange } from '../../core/events';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
 import { ownedChildren } from '../../composition/dom';
+import { reportUnexpectedChildren } from '../../core/dev';
 import { copyText } from '../../interaction/clipboard';
 import { applyRovingTabIndex, isRtl, moveInList } from '../../interaction/keyboard';
 import { SelectionModel } from '../../interaction/selection';
@@ -146,6 +147,7 @@ export class VFileTree extends VuiElement {
 
   protected sync(): void {
     this.qs('[role="tree"]').setAttribute('aria-label', this.getAttribute('label') ?? 'Files');
+    reportUnexpectedChildren(this, ['vui-tree-item']);
   }
 
   get selectedItem(): VTreeItem | null {
@@ -153,6 +155,7 @@ export class VFileTree extends VuiElement {
   }
 
   private items(root: ParentNode = this): VTreeItem[] {
+    if (root instanceof HTMLElement) reportUnexpectedChildren(root, ['vui-tree-item']);
     return ownedChildren(root, 'vui-tree-item', (node): node is VTreeItem => node instanceof VTreeItem);
   }
 

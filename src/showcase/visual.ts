@@ -7,8 +7,10 @@ const densities = new Set(['comfortable', 'compact', 'dense']);
 const params = new URLSearchParams(location.search);
 const theme = params.get('theme') ?? 'light';
 const density = params.get('density') ?? 'comfortable';
+const dir = params.get('dir');
 document.documentElement.setAttribute('data-vui-theme', themes.has(theme) ? theme : 'light');
 document.documentElement.setAttribute('data-vui-density', densities.has(density) ? density : 'comfortable');
+if (dir === 'rtl' || dir === 'ltr') document.documentElement.setAttribute('dir', dir);
 
 const style = document.createElement('style');
 style.textContent = `
@@ -109,7 +111,48 @@ fixture.innerHTML = `
   </vui-tabs>
 `;
 
+const families = document.createElement('section');
+families.id = 'families';
+families.innerHTML = `
+  <h2>Families</h2>
+  <div class="row">
+    <vui-button variant="primary">Save</vui-button>
+    <vui-button disabled>Disabled</vui-button>
+    <vui-icon-button name="settings" label="Settings"></vui-icon-button>
+    <vui-toggle pressed>Pressed</vui-toggle>
+  </div>
+  <vui-input label="Email" value="ada@" invalid hint="Enter a valid email"></vui-input>
+  <div class="row">
+    <vui-checkbox checked>Checked</vui-checkbox>
+    <vui-slider label="Level" value="30"></vui-slider>
+  </div>
+  <vui-breadcrumbs label="Path"><span>Studio</span><span aria-current="page">Families</span></vui-breadcrumbs>
+  <vui-nav label="Sections">
+    <vui-nav-item href="#a" selected>Overview</vui-nav-item>
+    <vui-nav-item href="#b">Data</vui-nav-item>
+  </vui-nav>
+  <vui-list label="Items" value="a">
+    <vui-list-item value="a" selected>Alpha</vui-list-item>
+    <vui-list-item value="b">Beta</vui-list-item>
+  </vui-list>
+  <vui-properties label="Inspector"><vui-property label="State">Ready</vui-property></vui-properties>
+  <vui-alert variant="danger">Error state</vui-alert>
+  <vui-empty heading="Empty" label="Empty">Nothing here.</vui-empty>
+  <vui-progress label="Loading" value="40" max="100"></vui-progress>
+  <vui-popover label="More"><vui-button variant="secondary">Popover</vui-button><span slot="panel">Panel</span></vui-popover>
+  <vui-tooltip text="Hint"><vui-button variant="ghost">Tooltip</vui-button></vui-tooltip>
+  <vui-panel heading="Panel"><vui-text>Content</vui-text></vui-panel>
+  <div class="row">
+    <vui-badge variant="info">Badge</vui-badge>
+    <vui-chip>Chip</vui-chip>
+    <vui-kbd>Ctrl</vui-kbd>
+  </div>
+  <vui-window label="Window"><span slot="controls">Controls</span><p>Body</p></vui-window>
+  <vui-status-bar label="Status"><span>Ready</span><span slot="end">UTF-8</span></vui-status-bar>
+`;
+
 document.body.append(board, fixture);
+if (params.get('strip') === '1') document.body.append(families);
 
 if (params.get('states') === 'menu') {
   const menuStates = document.createElement('section');

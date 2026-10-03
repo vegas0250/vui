@@ -15,6 +15,9 @@
 - Версия пакета — `1.0.0`. Карта exports расширена и по-прежнему заморожена тестом.
 - Горизонтальные стрелки, split, дерево и вложенное меню следуют `dir`. Раскладка toolbar, status bar, toast, switch и дерева использует logical properties.
 - Контракт зарегистрирован у каждого custom element, кроме `vui-option`. `checkCompliance()` проверяет весь реестр.
+- Цепочка component → category → `import 'vui'` проверяется тестом. Неизвестная тема, плотность, enum и чужой ребёнок дают одно предупреждение и не подменяют значение. Повторная регистрация другого класса не затирает элемент.
+- Выбор строки `vui-data-grid` обновляет выделение на месте. `vui-list` синхронизирует детей одним проходом, а не на каждый `slotchange`. Studio показывает `vui-window`, `vui-field-group` и reference-сборку: список, popover, toast, loading и error.
+- `pnpm check:consumer` ставит собранный пакет во временный Vite-проект и открывает production build в браузере. В пакет не входят tests, showcase и scripts.
 
 ## 0.2.0
 

@@ -418,6 +418,7 @@ button.addEventListener("click", handler);</pre>
   &lt;vui-toggle value="left" pressed&gt;Слева&lt;/vui-toggle&gt;
 &lt;/vui-toggle-group&gt;</pre>
           </vui-panel>
+          <vui-panel heading="Icon button">
             <vui-hstack gap="sm" align="center">
               <vui-icon-button name="save" label="Сохранить" variant="primary"></vui-icon-button>
               <vui-icon-button name="copy" label="Копировать" variant="secondary"></vui-icon-button>
@@ -445,6 +446,10 @@ button.addEventListener("click", handler);</pre>
               <vui-checkbox value="mail" checked>Почта</vui-checkbox>
               <vui-checkbox value="push">Push</vui-checkbox>
             </vui-checkbox-group>
+            <vui-field-group label="Адрес" hint="Группа полей">
+              <vui-input label="Город" value="Казань"></vui-input>
+              <vui-input label="Улица" value="Баумана"></vui-input>
+            </vui-field-group>
             <vui-switch id="notify" checked>Уведомления</vui-switch>
             <vui-checkbox disabled checked>Недоступный флажок</vui-checkbox>
             <vui-switch disabled>Недоступный переключатель</vui-switch>
@@ -666,6 +671,10 @@ grid.addEventListener("change", () =&gt; grid.selectedId);</pre>
                 <span slot="end">UTF-8</span>
               </vui-status-bar>
             </div>
+            <vui-window label="button.ts">
+              <vui-icon-button slot="controls" name="x" label="Закрыть"></vui-icon-button>
+              <p>Заголовок и слот controls. Это не окно операционной системы.</p>
+            </vui-window>
             <p class="demo-note">Дерево: стрелки, Home, End, Enter и Space. Split: перетаскивание и стрелки на разделителе.</p>
             <pre class="code">&lt;vui-toolbar&gt;...&lt;/vui-toolbar&gt;
 &lt;vui-split-panel&gt;

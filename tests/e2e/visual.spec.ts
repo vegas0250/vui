@@ -50,6 +50,18 @@ test('menu open focus disabled and checked', async ({ page }) => {
   await expect(page.locator('#menu-states')).toHaveScreenshot('menu-open-dark-compact.png');
 });
 
+test('family strip in light and rtl dark compact', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/visual.html?theme=light&density=comfortable&strip=1');
+  await page.evaluate(() => document.fonts.ready);
+  await expect(page.locator('#families')).toHaveScreenshot('families-light-comfortable.png');
+
+  await page.goto('/visual.html?theme=dark&density=compact&dir=rtl&strip=1');
+  await page.evaluate(() => document.fonts.ready);
+  await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+  await expect(page.locator('#families')).toHaveScreenshot('families-dark-compact-rtl.png');
+});
+
 test('dialog light desktop and dark compact mobile', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/visual.html?theme=light&density=comfortable');

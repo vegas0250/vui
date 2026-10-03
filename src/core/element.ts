@@ -1,4 +1,6 @@
+import { contractFor } from '../contract/registry';
 import { connectFoundation } from '../foundation/runtime';
+import { reportDeveloper } from './dev';
 import { mountStyles } from './styles';
 
 export abstract class VuiElement extends HTMLElement {
@@ -35,8 +37,20 @@ export abstract class VuiElement extends HTMLElement {
     this.sync();
   }
 
-  attributeChangedCallback(): void {
+  attributeChangedCallback(name?: string, _previous?: string | null, value?: string | null): void {
     if (this.rendered) this.sync();
+    this.warnAttribute(name, value);
+  }
+
+  private warnAttribute(name: string | undefined, value: string | null | undefined): void {
+    if (!name || value == null || value === '') return;
+    const attribute = contractFor(this.localName)?.attributes.find((item) => item.name === name);
+    if (!attribute || attribute.kind !== 'enum' || !attribute.values) return;
+    if (attribute.values.includes(value)) return;
+    reportDeveloper(
+      'attribute',
+      `${this.localName} keeps unknown ${name}="${value}". Expected ${attribute.values.join('|')}.`,
+    );
   }
 
   protected abstract template(): string;

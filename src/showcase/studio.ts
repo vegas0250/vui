@@ -32,6 +32,7 @@ export const studioMarkup = `
         <vui-link href="#components">К компонентам</vui-link>
       </vui-vstack>
     </vui-panel>
+    <vui-panel heading="Progress">
       <vui-vstack gap="sm">
         <vui-progress label="Upload" value="40" max="100"></vui-progress>
         <vui-progress label="Waiting"></vui-progress>
@@ -188,7 +189,12 @@ export const studioMarkup = `
         </vui-select>
         <vui-button-group slot="end" label="Actions">
           <vui-button id="platform-open" size="small">Inspect</vui-button>
+          <vui-button id="platform-loading" size="small" variant="secondary" loading>Loading</vui-button>
         </vui-button-group>
+        <vui-popover slot="end" label="Columns">
+          <vui-button size="small" variant="ghost">Columns</vui-button>
+          <vui-checkbox slot="panel" checked>Name</vui-checkbox>
+        </vui-popover>
       </vui-toolbar>
       <vui-nav slot="nav" label="Sections">
         <vui-nav-item href="#platform" selected>Overview</vui-nav-item>
@@ -208,11 +214,14 @@ export const studioMarkup = `
             <vui-tab panel="notes">Notes</vui-tab>
             <vui-tab-panel name="records">
               <vui-data-grid id="platform-grid" label="Records" empty-label="No rows"></vui-data-grid>
+              <vui-list id="platform-list" label="Matches"></vui-list>
               <vui-empty id="platform-empty" heading="No results" label="No results" hidden>Change the filter.</vui-empty>
               <vui-pagination id="platform-pages" page="1" pages="3" label="Pages"></vui-pagination>
             </vui-tab-panel>
             <vui-tab-panel name="notes">
+              <vui-alert variant="danger">Sample error state. The page decides when this is true.</vui-alert>
               <vui-empty heading="No notes" label="No notes">Notes stay on the page.</vui-empty>
+              <vui-toast variant="info" heading="Ready" duration="0">This toast belongs to the page.</vui-toast>
             </vui-tab-panel>
           </vui-tabs>
         </vui-scroll-area>

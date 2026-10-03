@@ -23,4 +23,5 @@ jobs:
       - run: pnpm check:budget
       - run: pnpm check:shake
       - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm check:consumer
       - run: pnpm test:e2e

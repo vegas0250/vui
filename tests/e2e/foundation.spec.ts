@@ -68,5 +68,5 @@ test('contract controls expose focus and skip disabled', async ({ page }) => {
   await expect(danger).toBeFocused();
   await page.keyboard.press('Tab');
   await expect(disabled).not.toBeFocused();
-  await expect(section.locator('vui-input')).toBeFocused();
+  await expect(page.locator('#contract-input')).toBeFocused();
 });

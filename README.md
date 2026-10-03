@@ -242,10 +242,13 @@ pnpm dev
 
 ```bash
 pnpm dev         # showcase
-pnpm test        # vitest: контракт, клавиатура, overlay
+pnpm test        # vitest: контракт, exports, lifecycle, клавиатура, overlay
 pnpm test:e2e    # showcase, responsive, accessibility, visual regression
 pnpm typecheck
 pnpm build       # библиотека в dist/
+pnpm check:budget
+pnpm check:shake
+pnpm check:consumer  # tarball во временный Vite-проект, нужен предварительный build
 ```
 
 Проверки идут слоями: unit, связка компонентов, e2e, accessibility, visual regression. Визуальная матрица — Light/Comfortable/desktop, Dark/Comfortable/desktop, Light/Compact/desktop, Dark/Compact/mobile, без перемножения всех тем на все плотности. Как добавлять компонент — в [CONTRIBUTING.md](CONTRIBUTING.md).

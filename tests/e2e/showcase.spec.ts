@@ -4,8 +4,12 @@ test('showcase switches theme and density', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'VUI Studio' })).toBeVisible();
   await expect(page.locator('vui-button', { hasText: 'Сохранить' }).first()).toBeVisible();
-  await expect(page.locator('vui-file-tree')).toBeVisible();
+  await expect(page.locator('#demo-tree')).toBeVisible();
   await expect(page.locator('#demo-grid')).toContainText('Button');
+  await expect(page.locator('vui-window')).toBeVisible();
+  await expect(page.locator('vui-field-group')).toBeVisible();
+  await expect(page.locator('#platform-list')).toContainText('Button');
+  await expect(page.locator('#platform-loading')).toHaveAttribute('loading', '');
 
   const theme = page.locator('#theme-select');
   await theme.locator('button').click();
@@ -27,4 +31,15 @@ test('showcase switches theme and density', async ({ page }) => {
   await expect(dialog).toHaveAttribute('open', '');
   await page.keyboard.press('Escape');
   await expect(dialog).not.toHaveAttribute('open', '');
+
+  await page.locator('#open-drawer').click();
+  const drawer = page.locator('#demo-drawer');
+  await expect(drawer).toHaveAttribute('open', '');
+  await page.locator('#drawer-close').click();
+  await expect(drawer).not.toHaveAttribute('open', '');
+
+  const dir = page.locator('#dir-select');
+  await dir.locator('button').click();
+  await dir.locator('[role="option"]', { hasText: 'RTL' }).click();
+  await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
 });

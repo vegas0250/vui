@@ -1,4 +1,5 @@
 import { ownedChildren } from '../../composition/dom';
+import { reportUnexpectedChildren } from '../../core/dev';
 import { registerContract } from '../../contract/registry';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
@@ -295,6 +296,7 @@ export class VMenu extends VuiElement {
   }
 
   private items(): VMenuItem[] {
+    reportUnexpectedChildren(this, ['vui-menu-item']);
     return ownedChildren(this, 'vui-menu-item', (node): node is VMenuItem => node instanceof VMenuItem);
   }
 

@@ -1,3 +1,4 @@
+import { reportDeveloper } from '../../core/dev';
 import { defineElement } from '../../core/define';
 import { registerContract } from '../../contract/registry';
 import { VuiElement } from '../../core/element';
@@ -24,7 +25,9 @@ export interface VDataGridRow {
 
 function safeWidth(width: string | undefined): string | null {
   if (!width) return null;
-  return /^(\d+(\.\d+)?)(px|rem|em|%)$/.test(width) ? width : null;
+  if (/^(\d+(\.\d+)?)(px|rem|em|%)$/.test(width)) return width;
+  reportDeveloper('attribute', `vui-data-grid ignores column width "${width}". Expected px, rem, em, or %.`);
+  return null;
 }
 
 export class VDataGrid extends VuiElement {
@@ -175,8 +178,32 @@ export class VDataGrid extends VuiElement {
     const grid = this.shadow.querySelector('[role="grid"]');
     grid?.setAttribute('aria-label', this.getAttribute('label') ?? 'Data grid');
     grid?.setAttribute('aria-rowcount', String(this.gridRows.length + 1));
-    grid?.setAttribute('aria-colcount', String(this.gridColumns.length));
-    this.renderGrid();
+    grid?.setAttribute('aria-colcount', String(this.gridColumns.filter((_, index) => this.columnVisible(index)).length));
+    this.paintSelection();
+  }
+
+  /** Selection and labels update in place. A full rebuild runs only when the row set changed. */
+  private paintSelection(): void {
+    const body = this.shadow.querySelector('tbody');
+    if (!body) return;
+    this.syncSelection();
+    const rows = [...body.querySelectorAll<HTMLTableRowElement>('tr[data-id]')];
+    if (rows.length !== this.gridRows.length) {
+      this.renderGrid();
+      return;
+    }
+    for (const row of rows) {
+      row.setAttribute('aria-selected', row.dataset.id === this.selectedId ? 'true' : 'false');
+    }
+    const empty = body.querySelector('.empty');
+    if (empty) empty.textContent = this.getAttribute('empty-label') ?? 'No data';
+    if (rows.length) this.applyCursor();
+  }
+
+  private syncSelection(): void {
+    this.selection.setOrder(this.gridRows.map((row) => row.id));
+    if (this.selectedId && this.gridRows.some((row) => row.id === this.selectedId)) this.selection.select(this.selectedId);
+    else this.selection.clear();
   }
 
   private renderGrid(): void {
@@ -205,9 +232,7 @@ export class VDataGrid extends VuiElement {
     );
     head.replaceChildren(headerRow);
     body.replaceChildren();
-    this.selection.setOrder(this.gridRows.map((row) => row.id));
-    if (this.selectedId && this.gridRows.some((row) => row.id === this.selectedId)) this.selection.select(this.selectedId);
-    else this.selection.clear();
+    this.syncSelection();
 
     if (!this.gridRows.length) {
       const row = document.createElement('tr');

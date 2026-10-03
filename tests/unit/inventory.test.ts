@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { checkCompliance, listContracts } from '../../src/contract/index';
+import { checkCompliance, listContracts, remount } from '../../src/contract/index';
 import { clearOverlays } from '../../src/core/overlay';
 import '../../src/index';
 
@@ -46,6 +46,30 @@ describe('component inventory', () => {
       document.body.append(element);
       expect(checkCompliance(element, contract), contract.element).toEqual([]);
       element.remove();
+    }
+  });
+
+  it('keeps one shadow across disconnect, reconnect, and a second instance', () => {
+    for (const contract of listContracts()) {
+      const element = document.createElement(contract.element) as HTMLElement & { connectionCount?: number };
+      document.body.append(element);
+      const shadow = element.shadowRoot;
+      const start = element.connectionCount ?? 1;
+      remount(element);
+      remount(element);
+      expect(element.shadowRoot, contract.element).toBe(shadow);
+      expect(element.connectionCount, contract.element).toBe(start + 2);
+      element.remove();
+      document.body.append(element);
+      expect(element.shadowRoot, contract.element).toBe(shadow);
+      expect(element.isConnected, contract.element).toBe(true);
+      element.remove();
+
+      const again = document.createElement(contract.element);
+      document.body.append(again);
+      expect(again.shadowRoot, contract.element).toBeTruthy();
+      expect(again.shadowRoot, contract.element).not.toBe(shadow);
+      again.remove();
     }
   });
 });

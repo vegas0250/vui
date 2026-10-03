@@ -463,6 +463,16 @@ const paintPlatform = (query = '', area = 'all'): void => {
   });
   const empty = document.querySelector('#platform-empty');
   if (empty instanceof HTMLElement) empty.hidden = grid.rows.length > 0;
+  const list = document.querySelector('#platform-list');
+  if (list) {
+    list.replaceChildren();
+    for (const row of grid.rows) {
+      const item = document.createElement('vui-list-item');
+      item.setAttribute('value', String(row.id));
+      item.textContent = String(row.name);
+      list.append(item);
+    }
+  }
 };
 
 if (platformGrid instanceof HTMLElement && 'columns' in platformGrid) {

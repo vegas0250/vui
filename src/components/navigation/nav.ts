@@ -1,3 +1,4 @@
+import { reportUnexpectedChildren } from '../../core/dev';
 import { defineElement } from '../../core/define';
 import { registerContract } from '../../contract/registry';
 import { emitChange } from '../../core/events';
@@ -142,6 +143,7 @@ export class VNav extends VuiElement {
   }
 
   protected sync(): void {
+    reportUnexpectedChildren(this, ['vui-nav-item']);
     const nav = this.qs('nav');
     const label = this.getAttribute('label') ?? '';
     if (label) nav.setAttribute('aria-label', label);

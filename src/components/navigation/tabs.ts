@@ -3,6 +3,7 @@ import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
 import { ownedChildren } from '../../composition/dom';
+import { reportUnexpectedChildren } from '../../core/dev';
 import { applyRovingTabIndex, isRtl, moveInList } from '../../interaction/keyboard';
 
 let tabSeq = 0;
@@ -153,6 +154,7 @@ export class VTabs extends VuiElement {
   protected sync(): void {
     const label = this.getAttribute('label') ?? 'Tabs';
     this.qs('[role="tablist"]').setAttribute('aria-label', label);
+    reportUnexpectedChildren(this, ['vui-tab', 'vui-tab-panel']);
     this.link();
   }
 

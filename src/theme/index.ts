@@ -1,3 +1,4 @@
+import { reportDeveloper } from '../core/dev';
 import { installVuiStyles } from './install';
 
 export type VuiTheme = 'light' | 'dark' | 'high-contrast' | 'system';
@@ -7,10 +8,21 @@ const themes = new Set<VuiTheme>(['light', 'dark', 'high-contrast', 'system']);
 const densities = new Set<VuiDensity>(['comfortable', 'compact', 'dense']);
 
 export function setTheme(theme: VuiTheme, root: HTMLElement = document.documentElement): void {
+  if (!themes.has(theme)) {
+    reportDeveloper('theme', `Unknown theme "${String(theme)}". Expected light|dark|high-contrast|system. The current theme stays.`);
+    return;
+  }
   root.setAttribute('data-vui-theme', theme);
 }
 
 export function setDensity(density: VuiDensity, root: HTMLElement = document.documentElement): void {
+  if (!densities.has(density)) {
+    reportDeveloper(
+      'density',
+      `Unknown density "${String(density)}". Expected comfortable|compact|dense. The current density stays.`,
+    );
+    return;
+  }
   root.setAttribute('data-vui-density', density);
 }
 

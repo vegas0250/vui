@@ -3,6 +3,7 @@ import { registerContract } from '../../contract/registry';
 import { VuiElement } from '../../core/element';
 import { emitChange } from '../../core/events';
 import { ownedChildren } from '../../composition/dom';
+import { reportUnexpectedChildren } from '../../core/dev';
 import { isActivation, nextEnabled } from '../../interaction/keyboard';
 import { pushOverlay } from '../../interaction/overlay';
 import { reflectBooleans, reflectStrings } from '../../core/reflect';
@@ -237,6 +238,7 @@ export class VSelect extends VuiElement {
   }
 
   private optionElements(): VOption[] {
+    reportUnexpectedChildren(this, ['vui-option']);
     return ownedChildren(this, 'vui-option', (node): node is VOption => node instanceof VOption);
   }
 

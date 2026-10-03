@@ -84,9 +84,13 @@ Pattern — страница из этих primitive для типового с�
 Unit → Compliance → Interaction → Composition → Accessibility → Visual → Build / package
 ```
 
-`pnpm test` гоняет unit, compliance, interaction и composition. `pnpm test:e2e` гоняет Studio, responsive, accessibility и короткую visual matrix в `visual.html`. Снимки не умножаются на все темы и плотности. Показательный compliance-набор — button, input, dialog, toast, select, data-grid, file-tree. Новые элементы 1.0 проверяются тем же `checkCompliance()` в `tests/unit/platform.test.ts`.
+`pnpm test` гоняет unit, compliance, interaction, composition, матрицу exports и повторный mount. `pnpm test:e2e` гоняет Studio, responsive, accessibility и visual matrix в `visual.html`: четыре сочетания темы и viewport, состояния, плюс полоса семейств в light и в dark/compact/rtl. Снимки не умножаются на все темы и плотности. `checkCompliance()` проходит по всему реестру.
 
-Публичная карта exports заморожена тестом `tests/unit/exports.test.ts`. Удаление ключа — ломающее изменение. CI: TypeScript, unit, сборка, бюджет размера, Playwright. Отдельного runtime-бюджета кадров нет: сначала замер в приложении, потом оптимизация. Дымовая проверка — монтирование длинного списка и снятие слушателей.
+Публичная карта exports заморожена тестом `tests/unit/exports.test.ts`. `tests/unit/export-matrix.test.ts` проверяет, что каждый элемент доступен из файла компонента, категории и `import 'vui'`, и что зарегистрированный класс — тот же. Удаление ключа — ломающее изменение.
+
+Неизвестное имя темы или плотности, неизвестный enum и прямой ребёнок не из контракта родителя дают одно предупреждение `vui:` и оставляют разметку как её написали. Повторный `defineElement` с другим классом не заменяет уже зарегистрированный элемент.
+
+CI: TypeScript, unit, сборка, бюджет размера, tree-shaking, временный consumer (`pnpm check:consumer`) и Playwright. Consumer ставит tarball пакета, а не исходники репозитория. Отдельного runtime-бюджета кадров нет: стресс-тест монтирует 1000 строк таблицы и 1000 пунктов списка.
 
 ## Packaging, tree shaking, public API
 
@@ -100,9 +104,9 @@ vui/theme | runtime | contract | composition | families | interaction
 vui/themes/*
 ```
 
-Сборка — ESM, `preserveModules`, declarations, source maps. `lucide` внешний. Селективный импорт не тянет `src/index.ts`. `src/core`, showcase и patterns в exports не входят.
+Сборка — ESM, `preserveModules`, declarations, source maps. `lucide` внешний. Селективный импорт не тянет `src/index.ts`. `src/core`, showcase и patterns в exports не входят. Декларации showcase в пакет не попадают: `tsconfig.build.json` их исключает.
 
-Бюджет после сборки: `pnpm check:budget`. Один JS-файл dist не больше 96 КБ, сумма JS не больше 2 МБ.
+Бюджет после сборки: `pnpm check:budget`. Один JS-файл dist не больше 96 КБ, сумма JS не больше 2 МБ. `pnpm check:shake` сравнивает полный импорт, категорию и один компонент. `pnpm check:consumer` после `pnpm build` повторяет путь внешнего приложения.
 
 ## Theming, customization
 

@@ -1,3 +1,4 @@
+import { reportUnexpectedChildren } from '../../core/dev';
 import { defineElement } from '../../core/define';
 import { registerContract } from '../../contract/registry';
 import { emitChange } from '../../core/events';
@@ -75,6 +76,7 @@ export class VList extends VuiElement {
 
   private readonly model = new SelectionModel<string>('single');
   private owned = '';
+  private slotSync = 0;
 
   static get observedAttributes(): string[] {
     return ['label', 'multiple', 'value'];
@@ -101,7 +103,13 @@ export class VList extends VuiElement {
   }
 
   protected afterRender(): void {
-    this.qs('slot').addEventListener('slotchange', () => this.sync());
+    this.qs('slot').addEventListener('slotchange', () => {
+      const ticket = ++this.slotSync;
+      queueMicrotask(() => {
+        if (ticket !== this.slotSync || !this.isConnected) return;
+        this.sync();
+      });
+    });
     this.addEventListener('click', (event) => {
       const target = event.target;
       if (!(target instanceof HTMLElement) || target.localName !== 'vui-list-item' || target.parentElement !== this) return;
@@ -140,6 +148,7 @@ export class VList extends VuiElement {
     if (label) list.setAttribute('aria-label', label);
     else list.removeAttribute('aria-label');
     list.setAttribute('aria-multiselectable', this.hasAttribute('multiple') ? 'true' : 'false');
+    reportUnexpectedChildren(this, ['vui-list-item']);
     const items = this.items();
     this.model.setMode(this.hasAttribute('multiple') ? 'multiple' : 'single');
     this.model.setOrder(items.map((item, index) => this.itemId(item, index)));
