@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { containerBand, getDensity, getTheme, readFoundation, setDensity, setTheme } from '../../src/foundation/index';
 import type { VuiDensity, VuiTheme } from '../../src/foundation/index';
 
-const themes: VuiTheme[] = ['light', 'dark', 'high-contrast', 'system'];
+const themes: VuiTheme[] = ['light', 'dark', 'high-contrast', 'system', 'neon-green', 'neon-magenta', 'neon-cyan'];
 const densities: VuiDensity[] = ['comfortable', 'compact', 'dense'];
 
 describe('foundation runtime', () => {

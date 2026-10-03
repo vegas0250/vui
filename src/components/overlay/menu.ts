@@ -1,3 +1,4 @@
+import '../foundation/icon';
 import { ownedChildren } from '../../composition/dom';
 import { reportUnexpectedChildren } from '../../core/dev';
 import { registerContract } from '../../contract/registry';
@@ -15,18 +16,19 @@ export class VMenuItem extends VuiElement {
   declare label: string;
   declare command: string;
   declare shortcut: string;
+  declare icon: string;
   declare disabled: boolean;
   declare checked: boolean;
 
   static shadowDelegatesFocus = false;
 
   static get observedAttributes(): string[] {
-    return ['label', 'command', 'shortcut', 'disabled', 'checked'];
+    return ['label', 'command', 'shortcut', 'icon', 'disabled', 'checked'];
   }
 
   protected template(): string {
     return `
-      <span class="mark" part="check" aria-hidden="true"></span>
+      <span class="mark" part="check" aria-hidden="true"><vui-icon part="icon" hidden></vui-icon></span>
       <span class="label" part="label"></span>
       <span class="shortcut" part="shortcut" hidden></span>
       <span class="caret" part="caret" hidden aria-hidden="true"></span>
@@ -60,6 +62,8 @@ export class VMenuItem extends VuiElement {
         text-align: center;
       }
       :host([checked]) .mark::before { content: "✓"; }
+      vui-icon { width: 1em; height: 1em; }
+      :host([checked]) vui-icon { display: none; }
       .label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .shortcut {
         margin-inline-start: auto;
@@ -94,6 +98,10 @@ export class VMenuItem extends VuiElement {
   protected sync(): void {
     const label = this.getAttribute('label') ?? '';
     this.qs('.label').textContent = label;
+    const iconName = this.getAttribute('icon') ?? '';
+    const icon = this.qs<HTMLElement>('vui-icon');
+    icon.toggleAttribute('hidden', iconName.length === 0 || this.hasAttribute('checked'));
+    if (iconName) icon.setAttribute('name', iconName);
     const shortcut = this.shortcutText();
     const shortcutEl = this.qs<HTMLElement>('.shortcut');
     shortcutEl.textContent = shortcut;
@@ -384,7 +392,7 @@ export class VMenu extends VuiElement {
   }
 }
 
-reflectStrings(VMenuItem, ['label', 'command', 'shortcut']);
+reflectStrings(VMenuItem, ['label', 'command', 'shortcut', 'icon']);
 reflectBooleans(VMenuItem, ['disabled', 'checked']);
 reflectStrings(VMenu, ['label']);
 defineElement('vui-menu-item', VMenuItem);
@@ -397,12 +405,13 @@ registerContract({
     { name: 'label', kind: 'string', reflected: true },
     { name: 'command', kind: 'string', reflected: true },
     { name: 'shortcut', kind: 'string', reflected: true },
+    { name: 'icon', kind: 'string', reflected: true },
     { name: 'disabled', kind: 'boolean', reflected: true },
     { name: 'checked', kind: 'boolean', reflected: true },
   ],
   events: ['click'],
   slots: ['submenu'],
-  parts: ['check', 'label', 'shortcut', 'caret'],
+  parts: ['check', 'icon', 'label', 'shortcut', 'caret'],
   methods: [],
   keyboard: ['Enter', 'Space'],
   states: ['disabled'],

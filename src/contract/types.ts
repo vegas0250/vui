@@ -35,4 +35,4 @@ export interface ComponentContract {
   role?: string;
 }
 
-export const standardEvents = ['click', 'input', 'change', 'close'] as const;
+export const standardEvents = ['click', 'input', 'change', 'close', 'minimize', 'maximize'] as const;

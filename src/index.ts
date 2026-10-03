@@ -28,6 +28,7 @@ export { VProperties, VProperty } from './components/data/properties';
 export { VFileTree, VTreeItem } from './components/desktop/file-tree';
 export { VShell } from './components/desktop/shell';
 export { VStatusBar } from './components/desktop/status-bar';
+export { VTitlebar } from './components/desktop/titlebar';
 export { VWindow } from './components/desktop/window';
 export { VAlert } from './components/feedback/alert';
 export { VEmpty } from './components/feedback/empty';

@@ -219,7 +219,7 @@ menu.showAt(x, y);
 ```
 
 | vui-tabs | attribute и property `label`. Слоты `tab` и `panel`. Part `tablist` |
-| vui-tab | `panel`, `selected`, `disabled` и те же properties. Part `label`. Роль `tab` |
+| vui-tab | `panel`, `close-label`, `selected`, `disabled`, `closable`. Part `label` и `close`. Роль `tab`. `closable` шлёт `close` и не выбирает вкладку |
 | vui-tab-panel | `name`, `selected`. Part `panel`. Роль `tabpanel` |
 | Events | нет, выбор записан в `selected` |
 | Keyboard | Arrow Left/Right, Home, End. В `dir="rtl"` стрелки влево и вправо меняются местами |
@@ -344,6 +344,23 @@ menu.showAt(x, y);
 | Accessibility | separator с `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-orientation`, `aria-label` |
 | Responsive | горизонтальная панель складывается уже `--vui-layout-narrow`. Вложенный split меняет только свою позицию |
 
+## vui-titlebar
+
+Рамка окна приложения. Системные кнопки сворачивания сюда не входят: их рисует сама панель и шлёт события наружу.
+
+```html
+<vui-titlebar label="Vortex" minimize-label="Свернуть" maximize-label="Развернуть" restore-label="Восстановить" close-label="Закрыть">
+  <vui-icon slot="icon" name="folder"></vui-icon>
+</vui-titlebar>
+```
+
+| Attributes | `label`, `minimize-label`, `maximize-label`, `restore-label`, `close-label`, `maximized` |
+| Events | `minimize`, `maximize`, `close`. Двойной щелчок по заголовку тоже шлёт `maximize` |
+| Slots | `icon`, `tools` |
+| Parts | `bar`, `icon`, `title`, `tools`, `controls`, `minimize`, `maximize`, `close` |
+
+`maximized` меняет значок средней кнопки. Область заголовка перетаскивает окно (`app-region: drag`), кнопки и слот `tools` — нет.
+
 ## vui-status-bar
 
 | Attributes | `label` |
@@ -392,7 +409,7 @@ grid.selectedId = '1';
 | Accessibility | `role="grid"`, `aria-rowcount`, `aria-multiselectable`, `aria-selected` на строке. Фокус ячейки — `:focus-visible` |
 | Responsive | горизонтальная прокрутка. Колонка `priority: "secondary"` скрывается на ширине до `--vui-layout-medium`, и клавиатура её пропускает. `fill` отдаёт таблице высоту родителя, и прокрутка идёт внутри `frame` |
 
-`columns`: `{ key, title, width?, align?: start | center | end, priority?: primary | secondary }`. `width` — только простое число с `px`, `rem`, `em` или `%`. `rows`: `{ id, [key]: string }`.
+`columns`: `{ key, title, width?, align?: start | center | end, priority?: primary | secondary, iconKey? }`. `iconKey` — поле строки с именем иконки VUI, оно рисуется перед текстом ячейки. `width` — только простое число с `px`, `rem`, `em` или `%`. `rows`: `{ id, [key]: string }`.
 
 `selectedIds` — массив id выбранных строк. Это свойство, не атрибут: id может содержать запятую. Запись `selectedIds` и `selectedId` не шлёт `change`. `selected` остаётся id активной строки.
 

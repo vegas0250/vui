@@ -1,3 +1,4 @@
+import '../foundation/icon';
 import { registerContract } from '../../contract/registry';
 import { defineElement } from '../../core/define';
 import { VuiElement } from '../../core/element';
@@ -10,17 +11,22 @@ let tabSeq = 0;
 
 export class VTab extends VuiElement {
   declare panel: string;
+  declare closeLabel: string;
   declare selected: boolean;
   declare disabled: boolean;
+  declare closable: boolean;
 
   static shadowDelegatesFocus = false;
 
   static get observedAttributes(): string[] {
-    return ['selected', 'disabled', 'panel'];
+    return ['selected', 'disabled', 'closable', 'panel', 'close-label'];
   }
 
   protected template(): string {
-    return `<span part="label"><slot></slot></span>`;
+    return `
+      <span part="label"><slot></slot></span>
+      <button part="close" type="button" hidden><vui-icon name="x"></vui-icon></button>
+    `;
   }
 
   protected componentStyles(): string {
@@ -48,11 +54,41 @@ export class VTab extends VuiElement {
         font-weight: var(--vui-font-weight-strong);
       }
       :host([disabled]) { opacity: 0.5; cursor: not-allowed; }
+      button {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 1.25rem;
+        height: 1.25rem;
+        margin-inline-start: var(--vui-space-2xs);
+        padding: 0;
+        border: 0;
+        border-radius: var(--vui-radius-sm);
+        background: transparent;
+        color: inherit;
+        cursor: pointer;
+      }
+      :host([closable]) button { display: inline-flex; }
+      button:hover { background: var(--vui-color-surface-hover); }
+      button:focus-visible { outline: var(--vui-focus-ring); outline-offset: calc(var(--vui-focus-offset) * -1); }
+      vui-icon { width: 0.85em; height: 0.85em; }
     `;
+  }
+
+  protected afterRender(): void {
+    this.qs('button').addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      this.dispatchEvent(new Event('close', { bubbles: true, composed: true }));
+    });
   }
 
   protected sync(): void {
     const selected = this.hasAttribute('selected');
+    const close = this.qs<HTMLButtonElement>('button');
+    close.hidden = !this.hasAttribute('closable');
+    close.disabled = this.hasAttribute('disabled');
+    close.setAttribute('aria-label', this.getAttribute('close-label') || 'Close');
     this.setAttribute('role', 'tab');
     this.setAttribute('aria-selected', selected ? 'true' : 'false');
     this.tabIndex = this.hasAttribute('disabled') ? -1 : selected ? 0 : -1;
@@ -235,8 +271,8 @@ export class VTabs extends VuiElement {
   }
 }
 
-reflectStrings(VTab, ['panel']);
-reflectBooleans(VTab, ['selected', 'disabled']);
+reflectStrings(VTab, { panel: 'panel', closeLabel: 'close-label' });
+reflectBooleans(VTab, ['selected', 'disabled', 'closable']);
 reflectStrings(VTabPanel, ['name']);
 reflectBooleans(VTabPanel, ['selected']);
 reflectStrings(VTabs, ['label']);
@@ -249,12 +285,14 @@ registerContract({
   className: 'VTab',
   attributes: [
     { name: 'panel', kind: 'string', reflected: true },
+    { name: 'close-label', kind: 'string', property: 'closeLabel', reflected: true },
     { name: 'selected', kind: 'boolean', reflected: true },
     { name: 'disabled', kind: 'boolean', reflected: true },
+    { name: 'closable', kind: 'boolean', reflected: true },
   ],
-  events: [],
+  events: ['close'],
   slots: [''],
-  parts: ['label'],
+  parts: ['label', 'close'],
   methods: [],
   keyboard: [],
   states: ['disabled'],

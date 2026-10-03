@@ -61,6 +61,7 @@ const publicExports = [
   './split-panel',
   './toolbar',
   './status-bar',
+  './titlebar',
   './shell',
   './window',
   './file-tree',

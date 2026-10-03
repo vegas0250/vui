@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 1.2.0
+
+- Темы `neon-green`, `neon-magenta` и `neon-cyan`: тёмный неон, общий словарь токенов.
+- `vui-titlebar` — рамка окна без системных кнопок. Слоты `icon` и `tools`. События `minimize`, `maximize`, `close`. `maximized` меняет значок разворота.
+- `vui-tab` с `closable` показывает закрытие и шлёт `close`.
+- Колонка `vui-data-grid` принимает `iconKey`: имя иконки из поля строки рисуется перед текстом.
+- `vui-menu-item` принимает `icon`.
+
 ## 1.1.0
 
 - `vui-data-grid` от 100 строк рисует окно строк, а не весь набор. `aria-rowcount` и `aria-rowindex` остаются абсолютными. `fill` делает `frame` областью прокрутки на высоте родителя.

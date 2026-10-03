@@ -1,6 +1,6 @@
 {
   "name": "vui",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Универсальная модульная UI-система готовых визуальных компонентов для Web, SPA и Desktop/Electron с поддержкой тем и различной плотности интерфейса.",
   "type": "module",
   "license": "UNLICENSED",
@@ -241,6 +241,10 @@
     "./shell": {
       "types": "./dist/components/desktop/shell.d.ts",
       "import": "./dist/components/desktop/shell.js"
+    },
+    "./titlebar": {
+      "types": "./dist/components/desktop/titlebar.d.ts",
+      "import": "./dist/components/desktop/titlebar.js"
     },
     "./window": {
       "types": "./dist/components/desktop/window.d.ts",

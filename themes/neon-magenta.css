@@ -1,0 +1,38 @@
+[data-vui-theme="neon-magenta"] {
+  color-scheme: dark;
+  --vui-color-background: var(--vui-palette-neon-magenta-void);
+  --vui-color-surface: var(--vui-palette-neon-magenta-panel);
+  --vui-color-surface-raised: var(--vui-palette-neon-magenta-raised);
+  --vui-color-surface-sunken: var(--vui-palette-neon-magenta-void);
+  --vui-color-surface-hover: var(--vui-palette-neon-magenta-hover);
+  --vui-color-field: var(--vui-palette-neon-magenta-void);
+  --vui-color-text: var(--vui-palette-neon-magenta-text);
+  --vui-color-text-muted: var(--vui-palette-neon-magenta-muted);
+  --vui-color-border: var(--vui-palette-neon-magenta-line);
+  --vui-color-border-strong: var(--vui-palette-neon-magenta);
+  --vui-color-primary: var(--vui-palette-neon-magenta);
+  --vui-color-primary-hover: var(--vui-palette-neon-magenta-hot);
+  --vui-color-primary-active: var(--vui-palette-neon-magenta-deep);
+  --vui-color-on-primary: var(--vui-palette-neon-magenta-ink);
+  --vui-color-danger: var(--vui-palette-neon-danger);
+  --vui-color-danger-hover: var(--vui-palette-neon-danger-hot);
+  --vui-color-on-danger: var(--vui-palette-neon-danger-ink);
+  --vui-color-success: var(--vui-palette-neon-green);
+  --vui-color-warning: var(--vui-palette-neon-warn);
+  --vui-color-info: var(--vui-palette-neon-cyan);
+  --vui-color-danger-surface: var(--vui-palette-neon-danger-ink);
+  --vui-color-success-surface: var(--vui-palette-neon-magenta-panel);
+  --vui-color-warning-surface: var(--vui-palette-neon-magenta-raised);
+  --vui-color-info-surface: var(--vui-palette-neon-magenta-raised);
+  --vui-color-backdrop: var(--vui-palette-backdrop-dark);
+  --vui-color-focus: var(--vui-palette-neon-magenta);
+  --vui-color-tooltip-bg: var(--vui-palette-neon-magenta-text);
+  --vui-color-tooltip-text: var(--vui-palette-neon-magenta-ink);
+  --vui-color-tooltip-border: var(--vui-palette-neon-magenta);
+  --vui-shadow-sm: var(--vui-palette-shadow-neon-magenta-sm);
+  --vui-shadow-md: var(--vui-palette-shadow-neon-magenta-md);
+  --vui-shadow-lg: var(--vui-palette-shadow-neon-magenta-lg);
+  --vui-focus-ring: 2px solid var(--vui-color-focus);
+  --vui-focus-shadow: 0 0 0 3px color-mix(in srgb, var(--vui-color-focus) 35%, transparent);
+  --vui-border-width: 1px;
+}

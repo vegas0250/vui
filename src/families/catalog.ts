@@ -154,6 +154,7 @@ joinFamily({ element: 'vui-text', family: 'content', rules: ['label', 'level', '
 joinFamily({ element: 'vui-chip', family: 'content', rules: ['label'] });
 joinFamily({ element: 'vui-kbd', family: 'content', rules: ['label'] });
 
+joinFamily({ element: 'vui-titlebar', family: 'desktop', rules: ['label', 'regions'] });
 joinFamily({ element: 'vui-shell', family: 'desktop', rules: ['label', 'regions', 'keyboard'] });
 joinFamily({ element: 'vui-window', family: 'desktop', rules: ['label', 'regions'] });
 joinFamily({ element: 'vui-status-bar', family: 'desktop', rules: ['label'] });

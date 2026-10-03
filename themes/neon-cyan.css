@@ -1,0 +1,38 @@
+[data-vui-theme="neon-cyan"] {
+  color-scheme: dark;
+  --vui-color-background: var(--vui-palette-neon-cyan-void);
+  --vui-color-surface: var(--vui-palette-neon-cyan-panel);
+  --vui-color-surface-raised: var(--vui-palette-neon-cyan-raised);
+  --vui-color-surface-sunken: var(--vui-palette-neon-cyan-void);
+  --vui-color-surface-hover: var(--vui-palette-neon-cyan-hover);
+  --vui-color-field: var(--vui-palette-neon-cyan-void);
+  --vui-color-text: var(--vui-palette-neon-cyan-text);
+  --vui-color-text-muted: var(--vui-palette-neon-cyan-muted);
+  --vui-color-border: var(--vui-palette-neon-cyan-line);
+  --vui-color-border-strong: var(--vui-palette-neon-cyan);
+  --vui-color-primary: var(--vui-palette-neon-cyan);
+  --vui-color-primary-hover: var(--vui-palette-neon-cyan-hot);
+  --vui-color-primary-active: var(--vui-palette-neon-cyan-deep);
+  --vui-color-on-primary: var(--vui-palette-neon-cyan-ink);
+  --vui-color-danger: var(--vui-palette-neon-danger);
+  --vui-color-danger-hover: var(--vui-palette-neon-danger-hot);
+  --vui-color-on-danger: var(--vui-palette-neon-danger-ink);
+  --vui-color-success: var(--vui-palette-neon-green);
+  --vui-color-warning: var(--vui-palette-neon-warn);
+  --vui-color-info: var(--vui-palette-neon-cyan);
+  --vui-color-danger-surface: var(--vui-palette-neon-danger-ink);
+  --vui-color-success-surface: var(--vui-palette-neon-cyan-panel);
+  --vui-color-warning-surface: var(--vui-palette-neon-cyan-raised);
+  --vui-color-info-surface: var(--vui-palette-neon-cyan-raised);
+  --vui-color-backdrop: var(--vui-palette-backdrop-dark);
+  --vui-color-focus: var(--vui-palette-neon-cyan);
+  --vui-color-tooltip-bg: var(--vui-palette-neon-cyan-text);
+  --vui-color-tooltip-text: var(--vui-palette-neon-cyan-ink);
+  --vui-color-tooltip-border: var(--vui-palette-neon-cyan);
+  --vui-shadow-sm: var(--vui-palette-shadow-neon-cyan-sm);
+  --vui-shadow-md: var(--vui-palette-shadow-neon-cyan-md);
+  --vui-shadow-lg: var(--vui-palette-shadow-neon-cyan-lg);
+  --vui-focus-ring: 2px solid var(--vui-color-focus);
+  --vui-focus-shadow: 0 0 0 3px color-mix(in srgb, var(--vui-color-focus) 35%, transparent);
+  --vui-border-width: 1px;
+}

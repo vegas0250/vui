@@ -1,3 +1,4 @@
+import '../foundation/icon';
 import { reportDeveloper } from '../../core/dev';
 import { defineElement } from '../../core/define';
 import { registerContract } from '../../contract/registry';
@@ -16,6 +17,8 @@ export interface VDataGridColumn {
   align?: 'start' | 'center' | 'end';
   /** Secondary columns stay in the grid and hide when the container is at or below `--vui-layout-medium`. */
   priority?: 'primary' | 'secondary';
+  /** Row field whose value is a VUI icon name, drawn before the cell text. */
+  iconKey?: string;
 }
 
 export interface VDataGridRow {
@@ -176,6 +179,14 @@ export class VDataGrid extends VuiElement {
       }
       .align-center { text-align: center; }
       .align-end { text-align: end; }
+      .with-icon {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--vui-space-xs);
+        min-width: 0;
+        max-width: 100%;
+      }
+      .with-icon vui-icon { width: var(--vui-icon-size); height: var(--vui-icon-size); color: var(--vui-color-primary); }
       .pad td {
         height: 0;
         min-height: 0;
@@ -359,7 +370,19 @@ export class VDataGrid extends VuiElement {
       cell.tabIndex = -1;
       cell.dataset.row = String(rowIndex);
       cell.dataset.col = String(colIndex);
-      cell.textContent = data[column.key] ?? '';
+      const text = data[column.key] ?? '';
+      if (column.iconKey) {
+        const lead = document.createElement('span');
+        lead.className = 'with-icon';
+        const icon = document.createElement('vui-icon');
+        icon.setAttribute('name', data[column.iconKey] || 'file');
+        const label = document.createElement('span');
+        label.textContent = text;
+        lead.append(icon, label);
+        cell.append(lead);
+      } else {
+        cell.textContent = text;
+      }
       if (column.align) cell.classList.add(`align-${column.align}`);
       this.markPriority(cell, column);
       row.append(cell);

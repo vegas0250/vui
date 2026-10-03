@@ -28,7 +28,7 @@ const app = document.querySelector('#app');
 if (!app) throw new Error('Showcase root is missing');
 app.innerHTML = showcaseMarkup.replace('</main>', `${studioMarkup}</main>`);
 
-const themes = new Set<VuiTheme>(['light', 'dark', 'high-contrast', 'system']);
+const themes = new Set<VuiTheme>(['light', 'dark', 'high-contrast', 'system', 'neon-green', 'neon-magenta', 'neon-cyan']);
 const densities = new Set<VuiDensity>(['comfortable', 'compact', 'dense']);
 
 const themeSelect = document.querySelector('#theme-select');
@@ -39,6 +39,9 @@ const themeLabels: Record<VuiTheme, string> = {
   dark: 'Dark',
   'high-contrast': 'High Contrast',
   system: 'System',
+  'neon-green': 'Neon Green',
+  'neon-magenta': 'Neon Magenta',
+  'neon-cyan': 'Neon Cyan',
 };
 const densityLabels: Record<VuiDensity, string> = {
   comfortable: 'Comfortable',

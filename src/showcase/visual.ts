@@ -2,7 +2,7 @@ import '../index';
 import { VDataGrid } from '../components/data/data-grid';
 import { VDialog } from '../components/overlay/dialog';
 
-const themes = new Set(['light', 'dark', 'high-contrast', 'system']);
+const themes = new Set(['light', 'dark', 'high-contrast', 'system', 'neon-green', 'neon-magenta', 'neon-cyan']);
 const densities = new Set(['comfortable', 'compact', 'dense']);
 const params = new URLSearchParams(location.search);
 const theme = params.get('theme') ?? 'light';
