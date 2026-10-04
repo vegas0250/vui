@@ -156,7 +156,7 @@ export class VShell extends VuiElement {
       .aside-sep:focus-visible { outline: var(--vui-focus-ring); outline-offset: calc(var(--vui-focus-offset) * -1); }
       .aside-rail {
         display: flex;
-        flex: 0 1 var(--vui-shell-aside, 50%);
+        flex: var(--vui-shell-aside-grow, 1) 1 var(--vui-shell-aside, 0px);
         align-items: stretch;
         width: auto;
         min-width: min(12rem, 36%);
@@ -326,6 +326,17 @@ export class VShell extends VuiElement {
     const max = Math.max(220, rect.width * 0.75);
     const next = Math.round(Math.min(max, Math.max(220, width)));
     this.style.setProperty('--vui-shell-aside', `${next}px`);
+    this.style.setProperty('--vui-shell-aside-grow', '0');
+  }
+
+  override attributeChangedCallback(name?: string, previous?: string | null, value?: string | null): void {
+    if (name === 'aside-collapsed' && previous != null && value == null) this.shareFilePanes();
+    super.attributeChangedCallback(name, previous, value);
+  }
+
+  private shareFilePanes(): void {
+    this.style.removeProperty('--vui-shell-aside');
+    this.style.removeProperty('--vui-shell-aside-grow');
   }
 
   protected sync(): void {

@@ -51,6 +51,7 @@ export class VPathBar extends VuiElement {
         font-size: var(--vui-font-size);
       }
       .bar {
+        position: relative;
         display: flex;
         align-items: center;
         gap: var(--vui-space-2xs);
@@ -106,6 +107,18 @@ export class VPathBar extends VuiElement {
         font: inherit;
         user-select: text;
       }
+      .crumbs[hidden],
+      .rest[hidden],
+      input[hidden] { display: none !important; }
+      :host([editing]) .crumbs,
+      :host([editing]) .rest { display: none !important; }
+      :host([editing]) input {
+        position: absolute;
+        inset-block: 0;
+        inset-inline: var(--vui-space-xs);
+        width: auto;
+        background: var(--vui-color-field);
+      }
       input:focus-visible { outline: none; }
       .bar:focus-within {
         border-color: var(--vui-color-focus);
@@ -118,15 +131,26 @@ export class VPathBar extends VuiElement {
   }
 
   protected afterRender(): void {
-    this.qs('.bar').addEventListener('click', (event) => {
-      if (this.isDisabled()) return;
-      const crumb = event.target instanceof Element ? event.target.closest('button') : null;
-      if (crumb instanceof HTMLButtonElement && this.containsNode(crumb)) {
+    const bar = this.qs('.bar');
+    bar.addEventListener('mousedown', (event) => {
+      if (this.isDisabled() || this.hasAttribute('editing')) return;
+      const crumb = this.crumbFrom(event);
+      if (crumb) {
         const path = crumb.dataset.path ?? '';
-        if (!path || path === this.value) return;
-        this.value = path;
-        emitChange(this);
-        return;
+        if (path && path !== this.value) return;
+      }
+      event.preventDefault();
+    });
+    bar.addEventListener('click', (event) => {
+      if (this.isDisabled()) return;
+      const crumb = this.crumbFrom(event);
+      if (crumb) {
+        const path = crumb.dataset.path ?? '';
+        if (path && path !== this.value) {
+          this.value = path;
+          emitChange(this);
+          return;
+        }
       }
       this.beginEdit();
     });
@@ -162,8 +186,10 @@ export class VPathBar extends VuiElement {
     return this.qs('input');
   }
 
-  private containsNode(node: Node): boolean {
-    return this.shadow.contains(node);
+  private crumbFrom(event: Event): HTMLButtonElement | null {
+    const crumb = event.target instanceof Element ? event.target.closest('button') : null;
+    if (!(crumb instanceof HTMLButtonElement) || !this.shadow.contains(crumb)) return null;
+    return crumb;
   }
 
   private beginEdit(): void {

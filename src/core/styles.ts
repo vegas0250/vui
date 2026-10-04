@@ -9,6 +9,35 @@ export const baseStyles = `
   font-size: var(--vui-font-size);
   line-height: var(--vui-line-height);
   color: var(--vui-color-text);
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--vui-color-text) 35%, transparent) transparent;
+}
+:host,
+:host * {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--vui-color-text) 35%, transparent) transparent;
+}
+:host::-webkit-scrollbar,
+:host *::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+:host::-webkit-scrollbar-thumb,
+:host *::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background-color: color-mix(in srgb, var(--vui-color-text) 35%, transparent);
+  background-clip: padding-box;
+}
+:host::-webkit-scrollbar-thumb:hover,
+:host *::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(in srgb, var(--vui-color-text) 55%, transparent);
+}
+:host::-webkit-scrollbar-track,
+:host *::-webkit-scrollbar-track,
+:host::-webkit-scrollbar-corner,
+:host *::-webkit-scrollbar-corner {
+  background: transparent;
 }
 :host *,
 :host *::before,

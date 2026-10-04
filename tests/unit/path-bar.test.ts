@@ -14,15 +14,22 @@ describe('vui-path-bar', () => {
     ];
     document.body.append(bar);
 
-    const buttons = [...bar.shadowRoot!.querySelectorAll('button')];
-    expect(buttons.map((button) => button.textContent)).toEqual(['C:\\', 'Users', 'vegas']);
+    const buttons = (): HTMLButtonElement[] => [...bar.shadowRoot!.querySelectorAll('button')];
+    expect(buttons().map((button) => button.textContent)).toEqual(['C:\\', 'Users', 'vegas']);
     expect(bar.shadowRoot?.querySelector('input')?.hidden).toBe(true);
+
+    buttons()[2]?.click();
+    expect(bar.hasAttribute('editing')).toBe(true);
+    expect(bar.shadowRoot?.querySelector('.crumbs')?.hasAttribute('hidden')).toBe(true);
+    bar.shadowRoot?.querySelector('input')?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    expect(bar.hasAttribute('editing')).toBe(false);
+    expect(bar.value).toBe('C:\\Users\\vegas');
 
     let opened = '';
     bar.addEventListener('change', () => {
       opened = bar.value;
     });
-    buttons[1]?.click();
+    buttons()[1]?.click();
     expect(opened).toBe('C:\\Users');
     expect(bar.hasAttribute('editing')).toBe(false);
 

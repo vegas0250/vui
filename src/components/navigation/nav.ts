@@ -29,7 +29,7 @@ export class VNavItem extends VuiElement {
         align-items: center;
         width: 100%;
         min-width: 0;
-        gap: var(--vui-space-sm);
+        gap: var(--vui-nav-item-gap, var(--vui-space-sm));
         min-height: var(--vui-size-control);
         padding-inline: var(--vui-space-sm);
         border-radius: var(--vui-radius);
@@ -110,7 +110,7 @@ export class VNav extends VuiElement {
   protected componentStyles(): string {
     return `
       :host { display: block; min-width: 0; max-width: 100%; container-type: inline-size; container-name: vui-nav; }
-      nav { display: flex; flex-direction: column; gap: var(--vui-space-2xs); min-width: 0; }
+      nav { display: flex; flex-direction: column; gap: var(--vui-nav-gap, var(--vui-space-xs)); min-width: 0; }
       :host([orientation="horizontal"]) nav { flex-direction: row; flex-wrap: wrap; }
       @container vui-nav (max-width: 22rem) {
         nav { flex-direction: column; }
