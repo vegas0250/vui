@@ -386,6 +386,8 @@ export class VDataGrid extends VuiElement {
       } else {
         cell.textContent = text;
       }
+      const hint = data[`${column.key}Title`];
+      if (hint) cell.title = hint;
       if (column.align) cell.classList.add(`align-${column.align}`);
       this.markPriority(cell, column);
       row.append(cell);

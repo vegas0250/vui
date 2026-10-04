@@ -15,10 +15,10 @@ describe('vui-data-grid', () => {
       { key: 'category', title: 'Category' },
     ];
     grid.rows = [
-      { id: 'button', name: 'Button', category: 'Actions' },
+      { id: 'button', name: 'Button', nameTitle: 'Button.full', category: 'Actions' },
       { id: 'input', name: 'Input', category: 'Forms' },
     ];
-
+    expect(grid.shadowRoot?.querySelector('td')?.getAttribute('title')).toBe('Button.full');
     expect(grid.shadowRoot?.textContent).toContain('Button');
     expect(grid.shadowRoot?.querySelectorAll('[role="gridcell"]').length).toBe(4);
 

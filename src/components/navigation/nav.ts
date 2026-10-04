@@ -36,6 +36,7 @@ export class VNavItem extends VuiElement {
         color: var(--vui-color-text);
         text-decoration: none;
         overflow-wrap: anywhere;
+        cursor: pointer;
       }
       a:hover { background: var(--vui-color-surface-hover); }
       :host([selected]) a {

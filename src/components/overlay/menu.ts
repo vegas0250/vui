@@ -210,6 +210,14 @@ export class VMenu extends VuiElement {
       :host(:focus) { outline: none; }
       :host(:focus-visible) { outline: var(--vui-focus-ring); }
       .menu { display: flex; flex-direction: column; min-width: 0; }
+      ::slotted(hr) {
+        width: auto;
+        align-self: stretch;
+        height: 0;
+        margin: var(--vui-space-2xs) var(--vui-space-xs);
+        border: 0;
+        border-block-start: var(--vui-border-width) solid var(--vui-color-border);
+      }
     `;
   }
 
@@ -304,7 +312,7 @@ export class VMenu extends VuiElement {
   }
 
   private items(): VMenuItem[] {
-    reportUnexpectedChildren(this, ['vui-menu-item']);
+    reportUnexpectedChildren(this, ['vui-menu-item', 'hr']);
     return ownedChildren(this, 'vui-menu-item', (node): node is VMenuItem => node instanceof VMenuItem);
   }
 

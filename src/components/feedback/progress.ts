@@ -41,6 +41,7 @@ export class VProgress extends VuiElement {
   protected componentStyles(): string {
     return `
       :host { display: block; min-width: 0; max-width: 100%; }
+      :host([hidden]) { display: none !important; }
       [part="track"] {
         height: var(--vui-space-xs);
         border-radius: var(--vui-radius-sm);

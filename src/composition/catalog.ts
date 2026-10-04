@@ -115,6 +115,14 @@ registerComposition({
 });
 
 registerComposition({
+  id: 'path-bar',
+  host: 'vui-path-bar',
+  summary: 'Крошки и адрес в одном поле. Щелчок по крошке открывает её путь, щелчок по полю включает ввод адреса.',
+  links: [],
+  emits: ['change'],
+});
+
+registerComposition({
   id: 'breadcrumbs',
   host: 'vui-breadcrumbs',
   summary: 'Крошки — светлые дети. Текущую страницу помечает приложение через aria-current.',

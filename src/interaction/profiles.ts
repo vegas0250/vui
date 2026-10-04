@@ -201,6 +201,16 @@ registerInteraction({
 });
 
 registerInteraction({
+  element: 'vui-path-bar',
+  focus: ['native'],
+  keyboard: ['Enter', 'Escape', 'Tab'],
+  selectionOwner: 'none',
+  active: 'none',
+  command: false,
+  primitives: ['native'],
+});
+
+registerInteraction({
   element: 'vui-breadcrumbs',
   focus: ['native'],
   keyboard: ['Tab'],

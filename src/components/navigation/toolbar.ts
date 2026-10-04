@@ -60,7 +60,8 @@ export class VToolbar extends VuiElement {
         width: 100%;
         min-width: 0;
       }
-      .center > slot::slotted(vui-input) {
+      .center > slot::slotted(vui-input),
+      .center > slot::slotted(vui-path-bar) {
         flex: 1 1 auto;
         width: 100%;
         min-width: 0;

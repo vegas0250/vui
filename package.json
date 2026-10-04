@@ -158,6 +158,10 @@
       "types": "./dist/components/navigation/breadcrumbs.d.ts",
       "import": "./dist/components/navigation/breadcrumbs.js"
     },
+    "./path-bar": {
+      "types": "./dist/components/navigation/path-bar.d.ts",
+      "import": "./dist/components/navigation/path-bar.js"
+    },
     "./pagination": {
       "types": "./dist/components/navigation/pagination.d.ts",
       "import": "./dist/components/navigation/pagination.js"

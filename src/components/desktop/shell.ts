@@ -15,6 +15,7 @@ export class VShell extends VuiElement {
   declare resizeLabel: string;
   declare asideExpandLabel: string;
   declare asideCollapseLabel: string;
+  declare asideResizeLabel: string;
   declare collapsed: boolean;
   declare asideCollapsed: boolean;
 
@@ -27,6 +28,7 @@ export class VShell extends VuiElement {
       'resize-label',
       'aside-expand-label',
       'aside-collapse-label',
+      'aside-resize-label',
       'collapsed',
       'aside-collapsed',
     ];
@@ -46,6 +48,7 @@ export class VShell extends VuiElement {
             <div class="sep" part="nav-resize" role="separator" tabindex="0"></div>
           </div>
           <main part="main" tabindex="-1"><slot></slot></main>
+          <div class="aside-sep" part="aside-resize" role="separator" tabindex="0"></div>
           <div class="aside-rail" part="aside">
             <button part="aside-toggle" type="button"><vui-icon name="chevron-left"></vui-icon></button>
             <aside class="pane"><slot name="aside"></slot></aside>
@@ -132,13 +135,34 @@ export class VShell extends VuiElement {
       }
       .sep:hover::before,
       .sep:focus-visible::before { background: var(--vui-color-primary); }
+      .aside-sep {
+        flex: 0 0 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: col-resize;
+        touch-action: none;
+        background: var(--vui-color-background);
+      }
+      .aside-sep::before {
+        content: "";
+        width: 2px;
+        height: 2.75rem;
+        border-radius: 999px;
+        background: var(--vui-color-border-strong);
+      }
+      .aside-sep:hover::before,
+      .aside-sep:focus-visible::before { background: var(--vui-color-primary); }
+      .aside-sep:focus-visible { outline: var(--vui-focus-ring); outline-offset: calc(var(--vui-focus-offset) * -1); }
       .aside-rail {
         display: flex;
-        flex: 1 1 0;
+        flex: 0 1 var(--vui-shell-aside, 50%);
         align-items: stretch;
-        min-width: 0;
+        width: auto;
+        min-width: min(12rem, 36%);
+        max-width: 75%;
         background: var(--vui-color-surface);
-        border-inline-start: var(--vui-border-width) solid var(--vui-color-border);
+        border-inline-start: 0;
       }
       .aside-rail .pane {
         display: flex;
@@ -176,10 +200,13 @@ export class VShell extends VuiElement {
       .aside-rail button:hover { background: var(--vui-color-surface-hover); color: var(--vui-color-primary); }
       .aside-rail button:focus-visible { outline: var(--vui-focus-ring); outline-offset: calc(var(--vui-focus-offset) * -1); }
       .aside-rail vui-icon { width: var(--vui-icon-size); height: var(--vui-icon-size); }
+      :host([aside-collapsed]) .aside-sep { display: none; }
       :host([aside-collapsed]) .aside-rail .pane { display: none; }
       :host([aside-collapsed]) .aside-rail {
         flex: 0 0 auto;
+        width: auto;
         min-width: 0;
+        max-width: none;
         background: transparent;
         border-inline-start: 0;
       }
@@ -209,6 +236,7 @@ export class VShell extends VuiElement {
           border-inline: 0;
           border-block-end: var(--vui-border-width) solid var(--vui-color-border);
         }
+        .aside-sep { display: none; }
         .sep { cursor: default; }
         .sep::before { width: 2.75rem; height: 2px; }
       }
@@ -247,6 +275,16 @@ export class VShell extends VuiElement {
       event.preventDefault();
       this.resizeNavBy(grow ? 16 : -16);
     });
+    const asideSep = this.qs<HTMLElement>('[part="aside-resize"]');
+    asideSep.addEventListener('keydown', (event) => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      event.preventDefault();
+      const wider = event.key === (isRtl(this) ? 'ArrowRight' : 'ArrowLeft');
+      const rail = this.qs('.aside-rail').getBoundingClientRect();
+      const edge = isRtl(this) ? rail.right : rail.left;
+      const delta = wider ? -16 : 16;
+      this.resizeAside(edge + (isRtl(this) ? -delta : delta));
+    });
   }
 
   override connectedCallback(): void {
@@ -255,6 +293,11 @@ export class VShell extends VuiElement {
     this.hold('nav-resize', trackPointer(sep, {
       onMove: (drag) => this.resizeNav(drag.current.clientX),
       onStart: (event) => this.resizeNav(event.clientX),
+    }));
+    const asideSep = this.qs<HTMLElement>('[part="aside-resize"]');
+    this.hold('aside-resize', trackPointer(asideSep, {
+      onMove: (drag) => this.resizeAside(drag.current.clientX),
+      onStart: (event) => this.resizeAside(event.clientX),
     }));
   }
 
@@ -274,6 +317,17 @@ export class VShell extends VuiElement {
     this.style.setProperty('--vui-shell-nav', `${next}px`);
   }
 
+  private resizeAside(clientX: number): void {
+    const body = this.qs('.body');
+    if (getComputedStyle(body).flexDirection === 'column') return;
+    if (this.hasAttribute('aside-collapsed')) return;
+    const rect = body.getBoundingClientRect();
+    const width = isRtl(this) ? clientX - rect.left : rect.right - clientX;
+    const max = Math.max(220, rect.width * 0.75);
+    const next = Math.round(Math.min(max, Math.max(220, width)));
+    this.style.setProperty('--vui-shell-aside', `${next}px`);
+  }
+
   protected sync(): void {
     const label = this.getAttribute('label') ?? '';
     const shell = this.qs('.shell');
@@ -285,6 +339,15 @@ export class VShell extends VuiElement {
     const sep = this.qs('[part="nav-resize"]');
     sep.setAttribute('aria-orientation', 'vertical');
     sep.setAttribute('aria-label', this.getAttribute('resize-label') || 'Resize');
+    const asideSep = this.qs('[part="aside-resize"]');
+    asideSep.setAttribute('aria-orientation', 'vertical');
+    asideSep.setAttribute('aria-label', this.getAttribute('aside-resize-label') || 'Resize panels');
+    const asideWidth = Number.parseFloat(this.style.getPropertyValue('--vui-shell-aside'));
+    if (Number.isFinite(asideWidth)) {
+      asideSep.setAttribute('aria-valuemin', '220');
+      asideSep.setAttribute('aria-valuemax', String(Math.round(this.qs('.body').getBoundingClientRect().width * 0.75)));
+      asideSep.setAttribute('aria-valuenow', String(Math.round(asideWidth)));
+    }
     const asideOpen = !this.hasAttribute('aside-collapsed');
     const toggle = this.qs('[part="aside-toggle"]');
     toggle.setAttribute('aria-expanded', asideOpen ? 'true' : 'false');
@@ -317,6 +380,7 @@ reflectStrings(VShell, {
   resizeLabel: 'resize-label',
   asideExpandLabel: 'aside-expand-label',
   asideCollapseLabel: 'aside-collapse-label',
+  asideResizeLabel: 'aside-resize-label',
 });
 reflectBooleans(VShell, { collapsed: 'collapsed', asideCollapsed: 'aside-collapsed' });
 defineElement('vui-shell', VShell);
@@ -332,12 +396,13 @@ registerContract({
     { name: 'resize-label', kind: 'string', property: 'resizeLabel', reflected: true },
     { name: 'aside-expand-label', kind: 'string', property: 'asideExpandLabel', reflected: true },
     { name: 'aside-collapse-label', kind: 'string', property: 'asideCollapseLabel', reflected: true },
+    { name: 'aside-resize-label', kind: 'string', property: 'asideResizeLabel', reflected: true },
     { name: 'collapsed', kind: 'boolean', reflected: true },
     { name: 'aside-collapsed', kind: 'boolean', property: 'asideCollapsed', reflected: true },
   ],
   events: [],
   slots: ['header', 'toolbar', 'nav', '', 'aside', 'footer'],
-  parts: ['shell', 'skip', 'header', 'toolbar', 'body', 'nav', 'nav-resize', 'main', 'aside', 'aside-toggle', 'footer'],
+  parts: ['shell', 'skip', 'header', 'toolbar', 'body', 'nav', 'nav-resize', 'main', 'aside-resize', 'aside', 'aside-toggle', 'footer'],
   methods: [],
   keyboard: ['Tab'],
   states: [],

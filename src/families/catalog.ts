@@ -89,6 +89,7 @@ joinFamily({ element: 'vui-tree-item', family: 'navigation', rules: ['keyboard',
 joinFamily({ element: 'vui-menu', family: 'navigation', rules: ['roving', 'keyboard', 'focus'] });
 joinFamily({ element: 'vui-menu-item', family: 'navigation', rules: ['keyboard', 'focus'] });
 joinFamily({ element: 'vui-breadcrumbs', family: 'navigation', rules: ['keyboard', 'focus', 'label'] });
+joinFamily({ element: 'vui-path-bar', family: 'navigation', rules: ['keyboard', 'focus', 'label'] });
 joinFamily({ element: 'vui-pagination', family: 'navigation', rules: ['keyboard', 'selection', 'focus', 'label'] });
 
 joinFamily({ element: 'vui-data-grid', family: 'data', rules: ['keyboard', 'selection', 'focus', 'roving'] });

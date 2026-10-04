@@ -55,6 +55,8 @@ export { VSplitPanel } from './components/layout/split-panel';
 export { VHStack, VStack, VVStack } from './components/layout/stack';
 export { VBreadcrumbs } from './components/navigation/breadcrumbs';
 export { VNav, VNavItem } from './components/navigation/nav';
+export { VPathBar } from './components/navigation/path-bar';
+export type { PathCrumb } from './components/navigation/path-bar';
 export { VPagination } from './components/navigation/pagination';
 export { VStep, VStepper } from './components/navigation/stepper';
 export { VTab, VTabPanel, VTabs } from './components/navigation/tabs';
