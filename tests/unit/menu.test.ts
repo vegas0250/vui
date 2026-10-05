@@ -99,6 +99,29 @@ describe('vui-menu', () => {
     expect(document.activeElement).toBe(opener);
   });
 
+  it('opens a submenu as soon as the pointer enters its item', () => {
+    const menu = document.createElement('vui-menu') as VMenu;
+    menu.label = 'File';
+    menu.innerHTML = `
+      <vui-menu-item label="Share">
+        <vui-menu label="Share" slot="submenu">
+          <vui-menu-item label="Copy"></vui-menu-item>
+        </vui-menu>
+      </vui-menu-item>
+      <vui-menu-item label="Rename"></vui-menu-item>
+    `;
+    document.body.append(menu);
+    menu.showAt(20, 24);
+    const items = [...menu.querySelectorAll(':scope > vui-menu-item')];
+    const over = (item: Element | undefined) => {
+      item?.shadowRoot?.querySelector('.label')?.dispatchEvent(new PointerEvent('pointerover', { bubbles: true }));
+    };
+    over(items[0]);
+    expect(items[0]?.querySelector('vui-menu')?.hasAttribute('open')).toBe(true);
+    over(items[1]);
+    expect(items[0]?.querySelector('vui-menu')?.hasAttribute('open')).toBe(false);
+  });
+
   it('runs a command from its shortcut', () => {
     const commands = new CommandRegistry();
     let ran = false;

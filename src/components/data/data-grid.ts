@@ -59,6 +59,12 @@ export class VDataGrid extends VuiElement {
   private windowStart = -1;
   private scrollIndex = 0;
   private selectionKey = '';
+  private holdScroll = false;
+  private heldTop = 0;
+  private heldLeft = 0;
+  private scrollLockTimer = 0;
+  private releaseScrollPin: (() => void) | null = null;
+  private restoringScroll = false;
 
   get columns(): VDataGridColumn[] {
     return this.gridColumns;
@@ -127,14 +133,16 @@ export class VDataGrid extends VuiElement {
         display: flex;
         flex-direction: column;
         flex: 1 1 auto;
+        align-self: stretch;
         min-height: 0;
-        height: auto;
         max-height: 100%;
+        overflow: hidden;
       }
       .frame {
         width: 100%;
         min-width: 0;
         overflow: auto;
+        overflow-anchor: none;
         max-width: 100%;
         border: var(--vui-border-width) solid var(--vui-color-border);
         border-radius: var(--vui-radius);
@@ -143,7 +151,6 @@ export class VDataGrid extends VuiElement {
       :host([fill]) .frame {
         flex: 1 1 auto;
         min-height: 0;
-        height: auto;
       }
       table {
         width: 100%;
@@ -170,11 +177,14 @@ export class VDataGrid extends VuiElement {
       }
       tbody tr:last-child td { border-bottom: 0; }
       tbody tr[data-id] { cursor: pointer; }
-      tbody tr[aria-selected="true"] { background: var(--vui-color-surface-hover); }
-      td:focus-visible {
-        outline: var(--vui-focus-ring);
-        outline-offset: calc(var(--vui-focus-offset) * -1);
+      tbody tr[aria-selected="true"] {
+        background: var(--vui-color-surface-hover);
+        box-shadow: inset 0 0 0 1px var(--vui-color-border-strong);
       }
+      tbody tr[data-current="true"]:not([aria-selected="true"]) {
+        box-shadow: inset 0 0 0 1px var(--vui-color-border-strong);
+      }
+      td:focus-visible { outline: none; }
       .empty {
         text-align: center;
         color: var(--vui-color-text-muted);
@@ -230,10 +240,27 @@ export class VDataGrid extends VuiElement {
   }
 
   protected afterRender(): void {
+    this.addEventListener('pointerdown', (event) => {
+      if (event.button !== 2) return;
+      event.preventDefault();
+      this.pinScroll(event);
+    }, true);
+    this.addEventListener('mousedown', (event) => {
+      if (event.button === 2) event.preventDefault();
+    }, true);
+    this.addEventListener('contextmenu', (event) => {
+      event.preventDefault();
+      this.restoreScroll();
+    }, true);
     this.addEventListener('click', (event) => {
+      if (event.button !== 0) return;
       const path = event.composedPath();
       const row = path.find((node): node is HTMLTableRowElement => node instanceof HTMLTableRowElement && Boolean(node.dataset.id));
-      if (!row) return;
+      const frame = path.find((node): node is HTMLElement => node instanceof HTMLElement && node.classList.contains('frame'));
+      if (!row) {
+        if (frame) this.clearToCursor();
+        return;
+      }
       const cell = path.find((node): node is HTMLElement => node instanceof HTMLElement && node.getAttribute('role') === 'gridcell');
       if (cell) {
         this.activeRow = Number(cell.dataset.row ?? 0);
@@ -334,6 +361,11 @@ export class VDataGrid extends VuiElement {
   private renderBody(): void {
     const body = this.shadow.querySelector('tbody');
     if (!body) return;
+    const frame = this.qs<HTMLElement>('.frame');
+    const top = this.holdScroll ? this.heldTop : frame.scrollTop;
+    const left = this.holdScroll ? this.heldLeft : frame.scrollLeft;
+    const stride = this.rowStride();
+    const { start, end } = this.slice(top);
     body.replaceChildren();
     if (!this.gridRows.length) {
       this.windowStart = 0;
@@ -347,9 +379,7 @@ export class VDataGrid extends VuiElement {
       return;
     }
 
-    const { start, end } = this.slice();
     this.windowStart = start;
-    const stride = this.rowStride();
     if (this.usesVirtual() && start > 0) body.append(this.padRow(start * stride));
     for (let rowIndex = start; rowIndex < end; rowIndex += 1) {
       const data = this.gridRows[rowIndex];
@@ -357,6 +387,8 @@ export class VDataGrid extends VuiElement {
       body.append(this.renderRow(data, rowIndex));
     }
     if (this.usesVirtual() && end < this.gridRows.length) body.append(this.padRow((this.gridRows.length - end) * stride));
+    frame.scrollTop = top;
+    frame.scrollLeft = left;
     this.applyCursor();
   }
 
@@ -433,22 +465,82 @@ export class VDataGrid extends VuiElement {
   }
 
   private currentStart(): number {
-    if (!this.usesVirtual()) return 0;
     if (!this.scrollportBounded()) return this.scrollIndex;
-    const frame = this.qs<HTMLElement>('.frame');
-    return Math.min(Math.max(0, this.gridRows.length - 1), Math.floor(frame.scrollTop / this.rowStride()));
+    return this.originAt(this.qs<HTMLElement>('.frame').scrollTop);
   }
 
-  private slice(): { start: number; end: number } {
+  private originAt(scrollTop: number): number {
+    if (!this.usesVirtual()) return 0;
+    if (!this.scrollportBounded()) return this.scrollIndex;
+    return Math.min(Math.max(0, this.gridRows.length - 1), Math.floor(scrollTop / this.rowStride()));
+  }
+
+  private slice(scrollTop?: number): { start: number; end: number } {
     if (!this.usesVirtual()) return { start: 0, end: this.gridRows.length };
     const view = this.viewportRows();
-    const origin = this.currentStart();
+    const origin = scrollTop === undefined ? this.currentStart() : this.originAt(scrollTop);
     const start = Math.max(0, origin - OVERSCAN);
     const end = Math.min(this.gridRows.length, origin + view + OVERSCAN);
     return { start, end };
   }
 
+  private pinScroll(event: Event): void {
+    this.releaseScrollPin?.();
+    const frame = this.qs<HTMLElement>('.frame');
+    this.heldTop = frame.scrollTop;
+    this.heldLeft = frame.scrollLeft;
+    this.holdScroll = true;
+    const pins: HTMLElement[] = [];
+    for (const node of event.composedPath()) {
+      if (!(node instanceof HTMLElement) || node === frame) continue;
+      const style = getComputedStyle(node);
+      if (!/(auto|scroll)/.test(`${style.overflowY}${style.overflowX}`)) continue;
+      pins.push(node);
+      node.dataset.vortexScrollTop = String(node.scrollTop);
+      node.dataset.vortexScrollLeft = String(node.scrollLeft);
+    }
+    const onScroll = (scrollEvent: Event) => {
+      const target = scrollEvent.target;
+      if (!(target instanceof HTMLElement)) return;
+      this.restorePinned(target);
+    };
+    frame.addEventListener('scroll', onScroll);
+    for (const pin of pins) pin.addEventListener('scroll', onScroll);
+    this.releaseScrollPin = () => {
+      frame.removeEventListener('scroll', onScroll);
+      for (const pin of pins) {
+        pin.removeEventListener('scroll', onScroll);
+        delete pin.dataset.vortexScrollTop;
+        delete pin.dataset.vortexScrollLeft;
+      }
+      this.releaseScrollPin = null;
+    };
+    window.clearTimeout(this.scrollLockTimer);
+    this.scrollLockTimer = window.setTimeout(() => {
+      this.holdScroll = false;
+      this.releaseScrollPin?.();
+    }, 400);
+  }
+
+  private restorePinned(node: HTMLElement): void {
+    if (this.restoringScroll) return;
+    const top = node.classList.contains('frame') ? this.heldTop : Number(node.dataset.vortexScrollTop);
+    const left = node.classList.contains('frame') ? this.heldLeft : Number(node.dataset.vortexScrollLeft);
+    if (!Number.isFinite(top) || !Number.isFinite(left)) return;
+    if (node.scrollTop === top && node.scrollLeft === left) return;
+    this.restoringScroll = true;
+    node.scrollTop = top;
+    node.scrollLeft = left;
+    this.restoringScroll = false;
+  }
+
+  private restoreScroll(): void {
+    if (!this.holdScroll) return;
+    this.restorePinned(this.qs<HTMLElement>('.frame'));
+  }
+
   private reveal(index: number): void {
+    if (this.holdScroll) return;
     if (!this.usesVirtual() || index < 0 || index >= this.gridRows.length) return;
     const view = this.viewportRows();
     const origin = this.currentStart();
@@ -460,6 +552,10 @@ export class VDataGrid extends VuiElement {
   }
 
   private onFrameScroll(): void {
+    if (this.holdScroll) {
+      this.restoreScroll();
+      return;
+    }
     if (!this.usesVirtual()) return;
     if (this.scrollportBounded()) {
       this.scrollIndex = Math.floor(this.qs<HTMLElement>('.frame').scrollTop / this.rowStride());
@@ -471,9 +567,27 @@ export class VDataGrid extends VuiElement {
 
   private paintRenderedSelection(): void {
     const selected = new Set(this.selection.selected);
+    const current = this.gridRows[this.activeRow]?.id ?? '';
     for (const row of this.shadow.querySelectorAll<HTMLTableRowElement>('tr[data-id]')) {
-      row.setAttribute('aria-selected', selected.has(row.dataset.id ?? '') ? 'true' : 'false');
+      const id = row.dataset.id ?? '';
+      row.setAttribute('aria-selected', selected.has(id) ? 'true' : 'false');
+      row.toggleAttribute('data-current', id.length > 0 && id === current);
     }
+  }
+
+  /** Drop the highlight and keep the focus border on the current row. */
+  private clearToCursor(): void {
+    if (!this.selection.selected.length && !(this.getAttribute('selected') ?? '')) {
+      this.paintRenderedSelection();
+      return;
+    }
+    this.selection.clear();
+    this.selectionKey = '';
+    this.ownedSelected = '';
+    this.removeAttribute('selected');
+    this.paintRenderedSelection();
+    this.applyCursor();
+    emitChange(this);
   }
 
   private get compact(): boolean {
@@ -517,7 +631,24 @@ export class VDataGrid extends VuiElement {
       (cell) => Number(cell.dataset.row) === this.activeRow && Number(cell.dataset.col) === this.activeCol,
     );
     applyRovingTabIndex(cells, active ? cells.indexOf(active) : -1);
-    if (this.scrollportBounded()) active?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
+    this.scrollRowVertically();
+  }
+
+  /** Keep the active row in the frame without sliding the horizontal scrollbar. */
+  private scrollRowVertically(): void {
+    if (this.holdScroll) return;
+    const frame = this.qs<HTMLElement>('.frame');
+    const row = frame.querySelector<HTMLElement>(`tbody tr[data-row="${this.activeRow}"]`);
+    if (!row) return;
+    const frameRect = frame.getBoundingClientRect();
+    const rowRect = row.getBoundingClientRect();
+    if (rowRect.top < frameRect.top - 1) frame.scrollTop -= frameRect.top - rowRect.top;
+    else if (rowRect.bottom > frameRect.bottom + 1) frame.scrollTop += rowRect.bottom - frameRect.bottom;
+  }
+
+  private focusActiveCell(): void {
+    this.shadow.querySelector<HTMLElement>('[role="gridcell"][tabindex="0"]')?.focus({ preventScroll: true });
+    this.restoreScroll();
   }
 
   private pointerGesture(event: MouseEvent): SelectionGesture {
@@ -544,7 +675,7 @@ export class VDataGrid extends VuiElement {
     if (this.windowStart !== start || rendered !== end - start) this.renderBody();
     else this.paintRenderedSelection();
     this.applyCursor();
-    this.shadow.querySelector<HTMLElement>('[role="gridcell"][tabindex="0"]')?.focus();
+    this.focusActiveCell();
     if (changed) emitChange(this);
   }
 
@@ -558,7 +689,7 @@ export class VDataGrid extends VuiElement {
       this.reveal(this.activeRow);
       this.renderBody();
       this.applyCursor();
-      this.shadow.querySelector<HTMLElement>('[role="gridcell"][tabindex="0"]')?.focus();
+      this.focusActiveCell();
       return;
     }
     this.selection.select(row.id, gesture);
@@ -608,7 +739,7 @@ export class VDataGrid extends VuiElement {
       }
       if (this.hasAttribute('multiple')) {
         this.applyCursor();
-        this.shadow.querySelector<HTMLElement>('[role="gridcell"][tabindex="0"]')?.focus();
+        this.focusActiveCell();
         return;
       }
       this.moveCursor(this.activeRow, 'replace');

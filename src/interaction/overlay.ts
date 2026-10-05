@@ -172,22 +172,37 @@ export interface AnchorBox {
   height?: number;
 }
 
-/** Pin `layer` to an anchor and keep it inside the viewport. */
+/** Pin `layer` to an anchor and keep the whole layer inside the viewport. */
 export function placeLayer(layer: HTMLElement, anchor: AnchorBox, placement: Placement = 'bottom-start'): void {
   layer.style.position = 'fixed';
   layer.style.right = 'auto';
   layer.style.bottom = 'auto';
   const gutter = 8;
-  const width = layer.offsetWidth;
-  const height = layer.offsetHeight;
   const viewWidth = window.innerWidth || document.documentElement.clientWidth || 0;
   const viewHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+  const maxWidth = Math.max(0, viewWidth - gutter * 2);
+  const maxHeight = Math.max(0, viewHeight - gutter * 2);
+  layer.style.maxWidth = `${maxWidth}px`;
+  layer.style.maxHeight = `${maxHeight}px`;
+  const width = Math.min(layer.offsetWidth, maxWidth);
+  const height = Math.min(layer.offsetHeight, maxHeight);
+  const anchorWidth = anchor.width ?? 0;
+  const anchorHeight = anchor.height ?? 0;
   let left = anchor.x;
   let top = anchor.y;
-  if (placement === 'bottom-start') top = anchor.y + (anchor.height ?? 0);
-  if (placement === 'top-start') top = anchor.y - height;
-  if (placement === 'right-start') left = anchor.x + (anchor.width ?? 0);
-  if (placement === 'left-start') left = anchor.x - width;
+  if (placement === 'bottom-start') {
+    top = anchor.y + anchorHeight;
+    if (top + height > viewHeight - gutter && anchor.y - height >= gutter) top = anchor.y - height;
+  } else if (placement === 'top-start') {
+    top = anchor.y - height;
+    if (top < gutter && anchor.y + anchorHeight + height <= viewHeight - gutter) top = anchor.y + anchorHeight;
+  } else if (placement === 'right-start') {
+    left = anchor.x + anchorWidth;
+    if (left + width > viewWidth - gutter && anchor.x - width >= gutter) left = anchor.x - width;
+  } else if (placement === 'left-start') {
+    left = anchor.x - width;
+    if (left < gutter && anchor.x + anchorWidth + width <= viewWidth - gutter) left = anchor.x + anchorWidth;
+  }
   const maxLeft = Math.max(gutter, viewWidth - width - gutter);
   const maxTop = Math.max(gutter, viewHeight - height - gutter);
   left = Math.min(Math.max(gutter, left), maxLeft);

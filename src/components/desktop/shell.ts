@@ -240,7 +240,7 @@ export class VShell extends VuiElement {
         .sep { cursor: default; }
         .sep::before { width: 2.75rem; height: 2px; }
       }
-      main:focus-visible { outline: var(--vui-focus-ring); }
+      main:focus-visible { outline: none; }
     `;
   }
 

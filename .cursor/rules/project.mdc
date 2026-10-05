@@ -139,7 +139,7 @@ Responsive — часть компонента, отдельно от темы �
 - `vui-grid` считает `columns` максимумом и схлопывает треки через `auto-fit` и `min(100%, ...)`.
 - `vui-hstack` и ряд `vui-stack` переносятся, когда host не шире `--vui-layout-narrow`.
 - `vui-split-panel` ставит `data-stacked` ниже этого порога, если нет `orientation="vertical"`. Перетаскивание идёт по сложенной оси.
-- `vui-data-grid` прокручивается по горизонтали. `priority: "secondary"` скрывает колонку на ширине не больше `--vui-layout-medium`, и клавиатура её пропускает.
+- `vui-data-grid` прокручивается по горизонтали внутри своего кадра. Правый щелчок не сдвигает эту прокрутку и не прокручивает предков. `priority: "secondary"` скрывает колонку на ширине не больше `--vui-layout-medium`, и клавиатура её пропускает.
 - `vui-dialog` ограничен viewport, прокручивает тело и на ширине до 30rem (`--vui-overlay-full`) занимает весь экран. В `@media` длина записана явно.
 - `vui-status-bar`, `vui-panel`, `vui-file-tree`, `vui-alert` и `vui-toast` сжимаются и переносятся, а не растягивают страницу.
 
@@ -171,7 +171,7 @@ Responsive — часть компонента, отдельно от темы �
 - `vui-select`: `label`, `value`, `placeholder`, `disabled`, `invalid`. Дети `vui-option`. Клавиатура открывает, двигает и фиксирует значение. Form-associated.
 - `vui-dialog`: `label`, `open`, `size` small|medium|large, `close-label`, `alert`. `dismissable="false"` не даёт закрыть окно по Escape и backdrop. `alert` ставит `role="alertdialog"`. Методы `show()` и `close()`. Нативный `<dialog>`. При открытии фокус переходит внутрь dialog, при закрытии возвращается на прежний элемент. Escape, блокировка прокрутки и порядок слоёв идут через `src/interaction/overlay.ts`. Select или menu, открытые внутри dialog, закрываются первыми. `close()` из скрипта обновляет и host: dialog внутри shadow DOM может не послать нативное событие `close`. Слушатели на `vui-dialog` всё равно получают `close`. Ширина и высота ограничены viewport, тело прокручивается, до 30rem поверхность занимает весь экран. `aria-modal="true"` только пока окно открыто.
 - `vui-drawer`: тот же стек, что у dialog. `placement` start|end. До 30rem занимает ширину экрана.
-- `vui-menu`: `label`. Property `commands`. Методы `showAt(x, y)`, `close()`, `bindTo(target)`. `vui-menu-item`: `label`, `command`, `shortcut`, `disabled`, `checked`, вложенный `vui-menu` в `slot="submenu"`. Команды регистрирует приложение. Клавиатура, фокус и слой — общие primitives. Escape закрывает верхнее меню. Меню не шире viewport.
+- `vui-menu`: `label`. Property `commands`. Методы `showAt(x, y)`, `close()`, `bindTo(target)`. Слот `bar` — нижняя полоса. `vui-menu-item`: `label`, `command`, `shortcut`, `icon`, `disabled`, `checked`, `layout="stack"` для полосы, вложенный `vui-menu` в `slot="submenu"`. Наведение сразу открывает подменю и закрывает соседние. Команды регистрирует приложение. Клавиатура, фокус и слой — общие primitives. Escape закрывает верхнее меню. Меню целиком остаётся в viewport и прокручивается, если не помещается.
 - `vui-tabs`: `label`. `vui-tab` (`panel`, `selected`, `disabled`) и `vui-tab-panel` (`name`). Стрелки, Home, End.
 - `vui-tooltip`: `text`, `placement` top|bottom. Показ по hover и focus, скрытие по Escape. Пока подсказка видна, у сфокусированного контрола стоит `aria-describedby` на `role="tooltip"`.
 - `vui-alert`: `variant` info|success|warning|danger|neutral, `closable`, `banner`, `close-label`.
@@ -278,6 +278,6 @@ Vitest + happy-dom: `tests/unit`. Покрывайте границы регис
 
 Уже закрыто существующими primitive: dropdown — `vui-select`, `vui-menu` или `vui-popover`; card — `vui-panel`; field — `vui-field` или само поле; toolbar item — слоты toolbar; context menu — `vui-menu`; command bar — `vui-toolbar`; resizable region — `vui-split-panel`; application layout — `vui-shell`; command palette и file browser — patterns в Studio, без файловой системы и без своего элемента. Сортировка и фильтр остаются данными страницы: таблица получает уже отфильтрованные `rows`.
 
-`vui-menu` покрывает context menu. Команды и shortcuts — infrastructure в `src/interaction`, не готовые бизнес-команды.
+`vui-menu` покрывает context menu. Команды и shortcuts — infrastructure в `src/interaction`, не готовые бизнес-команды. Меню оболочки Windows и Linux в VUI не входит: приложение получает команды само и рисует их этим меню. Отдельной темы или элемента для одной ОС нет. Позиция у края экрана — `placeLayer`: слой сдвигается или переворачивается и не выходит за viewport.
 
 Добавляйте это только как настоящие компоненты, по одному, со showcase и с обновлением этого файла, и только когда сценарий нельзя закрыть словарём 1.0.

@@ -39,7 +39,7 @@ const themeLabels: Record<VuiTheme, string> = {
   dark: 'Dark',
   'high-contrast': 'High Contrast',
   system: 'System',
-  'neon-green': 'Neon Green',
+  'neon-green': 'Cyberpunk',
   'neon-magenta': 'Neon Magenta',
   'neon-cyan': 'Neon Cyan',
 };

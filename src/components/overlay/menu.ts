@@ -12,6 +12,18 @@ import { placeLayer, pushOverlay, type Placement } from '../../interaction/overl
 
 let menuSeq = 0;
 
+function itemFromPointer(event: Event): VMenuItem | null {
+  const found = event.composedPath().find((node): node is VMenuItem => node instanceof VMenuItem);
+  if (found) return found;
+  const target = event.target;
+  if (target instanceof VMenuItem) return target;
+  if (target instanceof Node) {
+    const root = target.getRootNode();
+    if (root instanceof ShadowRoot && root.host instanceof VMenuItem) return root.host;
+  }
+  return null;
+}
+
 export class VMenuItem extends VuiElement {
   declare label: string;
   declare command: string;
@@ -50,7 +62,8 @@ export class VMenuItem extends VuiElement {
         cursor: pointer;
         user-select: none;
       }
-      :host(:focus) { background: var(--vui-color-surface-hover); }
+      :host(:focus),
+      :host([data-current]) { background: var(--vui-color-surface-hover); }
       :host(:focus-visible) {
         outline: var(--vui-focus-ring);
         outline-offset: calc(var(--vui-focus-offset) * -1);
@@ -59,10 +72,14 @@ export class VMenuItem extends VuiElement {
       .mark {
         width: 1em;
         flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         text-align: center;
       }
       :host([checked]) .mark::before { content: "✓"; }
-      vui-icon { width: 1em; height: 1em; }
+      vui-icon { width: 1em; height: 1em; color: var(--vui-color-primary); }
+      :host([disabled]) vui-icon { color: inherit; }
       :host([checked]) vui-icon { display: none; }
       .label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .shortcut {
@@ -71,13 +88,33 @@ export class VMenuItem extends VuiElement {
         font-size: var(--vui-font-size-sm);
       }
       .caret {
-        margin-inline-start: auto;
+        margin-inline-start: var(--vui-space-sm);
         width: 0.4em;
         height: 0.4em;
         border-block-start: var(--vui-stroke-width) solid currentColor;
         border-inline-end: var(--vui-stroke-width) solid currentColor;
         transform: rotate(45deg);
       }
+      :host(:not(:has(.shortcut:not([hidden])))) .caret { margin-inline-start: auto; }
+      :host([layout="stack"]) {
+        flex: 1 1 0;
+        flex-direction: column;
+        justify-content: center;
+        gap: 2px;
+        min-width: 0;
+        padding: var(--vui-space-2xs);
+        text-align: center;
+      }
+      :host([layout="stack"]) .mark { width: auto; }
+      :host([layout="stack"]) .label {
+        width: 100%;
+        font-size: var(--vui-font-size-sm);
+        line-height: 1.15;
+        white-space: normal;
+        text-align: center;
+      }
+      :host([layout="stack"]) .shortcut,
+      :host([layout="stack"]) .caret { display: none; }
       :host-context([dir="rtl"]) .caret { transform: rotate(-135deg); }
     `;
   }
@@ -88,11 +125,13 @@ export class VMenuItem extends VuiElement {
       event.preventDefault();
       event.stopPropagation();
     });
-    this.addEventListener('pointerenter', () => {
+    const enter = () => {
       if (this.unavailable) return;
-      const menu = this.parentMenu();
-      menu?.highlight(this);
-    });
+      this.parentMenu()?.hoverItem(this);
+    };
+    this.addEventListener('pointerenter', enter);
+    this.shadow.addEventListener('pointerover', enter);
+    this.shadow.addEventListener('pointermove', enter);
   }
 
   protected sync(): void {
@@ -166,6 +205,7 @@ export class VMenu extends VuiElement {
   private releaseOverlay: (() => void) | null = null;
   private groupId = '';
   private unbind: (() => void) | null = null;
+  private hovered: VMenuItem | null = null;
 
   static get observedAttributes(): string[] {
     return ['label'];
@@ -183,7 +223,7 @@ export class VMenu extends VuiElement {
   }
 
   protected template(): string {
-    return `<div class="menu" part="menu" role="presentation"><slot></slot></div>`;
+    return `<div class="menu" part="menu" role="presentation"><slot></slot><div class="bar" part="bar"><slot name="bar"></slot></div></div>`;
   }
 
   protected componentStyles(): string {
@@ -210,6 +250,15 @@ export class VMenu extends VuiElement {
       :host(:focus) { outline: none; }
       :host(:focus-visible) { outline: var(--vui-focus-ring); }
       .menu { display: flex; flex-direction: column; min-width: 0; }
+      .bar { display: none; }
+      :host(:has([slot="bar"])) .bar {
+        display: flex;
+        gap: 2px;
+        min-width: 18rem;
+        margin-top: var(--vui-space-2xs);
+        padding-top: var(--vui-space-2xs);
+        border-top: var(--vui-border-width) solid var(--vui-color-border);
+      }
       ::slotted(hr) {
         width: auto;
         align-self: stretch;
@@ -223,11 +272,15 @@ export class VMenu extends VuiElement {
 
   protected afterRender(): void {
     this.addEventListener('keydown', (event) => this.onKeydown(event));
+    this.addEventListener('pointerdown', (event) => {
+      if (event.button !== 0) event.preventDefault();
+    });
     this.addEventListener('click', (event) => {
-      const item = event.target;
-      if (!(item instanceof VMenuItem) || item.parentElement !== this || item.unavailable) return;
+      if (event.button !== 0) return;
+      const item = event.composedPath().find((node): node is VMenuItem => node instanceof VMenuItem);
+      if (!item || item.parentElement !== this || item.unavailable) return;
       if (item.submenu()) {
-        this.openSubmenu(item);
+        this.hoverItem(item);
         return;
       }
       const id = item.getAttribute('command');
@@ -235,6 +288,13 @@ export class VMenu extends VuiElement {
       this.root().closeTree();
     });
     this.qs('slot').addEventListener('slotchange', () => this.refreshItems());
+    this.addEventListener('pointermove', (event) => {
+      if (!this.hasAttribute('open')) return;
+      const item = itemFromPointer(event);
+      if (!item || item.unavailable) return;
+      const menu = item.parentElement;
+      if (menu instanceof VMenu) menu.hoverItem(item);
+    });
   }
 
   protected sync(): void {
@@ -258,7 +318,7 @@ export class VMenu extends VuiElement {
     return this.unbind;
   }
 
-  showAt(x: number, y: number, options?: { group?: string; placement?: Placement }): void {
+  showAt(x: number, y: number, options?: { group?: string; placement?: Placement; moveFocus?: boolean }): void {
     if (!this.groupId) this.groupId = `vui-menu-${++menuSeq}`;
     const group = options?.group ?? this.groupId;
     this.groupId = group;
@@ -281,7 +341,10 @@ export class VMenu extends VuiElement {
     const items = this.items();
     const first = enabled[0];
     applyRovingTabIndex(items, first ? items.indexOf(first) : -1);
-    first?.focus();
+    if (options?.moveFocus !== false && first) {
+      first.toggleAttribute('data-current', true);
+      first.focus({ preventScroll: true });
+    }
   }
 
   close(): void {
@@ -296,14 +359,34 @@ export class VMenu extends VuiElement {
 
   highlight(item: VMenuItem): void {
     const items = this.items();
+    for (const other of items) other.toggleAttribute('data-current', other === item);
     applyRovingTabIndex(items, items.indexOf(item));
-    if (document.activeElement !== item) item.focus();
+    if (document.activeElement !== item) item.focus({ preventScroll: true });
+  }
+
+  /** Hover opens a nested menu immediately and closes the siblings. */
+  hoverItem(item: VMenuItem): void {
+    if (item.parentElement !== this || item.unavailable) return;
+    const nested = item.submenu();
+    if (this.hovered === item && (!nested || nested.hasAttribute('open'))) return;
+    this.hovered = item;
+    for (const other of this.items()) other.toggleAttribute('data-current', other === item);
+    const items = this.items();
+    applyRovingTabIndex(items, items.indexOf(item));
+    for (const other of items) {
+      if (other === item) continue;
+      const sibling = other.submenu();
+      if (sibling?.hasAttribute('open')) sibling.hide();
+    }
+    if (nested) this.openSubmenu(item, false);
   }
 
   private hide(): void {
     if (!this.hasAttribute('open') && !this.releaseOverlay) return;
     this.removeAttribute('open');
     this.setAttribute('aria-hidden', 'true');
+    this.hovered = null;
+    for (const item of this.items()) item.removeAttribute('data-current');
     if (this.parentElement instanceof VMenuItem) this.parentElement.setAttribute('aria-expanded', 'false');
     const release = this.releaseOverlay;
     this.releaseOverlay = null;
@@ -322,7 +405,8 @@ export class VMenu extends VuiElement {
 
   private refreshItems(): void {
     for (const item of this.items()) {
-      if (item.getAttribute('slot') !== null && item.getAttribute('slot') !== '') item.removeAttribute('slot');
+      const slot = item.getAttribute('slot');
+      if (slot && slot !== 'bar') item.removeAttribute('slot');
       item.refresh();
     }
   }
@@ -337,15 +421,22 @@ export class VMenu extends VuiElement {
     return current;
   }
 
-  private openSubmenu(item: VMenuItem): void {
+  private openSubmenu(item: VMenuItem, moveFocus: boolean): void {
     const nested = item.submenu();
     if (!nested) return;
+    for (const other of this.items()) {
+      if (other === item) continue;
+      const sibling = other.submenu();
+      if (sibling?.hasAttribute('open')) sibling.hide();
+    }
+    if (nested.hasAttribute('open')) return;
     item.setAttribute('aria-expanded', 'true');
     const rect = item.getBoundingClientRect();
     const rtl = isRtl(this);
     nested.showAt(rtl ? rect.left : rect.right, rect.top, {
       group: this.groupId,
       placement: rtl ? 'left-start' : 'right-start',
+      moveFocus,
     });
   }
 
@@ -380,7 +471,7 @@ export class VMenu extends VuiElement {
       if (!current.submenu()) return;
       event.preventDefault();
       event.stopPropagation();
-      this.openSubmenu(current);
+      this.openSubmenu(current, true);
       return;
     }
     if (isActivation(event)) {
@@ -396,7 +487,7 @@ export class VMenu extends VuiElement {
     const item = enabled[next];
     if (!item) return;
     applyRovingTabIndex(items, items.indexOf(item));
-    item.focus();
+    item.focus({ preventScroll: true });
   }
 }
 
@@ -416,6 +507,7 @@ registerContract({
     { name: 'icon', kind: 'string', reflected: true },
     { name: 'disabled', kind: 'boolean', reflected: true },
     { name: 'checked', kind: 'boolean', reflected: true },
+    { name: 'layout', kind: 'string', reflected: false },
   ],
   events: ['click'],
   slots: ['submenu'],
@@ -432,8 +524,8 @@ registerContract({
   className: 'VMenu',
   attributes: [{ name: 'label', kind: 'string', reflected: true }],
   events: ['close'],
-  slots: [''],
-  parts: ['menu'],
+  slots: ['', 'bar'],
+  parts: ['menu', 'bar'],
   methods: ['showAt', 'close', 'bindTo'],
   keyboard: ['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'PageUp', 'PageDown', 'Enter', 'Space', 'Escape'],
   states: [],
