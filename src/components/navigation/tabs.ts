@@ -71,12 +71,12 @@ export class VTab extends VuiElement {
       }
       :host([selected]) {
         color: var(--vui-color-text);
-        background: var(--vui-color-background);
+        background: var(--vui-color-surface);
         box-shadow: inset 0 2px 0 var(--vui-color-primary);
-        font-weight: var(--vui-font-weight-strong);
         z-index: 1;
       }
-      :host([disabled]) { opacity: 0.5; cursor: not-allowed; }
+      :host([selected]:hover) { background: var(--vui-color-surface); }
+      :host([disabled]) { opacity: 0.72; cursor: not-allowed; }
       button {
         display: none;
         align-items: center;

@@ -40,13 +40,15 @@ export class VNavItem extends VuiElement {
       }
       a:hover { background: var(--vui-color-surface-hover); }
       :host([selected]) a {
-        background: var(--vui-color-surface-hover);
+        background: var(--vui-color-selected);
         color: var(--vui-color-text);
-        font-weight: var(--vui-font-weight-strong);
+        box-shadow: inset 2px 0 0 var(--vui-color-primary);
       }
+      :host-context([dir="rtl"]):host([selected]) a { box-shadow: inset -2px 0 0 var(--vui-color-primary); }
+      :host([selected]) a:hover { background: var(--vui-color-selected); }
       a:focus { outline: none; }
       a:focus-visible { outline: var(--vui-focus-ring); outline-offset: calc(var(--vui-focus-offset) * -1); }
-      :host([disabled]) a { opacity: 0.5; cursor: not-allowed; }
+      :host([disabled]) a { opacity: 0.72; cursor: not-allowed; }
     `;
   }
 

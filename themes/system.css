@@ -10,9 +10,10 @@
     --vui-color-background: var(--vui-palette-ink-900);
     --vui-color-surface: var(--vui-palette-ink-800);
     --vui-color-surface-raised: var(--vui-palette-ink-700);
-    --vui-color-surface-sunken: var(--vui-palette-ink-950);
+    --vui-color-surface-sunken: var(--vui-palette-ink-900);
     --vui-color-surface-hover: var(--vui-palette-ink-600);
-    --vui-color-field: var(--vui-palette-ink-950);
+    --vui-color-field: color-mix(in srgb, var(--vui-palette-ink-800) 42%, var(--vui-palette-ink-900));
+    --vui-color-selected: color-mix(in srgb, var(--vui-color-primary) 22%, var(--vui-color-surface));
     --vui-color-text: var(--vui-palette-ink-50);
     --vui-color-text-muted: var(--vui-palette-ink-200);
     --vui-color-border: var(--vui-palette-ink-500);

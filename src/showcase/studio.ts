@@ -117,6 +117,83 @@ export const studioMarkup = `
   </div>
 </section>
 
+<section class="category" id="workspace">
+  <h2>Technical workspace</h2>
+  <p class="section-lead">
+    Плотная сборка из тех же компонентов: дерево группировок, дерево правил и панель свойств.
+    Строка хранит название, сводку, счётчик и статус. Действия строки появляются при наведении и фокусе.
+  </p>
+  <div class="desktop">
+    <vui-toolbar label="Конструктор">
+      <vui-button slot="start" size="small" variant="ghost">Группировки</vui-button>
+      <vui-button slot="start" size="small" variant="ghost">Правила</vui-button>
+      <vui-button slot="end" size="small" variant="secondary">Проверить</vui-button>
+      <vui-button slot="end" size="small">Применить</vui-button>
+      <vui-button slot="end" size="small" variant="danger">Удалить</vui-button>
+      <vui-button slot="end" size="small" variant="primary" disabled>Недоступно</vui-button>
+    </vui-toolbar>
+    <vui-split-panel label="Рабочая область" position="34" style="height: 320px">
+      <vui-file-tree slot="start" label="Группировки">
+        <vui-tree-item label="Сети" icon="network" kind="folder" expanded count="3" selected>
+          <vui-icon-button slot="actions" name="plus" label="Добавить в Сети" size="small"></vui-icon-button>
+          <vui-tree-item label="LAN" icon="waypoints" kind="folder" expanded summary="10.0.0.0/8" count="2" status="активно" status-variant="success">
+            <vui-icon-button slot="actions" name="pencil" label="Править LAN" size="small"></vui-icon-button>
+            <vui-tree-item label="dns.internal" icon="globe" summary="домены" count="12" status="info" status-variant="info"></vui-tree-item>
+            <vui-tree-item label="office" icon="server" summary="10.1.0.0/16" count="48"></vui-tree-item>
+          </vui-tree-item>
+          <vui-tree-item label="archive" icon="file-archive" summary="не применяется" disabled></vui-tree-item>
+          <vui-tree-item label="sync" icon="refresh-cw" summary="обновление" loading></vui-tree-item>
+        </vui-tree-item>
+      </vui-file-tree>
+      <vui-split-panel slot="end" label="Правила и свойства" position="62" style="height: 100%">
+        <vui-file-tree slot="start" label="Правила">
+          <vui-tree-item label="tcp" icon="terminal" kind="folder" expanded count="2">
+            <vui-tree-item label="https" icon="hash" summary="443" status="разрешить" status-variant="success" selected>
+              <vui-icon-button slot="actions" name="pencil" label="Править https" size="small"></vui-icon-button>
+            </vui-tree-item>
+            <vui-tree-item label="drop" icon="shield" summary="любой" status="запретить" status-variant="danger"></vui-tree-item>
+          </vui-tree-item>
+        </vui-file-tree>
+        <vui-panel slot="end" heading="https" padding="sm">
+          <vui-icon-button slot="actions" name="settings" label="Параметры правила" size="small"></vui-icon-button>
+          <vui-vstack gap="sm">
+            <vui-input label="Назначение" value="10.1.4.12/32" style="font-family: var(--vui-font-mono)"></vui-input>
+            <vui-input label="Порт" value="443" readonly></vui-input>
+            <vui-select label="Действие" value="allow">
+              <vui-option value="allow">Разрешить</vui-option>
+              <vui-option value="deny">Запретить</vui-option>
+            </vui-select>
+            <vui-input label="Маска" value="не cidr" invalid hint="Ожидается адрес или CIDR"></vui-input>
+            <vui-switch checked>Правило включено</vui-switch>
+          </vui-vstack>
+        </vui-panel>
+      </vui-split-panel>
+    </vui-split-panel>
+    <vui-status-bar label="Состояние конструктора">
+      <span>2 правила</span>
+      <span slot="end">compact</span>
+    </vui-status-bar>
+  </div>
+  <vui-panel heading="Строка конфигурации">
+    <vui-list label="Правила" value="https">
+      <vui-list-item value="https" selected>
+        https
+        <vui-text slot="meta" variant="code">tcp/443</vui-text>
+        <span slot="end"><vui-badge>2</vui-badge> <vui-badge variant="success">активно</vui-badge></span>
+      </vui-list-item>
+      <vui-list-item value="drop">
+        drop
+        <vui-text slot="meta" variant="code" muted>any</vui-text>
+        <vui-badge slot="end" variant="danger">запретить</vui-badge>
+      </vui-list-item>
+      <vui-list-item value="old" disabled>
+        archive
+        <vui-text slot="meta" muted>не применяется</vui-text>
+      </vui-list-item>
+    </vui-list>
+  </vui-panel>
+</section>
+
 <section class="category" id="shell">
   <h2>Application Shell</h2>
   <p class="section-lead">

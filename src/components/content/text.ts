@@ -41,6 +41,7 @@ export class VText extends VuiElement {
         display: inline;
         font-family: var(--vui-font-mono);
         font-size: 0.95em;
+        font-variant-numeric: tabular-nums;
       }
       :host([muted]) { color: var(--vui-color-text-muted); }
       :host([truncate]) {

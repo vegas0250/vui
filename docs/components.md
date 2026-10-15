@@ -182,7 +182,7 @@ menu.showAt(x, y);
 ```
 
 | vui-menu | attribute и property `label`. Property `commands` — `CommandRegistry` или `null`. Методы `showAt(x, y)`, `close()`, `bindTo(target)`. Событие `close` не всплывает, чтобы внешний dialog не принял его за своё закрытие. Слот — пункты. Part `menu` |
-| vui-menu-item | attributes `label`, `command`, `shortcut`, `disabled`, `checked`. Событие `click`. Вложенный `vui-menu` со `slot="submenu"`. Parts `check`, `label`, `shortcut`, `caret` |
+| vui-menu-item | attributes `label`, `command`, `shortcut`, `icon`, `disabled`, `checked`, `variant="danger"`. Событие `click`. Вложенный `vui-menu` со `slot="submenu"`. Parts `check`, `icon`, `label`, `shortcut`, `caret` |
 | Keyboard | стрелки, Home, End, PageUp, PageDown, Enter, Space, Escape, Tab. В `dir="rtl"` вложенное меню открывается в сторону inline start. Shift+F10 и правый щелчок через `bindTo` |
 | Accessibility | `role="menu"` / `menuitem`, `aria-disabled`, `aria-checked` у отмеченного пункта, `aria-haspopup` и `aria-expanded` у пункта с подменю |
 | Responsive | меню не шире viewport и прокручивается, если пунктов больше, чем помещается по высоте |
@@ -298,8 +298,8 @@ menu.showAt(x, y);
 | Attributes | `heading`, `padding` 2xs \| xs \| sm \| md \| lg \| xl \| 2xl, `overflow` visible \| auto \| hidden \| scroll |
 | Properties | те же |
 | Events | нет |
-| Slots | `header`, содержимое, `footer` |
-| Parts | `panel`, `header`, `title`, `body`, `footer` |
+| Slots | `header`, `actions`, содержимое, `footer` |
+| Parts | `panel`, `header`, `title`, `actions`, `body`, `footer` |
 | Accessibility | заголовок — `h2`, если не подставлен свой `header` |
 | Responsive | `min-width: 0`, `max-width: 100%`. Тело прокручивается, пока `overflow` не задан иначе |
 
@@ -381,9 +381,9 @@ menu.showAt(x, y);
 ```
 
 | vui-file-tree | `label`. Событие `change`. Слот — пункты. Part `tree`. Свойство `selectedItem` |
-| vui-tree-item | attributes `label`, `kind` file \| folder, `expanded`, `selected`, `value`. Properties `label`, `kind`, `expanded`, `selected`. `itemValue` — `value` или `label`. Parts `row`, `icon`, `label` |
-| Keyboard | Arrow Up/Down/Left/Right, Home, End, PageUp, PageDown, Enter, Space. Ctrl/Cmd+C копирует `itemValue` |
-| Accessibility | `tree` / `treeitem`, `aria-expanded` у папки, `aria-selected` |
+| vui-tree-item | attributes `label`, `kind` file \| folder, `icon`, `summary`, `count`, `status`, `status-variant` neutral \| info \| success \| warning \| danger, `expanded`, `selected`, `disabled`, `loading`, `value`. Properties с теми же именами; `status-variant` — `statusVariant`. `itemValue` — `value` или `label`. Слот `actions` — кнопки строки, видимые при наведении, фокусе и выборе. Parts `row`, `icon`, `label`, `summary`, `count`, `status`, `actions` |
+| Keyboard | Arrow Up/Down/Left/Right, Home, End, PageUp, PageDown, Enter, Space. Ctrl/Cmd+C копирует `itemValue`. `disabled` пропускается |
+| Accessibility | `tree` / `treeitem`, `aria-expanded` у папки, `aria-selected`, `aria-disabled`, `aria-busy` при `loading`. Имя включает сводку, счётчик и статус |
 
 ## vui-data-grid
 
@@ -545,7 +545,7 @@ grid.selectedId = '1';
 
 ## vui-list
 
-`label`, `value`, `multiple`. Дети `vui-list-item`: `value`, `selected`, `disabled`. Стрелки выбирают. С `multiple` Shift расширяет диапазон, Ctrl или Meta переключает пункт. Идентификатор — `value` пункта, не доменная сущность. Событие `change`. Part `list` — `listbox`.
+`label`, `value`, `multiple`. Дети `vui-list-item`: `value`, `selected`, `disabled`. Слоты пункта: подпись, `meta`, `end`. Стрелки выбирают. С `multiple` Shift расширяет диапазон, Ctrl или Meta переключает пункт. Идентификатор — `value` пункта, не доменная сущность. Событие `change`. Part `list` — `listbox`. Parts пункта: `label`, `meta`, `end`.
 
 ## vui-properties
 

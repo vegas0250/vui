@@ -35,6 +35,7 @@ export const showcaseMarkup = `
           <a href="#components">Components</a>
           <a href="#content">Content</a>
           <a href="#patterns">Patterns</a>
+          <a href="#workspace">Workspace</a>
           <a href="#shell">Shell</a>
           <a href="#platform">Platform</a>
           <a href="#contract">Contracts</a>

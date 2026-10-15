@@ -5,6 +5,7 @@ import { iconNames, registerIcon } from '../../src/icons/registry';
 describe('vui-icon', () => {
   it('renders a built-in icon and a registered svg', () => {
     expect(iconNames).toContain('folder');
+    expect(iconNames).toEqual(expect.arrayContaining(['hash', 'network', 'shield', 'waypoints']));
     const icon = document.createElement('vui-icon');
     icon.setAttribute('name', 'folder');
     document.body.append(icon);

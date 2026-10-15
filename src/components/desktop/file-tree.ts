@@ -7,7 +7,7 @@ import { reflectBooleans, reflectStrings } from '../../core/reflect';
 import { ownedChildren } from '../../composition/dom';
 import { reportUnexpectedChildren } from '../../core/dev';
 import { copyText } from '../../interaction/clipboard';
-import { applyRovingTabIndex, isRtl, moveInList } from '../../interaction/keyboard';
+import { applyRovingTabIndex, isRtl, moveInList, stepIndex } from '../../interaction/keyboard';
 import { SelectionModel } from '../../interaction/selection';
 import type { VIcon } from '../foundation/icon';
 
@@ -19,13 +19,20 @@ const chevron = `
 export class VTreeItem extends VuiElement {
   declare label: string;
   declare kind: string;
+  declare icon: string;
+  declare summary: string;
+  declare count: string;
+  declare status: string;
+  declare statusVariant: string;
   declare expanded: boolean;
   declare selected: boolean;
+  declare disabled: boolean;
+  declare loading: boolean;
 
   static shadowDelegatesFocus = false;
 
   static get observedAttributes(): string[] {
-    return ['label', 'expanded', 'selected', 'kind', 'value'];
+    return ['label', 'expanded', 'selected', 'kind', 'value', 'icon', 'summary', 'count', 'status', 'status-variant', 'disabled', 'loading'];
   }
 
   protected template(): string {
@@ -33,7 +40,13 @@ export class VTreeItem extends VuiElement {
       <div class="row" part="row">
         <span class="twist" aria-hidden="true">${chevron}</span>
         <vui-icon part="icon"></vui-icon>
-        <span class="label" part="label"></span>
+        <span class="copy">
+          <span class="label" part="label"></span>
+          <span class="summary" part="summary" hidden></span>
+        </span>
+        <span class="count" part="count" hidden></span>
+        <span class="status" part="status" hidden></span>
+        <span class="actions" part="actions" hidden><slot name="actions"></slot></span>
       </div>
       <div class="children" role="group"><slot></slot></div>
     `;
@@ -42,6 +55,7 @@ export class VTreeItem extends VuiElement {
   protected componentStyles(): string {
     return `
       :host { display: block; max-width: 100%; min-width: 0; }
+      :host([disabled]) { opacity: 0.72; }
       .row {
         display: flex;
         align-items: center;
@@ -52,26 +66,76 @@ export class VTreeItem extends VuiElement {
         cursor: pointer;
         user-select: none;
       }
-      :host(:focus) .row,
+      :host([disabled]) .row { cursor: default; }
+      :host(:hover) .row { background: var(--vui-color-surface-hover); }
       :host([selected]) .row {
-        background: var(--vui-color-surface-hover);
+        background: var(--vui-color-selected);
+        box-shadow: inset 2px 0 0 var(--vui-color-primary);
       }
-      :host([selected]) .row { font-weight: var(--vui-font-weight-strong); }
+      :host([selected]:hover) .row { background: var(--vui-color-selected); }
+      :host-context([dir="rtl"]):host([selected]) .row { box-shadow: inset -2px 0 0 var(--vui-color-primary); }
       :host(:focus-visible) .row {
         outline: var(--vui-focus-ring);
         outline-offset: calc(var(--vui-focus-offset) * -1);
       }
       .twist {
         display: inline-flex;
-        width: 1em;
-        height: 1em;
+        flex: 0 0 var(--vui-icon-size);
+        width: var(--vui-icon-size);
+        height: var(--vui-icon-size);
         color: var(--vui-color-text-muted);
       }
-      .twist svg { width: 1em; height: 1em; transition: transform var(--vui-duration) var(--vui-easing); }
+      .twist svg { width: 100%; height: 100%; transition: transform var(--vui-duration) var(--vui-easing); }
       :host([expanded]) .twist svg { transform: rotate(90deg); }
       :host-context([dir="rtl"]):host(:not([expanded])) .twist svg { transform: scaleX(-1); }
       :host(:not([branch])) .twist { visibility: hidden; }
-      .label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      vui-icon { color: var(--vui-color-text-muted); }
+      :host([selected]) vui-icon { color: var(--vui-color-text); }
+      :host([loading]) vui-icon { animation: vui-tree-spin calc(var(--vui-duration) * 8) linear infinite; }
+      @keyframes vui-tree-spin { to { transform: rotate(360deg); } }
+      .copy {
+        display: flex;
+        align-items: baseline;
+        gap: var(--vui-space-xs);
+        min-width: 0;
+        flex: 1 1 auto;
+      }
+      .label, .summary { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .label { flex: 1 1 auto; }
+      .summary { flex: 0 1 42%; color: var(--vui-color-text-muted); font-size: var(--vui-font-size-sm); }
+      .count {
+        flex: 0 0 auto;
+        color: var(--vui-color-text-muted);
+        font-size: var(--vui-font-size-sm);
+        font-variant-numeric: tabular-nums;
+      }
+      .status {
+        flex: 0 0 auto;
+        max-width: 8rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        padding-inline: var(--vui-space-xs);
+        border: var(--vui-border-width) solid var(--vui-color-border);
+        border-radius: var(--vui-radius-sm);
+        color: var(--vui-color-text-muted);
+        font-size: var(--vui-font-size-sm);
+        line-height: 1.3;
+      }
+      :host([status-variant="info"]) .status { color: var(--vui-color-info); background: var(--vui-color-info-surface); }
+      :host([status-variant="success"]) .status { color: var(--vui-color-success); background: var(--vui-color-success-surface); }
+      :host([status-variant="warning"]) .status { color: var(--vui-color-warning); background: var(--vui-color-warning-surface); }
+      :host([status-variant="danger"]) .status { color: var(--vui-color-danger); background: var(--vui-color-danger-surface); }
+      .actions {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--vui-space-2xs);
+        opacity: 0;
+      }
+      :host(:hover) .actions,
+      :host(:focus-within) .actions,
+      :host([selected]) .actions { opacity: 1; }
+      .actions[hidden] { display: none; }
       .children { padding-inline-start: var(--vui-space-md); }
       .children[hidden] { display: none; }
     `;
@@ -79,24 +143,56 @@ export class VTreeItem extends VuiElement {
 
   protected afterRender(): void {
     this.qs('.row').addEventListener('click', (event) => {
+      if (this.hasAttribute('disabled')) return;
       if (event.composedPath().includes(this.qs('.twist')) && this.hasChildren()) {
         this.toggleAttribute('expanded');
       }
     });
-    this.qs('slot').addEventListener('slotchange', () => this.sync());
+    this.qs('.children slot').addEventListener('slotchange', () => this.sync());
+    this.qs('slot[name="actions"]').addEventListener('slotchange', () => this.sync());
+    queueMicrotask(() => {
+      if (this.isConnected) this.sync();
+    });
   }
 
   protected sync(): void {
     const label = this.getAttribute('label') ?? '';
     this.qs('.label').textContent = label;
+    const summary = this.getAttribute('summary') ?? '';
+    const summaryEl = this.qs<HTMLElement>('.summary');
+    summaryEl.textContent = summary;
+    summaryEl.hidden = summary.length === 0;
+    const count = this.getAttribute('count') ?? '';
+    const countEl = this.qs<HTMLElement>('.count');
+    countEl.textContent = count;
+    countEl.hidden = count.length === 0;
+    const status = this.getAttribute('status') ?? '';
+    const statusEl = this.qs<HTMLElement>('.status');
+    statusEl.textContent = status;
+    statusEl.hidden = status.length === 0;
+    const actions = this.qs<HTMLSlotElement>('slot[name="actions"]');
+    this.qs<HTMLElement>('.actions').hidden = actions.assignedNodes({ flatten: true }).length === 0;
     const kind = this.getAttribute('kind') ?? (this.hasChildren() ? 'folder' : 'file');
     const expanded = this.hasAttribute('expanded');
     const branch = kind === 'folder' || this.hasChildren();
     this.toggleAttribute('branch', branch);
-    const iconName = kind === 'folder' || this.hasChildren() ? (expanded ? 'folder-open' : 'folder') : 'file';
+    const custom = this.getAttribute('icon') ?? '';
+    let iconName = custom || (kind === 'folder' || this.hasChildren() ? (expanded ? 'folder-open' : 'folder') : 'file');
+    if (this.hasAttribute('loading')) iconName = 'loader';
     this.qs<VIcon>('vui-icon').setAttribute('name', iconName);
+    const accessible = [label, summary, count, status].filter((part) => part.length > 0);
     this.setAttribute('role', 'treeitem');
-    this.setAttribute('aria-label', label);
+    this.setAttribute('aria-label', accessible.join(', '));
+    this.setAttribute('aria-disabled', this.hasAttribute('disabled') ? 'true' : 'false');
+    const busy = this.hasAttribute('loading');
+    const row = this.qs('.row');
+    if (busy) {
+      this.setAttribute('aria-busy', 'true');
+      row.setAttribute('aria-busy', 'true');
+    } else {
+      this.removeAttribute('aria-busy');
+      row.removeAttribute('aria-busy');
+    }
     if (branch) this.setAttribute('aria-expanded', expanded ? 'true' : 'false');
     else this.removeAttribute('aria-expanded');
     this.setAttribute('aria-selected', this.hasAttribute('selected') ? 'true' : 'false');
@@ -173,18 +269,20 @@ export class VFileTree extends VuiElement {
 
   private refreshTabStops(active?: VTreeItem): void {
     const visible = this.visibleItems();
+    const enabled = visible.filter((item) => !item.hasAttribute('disabled'));
     const current =
-      (active && visible.includes(active) ? active : undefined) ??
-      visible.find((item) => item.tabIndex === 0) ??
-      visible.find((item) => this.selection.isSelected(item)) ??
-      visible[0];
-    applyRovingTabIndex(visible, current ? visible.indexOf(current) : -1);
+      (active && enabled.includes(active) ? active : undefined) ??
+      enabled.find((item) => item.tabIndex === 0) ??
+      enabled.find((item) => this.selection.isSelected(item)) ??
+      enabled[0];
+    applyRovingTabIndex(enabled, current ? enabled.indexOf(current) : -1);
     for (const item of this.querySelectorAll('vui-tree-item')) {
-      if (item instanceof VTreeItem && !visible.includes(item)) item.tabIndex = -1;
+      if (item instanceof VTreeItem && !enabled.includes(item)) item.tabIndex = -1;
     }
   }
 
   private selectItem(item: VTreeItem): void {
+    if (item.hasAttribute('disabled')) return;
     const previous = this.selectedItem;
     this.selection.setOrder(this.visibleItems());
     this.selection.select(item);
@@ -224,13 +322,24 @@ export class VFileTree extends VuiElement {
     ) {
       if (nextIndex === null) return;
       event.preventDefault();
-      const next = visible[nextIndex];
-      if (next) this.focusItem(next);
+      const enabledAt = (itemIndex: number) => visible[itemIndex] !== undefined && !visible[itemIndex].hasAttribute('disabled');
+      let target = nextIndex;
+      if (!enabledAt(target)) {
+        if (event.key === 'Home') target = stepIndex(-1, 1, visible.length, enabledAt);
+        else if (event.key === 'End') target = stepIndex(visible.length, -1, visible.length, enabledAt);
+        else target = stepIndex(index, target >= index ? 1 : -1, visible.length, enabledAt);
+      }
+      const next = visible[target];
+      if (next && !next.hasAttribute('disabled')) this.focusItem(next);
       return;
     }
     const rtl = isRtl(this);
     const openKey = rtl ? 'ArrowLeft' : 'ArrowRight';
     const closeKey = rtl ? 'ArrowRight' : 'ArrowLeft';
+    if (current.hasAttribute('disabled')) {
+      if (event.key === openKey || event.key === closeKey || event.key === 'Enter' || event.key === ' ') event.preventDefault();
+      return;
+    }
     if (event.key === openKey) {
       event.preventDefault();
       if (current.hasChildren() && !current.hasAttribute('expanded')) {
@@ -266,8 +375,16 @@ export class VFileTree extends VuiElement {
   }
 }
 
-reflectStrings(VTreeItem, ['label', 'kind']);
-reflectBooleans(VTreeItem, ['expanded', 'selected']);
+reflectStrings(VTreeItem, {
+  label: 'label',
+  kind: 'kind',
+  icon: 'icon',
+  summary: 'summary',
+  count: 'count',
+  status: 'status',
+  statusVariant: 'status-variant',
+});
+reflectBooleans(VTreeItem, ['expanded', 'selected', 'disabled', 'loading']);
 reflectStrings(VFileTree, ['label']);
 defineElement('vui-tree-item', VTreeItem);
 defineElement('vui-file-tree', VFileTree);
@@ -278,16 +395,23 @@ registerContract({
   attributes: [
     { name: 'label', kind: 'string', reflected: true },
     { name: 'kind', kind: 'enum', values: ['file', 'folder'], reflected: true },
+    { name: 'icon', kind: 'string', reflected: true },
+    { name: 'summary', kind: 'string', reflected: true },
+    { name: 'count', kind: 'string', reflected: true },
+    { name: 'status', kind: 'string', reflected: true },
+    { name: 'status-variant', kind: 'enum', values: ['neutral', 'info', 'success', 'warning', 'danger'], property: 'statusVariant', reflected: true },
     { name: 'expanded', kind: 'boolean', reflected: true },
     { name: 'selected', kind: 'boolean', reflected: true },
+    { name: 'disabled', kind: 'boolean', reflected: true },
+    { name: 'loading', kind: 'boolean', reflected: true },
     { name: 'value', kind: 'string', reflected: false },
   ],
   events: [],
-  slots: [''],
-  parts: ['row', 'icon', 'label'],
+  slots: ['actions', ''],
+  parts: ['row', 'icon', 'label', 'summary', 'count', 'status', 'actions'],
   methods: [],
   keyboard: [],
-  states: [],
+  states: ['disabled', 'loading'],
   responsive: 'flow',
   focus: 'roving',
   role: 'group',

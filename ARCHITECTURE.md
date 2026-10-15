@@ -253,7 +253,7 @@ Active descendant остаётся только у `vui-select`: фокус де
 
 `system` следует `prefers-color-scheme`. Тёмные значения в `themes/system.css` совпадают с `themes/dark.css`.
 
-Компонент использует `--vui-color-text`, `--vui-color-background`, `--vui-color-surface`, `--vui-color-border`, `--vui-color-primary`, `--vui-color-danger`, `--vui-color-warning`, `--vui-color-success`, `--vui-color-info`, `--vui-color-focus` и парные hover, active, surface и on-color токены. Фокус — `--vui-focus-ring`. Тени — `--vui-shadow-*`.
+Компонент использует `--vui-color-text`, `--vui-color-background`, `--vui-color-surface`, `--vui-color-border`, `--vui-color-primary`, `--vui-color-danger`, `--vui-color-warning`, `--vui-color-success`, `--vui-color-info`, `--vui-color-focus`, `--vui-color-selected` и парные hover, active, surface и on-color токены. Выбор в списке, дереве, таблице, навигации и меню читает `--vui-color-selected`, а не отдельную заливку. Фокус — `--vui-focus-ring`. Тени — `--vui-shadow-*`.
 
 Своя тема переопределяет те же custom properties. Новую палитру и новый набор имён заводить не нужно.
 

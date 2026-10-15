@@ -25,6 +25,7 @@
   --vui-color-warning-surface: var(--vui-palette-hc-black);
   --vui-color-info-surface: var(--vui-palette-hc-black);
   --vui-color-backdrop: var(--vui-palette-backdrop-hc);
+  --vui-color-selected: var(--vui-palette-hc-hover);
   --vui-color-focus: var(--vui-palette-hc-yellow);
   --vui-color-tooltip-bg: var(--vui-palette-hc-black);
   --vui-color-tooltip-text: var(--vui-palette-hc-white);

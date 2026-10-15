@@ -5,11 +5,12 @@
   --vui-color-surface-raised: var(--vui-palette-neon-cyan-raised);
   --vui-color-surface-sunken: var(--vui-palette-neon-cyan-void);
   --vui-color-surface-hover: var(--vui-palette-neon-cyan-hover);
-  --vui-color-field: var(--vui-palette-neon-cyan-void);
+  --vui-color-field: color-mix(in srgb, var(--vui-palette-neon-cyan-panel) 70%, var(--vui-palette-neon-cyan-void));
+  --vui-color-selected: color-mix(in srgb, var(--vui-color-primary) 18%, var(--vui-color-surface));
   --vui-color-text: var(--vui-palette-neon-cyan-text);
   --vui-color-text-muted: var(--vui-palette-neon-cyan-muted);
   --vui-color-border: var(--vui-palette-neon-cyan-line);
-  --vui-color-border-strong: var(--vui-palette-neon-cyan);
+  --vui-color-border-strong: color-mix(in srgb, var(--vui-palette-neon-cyan) 42%, var(--vui-palette-neon-cyan-line));
   --vui-color-primary: var(--vui-palette-neon-cyan);
   --vui-color-primary-hover: var(--vui-palette-neon-cyan-hot);
   --vui-color-primary-active: var(--vui-palette-neon-cyan-deep);

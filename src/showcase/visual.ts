@@ -80,6 +80,15 @@ board.innerHTML = `
     </vui-select>
   </section>
   <section>
+    <h2>Tree</h2>
+    <vui-file-tree id="state-tree" label="Groups">
+      <vui-tree-item label="LAN" icon="network" kind="folder" expanded summary="10.0.0.0/8" count="2" status="on" status-variant="success" selected>
+        <vui-tree-item label="dns" icon="globe" summary="example.net" count="4"></vui-tree-item>
+        <vui-tree-item label="archive" icon="file-archive" disabled></vui-tree-item>
+      </vui-tree-item>
+    </vui-file-tree>
+  </section>
+  <section>
     <h2>Data grid</h2>
     <vui-data-grid id="grid" label="Components"></vui-data-grid>
   </section>

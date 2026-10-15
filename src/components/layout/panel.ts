@@ -17,7 +17,8 @@ export class VPanel extends VuiElement {
     return `
       <section part="panel">
         <header part="header">
-          <slot name="header"><h2 part="title"></h2></slot>
+          <div class="heading"><slot name="header"><h2 part="title"></h2></slot></div>
+          <div class="tools" part="actions" hidden><slot name="actions"></slot></div>
         </header>
         <div class="body" part="body"><slot></slot></div>
         <footer part="footer"><slot name="footer"></slot></footer>
@@ -33,7 +34,7 @@ export class VPanel extends VuiElement {
         background: var(--vui-color-surface);
         color: var(--vui-color-text);
         border: var(--vui-border-width) solid var(--vui-color-border);
-        border-radius: var(--vui-radius-lg);
+        border-radius: var(--vui-radius);
         box-shadow: var(--vui-shadow-sm);
         min-width: 0;
         max-width: 100%;
@@ -44,8 +45,20 @@ export class VPanel extends VuiElement {
       }
       .body { overflow: var(--vui-layout-overflow, auto); }
       header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--vui-space-sm);
         border-bottom: var(--vui-border-width) solid var(--vui-color-border);
       }
+      .heading { min-width: 0; flex: 1 1 auto; }
+      .tools {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--vui-space-2xs);
+        flex: 0 0 auto;
+      }
+      .tools[hidden] { display: none; }
       header.hidden, footer.hidden { display: none; }
       h2 {
         margin: 0;
@@ -60,7 +73,11 @@ export class VPanel extends VuiElement {
 
   protected afterRender(): void {
     this.qs('slot[name="header"]').addEventListener('slotchange', () => this.sync());
+    this.qs('slot[name="actions"]').addEventListener('slotchange', () => this.sync());
     this.qs('slot[name="footer"]').addEventListener('slotchange', () => this.sync());
+    queueMicrotask(() => {
+      if (this.isConnected) this.sync();
+    });
   }
 
   protected sync(): void {
@@ -69,10 +86,14 @@ export class VPanel extends VuiElement {
     title.textContent = heading;
     title.hidden = !heading;
     const headerSlot = this.qs<HTMLSlotElement>('slot[name="header"]');
+    const actionsSlot = this.qs<HTMLSlotElement>('slot[name="actions"]');
     const footerSlot = this.qs<HTMLSlotElement>('slot[name="footer"]');
     const header = this.qs('header');
     const footer = this.qs('footer');
-    header.classList.toggle('hidden', !heading && headerSlot.assignedNodes({ flatten: true }).length === 0);
+    const tools = this.qs<HTMLElement>('.tools');
+    const hasActions = actionsSlot.assignedNodes({ flatten: true }).length > 0;
+    tools.hidden = !hasActions;
+    header.classList.toggle('hidden', !heading && headerSlot.assignedNodes({ flatten: true }).length === 0 && !hasActions);
     footer.classList.toggle('hidden', footerSlot.assignedNodes({ flatten: true }).length === 0);
     const padding = this.getAttribute('padding');
     if (padding) applySpace(this, '--vui-layout-padding', padding, 'var(--vui-panel-padding)');
@@ -93,8 +114,8 @@ registerContract({
     { name: 'overflow', kind: 'string', reflected: true },
   ],
   events: [],
-  slots: ['header', '', 'footer'],
-  parts: ['panel', 'header', 'title', 'body', 'footer'],
+  slots: ['header', 'actions', '', 'footer'],
+  parts: ['panel', 'header', 'title', 'actions', 'body', 'footer'],
   methods: [],
   keyboard: [],
   states: [],

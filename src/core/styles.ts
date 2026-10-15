@@ -136,8 +136,16 @@ export const controlStyles = `
 :host([invalid]) .control {
   border-color: var(--vui-color-danger);
 }
+:host([readonly]) .control {
+  background: var(--vui-color-surface-sunken);
+  border-style: dashed;
+}
+:host([readonly]) .control:has(:focus-visible) {
+  border-color: var(--vui-color-border-strong);
+  box-shadow: none;
+}
 :host([disabled]) .control {
-  opacity: 0.55;
+  opacity: 0.72;
   cursor: not-allowed;
 }
 :host([size="small"]) .control {

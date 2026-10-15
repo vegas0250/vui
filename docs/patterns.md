@@ -13,6 +13,7 @@ Pattern — не компонент. Это пример, как собрать 
 У pattern нет своего custom element, нет регистрации и нет отдельного export. Studio (`pnpm dev`) содержит рабочие сборки:
 
 - Form, Login, Settings, Search, List / detail, Command palette;
+- Technical workspace: дерево группировок, дерево правил, панель свойств и строка с метаданными;
 - Application Shell;
 - Platform Validation: shell, toolbar, search, tree, data grid, detail, dialog, context menu, toast, status bar.
 

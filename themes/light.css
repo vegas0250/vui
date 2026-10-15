@@ -26,6 +26,7 @@
   --vui-color-warning-surface: var(--vui-palette-amber-50);
   --vui-color-info-surface: var(--vui-palette-blue-50);
   --vui-color-backdrop: var(--vui-palette-backdrop-light);
+  --vui-color-selected: color-mix(in srgb, var(--vui-color-primary) 14%, var(--vui-color-surface));
   --vui-color-focus: var(--vui-palette-blue-600);
   --vui-color-tooltip-bg: var(--vui-palette-slate-900);
   --vui-color-tooltip-text: var(--vui-palette-slate-0);

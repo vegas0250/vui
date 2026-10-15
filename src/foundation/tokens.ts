@@ -23,6 +23,7 @@ export const semanticTokens = [
   '--vui-color-warning',
   '--vui-color-info',
   '--vui-color-focus',
+  '--vui-color-selected',
   '--vui-focus-ring',
   '--vui-border-width',
   '--vui-shadow-md',

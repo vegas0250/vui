@@ -152,16 +152,14 @@ export class VSelect extends VuiElement {
         border-radius: var(--vui-radius-sm);
         cursor: pointer;
       }
-      .listbox [role="option"][aria-selected="true"] {
-        background: var(--vui-color-surface-hover);
-        font-weight: var(--vui-font-weight-strong);
-      }
+      .listbox [role="option"]:hover:not([aria-disabled="true"]) { background: var(--vui-color-surface-hover); }
+      .listbox [role="option"][aria-selected="true"],
       .listbox [role="option"].active {
-        background: var(--vui-color-primary);
-        color: var(--vui-color-on-primary);
+        background: var(--vui-color-selected);
+        box-shadow: inset 2px 0 0 var(--vui-color-primary);
       }
       .listbox [role="option"][aria-disabled="true"] {
-        opacity: 0.45;
+        opacity: 0.72;
         cursor: not-allowed;
       }
       .label:empty { display: none; }

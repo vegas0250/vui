@@ -65,8 +65,8 @@ export class VPagination extends VuiElement {
         cursor: pointer;
       }
       button[aria-current="page"] {
-        background: var(--vui-color-primary);
-        color: var(--vui-color-on-primary);
+        background: var(--vui-color-selected);
+        color: var(--vui-color-text);
         border-color: var(--vui-color-primary);
       }
       button:focus-visible { outline: var(--vui-focus-ring); outline-offset: var(--vui-focus-offset); }

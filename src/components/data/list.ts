@@ -19,7 +19,11 @@ export class VListItem extends VuiElement {
   }
 
   protected template(): string {
-    return `<span part="label"><slot></slot></span>`;
+    return `
+      <span part="label"><slot></slot></span>
+      <span part="meta" hidden><slot name="meta"></slot></span>
+      <span part="end" hidden><slot name="end"></slot></span>
+    `;
   }
 
   protected componentStyles(): string {
@@ -27,6 +31,7 @@ export class VListItem extends VuiElement {
       :host {
         display: flex;
         align-items: center;
+        gap: var(--vui-space-sm);
         min-width: 0;
         max-width: 100%;
         min-height: var(--vui-row-height, var(--vui-size-control));
@@ -34,14 +39,41 @@ export class VListItem extends VuiElement {
         cursor: pointer;
         overflow-wrap: anywhere;
       }
-      :host([selected]) { background: var(--vui-color-surface); }
+      [part="label"] { flex: 1 1 auto; min-width: 0; }
+      [part="meta"], [part="end"] {
+        flex: 0 1 auto;
+        min-width: 0;
+        color: var(--vui-color-text-muted);
+        font-size: var(--vui-font-size-sm);
+        font-variant-numeric: tabular-nums;
+      }
+      [part="meta"][hidden], [part="end"][hidden] { display: none; }
       :host(:hover) { background: var(--vui-color-surface-hover); }
+      :host([selected]) {
+        background: var(--vui-color-selected);
+        box-shadow: inset 2px 0 0 var(--vui-color-primary);
+      }
+      :host([selected]:hover) { background: var(--vui-color-selected); }
+      :host-context([dir="rtl"]):host([selected]) { box-shadow: inset -2px 0 0 var(--vui-color-primary); }
       :host(:focus-visible) { outline: var(--vui-focus-ring); outline-offset: calc(var(--vui-focus-offset) * -1); }
-      :host([disabled]) { opacity: 0.5; cursor: not-allowed; }
+      :host([disabled]) { opacity: 0.72; cursor: not-allowed; }
     `;
   }
 
+  protected afterRender(): void {
+    this.qs('slot[name="meta"]').addEventListener('slotchange', () => this.sync());
+    this.qs('slot[name="end"]').addEventListener('slotchange', () => this.sync());
+    queueMicrotask(() => {
+      if (this.isConnected) this.sync();
+    });
+  }
+
   protected sync(): void {
+    for (const name of ['meta', 'end']) {
+      const slot = this.qs<HTMLSlotElement>(`slot[name="${name}"]`);
+      const box = slot.parentElement;
+      if (box) box.hidden = slot.assignedNodes({ flatten: true }).length === 0;
+    }
     this.setAttribute('role', 'option');
     this.setAttribute('aria-selected', this.hasAttribute('selected') ? 'true' : 'false');
     this.setAttribute('aria-disabled', this.isDisabled() ? 'true' : 'false');
@@ -61,8 +93,8 @@ registerContract({
     { name: 'selected', kind: 'boolean', reflected: true },
   ],
   events: [],
-  slots: [''],
-  parts: ['label'],
+  slots: ['', 'meta', 'end'],
+  parts: ['label', 'meta', 'end'],
   methods: [],
   keyboard: [],
   states: ['disabled'],

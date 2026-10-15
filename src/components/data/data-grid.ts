@@ -165,6 +165,7 @@ export class VDataGrid extends VuiElement {
         border-bottom: var(--vui-border-width) solid var(--vui-color-border);
         text-align: start;
         white-space: nowrap;
+        font-variant-numeric: tabular-nums;
       }
       th {
         position: sticky;
@@ -177,10 +178,12 @@ export class VDataGrid extends VuiElement {
       }
       tbody tr:last-child td { border-bottom: 0; }
       tbody tr[data-id] { cursor: pointer; }
+      tbody tr[data-id]:hover:not([aria-selected="true"]) { background: var(--vui-color-surface-hover); }
       tbody tr[aria-selected="true"] {
-        background: var(--vui-color-surface-hover);
-        box-shadow: inset 0 0 0 1px var(--vui-color-border-strong);
+        background: var(--vui-color-selected);
+        box-shadow: inset 2px 0 0 var(--vui-color-primary);
       }
+      :host-context([dir="rtl"]) tbody tr[aria-selected="true"] { box-shadow: inset -2px 0 0 var(--vui-color-primary); }
       tbody tr[data-current="true"]:not([aria-selected="true"]) {
         box-shadow: inset 0 0 0 1px var(--vui-color-border-strong);
       }

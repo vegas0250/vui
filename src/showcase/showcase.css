@@ -183,9 +183,9 @@ main {
 .desktop {
   overflow: hidden;
   border: var(--vui-border-width) solid var(--vui-color-border);
-  border-radius: var(--vui-radius-lg);
+  border-radius: var(--vui-radius);
   background: var(--vui-color-background);
-  box-shadow: var(--vui-shadow-md);
+  box-shadow: var(--vui-shadow-sm);
 }
 
 .editor {

@@ -28,6 +28,7 @@ export class VBadge extends VuiElement {
         background: var(--vui-color-surface);
         color: var(--vui-color-text);
         font-size: var(--vui-font-size-sm);
+        font-variant-numeric: tabular-nums;
         line-height: var(--vui-line-height);
         overflow-wrap: anywhere;
       }

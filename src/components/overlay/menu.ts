@@ -31,11 +31,12 @@ export class VMenuItem extends VuiElement {
   declare icon: string;
   declare disabled: boolean;
   declare checked: boolean;
+  declare variant: string;
 
   static shadowDelegatesFocus = false;
 
   static get observedAttributes(): string[] {
-    return ['label', 'command', 'shortcut', 'icon', 'disabled', 'checked'];
+    return ['label', 'command', 'shortcut', 'icon', 'disabled', 'checked', 'variant'];
   }
 
   protected template(): string {
@@ -68,7 +69,11 @@ export class VMenuItem extends VuiElement {
         outline: var(--vui-focus-ring);
         outline-offset: calc(var(--vui-focus-offset) * -1);
       }
-      :host([disabled]) { opacity: 0.45; cursor: not-allowed; }
+      :host([disabled]) { opacity: 0.72; cursor: not-allowed; }
+      :host([variant="danger"]) { color: var(--vui-color-danger); }
+      :host([variant="danger"]) vui-icon { color: var(--vui-color-danger); }
+      :host([checked]) { box-shadow: inset 2px 0 0 var(--vui-color-primary); }
+      :host-context([dir="rtl"]):host([checked]) { box-shadow: inset -2px 0 0 var(--vui-color-primary); }
       .mark {
         width: 1em;
         flex: 0 0 auto;
@@ -491,7 +496,7 @@ export class VMenu extends VuiElement {
   }
 }
 
-reflectStrings(VMenuItem, ['label', 'command', 'shortcut', 'icon']);
+reflectStrings(VMenuItem, ['label', 'command', 'shortcut', 'icon', 'variant']);
 reflectBooleans(VMenuItem, ['disabled', 'checked']);
 reflectStrings(VMenu, ['label']);
 defineElement('vui-menu-item', VMenuItem);
@@ -507,6 +512,7 @@ registerContract({
     { name: 'icon', kind: 'string', reflected: true },
     { name: 'disabled', kind: 'boolean', reflected: true },
     { name: 'checked', kind: 'boolean', reflected: true },
+    { name: 'variant', kind: 'enum', values: ['danger'], reflected: true },
     { name: 'layout', kind: 'string', reflected: false },
   ],
   events: ['click'],

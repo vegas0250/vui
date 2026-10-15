@@ -42,7 +42,7 @@ button:focus-visible {
 button:disabled,
 :host([disabled]) button,
 :host([loading]) button {
-  opacity: 0.5;
+  opacity: 0.72;
   cursor: not-allowed;
 }
 [part="busy"] {
@@ -63,16 +63,19 @@ button:disabled,
   border-color: var(--vui-color-border);
 }
 :host([variant="secondary"]) button:hover { background: var(--vui-color-surface-hover); }
+:host([variant="secondary"]) button:active { background: var(--vui-color-surface-sunken); }
 :host([variant="ghost"]) button {
   background: transparent;
   color: var(--vui-color-text);
 }
-:host([variant="ghost"]) button:hover { background: var(--vui-color-surface-hover); }
+:host([variant="ghost"]) button:hover,
+:host([variant="ghost"]) button:active { background: var(--vui-color-surface-hover); }
 :host([variant="danger"]) button {
   background: var(--vui-color-danger);
   color: var(--vui-color-on-danger);
 }
-:host([variant="danger"]) button:hover { background: var(--vui-color-danger-hover); }
+:host([variant="danger"]) button:hover,
+:host([variant="danger"]) button:active { background: var(--vui-color-danger-hover); }
 :host([size="small"]) button {
   min-height: var(--vui-size-control-sm);
   padding-inline: var(--vui-space-sm);

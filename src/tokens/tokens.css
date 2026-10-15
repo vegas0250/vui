@@ -39,15 +39,16 @@
   --vui-palette-amber-300: #f0c36a;
   --vui-palette-amber-800: #8a5a00;
   --vui-palette-amber-900: #332a16;
-  --vui-palette-ink-50: #e7edf4;
-  --vui-palette-ink-200: #9aa8b8;
-  --vui-palette-ink-400: #526173;
-  --vui-palette-ink-500: #3a4553;
-  --vui-palette-ink-600: #2c343f;
-  --vui-palette-ink-700: #262d37;
-  --vui-palette-ink-800: #1e242c;
-  --vui-palette-ink-900: #161a20;
-  --vui-palette-ink-950: #12161b;
+  /* Ink scale: 900 is the darkest canvas. 950 matches it so nothing sits below the page. */
+  --vui-palette-ink-50: #e8eef6;
+  --vui-palette-ink-200: #93a2b5;
+  --vui-palette-ink-400: #5c6c7e;
+  --vui-palette-ink-500: #3c4a5a;
+  --vui-palette-ink-600: #2a3442;
+  --vui-palette-ink-700: #212a36;
+  --vui-palette-ink-800: #171f29;
+  --vui-palette-ink-900: #0e1318;
+  --vui-palette-ink-950: #0e1318;
   --vui-palette-navy-900: #0d1b2e;
   --vui-palette-info-900: #1c2a3d;
   --vui-palette-danger-900: #3a2224;
@@ -106,27 +107,28 @@
   --vui-palette-neon-danger-ink: #2a0d12;
   --vui-palette-neon-warn: #e8ff47;
   --vui-palette-neon-info: #4dffe0;
-  --vui-palette-shadow-neon-green-sm: 0 1px 0 rgba(61, 255, 138, 0.14);
-  --vui-palette-shadow-neon-green-md: 0 10px 28px rgba(0, 0, 0, 0.46), 0 0 0 1px rgba(61, 255, 138, 0.1);
-  --vui-palette-shadow-neon-green-lg: 0 18px 44px rgba(0, 0, 0, 0.58), 0 0 0 1px rgba(61, 255, 138, 0.18);
-  --vui-palette-shadow-neon-magenta-sm: 0 0 8px rgba(255, 43, 214, 0.28);
-  --vui-palette-shadow-neon-magenta-md: 0 0 18px rgba(255, 43, 214, 0.32);
-  --vui-palette-shadow-neon-magenta-lg: 0 0 36px rgba(255, 43, 214, 0.4);
-  --vui-palette-shadow-neon-cyan-sm: 0 0 8px rgba(45, 226, 230, 0.28);
-  --vui-palette-shadow-neon-cyan-md: 0 0 18px rgba(45, 226, 230, 0.32);
-  --vui-palette-shadow-neon-cyan-lg: 0 0 36px rgba(45, 226, 230, 0.4);
+  --vui-palette-shadow-neon-green-sm: 0 1px 0 rgba(61, 255, 138, 0.1);
+  --vui-palette-shadow-neon-green-md: 0 8px 20px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(61, 255, 138, 0.12);
+  --vui-palette-shadow-neon-green-lg: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(61, 255, 138, 0.16);
+  --vui-palette-shadow-neon-magenta-sm: 0 1px 0 rgba(255, 43, 214, 0.12);
+  --vui-palette-shadow-neon-magenta-md: 0 8px 20px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(255, 43, 214, 0.14);
+  --vui-palette-shadow-neon-magenta-lg: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 43, 214, 0.18);
+  --vui-palette-shadow-neon-cyan-sm: 0 1px 0 rgba(45, 226, 230, 0.12);
+  --vui-palette-shadow-neon-cyan-md: 0 8px 20px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(45, 226, 230, 0.14);
+  --vui-palette-shadow-neon-cyan-lg: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(45, 226, 230, 0.18);
   --vui-palette-shadow-light-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
-  --vui-palette-shadow-light-md: 0 8px 24px rgba(16, 24, 40, 0.12);
-  --vui-palette-shadow-light-lg: 0 16px 48px rgba(16, 24, 40, 0.18);
-  --vui-palette-shadow-dark-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
-  --vui-palette-shadow-dark-md: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --vui-palette-shadow-dark-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
+  --vui-palette-shadow-light-md: 0 8px 20px rgba(16, 24, 40, 0.1);
+  --vui-palette-shadow-light-lg: 0 16px 36px rgba(16, 24, 40, 0.16);
+  --vui-palette-shadow-dark-sm: 0 1px 1px rgba(0, 0, 0, 0.35);
+  --vui-palette-shadow-dark-md: 0 8px 20px rgba(0, 0, 0, 0.36);
+  --vui-palette-shadow-dark-lg: 0 16px 36px rgba(0, 0, 0, 0.46);
 
   /* Typography */
   --vui-font-sans: "Segoe UI", "Segoe UI Variable", system-ui, sans-serif;
   --vui-font-mono: "Cascadia Mono", "Cascadia Code", ui-monospace, Consolas, monospace;
   --vui-font-weight: 400;
   --vui-font-weight-strong: 600;
+  --vui-color-selected: color-mix(in srgb, var(--vui-color-primary) 16%, var(--vui-color-surface));
 
   /* Motion */
   --vui-duration: 120ms;

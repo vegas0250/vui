@@ -2,6 +2,9 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import darkCss from '../../themes/dark.css?raw';
 import highContrastCss from '../../themes/high-contrast.css?raw';
 import lightCss from '../../themes/light.css?raw';
+import neonCyanCss from '../../themes/neon-cyan.css?raw';
+import neonGreenCss from '../../themes/neon-green.css?raw';
+import neonMagentaCss from '../../themes/neon-magenta.css?raw';
 import systemCss from '../../themes/system.css?raw';
 import densityCss from '../../src/tokens/density.css?raw';
 import '../../src/components/layout/grid';
@@ -22,6 +25,9 @@ describe('token contract', () => {
     expect(darkCss).toContain('--vui-color-background: var(--vui-palette-ink-900)');
     expect(systemCss).toContain('--vui-color-background: var(--vui-palette-ink-900)');
     expect(highContrastCss).toContain('--vui-color-focus: var(--vui-palette-hc-yellow)');
+    for (const css of [lightCss, darkCss, highContrastCss, systemCss, neonGreenCss, neonMagentaCss, neonCyanCss]) {
+      expect(css).toContain('--vui-color-selected:');
+    }
     expect(densityCss.match(/--vui-panel-padding: var\(--vui-space-lg\)/g)).toHaveLength(3);
   });
 });

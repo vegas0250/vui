@@ -176,18 +176,18 @@ Responsive — часть компонента, отдельно от темы �
 - `vui-tooltip`: `text`, `placement` top|bottom. Показ по hover и focus, скрытие по Escape. Пока подсказка видна, у сфокусированного контрола стоит `aria-describedby` на `role="tooltip"`.
 - `vui-alert`: `variant` info|success|warning|danger|neutral, `closable`, `banner`, `close-label`.
 - `vui-toast`: `variant`, `heading`, `duration` (`0` не скрывает сам). `toast({ title, message, variant, duration })` использует или создаёт `vui-toaster`.
-- `vui-panel`: `heading`, `padding`, `overflow`. Слоты по умолчанию, `header`, `footer`. Поверхность, граница и радиус — tokens. Без `padding` отступ равен `--vui-panel-padding`.
+- `vui-panel`: `heading`, `padding`, `overflow`. Слоты по умолчанию, `header`, `actions`, `footer`. Поверхность, граница и радиус — tokens. Без `padding` отступ равен `--vui-panel-padding`.
 - `vui-stack` / `vui-hstack` / `vui-vstack`: `gap`, `padding`, `align`, `justify`, `wrap`, `direction`, `overflow`.
 - `vui-grid`: `columns` 1–12 или `min` как длина (`px|rem|em|%`), `gap`, `padding`, `align`, `justify`, `overflow`. `columns` — наибольшее число колонок; треки схлопываются, когда контейнер уже.
 - `vui-split-panel`: `orientation` horizontal|vertical, `position`, `min`, `max`, `label`, `overflow`. Без `min`/`max` позиция остаётся в 10–90. Слоты `start`, `end`. Разделитель доступен с клавиатуры. Горизонтальный split складывается ниже `--vui-layout-narrow`. Вложенные панели двигаются независимо.
 - `vui-toolbar`: `label`, `wrap`. Слоты `start`, по умолчанию, `end`. На ширине до 40rem каждая группа занимает свою строку. `wrap` по-прежнему включает перенос на любой ширине.
 - `vui-status-bar`: `label`. Слоты по умолчанию, `end`.
-- `vui-file-tree`: `label`. `vui-tree-item`: `label`, `kind` file|folder, `expanded`, `selected`, `value`. Стрелки, Home, End, Enter, Space. `change` и `selectedItem`.
+- `vui-file-tree`: `label`. `vui-tree-item`: `label`, `kind` file|folder, `icon`, `summary`, `count`, `status`, `status-variant`, `expanded`, `selected`, `disabled`, `loading`, `value`. Слот `actions`. Стрелки, Home, End, Enter, Space. `change` и `selectedItem`. Отключённый пункт пропускается клавиатурой.
 - `vui-data-grid`: properties `columns`, `rows`, `selectedId`. `label`, `empty-label`. Стрелки, Home, End. `change`.
 - `vui-field` / `vui-field-group`: `label`, `hint`, `invalid`, `disabled`. Ошибка — `invalid` и `hint`.
 - `vui-slider`: `value`, необязательный `value-end`, `min`, `max`, `step`.
 - `vui-nav`, `vui-stepper`: roving tabindex и `change`.
-- `vui-list`: светлый DOM, `multiple`, диапазон через Shift. `vui-properties` — пары подпись/значение.
+- `vui-list`: светлый DOM, `multiple`, диапазон через Shift. У `vui-list-item` слоты по умолчанию, `meta` и `end`. `vui-properties` — пары подпись/значение.
 - `vui-empty`, `vui-text`, `vui-link`, `vui-chip`, `vui-kbd`, `vui-window`: см. `docs/components.md`.
 
 `columns`: `{ key, title, width?, align?, priority? }`. `priority` — `primary` или `secondary`. `rows`: `{ id, [key]: string }`. `width` принимает только простую длину.
