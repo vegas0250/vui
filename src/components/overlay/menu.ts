@@ -83,7 +83,7 @@ export class VMenuItem extends VuiElement {
         text-align: center;
       }
       :host([checked]) .mark::before { content: "✓"; }
-      vui-icon { width: 1em; height: 1em; color: var(--vui-color-primary); }
+      vui-icon { width: 1em; height: 1em; color: var(--vui-color-interactive-text, var(--vui-color-primary)); }
       :host([disabled]) vui-icon { color: inherit; }
       :host([checked]) vui-icon { display: none; }
       .label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

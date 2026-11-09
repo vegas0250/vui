@@ -68,7 +68,7 @@ export class VDialog extends VuiElement {
         width: 100%;
         max-height: var(--vui-dialog-block);
         min-width: 0;
-        background: var(--vui-color-surface-raised);
+        background: var(--vui-color-modal, var(--vui-color-surface-raised));
         color: var(--vui-color-text);
         border: var(--vui-border-width) solid var(--vui-color-border);
         border-radius: var(--vui-radius-lg);

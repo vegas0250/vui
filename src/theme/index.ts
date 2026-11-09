@@ -1,13 +1,40 @@
 import { reportDeveloper } from '../core/dev';
 import { installVuiStyles } from './install';
+import { applyTheme, clearTheme, listThemes } from './engine';
+export * from './engine';
+export * from './presets';
+export { normalizeColor, contrast, colorFormats } from './colors';
 
-export type VuiTheme = 'light' | 'dark' | 'high-contrast' | 'system' | 'neon-green' | 'neon-magenta' | 'neon-cyan';
+export type VuiTheme =
+  | 'light'
+  | 'dark'
+  | 'high-contrast'
+  | 'system'
+  | 'neon-green'
+  | 'neon-magenta'
+  | 'neon-cyan'
+  | (string & {});
 export type VuiDensity = 'comfortable' | 'compact' | 'dense';
 
-const themes = new Set<VuiTheme>(['light', 'dark', 'high-contrast', 'system', 'neon-green', 'neon-magenta', 'neon-cyan']);
+const themes = new Set<VuiTheme>([
+  'light',
+  'dark',
+  'high-contrast',
+  'system',
+  'neon-green',
+  'neon-magenta',
+  'neon-cyan',
+]);
 const densities = new Set<VuiDensity>(['comfortable', 'compact', 'dense']);
 
-export function setTheme(theme: VuiTheme, root: HTMLElement = document.documentElement): void {
+export function setTheme(
+  theme: VuiTheme,
+  root: HTMLElement = document.documentElement,
+): void {
+  if (listThemes().some((item) => item.id === theme)) {
+    applyTheme(theme, root);
+    return;
+  }
   if (!themes.has(theme)) {
     reportDeveloper(
       'theme',
@@ -15,10 +42,14 @@ export function setTheme(theme: VuiTheme, root: HTMLElement = document.documentE
     );
     return;
   }
+  clearTheme(root);
   root.setAttribute('data-vui-theme', theme);
 }
 
-export function setDensity(density: VuiDensity, root: HTMLElement = document.documentElement): void {
+export function setDensity(
+  density: VuiDensity,
+  root: HTMLElement = document.documentElement,
+): void {
   if (!densities.has(density)) {
     reportDeveloper(
       'density',
@@ -29,14 +60,23 @@ export function setDensity(density: VuiDensity, root: HTMLElement = document.doc
   root.setAttribute('data-vui-density', density);
 }
 
-export function getTheme(root: HTMLElement = document.documentElement): VuiTheme {
+export function getTheme(
+  root: HTMLElement = document.documentElement,
+): VuiTheme {
   const value = root.getAttribute('data-vui-theme');
-  return value !== null && themes.has(value as VuiTheme) ? (value as VuiTheme) : 'light';
+  return value !== null &&
+    (themes.has(value as VuiTheme) || listThemes().some((t) => t.id === value))
+    ? (value as VuiTheme)
+    : 'light';
 }
 
-export function getDensity(root: HTMLElement = document.documentElement): VuiDensity {
+export function getDensity(
+  root: HTMLElement = document.documentElement,
+): VuiDensity {
   const value = root.getAttribute('data-vui-density');
-  return value !== null && densities.has(value as VuiDensity) ? (value as VuiDensity) : 'comfortable';
+  return value !== null && densities.has(value as VuiDensity)
+    ? (value as VuiDensity)
+    : 'comfortable';
 }
 
 installVuiStyles();

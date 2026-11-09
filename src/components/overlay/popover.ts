@@ -45,7 +45,7 @@ export class VPopover extends VuiElement {
         min-width: min(12rem, calc(100vw - var(--vui-overlay-gutter) * 2));
         max-width: min(20rem, calc(100vw - var(--vui-overlay-gutter) * 2));
         padding: var(--vui-space-sm);
-        background: var(--vui-color-surface);
+        background: var(--vui-color-popover, var(--vui-color-surface));
         color: var(--vui-color-text);
         border: var(--vui-border-width) solid var(--vui-color-border);
         border-radius: var(--vui-radius);

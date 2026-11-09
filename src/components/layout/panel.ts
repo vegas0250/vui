@@ -31,7 +31,7 @@ export class VPanel extends VuiElement {
       :host { display: block; min-width: 0; max-width: 100%; }
       :host(:focus-visible) { outline: var(--vui-focus-ring); }
       section {
-        background: var(--vui-color-surface);
+        background: var(--vui-color-card, var(--vui-color-surface));
         color: var(--vui-color-text);
         border: var(--vui-border-width) solid var(--vui-color-border);
         border-radius: var(--vui-radius);

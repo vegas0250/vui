@@ -24,12 +24,12 @@ export class VLink extends VuiElement {
       a {
         min-width: 0;
         max-width: 100%;
-        color: var(--vui-color-primary);
+        color: var(--vui-color-interactive-text, var(--vui-color-primary));
         overflow-wrap: anywhere;
         text-decoration: underline;
         text-underline-offset: 0.15em;
       }
-      a:hover { color: var(--vui-color-primary-hover); }
+      a:hover { color: var(--vui-color-interactive-text, var(--vui-color-primary-hover)); }
       a:focus { outline: none; }
       a:focus-visible {
         outline: var(--vui-focus-ring);

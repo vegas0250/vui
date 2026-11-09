@@ -8,6 +8,19 @@ import neonGreenCss from '../../themes/neon-green.css?raw';
 import neonMagentaCss from '../../themes/neon-magenta.css?raw';
 import systemCss from '../../themes/system.css?raw';
 
+import { builtInThemes } from './presets';
+import { themeDocument, themeVariables } from './engine';
+const presetCss = builtInThemes
+  .map(
+    (theme) =>
+      `[data-vui-theme="${theme.id}"] { color-scheme: ${theme.mode}; ${Object.entries(
+        themeVariables(themeDocument(theme.id)),
+      )
+        .map(([key, value]) => `${key}:${value};`)
+        .join('')} }`,
+  )
+  .join('\n');
+
 const STYLE_ID = 'vui-styles';
 let installed = false;
 
@@ -20,7 +33,18 @@ export function installVuiStyles(): void {
 
   const style = document.createElement('style');
   style.id = STYLE_ID;
-  style.textContent = [tokensCss, densityCss, lightCss, darkCss, highContrastCss, neonGreenCss, neonMagentaCss, neonCyanCss, systemCss].join('\n');
+  style.textContent = [
+    tokensCss,
+    densityCss,
+    lightCss,
+    darkCss,
+    highContrastCss,
+    neonGreenCss,
+    neonMagentaCss,
+    neonCyanCss,
+    systemCss,
+    presetCss,
+  ].join('\n');
   document.head.append(style);
   installed = true;
 }

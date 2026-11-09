@@ -197,7 +197,7 @@ export class VShell extends VuiElement {
         color: var(--vui-color-text);
         cursor: pointer;
       }
-      .aside-rail button:hover { background: var(--vui-color-surface-hover); color: var(--vui-color-primary); }
+      .aside-rail button:hover { background: var(--vui-color-surface-hover); color: var(--vui-color-interactive-text, var(--vui-color-primary)); }
       .aside-rail button:focus-visible { outline: var(--vui-focus-ring); outline-offset: calc(var(--vui-focus-offset) * -1); }
       .aside-rail vui-icon { width: var(--vui-icon-size); height: var(--vui-icon-size); }
       :host([aside-collapsed]) .aside-sep { display: none; }

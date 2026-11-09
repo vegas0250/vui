@@ -91,3 +91,7 @@ export type { CompositionContract } from './composition/index';
 export { listFamilies, familyMembers, componentStates } from './families/index';
 export type { FamilyContract, FamilyName, ComponentState } from './families/index';
 export { commandPath, listInteractions, platformKeys, runCommand } from './interaction/index';
+
+export * from './theme/engine';
+export * from './theme/presets';
+export {normalizeColor,contrast,colorFormats} from './theme/colors';

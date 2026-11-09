@@ -1,0 +1,151 @@
+/** Official upstream base palettes; semantic derivation and AA adjustments live in presets.ts. */
+export interface Palette {
+  background: string;
+  surface: string;
+  elevated: string;
+  foreground: string;
+  muted: string;
+  primary: string;
+  accent: string;
+  success: string;
+  warning: string;
+  error: string;
+  info: string;
+}
+export const palettes: Readonly<Record<string, Readonly<Palette>>> =
+  Object.freeze(
+    Object.fromEntries(
+      Object.entries({
+        'tokyo-night': {
+          background: '#1a1b26',
+          surface: '#24283b',
+          elevated: '#292e42',
+          foreground: '#c0caf5',
+          muted: '#a9b1d6',
+          primary: '#7aa2f7',
+          accent: '#bb9af7',
+          success: '#9ece6a',
+          warning: '#e0af68',
+          error: '#f7768e',
+          info: '#7dcfff',
+        },
+        'catppuccin-mocha': {
+          background: '#1e1e2e',
+          surface: '#313244',
+          elevated: '#45475a',
+          foreground: '#cdd6f4',
+          muted: '#a6adc8',
+          primary: '#cba6f7',
+          accent: '#89b4fa',
+          success: '#a6e3a1',
+          warning: '#f9e2af',
+          error: '#f38ba8',
+          info: '#89dceb',
+        },
+        dracula: {
+          background: '#282a36',
+          surface: '#343746',
+          elevated: '#44475a',
+          foreground: '#f8f8f2',
+          muted: '#b2b7d5',
+          primary: '#bd93f9',
+          accent: '#ff79c6',
+          success: '#50fa7b',
+          warning: '#f1fa8c',
+          error: '#ff5555',
+          info: '#8be9fd',
+        },
+        nord: {
+          background: '#2e3440',
+          surface: '#3b4252',
+          elevated: '#434c5e',
+          foreground: '#eceff4',
+          muted: '#d8dee9',
+          primary: '#88c0d0',
+          accent: '#b48ead',
+          success: '#a3be8c',
+          warning: '#ebcb8b',
+          error: '#bf616a',
+          info: '#81a1c1',
+        },
+        'rose-pine': {
+          background: '#191724',
+          surface: '#1f1d2e',
+          elevated: '#26233a',
+          foreground: '#e0def4',
+          muted: '#908caa',
+          primary: '#c4a7e7',
+          accent: '#ebbcba',
+          success: '#95b1ac',
+          warning: '#f6c177',
+          error: '#eb6f92',
+          info: '#9ccfd8',
+        },
+        'kanagawa-wave': {
+          background: '#1f1f28',
+          surface: '#2a2a37',
+          elevated: '#363646',
+          foreground: '#dcd7ba',
+          muted: '#c8c093',
+          primary: '#7e9cd8',
+          accent: '#957fb8',
+          success: '#98bb6c',
+          warning: '#e6c384',
+          error: '#e46876',
+          info: '#7fb4ca',
+        },
+        synthwave: {
+          background: '#262335',
+          surface: '#2a2139',
+          elevated: '#34294f',
+          foreground: '#ffffff',
+          muted: '#b6a5d0',
+          primary: '#ff7edb',
+          accent: '#36f9f6',
+          success: '#72f1b8',
+          warning: '#fede5d',
+          error: '#fe4450',
+          info: '#36f9f6',
+        },
+        'catppuccin-latte': {
+          background: '#eff1f5',
+          surface: '#ffffff',
+          elevated: '#e6e9ef',
+          foreground: '#4c4f69',
+          muted: '#6c6f85',
+          primary: '#8839ef',
+          accent: '#1e66f5',
+          success: '#40a02b',
+          warning: '#df8e1d',
+          error: '#d20f39',
+          info: '#1e66f5',
+        },
+        'tokyo-night-day': {
+          background: '#e1e2e7',
+          surface: '#d5d6db',
+          elevated: '#ffffff',
+          foreground: '#3760bf',
+          muted: '#6172b0',
+          primary: '#2e7de9',
+          accent: '#9854f1',
+          success: '#587539',
+          warning: '#8c6c3e',
+          error: '#f52a65',
+          info: '#007197',
+        },
+        'rose-pine-dawn': {
+          background: '#faf4ed',
+          surface: '#fffaf3',
+          elevated: '#f2e9e1',
+          foreground: '#464261',
+          muted: '#797593',
+          primary: '#907aa9',
+          accent: '#286983',
+          success: '#6d8f89',
+          warning: '#ea9d34',
+          error: '#b4637a',
+          info: '#56949f',
+        },
+      }).map(([id, palette]) => [id, Object.freeze(palette)]),
+    ),
+  );

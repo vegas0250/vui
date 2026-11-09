@@ -43,6 +43,8 @@ button:disabled,
 :host([disabled]) button,
 :host([loading]) button {
   opacity: 0.72;
+  color: var(--vui-color-text-disabled, var(--vui-color-on-primary));
+  background: var(--vui-color-secondary, var(--vui-color-primary));
   cursor: not-allowed;
 }
 [part="busy"] {
@@ -58,8 +60,8 @@ button:disabled,
 [part="busy"][hidden] { display: none; }
 @keyframes vui-spin { to { transform: rotate(360deg); } }
 :host([variant="secondary"]) button {
-  background: var(--vui-color-surface);
-  color: var(--vui-color-text);
+  background: var(--vui-color-secondary, var(--vui-color-surface));
+  color: var(--vui-color-on-secondary, var(--vui-color-text));
   border-color: var(--vui-color-border);
 }
 :host([variant="secondary"]) button:hover { background: var(--vui-color-surface-hover); }

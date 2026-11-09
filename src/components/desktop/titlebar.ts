@@ -55,7 +55,7 @@ export class VTitlebar extends VuiElement {
         min-height: var(--vui-toolbar-height);
         padding-inline-start: var(--vui-space-sm);
       }
-      .mark { display: inline-flex; flex: 0 0 auto; align-self: center; color: var(--vui-color-primary); }
+      .mark { display: inline-flex; flex: 0 0 auto; align-self: center; color: var(--vui-color-interactive-text, var(--vui-color-primary)); }
       .mark:empty, .mark:not(:has(*)) { display: none; }
       .tabs {
         display: flex;

@@ -202,7 +202,7 @@ export class VDataGrid extends VuiElement {
         min-width: 0;
         max-width: 100%;
       }
-      .with-icon vui-icon { width: var(--vui-icon-size); height: var(--vui-icon-size); color: var(--vui-color-primary); }
+      .with-icon vui-icon { width: var(--vui-icon-size); height: var(--vui-icon-size); color: var(--vui-color-interactive-text, var(--vui-color-primary)); }
       .pad td {
         height: 0;
         min-height: 0;
