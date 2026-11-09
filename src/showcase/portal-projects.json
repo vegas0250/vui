@@ -50,6 +50,38 @@
       "url": "https://html-editor.vegas0250.ru/"
     },
     {
+      "slug": "json",
+      "title": {
+        "ru": "Инструменты JSON",
+        "en": "JSON Toolbox"
+      },
+      "url": "https://json.vegas0250.ru/"
+    },
+    {
+      "slug": "image",
+      "title": {
+        "ru": "Инструменты изображений",
+        "en": "Image Toolbox"
+      },
+      "url": "https://image.vegas0250.ru/"
+    },
+    {
+      "slug": "text",
+      "title": {
+        "ru": "Инструменты для текста",
+        "en": "Text Toolbox"
+      },
+      "url": "https://text.vegas0250.ru/"
+    },
+    {
+      "slug": "encoder",
+      "title": {
+        "ru": "Кодирование и декодирование",
+        "en": "Encoder Toolbox"
+      },
+      "url": "https://encoder.vegas0250.ru/"
+    },
+    {
       "slug": "vui",
       "title": {
         "ru": "VUI",

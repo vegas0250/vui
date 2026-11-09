@@ -41,12 +41,12 @@ export function mountPortalMenu(before: Element): void {
     const nav = details.querySelector('nav')!;
     nav.replaceChildren();
     const home = document.createElement('a');
-    home.href = `https://vegas0250.ru/${docsLocale === 'en' ? '?lang=en' : ''}`;
+    home.href = `https://vegas0250.ru/?lang=${docsLocale}`;
     home.textContent = 'vegas0250.ru';
     nav.append(home);
     for (const p of projects) {
       const a = document.createElement('a');
-      a.href = p.url + (docsLocale === 'en' ? '?lang=en' : '');
+      a.href = p.url + '?lang=' + docsLocale;
       a.textContent = p.title[docsLocale];
       if (p.slug === 'vui') a.setAttribute('aria-current', 'page');
       nav.append(a);
