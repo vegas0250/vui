@@ -5,7 +5,7 @@ The theme engine extends the existing `vui/theme` API and the existing component
 ## Architecture and files
 
 - `src/theme/palettes.ts`: upstream base colors, independent of components.
-- `src/theme/presets.ts`: ten immutable presets and 28 semantic color tokens, with derived hover, border and contrast values.
+- `src/theme/presets.ts`: eleven immutable presets and 28 semantic color tokens, with derived hover, border and contrast values.
 - `src/theme/colors.ts`: strict portable HEX/RGB/HSL normalization and contrast utilities.
 - `src/theme/engine.ts`: application, registration, validation, persistence, history, JSON and CSS exports.
 - `src/theme/install.ts`: installs all preset selectors once; component styles are shared across themes.
@@ -86,3 +86,5 @@ The `interactiveText` token separates readable link/tab text from the specified 
 ## Validation
 
 `pnpm typecheck`, `pnpm test`, `pnpm build`, `pnpm build:docs`, `pnpm check:budget`, `pnpm check:shake`, `pnpm check:consumer`, and `pnpm test:e2e`. `pnpm lint` performs the project's TypeScript static analysis; there is no added lint framework. `dist-docs` is the independent static documentation artifact. Do not publish the docs or push changes without separate authorization for this task.
+
+Modern Light is an original neutral light palette with blue primary actions and a purple accent. It is derived by the same semantic engine and contrast checks as the other presets. Tokyo Night and Catppuccin Latte remain the OS defaults.

@@ -1,4 +1,4 @@
-/** Official upstream base palettes; semantic derivation and AA adjustments live in presets.ts. */
+/** Upstream base palettes and the original Modern Light palette; semantic derivation and AA adjustments live in presets.ts. */
 export interface Palette {
   background: string;
   surface: string;
@@ -16,6 +16,19 @@ export const palettes: Readonly<Record<string, Readonly<Palette>>> =
   Object.freeze(
     Object.fromEntries(
       Object.entries({
+        'modern-light': {
+          background: '#f7f8fa',
+          surface: '#ffffff',
+          elevated: '#eef1f6',
+          foreground: '#202734',
+          muted: '#586174',
+          primary: '#245fd6',
+          accent: '#7046cc',
+          success: '#147447',
+          warning: '#875900',
+          error: '#b42335',
+          info: '#176c8c',
+        },
         'tokyo-night': {
           background: '#1a1b26',
           surface: '#24283b',

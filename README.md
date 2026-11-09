@@ -291,4 +291,4 @@ vui/
 
 ## Theme Studio
 
-Ten semantic theme presets, scoped live previews, local custom themes, and validated JSON/CSS exports are described in [the integration guide](docs/theme-studio.md). Run `pnpm dev` and open `/#theme-studio`, or `pnpm build:docs` for the independent static documentation artifact.
+Eleven semantic theme presets, scoped live previews, local custom themes, and validated JSON/CSS exports are described in [the integration guide](docs/theme-studio.md). Run `pnpm dev` and open `/#theme-studio`, or `pnpm build:docs` for the independent static documentation artifact.

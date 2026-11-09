@@ -50,6 +50,7 @@ const definitions: Array<[string, string, ThemeMode]> = [
   ['catppuccin-latte', 'Catppuccin Latte', 'light'],
   ['tokyo-night-day', 'Tokyo Night Day', 'light'],
   ['rose-pine-dawn', 'Rosé Pine Dawn', 'light'],
+  ['modern-light', 'Modern Light', 'light'],
 ];
 export const builtInThemes: readonly ThemePreset[] = Object.freeze(
   definitions.map(([id, name, mode]) => {

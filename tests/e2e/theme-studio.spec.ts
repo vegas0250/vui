@@ -9,10 +9,10 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/?lang=en');
   await expect(page.locator(studio)).toBeVisible();
 });
-test('ten palettes switch instantly; documentation preference is independent and persistent', async ({
+test('eleven palettes switch instantly; documentation preference is independent and persistent', async ({
   page,
 }) => {
-  await expect(page.locator('.ts-preset')).toHaveCount(10);
+  await expect(page.locator('.ts-preset')).toHaveCount(11);
   await page.locator('#docs-theme').selectOption('nord');
   for (const id of [
     'tokyo-night',
@@ -25,6 +25,7 @@ test('ten palettes switch instantly; documentation preference is independent and
     'catppuccin-latte',
     'tokyo-night-day',
     'rose-pine-dawn',
+    'modern-light',
   ]) {
     await page.locator(`[data-preset="${id}"]`).click();
     await expect(page.locator('#ts-live-preview')).toHaveAttribute(
