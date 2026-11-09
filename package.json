@@ -326,7 +326,10 @@
     "test:e2e": "playwright test",
     "check:budget": "node scripts/budget.mjs",
     "check:shake": "node scripts/shake.mjs",
-    "check:consumer": "node scripts/consumer.mjs"
+    "check:consumer": "node scripts/consumer.mjs",
+    "build:docs": "vite build",
+    "lint": "tsc --noEmit",
+    "sync:portal": "node scripts/sync-portal.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.1",

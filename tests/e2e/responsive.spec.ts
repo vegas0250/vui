@@ -4,7 +4,7 @@ test('responsive containers adapt without a horizontal page scroll', async ({ pa
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Responsive Design' })).toBeVisible();
-  await expect(page.locator('#responsive-readout')).toContainText('Light + Comfortable');
+  await expect(page.locator('#responsive-readout')).toContainText('Catppuccin Latte + Comfortable');
 
   await page.locator('#size-narrow').click();
   await expect(page.locator('#responsive-split')).toHaveAttribute('data-stacked', '');
@@ -50,9 +50,9 @@ test('responsive containers adapt without a horizontal page scroll', async ({ pa
 test('theme and density stay valid for every combination', async ({ page }) => {
   await page.goto('/');
   const themes = [
-    ['Светлая', 'light', 'Light'],
-    ['Тёмная', 'dark', 'Dark'],
-    ['Контрастная', 'high-contrast', 'High Contrast'],
+    ['catppuccin-latte', 'catppuccin-latte', 'Catppuccin Latte'],
+    ['tokyo-night', 'tokyo-night', 'Tokyo Night'],
+    ['nord', 'nord', 'Nord'],
   ] as const;
   const densities = [
     ['Comfortable', 'comfortable'],
@@ -61,9 +61,7 @@ test('theme and density stay valid for every combination', async ({ page }) => {
   ] as const;
 
   for (const [themeLabel, theme, themeReadout] of themes) {
-    const themeSelect = page.locator('#theme-select');
-    await themeSelect.locator('button').click();
-    await themeSelect.locator('[role="option"]', { hasText: themeLabel }).click();
+    await page.locator('#docs-theme').selectOption(themeLabel);
     await expect(page.locator('html')).toHaveAttribute('data-vui-theme', theme);
 
     for (const [densityLabel, density] of densities) {

@@ -14,6 +14,7 @@ import {
   toast,
   type VuiDensity,
   type VuiTheme,
+  builtInThemes,
 } from '../index';
 import { containerBand, prefersForcedColors, prefersReducedMotion, readFoundation } from '../foundation/index';
 import './showcase.css';
@@ -23,6 +24,7 @@ import type { VDialog } from '../components/overlay/dialog';
 import type { VMenu } from '../components/overlay/menu';
 import { showcaseMarkup } from './markup';
 import { studioMarkup } from './studio';
+import {mountDocumentation} from './documentation';
 
 const app = document.querySelector('#app');
 if (!app) throw new Error('Showcase root is missing');
@@ -34,7 +36,8 @@ const densities = new Set<VuiDensity>(['comfortable', 'compact', 'dense']);
 const themeSelect = document.querySelector('#theme-select');
 const densitySelect = document.querySelector('#density-select');
 
-const themeLabels: Record<VuiTheme, string> = {
+const themeLabels: Record<string, string> = {
+  ...Object.fromEntries(builtInThemes.map(theme => [theme.id,theme.name])),
   light: 'Light',
   dark: 'Dark',
   'high-contrast': 'High Contrast',
@@ -550,3 +553,9 @@ tree?.addEventListener('change', () => {
   const item = (tree as VFileTree).selectedItem;
   status.textContent = item?.getAttribute('label') ?? 'Файл не выбран';
 });
+
+mountDocumentation();
+document.documentElement.addEventListener('vui-theme-change', event => {
+  if (event.target === document.documentElement) updateResponsiveReadout();
+});
+updateResponsiveReadout();

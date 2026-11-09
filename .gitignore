@@ -7,3 +7,7 @@ playwright/.cache/
 *.tsbuildinfo
 .DS_Store
 *.log
+
+dist-docs/
+
+.pnpm-store/

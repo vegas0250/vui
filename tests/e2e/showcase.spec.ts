@@ -13,10 +13,8 @@ test('showcase switches theme and density', async ({ page }) => {
   await expect(page.locator('#platform-list')).toContainText('Button');
   await expect(page.locator('#platform-loading')).toHaveAttribute('loading', '');
 
-  const theme = page.locator('#theme-select');
-  await theme.locator('button').click();
-  await theme.locator('[role="option"]', { hasText: 'Тёмная' }).click();
-  await expect(page.locator('html')).toHaveAttribute('data-vui-theme', 'dark');
+  await page.locator('#docs-theme').selectOption('tokyo-night');
+  await expect(page.locator('html')).toHaveAttribute('data-vui-theme', 'tokyo-night');
 
   const density = page.locator('#density-select');
   await density.locator('button').click();

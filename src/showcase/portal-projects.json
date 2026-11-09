@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "projects": [
+    {
+      "slug": "password-generator",
+      "title": {
+        "ru": "Генератор паролей",
+        "en": "Password generator"
+      },
+      "url": "https://password-generator.vegas0250.ru/"
+    },
+    {
+      "slug": "link-generator",
+      "title": {
+        "ru": "Генератор ссылок",
+        "en": "Link generator"
+      },
+      "url": "https://link-generator.vegas0250.ru/"
+    },
+    {
+      "slug": "qr-generator",
+      "title": {
+        "ru": "Генератор QR-кодов",
+        "en": "QR generator"
+      },
+      "url": "https://qr-generator.vegas0250.ru/"
+    },
+    {
+      "slug": "random-generator",
+      "title": {
+        "ru": "Случайные числа",
+        "en": "Random numbers"
+      },
+      "url": "https://random-generator.vegas0250.ru/"
+    },
+    {
+      "slug": "who-are-you",
+      "title": {
+        "ru": "Информация о запросе",
+        "en": "Request inspector"
+      },
+      "url": "https://who-are-you.vegas0250.ru/"
+    },
+    {
+      "slug": "html-editor",
+      "title": {
+        "ru": "HTML-редактор",
+        "en": "HTML editor"
+      },
+      "url": "https://html-editor.vegas0250.ru/"
+    },
+    {
+      "slug": "vui",
+      "title": {
+        "ru": "VUI",
+        "en": "VUI"
+      },
+      "url": "https://vui.vegas0250.ru/"
+    }
+  ]
+}

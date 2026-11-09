@@ -1,5 +1,6 @@
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
+import { themeBootScript } from './src/showcase/boot';
 
 const entries = [
   resolve('src/index.ts'),
@@ -75,9 +76,20 @@ const entries = [
 export default defineConfig(({ mode }) => {
   if (mode !== 'lib') {
     return {
+      plugins: [{
+        name: 'vui-initial-theme',
+        transformIndexHtml: {
+          order: 'pre' as const,
+          handler: (_html, context) => context.filename.endsWith('/index.html')
+            ? [{tag: 'script', children: themeBootScript(), injectTo: 'head-prepend' as const}]
+            : [],
+        },
+      }],
+      build: {outDir: 'dist-docs', emptyOutDir: true},
       server: {
         host: true,
         port: 5173,
+        watch: {ignored: ['**/.pnpm-store/**', '**/test-results/**', '**/dist/**', '**/dist-docs/**']},
       },
     };
   }

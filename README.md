@@ -288,3 +288,7 @@ vui/
 ## Статус
 
 Версия `1.2.1`. Публичная граница и порядок обновления — в [docs/guide.md](docs/guide.md). Архитектурный контракт — в `ARCHITECTURE.md`. Краткий список для изменений в репозитории — в `.cursor/rules/project.mdc`.
+
+## Theme Studio
+
+Ten semantic theme presets, scoped live previews, local custom themes, and validated JSON/CSS exports are described in [the integration guide](docs/theme-studio.md). Run `pnpm dev` and open `/#theme-studio`, or `pnpm build:docs` for the independent static documentation artifact.
