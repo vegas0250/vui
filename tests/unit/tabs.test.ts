@@ -44,6 +44,6 @@ describe('vui-tabs', () => {
 
     expect(tab.getAttribute('slot')).toBe('tab');
     expect(tab.hasAttribute('selected')).toBe(true);
-    expect(tabs.shadowRoot?.querySelector('slot[name="tab"]')?.assignedElements()).toContain(tab);
+    expect(tabs.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="tab"]')?.assignedElements()).toContain(tab);
   });
 });

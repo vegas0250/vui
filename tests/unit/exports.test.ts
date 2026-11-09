@@ -52,6 +52,7 @@ const publicExports = [
   './skeleton',
   './toast',
   './panel',
+  './path-bar',
   './container',
   './scroll-area',
   './stack',
