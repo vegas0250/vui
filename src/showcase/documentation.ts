@@ -10,10 +10,13 @@ import {
 import { docsLocale, escapeHTML, tr } from './theme-i18n';
 import { mountDocumentationSite } from './site';
 import { documentationStorage } from './preferences';
-import { mountPortalMenu } from './portal';
 import { mountThemeStudio } from './theme-studio';
 export function mountDocumentation(): void {
   document.documentElement.lang = docsLocale;
+  document.querySelector('meta[name="description"]')?.setAttribute('content', docsLocale === 'ru'
+    ? 'Библиотека компонентов VUI: рабочие примеры, документация и редактор тем.'
+    : 'VUI component library: working examples, documentation and theme editor.');
+  document.querySelector('link[rel="canonical"]')?.setAttribute('href', `https://vui.vegas0250.ru/${docsLocale === 'en' ? '?lang=en' : ''}`);
   try {
     initializeTheme(document.documentElement, documentationStorage);
   } catch {
@@ -23,8 +26,6 @@ export function mountDocumentation(): void {
       ],
     );
   }
-  const topbar = document.querySelector('.topbar');
-  if (topbar) mountPortalMenu(topbar);
   const old = document.querySelector('#theme-select');
   if (old) {
     old.id = 'legacy-theme-select';

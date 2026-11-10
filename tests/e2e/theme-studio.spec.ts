@@ -3,9 +3,6 @@ test.setTimeout(90_000);
 const studio = '#theme-studio';
 const token = (name: string) => `[data-value="${name}"]`;
 test.beforeEach(async ({ page }) => {
-  await page.route('https://vegas0250.ru/api/projects', (route) =>
-    route.abort(),
-  );
   await page.goto('/?lang=en&legacy=1');
   await expect(page.locator(studio)).toBeVisible();
 });
@@ -183,15 +180,11 @@ test('all interface templates use actual VUI and original comparison stays isola
     page.locator('#ts-live-preview [data-preview-dialog]'),
   ).not.toHaveAttribute('open', '');
 });
-test('mobile portal disclosure and customize/preview tabs retain state without overflow', async ({
+test('mobile standalone documentation and customize/preview tabs retain state without overflow', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await expect(page.locator('.portal-menu')).not.toHaveAttribute('open');
-  await page.locator('.portal-menu summary').click();
-  await expect(page.locator('.portal-menu a[aria-current=page]')).toHaveText(
-    'VUI',
-  );
+  await expect(page.locator('.portal-menu')).toHaveCount(0);
   await page.locator(token('primary')).fill('#123456');
   await page.locator(token('primary')).blur();
   await page.locator('[data-view=preview]').click();

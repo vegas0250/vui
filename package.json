@@ -406,7 +406,6 @@
     "check:consumer": "node scripts/consumer.mjs",
     "build:docs": "vite build",
     "lint": "tsc --noEmit",
-    "sync:portal": "node scripts/sync-portal.mjs",
     "check:next": "node scripts/next-consumer.mjs",
     "package:website": "node scripts/package-website.mjs",
     "check:website": "playwright test --config playwright.docs-build.config.ts"

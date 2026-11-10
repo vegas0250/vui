@@ -26,4 +26,4 @@ The three initially failing board renders from the modified library were byte-fo
 
 The Theme Studio preview is local, not an authentication or dashboard backend. Saved themes are browser/origin-specific. Arbitrary user colors can fail contrast; the editor warns instead of silently replacing intentional overrides. Translucent background contrast is evaluated over white, so consumer-specific underlays require an additional check. Strict CSP deployments must allow the initial head bootstrap through a nonce or hash.
 
-The production VUI subdomain still uses the portal-local legacy page until a separately authorized deployment switches it to the independent `dist-docs` artifact. The prepared portal endpoint likewise requires its normal separately authorized deployment. See the integration guide in the portal repository.
+The VUI subdomain serves an independent static documentation release. See docs/website.md for deployment and rollback.

@@ -54,7 +54,7 @@ export function wirePreview(root: HTMLElement): void {
     ];
     grid.rows = [
       { id: 'vui', name: 'VUI', status: tr('Ready') },
-      { id: 'portal', name: 'vegas0250.ru', status: tr('Ready') },
+      { id: 'documentation', name: 'VUI Docs', status: tr('Ready') },
     ];
   }
   root.addEventListener('click', async (event) => {

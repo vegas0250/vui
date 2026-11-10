@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       deploy:
-        description: Import this website artifact into the existing vegas0250 portal and deploy
+        description: Deploy the independent VUI documentation website
         type: boolean
         default: false
 permissions:
@@ -36,7 +36,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with: {name: vui-website, path: website}
-      - name: Import into the existing portal and deploy
+      - name: Deploy independent static website
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
@@ -49,4 +49,4 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
           scp website/*.tar.gz "$DEPLOY_USER@$DEPLOY_HOST:/tmp/vui-website.tar.gz"
-          ssh "$DEPLOY_USER@$DEPLOY_HOST" 'cd /var/www/vegas0250 && ./scripts/import-vui-docs.sh /tmp/vui-website.tar.gz && ./deploy.sh'
+          ssh "$DEPLOY_USER@$DEPLOY_HOST" 'cd /var/www/vui && ./deploy.sh /tmp/vui-website.tar.gz'

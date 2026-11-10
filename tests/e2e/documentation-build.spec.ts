@@ -3,7 +3,11 @@ import { expect, test } from '@playwright/test';
 test('optimized website registers every component and runs the real examples', async ({ page, request }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
+  const foreign: string[] = [];
+  page.on('request', (request) => { if (new URL(request.url()).hostname === 'vegas0250.ru') foreign.push(request.url()); });
   await page.goto('/?lang=en#/components');
+  await expect(page.locator('.portal-menu, iframe')).toHaveCount(0);
+  expect(foreign).toEqual([]);
   await expect(page.locator('.docs-cards > a')).toHaveCount(69);
   const tags = await page.locator('.docs-cards code').allTextContents();
   expect(await page.evaluate((tags) => tags.filter((tag) => !customElements.get(tag)), tags)).toEqual([]);

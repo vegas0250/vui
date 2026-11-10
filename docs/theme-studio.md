@@ -11,7 +11,7 @@ The theme engine extends the existing `vui/theme` API and the existing component
 - `src/theme/install.ts`: installs all preset selectors once; component styles are shared across themes.
 - `src/showcase/theme-studio.ts`: documentation-only editor using public APIs and actual `vui-*` elements.
 - `src/showcase/theme-preview.ts`: live components plus dashboard, settings, login and developer-tool reference compositions.
-- `src/showcase/documentation.ts`, `portal.ts`: documentation preferences, search, copy actions and ecosystem navigation.
+- `src/showcase/documentation.ts`: documentation preferences, search and copy actions.
 
 Semantic tokens map to existing properties, for example `foreground` → `--vui-color-text` and `primaryForeground` → `--vui-color-on-primary`. New card, modal, popover, secondary, accent, interactive text and disabled tokens extend the existing vocabulary; components fall back to the original tokens for older integrations. Shadow is an editable color, while the engine generates the existing `--vui-shadow-sm/md/lg` values. No unvalidated CSS expressions are accepted in imports.
 
@@ -65,9 +65,9 @@ JSON stores `schemaVersion`, `name`, `baseTheme`, `mode`, only changed `tokens`,
 
 Add its named base palette to `palettes.ts` and its identifier, name and mode to `definitions` in `presets.ts`. The existing derivation produces the complete semantic token set, picker entry and static CSS selectors automatically. Add the upstream reference below, then run typecheck, tests and builds. If the palette has unusual surface luminance, extend the AA pair tests rather than copying component CSS. Applications can instead use `registerTheme` without modifying the package.
 
-## Shared portal navigation
+## Independent documentation navigation
 
-The menu belongs only to the documentation application. It reads the public `https://vegas0250.ru/api/projects` manifest and validates hosts, shape and names. A versioned fallback works offline or before that portal endpoint is deployed. Run `pnpm sync:portal` after portal catalog changes to refresh the fallback. Hidden audio/video and Discussion are excluded. VUI remains highlighted and internal documentation navigation stays independent. On mobile the portal menu is a compact native disclosure.
+The documentation website owns its grouped component menu, bilingual search and Theme Studio. It does not load the utility portal manifest or link to its tools. Library consumers, including vegas0250.ru, use the public package independently of this website.
 
 ## Palette sources
 

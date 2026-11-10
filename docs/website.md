@@ -5,7 +5,7 @@ The library and documentation share one repository and have independent outputs:
 | Purpose | Command | Output | Publication |
 | --- | --- | --- | --- |
 | Library | `pnpm build` | `dist`, declarations, existing theme entries | `pnpm pack`; optional manual npm release |
-| Website | `pnpm build:docs` | `dist-docs` | `pnpm package:website`; import into the vegas0250 VUI subproject |
+| Website | `pnpm build:docs` | `dist-docs` | `pnpm package:website`; independent static deployment |
 
 The package `files` allowlist and TypeScript build exclusion keep `src/showcase`,
 website assets, navigation, editor state, and examples out of the library archive.
@@ -33,11 +33,9 @@ existing component attributes and CSS tokens. The original laboratory remains at
 `?legacy=1`, loaded separately for regression checks and historical links.
 
 Theme Studio uses the existing public engine. Documentation preferences and
-editor drafts are separate. Embedded documentation prefixes storage keys with
-`vui.documentation.` so it cannot overwrite the portal's theme preferences.
+editor drafts are separate. Preferences stay in the website origin's localStorage.
 The initial theme script is external and runs before the app for strict CSP.
-Portal navigation loads `/api/projects` from vegas0250.ru and falls back to the
-checked-in manifest when offline. `pnpm sync:portal` refreshes that fallback.
+The website has no portal navigation or requests to the utility project manifest.
 
 ## Review, build and publish
 
@@ -45,15 +43,9 @@ checked-in manifest when offline. `pnpm sync:portal` refreshes that fallback.
 2. Run `pnpm check:consumer`, `pnpm check:shake`, `pnpm check:website`, and relevant Playwright scenarios. The optimized-build check verifies all 69 registrations, real interaction, responsive width, and the external boot script.
 3. Commit reviewed source. `pnpm package:website` requires a clean checkout and
    packages the built site with the exact source SHA and version.
-4. In `/var/www/vegas0250`, run `npm run import:vui -- /path/to/vui-website-VERSION.tar.gz`.
-   It validates paths and provenance, stages static assets in `public/vui-docs`,
-   keeps the previous staging directory, and records `apps/vui/release.json`.
-   Its shell wrapper `scripts/import-vui-docs.sh` also works on Docker hosts without a global Node installation.
-5. Refresh the portal's `vendor/vui-VERSION.tgz` from `pnpm pack` after reviewing the
-   library build. Update its dependency and lockfile, then run its tests and build.
-6. Use the portal's existing deployment workflow. The VUI route frames the actual
-   website inside the shared navigation. Only the documentation path permits
-   same-origin framing; the rest of the portal keeps its existing CSP restrictions.
+4. Run `./deploy.sh /path/to/vui-website-VERSION.tar.gz` in this repository. It validates the archive and provenance, stages an immutable release and atomically switches `current`. Previous releases remain under `.releases` for rollback.
+5. Enable `deploy/nginx.conf` after removing the VUI hostname from the utility server blocks. The existing tools certificate covers this hostname; preserve its renewal. The static website is served at https://vui.vegas0250.ru/ without the utility application upstream. Point `current` to the previous release to roll back.
+6. The utility portal continues to use a separately reviewed vendored library archive. Website-only releases do not change that dependency or redeploy utilities.
 
 `.github/workflows/library-release.yml` builds only the library artifact. npm
 publishing requires an explicit manual input, the `npm` environment and NPM_TOKEN.

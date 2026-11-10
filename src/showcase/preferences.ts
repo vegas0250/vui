@@ -1,6 +1,5 @@
-/** An embedded documentation window must not read or overwrite portal preferences. */
-export const embedded = new URLSearchParams(location.search).get('embedded') === '1';
-const prefix = embedded ? 'vui.documentation.' : '';
+/** Preferences are scoped to the independent documentation origin. */
+const prefix = "";
 export const documentationStorage: Storage = {
   get length() { return Object.keys(localStorage).filter((key) => key.startsWith(prefix)).length; },
   key(index) { return Object.keys(localStorage).filter((key) => key.startsWith(prefix))[index]?.slice(prefix.length) ?? null; },

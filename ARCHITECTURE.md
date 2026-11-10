@@ -24,7 +24,7 @@ not need an application provider, state manager, router, or dependency injection
 | `src/utils/` | Element lifecycle, property reflection, styles, events, React adapter |
 | `src/tokens/` | Shared CSS custom properties and density scales |
 | `src/interaction/` | Shared keyboard, focus, selection, overlay and pointer behavior |
-| `src/showcase/` | Documentation, Theme Studio drafts, portal navigation and preview templates; never published |
+| `src/showcase/` | Documentation, Theme Studio drafts, documentation navigation and preview templates; never published |
 
 There is no `hooks/` directory yet: the small adapter keeps its effects together.
 Add one when a genuinely reusable public React hook is needed, rather than
@@ -88,7 +88,7 @@ for light. Theme Studio draft state is separate from the documentation theme.
 The theme engine allowlists tokens, validates types and colors, bounds imported
 JSON, and never evaluates imported CSS or code. Built-in presets are immutable.
 Live preview, color editing, JSON import/export and CSS export use this same
-engine. Reference templates, editor history, preview UI and portal data stay in
+engine. Reference templates, editor history, preview UI and documentation data stay in
 `src/showcase`, outside the package export map and declaration build.
 
 ## Build and verification
@@ -108,6 +108,7 @@ in Chromium. Generated output and dependency directories are ignored by Git.
 
 The documentation website has four routed sections and a contract-backed page for
 every visual element. Live examples and copied programs share their markup, styles
-and setup function. The portal consumes its separate website artifact inside the
-VUI subproject; website source never enters the library package. See
+and setup function. Its static artifact deploys independently to vui.vegas0250.ru;
+website source never enters the library package. Library consumers such as the
+utility portal depend only on the published package. See
 [website publishing](docs/website.md) for build and deployment boundaries.

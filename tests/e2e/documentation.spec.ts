@@ -71,12 +71,11 @@ test('copied example runs independently with its declared imports', async ({ pag
   await expect(frame.locator('[data-result]')).toHaveText('Saved: Independent');
 });
 
-test('embedded documentation isolates preferences and fits a narrow viewport', async ({ page }) => {
-  await page.goto('/?lang=en&embedded=1#/components/button');
-  await page.evaluate(() => localStorage.setItem('vui.theme.preference.v1', JSON.stringify('dracula')));
+test('standalone documentation persists preferences and fits a narrow viewport', async ({ page }) => {
+  await page.goto('/?lang=en#/components/button');
   await page.locator('#docs-theme').selectOption('nord');
   await expect(page.locator('[data-example-code]').first()).toContainText('applyTheme("nord")');
-  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('vui.theme.preference.v1')!))).toBe('dracula');
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('vui.theme.preference.v1')!))).toBe('nord');
   await page.locator('#density-select button').click();
   await page.getByRole('option', { name: 'Compact', exact: true }).click();
   await expect(page.locator('[data-example-code]').first()).toContainText("setDensity('compact')");

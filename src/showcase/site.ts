@@ -5,7 +5,7 @@ import type { ComponentContract } from '../contract';
 import { setDensity } from '../theme';
 import type { VuiDensity } from '../theme';
 import { docsLocale, escapeHTML } from './theme-i18n';
-import { documentationStorage, embedded } from './preferences';
+import { documentationStorage } from './preferences';
 import './site.css';
 import './examples.css';
 
@@ -76,7 +76,6 @@ export function mountDocumentationSite(): void {
   layout.innerHTML = `<aside class="docs-sidebar"><a class="docs-wordmark" href="#/getting-started">VUI <span>${text('Документация', 'Documentation')} · ${libraryVersion}</span></a><nav aria-label="${text('Разделы документации', 'Documentation sections')}">${sections().map(([id, label]) => link(id!, label!)).join('')}</nav><label class="docs-search">${text('Найти компонент', 'Find a component')}<input type="search" id="component-search" autocomplete="off" /></label><details class="docs-menu-disclosure" open><summary>${text('Каталог компонентов', 'Component catalog')}</summary><nav id="docs-component-menu" aria-label="${text('Каталог компонентов', 'Component catalog')}"></nav></details></aside><article id="docs-page" class="docs-page"></article>`;
   main.prepend(layout);
   document.body.classList.add('documentation-site');
-  if (embedded) document.querySelector('.portal-menu')?.setAttribute('hidden', '');
   document.querySelector('#dir-select')?.setAttribute('hidden', '');
   const renderedExamples = new Map<string, Example>();
   const showExample = (example: Example) => {
@@ -164,17 +163,10 @@ export function mountDocumentationSite(): void {
       if (active) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     }
     const language = document.querySelector<HTMLAnchorElement>('.header-controls > a[lang]');
-    if (language) language.href = `?lang=${docsLocale === 'ru' ? 'en' : 'ru'}${embedded ? '&embedded=1' : ''}${location.hash}`;
+    if (language) language.href = `?lang=${docsLocale === 'ru' ? 'en' : 'ru'}${location.hash}`;
     paintMenu();
     page.querySelector<HTMLElement>('h1')?.focus({ preventScroll: true });
-    if (embedded) parent.postMessage({ type: 'vui-docs-route', hash: location.hash }, location.origin);
   };
-  if (embedded && parent !== window) {
-    document.querySelector('.header-controls > a[lang]')?.addEventListener('click', (event) => {
-      event.preventDefault();
-      parent.postMessage({ type: 'vui-docs-locale', locale: docsLocale === 'ru' ? 'en' : 'ru' }, location.origin);
-    });
-  }
   window.addEventListener('hashchange', render);
   if (!location.hash.startsWith('#/')) history.replaceState(null, '', `${location.pathname}${location.search}#/getting-started`);
   render();

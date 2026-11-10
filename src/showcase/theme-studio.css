@@ -310,42 +310,6 @@
 .ts-mobile-tabs {
   display: none;
 }
-.portal-menu {
-  position: relative;
-  padding: 0.65rem max(1rem, calc((100% - 1120px) / 2));
-  background: var(--vui-color-surface);
-  border-block-end: var(--vui-border-width) solid var(--vui-color-border);
-}
-.portal-menu summary {
-  cursor: pointer;
-  font-weight: 600;
-}
-.portal-project-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  margin-block-start: 0.6rem;
-}
-.portal-project-list a {
-  padding: 0.45rem 0.65rem;
-  border-radius: var(--vui-radius);
-  text-decoration: none;
-  color: var(--vui-color-text-muted);
-  font-size: 0.8rem;
-}
-.portal-project-list a[aria-current='page'] {
-  color: var(--vui-color-primary);
-  background: var(--vui-color-selected);
-  font-weight: 600;
-}
-.portal-project-list a:hover {
-  background: var(--vui-color-surface-hover);
-  color: var(--vui-color-text);
-}
-.portal-menu :focus-visible {
-  outline: var(--vui-focus-ring);
-  outline-offset: 2px;
-}
 .docs-tools {
   display: flex;
   flex-wrap: wrap;
@@ -382,12 +346,6 @@
   display: none !important;
 }
 @media (min-width: 761px) {
-  .portal-menu summary {
-    display: none;
-  }
-  .portal-project-list {
-    margin: 0;
-  }
   .ts-editor[role='tabpanel'],
   .ts-preview-section[role='tabpanel'] {
     display: block;
@@ -444,13 +402,6 @@
   .ts-actions button,
   .ts-file {
     font-size: 0.75rem !important;
-  }
-  .portal-project-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .portal-menu {
-    padding: 0.8rem 1rem;
   }
   .ts-preview {
     padding: 0.7rem;
@@ -515,7 +466,7 @@
 a {
   color: var(--vui-color-interactive-text, var(--vui-color-primary));
 }
-.portal-project-list a[aria-current='page'],
+
 .lab-nav a,
 .docs-tools a {
   color: var(--vui-color-interactive-text, var(--vui-color-primary));

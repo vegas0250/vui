@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://vui.vegas0250.ru/sitemap.xml
