@@ -169,6 +169,12 @@ export function mountDocumentationSite(): void {
     page.querySelector<HTMLElement>('h1')?.focus({ preventScroll: true });
     if (embedded) parent.postMessage({ type: 'vui-docs-route', hash: location.hash }, location.origin);
   };
+  if (embedded && parent !== window) {
+    document.querySelector('.header-controls > a[lang]')?.addEventListener('click', (event) => {
+      event.preventDefault();
+      parent.postMessage({ type: 'vui-docs-locale', locale: docsLocale === 'ru' ? 'en' : 'ru' }, location.origin);
+    });
+  }
   window.addEventListener('hashchange', render);
   if (!location.hash.startsWith('#/')) history.replaceState(null, '', `${location.pathname}${location.search}#/getting-started`);
   render();
