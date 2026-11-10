@@ -53,3 +53,5 @@
 .documentation-site .portal-menu[hidden] { display: none !important; }
 
 .docs-sidebar .docs-menu-disclosure { display: block; }
+
+.documentation-site .topbar .header-controls { box-sizing: border-box; inline-size: min(650px, calc(100vw - 3rem)); max-inline-size: 100%; }

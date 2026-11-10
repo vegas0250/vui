@@ -13,8 +13,10 @@ test('optimized website registers every component and runs the real examples', a
   await expect(page.locator('#docs-page [data-result]')).toHaveText('Saved: Production');
   await page.locator('#docs-theme').selectOption('tokyo-night');
   await page.screenshot({ path: test.info().outputPath('website-desktop.png') });
-  await page.setViewportSize({ width: 356, height: 844 });
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+  for (const width of [1044, 734, 670, 356]) {
+    await page.setViewportSize({ width, height: 844 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), String(width)).toBe(true);
+  }
   await page.screenshot({ path: test.info().outputPath('website-mobile.png') });
   expect(errors).toEqual([]);
   const html = await (await request.get('/')).text();
