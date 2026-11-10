@@ -1,0 +1,51 @@
+name: Documentation website
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: Import this website artifact into the existing vegas0250 portal and deploy
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  website:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: {version: 10}
+      - uses: actions/setup-node@v4
+        with: {node-version: 22, cache: pnpm}
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck && pnpm lint && pnpm test
+      - run: pnpm build:docs
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm exec playwright test tests/e2e/documentation.spec.ts tests/e2e/theme-studio.spec.ts
+      - run: pnpm package:website
+      - uses: actions/upload-artifact@v4
+        with: {name: vui-website, path: '.artifacts/vui-website-*.tar.gz'}
+  deploy:
+    if: github.event_name == 'workflow_dispatch' && inputs.deploy
+    needs: website
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/download-artifact@v4
+        with: {name: vui-website, path: website}
+      - name: Import into the existing portal and deploy
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          set -eu
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          scp website/*.tar.gz "$DEPLOY_USER@$DEPLOY_HOST:/tmp/vui-website.tar.gz"
+          ssh "$DEPLOY_USER@$DEPLOY_HOST" 'cd /var/www/vegas0250 && node scripts/import-vui-docs.mjs /tmp/vui-website.tar.gz && ./deploy.sh'

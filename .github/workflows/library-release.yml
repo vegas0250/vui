@@ -1,0 +1,32 @@
+name: Library package
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish the reviewed package to npm
+        type: boolean
+        default: false
+  push:
+    tags: ['v*']
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    environment: npm
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: {version: 10}
+      - uses: actions/setup-node@v4
+        with: {node-version: 22, cache: pnpm, registry-url: 'https://registry.npmjs.org'}
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck && pnpm lint && pnpm test
+      - run: pnpm build && pnpm check:budget && pnpm check:shake
+      - run: pnpm pack --pack-destination .artifacts
+      - uses: actions/upload-artifact@v4
+        with: {name: vui-library, path: '.artifacts/*.tgz'}
+      - if: github.event_name == 'workflow_dispatch' && inputs.publish
+        run: npm publish .artifacts/*.tgz
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
