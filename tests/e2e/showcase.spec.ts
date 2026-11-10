@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test('showcase switches theme and density', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/?legacy=1');
   await expect(page.getByRole('heading', { name: 'VUI Studio' })).toBeVisible();
   await expect(page.locator('vui-button', { hasText: 'Сохранить' }).first()).toBeVisible();
   await expect(page.locator('vui-stack').first()).toBeVisible();

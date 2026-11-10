@@ -13,12 +13,22 @@ const entries = [...new Set(Object.values(pkg.exports).flatMap((entry) =>
 export default defineConfig(({ mode }) => {
   if (mode !== 'lib') {
     return {
+      base: './',
       plugins: [{
         name: 'vui-initial-theme',
+        configureServer(server) {
+          server.middlewares.use('/theme-boot.js', (_request, response) => {
+            response.setHeader('Content-Type', 'text/javascript');
+            response.end(themeBootScript());
+          });
+        },
+        generateBundle() {
+          this.emitFile({ type: 'asset', fileName: 'theme-boot.js', source: themeBootScript() });
+        },
         transformIndexHtml: {
-          order: 'pre' as const,
+          order: 'post' as const,
           handler: (_html, context) => context.filename.endsWith('/index.html')
-            ? [{tag: 'script', children: themeBootScript(), injectTo: 'head-prepend' as const}]
+            ? [{tag: 'script', attrs: {src: './theme-boot.js'}, injectTo: 'head-prepend' as const}]
             : [],
         },
       }],

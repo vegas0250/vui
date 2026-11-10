@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test('foundation, theme, and density share one token contract', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
-  await page.goto('/');
+  await page.goto('/?legacy=1');
   await expect(page.getByRole('heading', { name: 'Foundation' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Tokens' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Пороги контейнера' })).toBeVisible();
@@ -40,7 +40,7 @@ test('foundation, theme, and density share one token contract', async ({ page })
 
 test('nested split keyboard respects min and max', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
-  await page.goto('/');
+  await page.goto('/?legacy=1');
   const outer = page.locator('#nested-split');
   const inner = page.locator('#nested-split-inner');
   await inner.locator('[part="separator"]').focus();
@@ -55,7 +55,7 @@ test('nested split keyboard respects min and max', async ({ page }) => {
 
 test('contract controls expose focus and skip disabled', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
-  await page.goto('/');
+  await page.goto('/?legacy=1');
   const section = page.locator('#contract');
   const primary = section.locator('vui-button', { hasText: 'Основная' });
   const danger = section.locator('vui-button', { hasText: 'Опасная' });

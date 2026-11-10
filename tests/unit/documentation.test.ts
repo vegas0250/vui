@@ -1,0 +1,48 @@
+import { describe, expect, it } from 'vitest';
+import '../../src/index';
+import { componentCatalog, componentImport, description } from '../../src/showcase/component-data';
+import { exampleCode, exampleFor, exampleMarkup, interfaceExample } from '../../src/showcase/examples';
+import pkg from '../../package.json';
+
+describe('documentation completeness', () => {
+  it('documents every registered public visual element, including contextual children', () => {
+    const catalog = componentCatalog();
+    expect(new Set(catalog.map((c) => c.element)).size).toBe(catalog.length);
+    expect(catalog.length).toBe(69);
+    for (const contract of catalog) {
+      expect(description(contract.element, 'ru'), contract.element).not.toBe('');
+      expect(description(contract.element, 'en'), contract.element).not.toBe('');
+      expect(customElements.get(contract.element), contract.element).toBeDefined();
+      expect(Object.keys(pkg.exports)).toContain('./' + componentImport(contract.element).slice(4));
+      const example = exampleFor(contract.element);
+      expect(example.html, contract.element).toContain('<' + contract.element);
+      expect(exampleCode(example), contract.element).toContain(`import '${componentImport(contract.element)}'`);
+    }
+  });
+  it('uses supported public attributes in every example', () => {
+    const contracts = new Map(componentCatalog().map((contract) => [contract.element, contract]));
+    const invalid: string[] = [];
+    for (const example of componentCatalog().map((contract) => exampleFor(contract.element))) {
+      const template = document.createElement('template');
+      template.innerHTML = example.html;
+      for (const element of template.content.querySelectorAll('*')) {
+        if (!element.localName.startsWith('vui-')) continue;
+        const allowed = new Set(contracts.get(element.localName)!.attributes.map((attribute) => attribute.name));
+        for (const attribute of element.attributes) {
+          if (/^(data-|aria-)/.test(attribute.name) || ['class', 'style', 'slot', 'id', 'role', 'tabindex', 'hidden', 'title', 'dir', 'lang'].includes(attribute.name)) continue;
+          if (!allowed.has(attribute.name)) invalid.push(`${element.localName}: ${attribute.name}`);
+        }
+      }
+    }
+    expect(invalid).toEqual([]);
+  });
+  it('copies the same markup and setup function used by the displayed scenario', () => {
+    for (const id of ['settings', 'table', 'dialog', 'shell']) {
+      const example = interfaceExample(id);
+      const copied = exampleCode(example);
+      expect(copied).toContain(exampleMarkup(example));
+      expect(copied).toContain('type="module"');
+      expect(copied).not.toContain('src/showcase');
+    }
+  });
+});

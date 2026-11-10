@@ -6,7 +6,7 @@ test.beforeEach(async ({ page }) => {
   await page.route('https://vegas0250.ru/api/projects', (route) =>
     route.abort(),
   );
-  await page.goto('/?lang=en');
+  await page.goto('/?lang=en&legacy=1');
   await expect(page.locator(studio)).toBeVisible();
 });
 test('fourteen palettes switch instantly; documentation preference is independent and persistent', async ({

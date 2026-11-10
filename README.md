@@ -94,3 +94,10 @@ pnpm test:e2e
 Read [ARCHITECTURE.md](ARCHITECTURE.md) for the source map, lifecycle, public API,
 build boundaries and SSR limitations. Practical compositions are in
 [docs/patterns.md](docs/patterns.md).
+
+## Documentation website
+
+Run `pnpm dev` for the bilingual catalog, interface examples and Theme Studio.
+Direct component pages use routes such as `?lang=en#/components/button`.
+`pnpm build:docs` builds the website independently from the library; see
+[website architecture and publishing](docs/website.md).

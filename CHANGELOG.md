@@ -1,3 +1,9 @@
+# 1.3.0
+
+- Add a bilingual documentation website with four sections, direct pages for all 69 visual components, shared live/copyable examples, and real interface compositions.
+- Separate library and website artifacts and publishing workflows. Keep documentation preferences isolated when embedded in the vegas0250 VUI subproject.
+- Include the typed React adapters and Next.js integration from the preceding architecture work without breaking existing Custom Element or theme entry points.
+
 # 1.2.3
 
 - Add Midnight, Emerald and Minimal Light through the existing semantic theme engine. Retain all existing preset IDs and system defaults.

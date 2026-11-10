@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test('composition scenarios keep theme, keyboard, and overlay behavior', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
-  await page.goto('/');
+  await page.goto('/?legacy=1');
   await expect(page.getByRole('heading', { name: 'Composition', exact: true })).toBeVisible();
   await expect(page.locator('#family-table')).toContainText('field');
   await expect(page.locator('#composition-table')).toContainText('vui-dialog');

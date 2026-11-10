@@ -18,6 +18,7 @@ import {
   writeCustomThemes,
 } from '../theme';
 import type { ThemeDocument, ThemeToken } from '../theme';
+import { documentationStorage } from './preferences';
 import { escapeHTML, tr } from './theme-i18n';
 import {
   previewMarkup,
@@ -69,7 +70,7 @@ export function mountThemeStudio(host: HTMLElement): void {
     format: 'hex' | 'rgb' | 'hsl' = 'hex',
     frame = 0;
   try {
-    custom = readCustomThemes();
+    custom = readCustomThemes(documentationStorage);
   } catch {
     /* Editing and exports remain available without storage. */
   }
@@ -143,7 +144,7 @@ export function mountThemeStudio(host: HTMLElement): void {
   };
   const persist = () => {
     try {
-      writeCustomThemes(custom);
+      writeCustomThemes(custom, documentationStorage);
       return true;
     } catch {
       status('Storage unavailable. Export your work before closing this page.');
@@ -444,7 +445,7 @@ export function mountThemeStudio(host: HTMLElement): void {
     }
     if (action === 'apply') {
       try {
-        saveThemePreference(working);
+        saveThemePreference(working, documentationStorage);
         applyTheme(working);
         status('Documentation theme updated.');
       } catch {

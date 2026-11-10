@@ -8,12 +8,14 @@ import {
   themeStorageKey,
 } from '../theme';
 import { docsLocale, escapeHTML, tr } from './theme-i18n';
+import { mountDocumentationSite } from './site';
+import { documentationStorage } from './preferences';
 import { mountPortalMenu } from './portal';
 import { mountThemeStudio } from './theme-studio';
 export function mountDocumentation(): void {
   document.documentElement.lang = docsLocale;
   try {
-    initializeTheme();
+    initializeTheme(document.documentElement, documentationStorage);
   } catch {
     applyTheme(
       defaultThemes[
@@ -42,7 +44,7 @@ export function mountDocumentation(): void {
   const sync = () => {
     let pref: ReturnType<typeof getThemePreference> = null;
     try {
-      pref = getThemePreference();
+      pref = getThemePreference(documentationStorage);
     } catch {
       /* private browsing */
     }
@@ -58,7 +60,7 @@ export function mountDocumentation(): void {
     if (select.value === 'custom') return;
     try {
       if (select.value === 'system') {
-        localStorage.removeItem(themeStorageKey);
+        documentationStorage.removeItem(themeStorageKey);
         applyTheme(
           defaultThemes[
             matchMedia('(prefers-color-scheme: dark)').matches
@@ -67,7 +69,7 @@ export function mountDocumentation(): void {
           ],
         );
       } else {
-        saveThemePreference(select.value);
+        saveThemePreference(select.value, documentationStorage);
         applyTheme(select.value);
       }
     } catch {
@@ -136,7 +138,8 @@ export function mountDocumentation(): void {
   integration.className = 'category';
   integration.innerHTML = `<h2>${escapeHTML(tr('Theme integration'))}</h2><p>${escapeHTML(tr('Visual theme editor for VUI'))}: JSON / CSS</p><pre class="code"></pre><p><a href="#theme-studio">${escapeHTML(tr('Theme Studio'))}</a></p>`;
   integration.querySelector('pre')!.textContent =
-    `import { applyTheme, importThemeJSON, initializeTheme } from 'vui/theme';\ninitializeTheme();\napplyTheme('tokyo-night');\nconst theme = importThemeJSON(jsonText);\napplyTheme(theme, document.querySelector('#preview'));\n// CSS export: import './theme.css'; then data-vui-theme="custom".\n// Token reference and integration guide: docs/theme-studio.md`;
+    `import { applyTheme, importThemeJSON, initializeTheme } from 'vui/theme';\ninitializeTheme(document.documentElement, documentationStorage);\napplyTheme('tokyo-night');\nconst theme = importThemeJSON(jsonText);\napplyTheme(theme, document.querySelector('#preview'));\n// CSS export: import './theme.css'; then data-vui-theme="custom".\n// Token reference and integration guide: docs/theme-studio.md`;
   document.querySelector('main')?.append(integration);
   addCopy(integration.querySelector<HTMLPreElement>('pre')!);
+  mountDocumentationSite();
 }

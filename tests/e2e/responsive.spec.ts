@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test('responsive containers adapt without a horizontal page scroll', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
-  await page.goto('/');
+  await page.goto('/?legacy=1');
   await expect(page.getByRole('heading', { name: 'Responsive Design' })).toBeVisible();
   await expect(page.locator('#responsive-readout')).toContainText('Catppuccin Latte + Comfortable');
 
@@ -48,7 +48,7 @@ test('responsive containers adapt without a horizontal page scroll', async ({ pa
 });
 
 test('theme and density stay valid for every combination', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/?legacy=1');
   const themes = [
     ['catppuccin-latte', 'catppuccin-latte', 'Catppuccin Latte'],
     ['tokyo-night', 'tokyo-night', 'Tokyo Night'],

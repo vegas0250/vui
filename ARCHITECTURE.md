@@ -105,3 +105,9 @@ Run `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm build`, and
 The Next.js check installs a packed tarball into a temporary copy of the example,
 builds production output, checks server HTML, and tests hydration and interaction
 in Chromium. Generated output and dependency directories are ignored by Git.
+
+The documentation website has four routed sections and a contract-backed page for
+every visual element. Live examples and copied programs share their markup, styles
+and setup function. The portal consumes its separate website artifact inside the
+VUI subproject; website source never enters the library package. See
+[website publishing](docs/website.md) for build and deployment boundaries.

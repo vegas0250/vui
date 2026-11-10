@@ -13,3 +13,4 @@ dist-docs/
 .pnpm-store/
 .next/
 *.tgz
+.artifacts/
