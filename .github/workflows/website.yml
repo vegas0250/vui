@@ -49,4 +49,4 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
           scp website/*.tar.gz "$DEPLOY_USER@$DEPLOY_HOST:/tmp/vui-website.tar.gz"
-          ssh "$DEPLOY_USER@$DEPLOY_HOST" 'cd /var/www/vegas0250 && node scripts/import-vui-docs.mjs /tmp/vui-website.tar.gz && ./deploy.sh'
+          ssh "$DEPLOY_USER@$DEPLOY_HOST" 'cd /var/www/vegas0250 && ./scripts/import-vui-docs.sh /tmp/vui-website.tar.gz && ./deploy.sh'

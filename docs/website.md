@@ -48,6 +48,7 @@ checked-in manifest when offline. `pnpm sync:portal` refreshes that fallback.
 4. In `/var/www/vegas0250`, run `npm run import:vui -- /path/to/vui-website-VERSION.tar.gz`.
    It validates paths and provenance, stages static assets in `public/vui-docs`,
    keeps the previous staging directory, and records `apps/vui/release.json`.
+   Its shell wrapper `scripts/import-vui-docs.sh` also works on Docker hosts without a global Node installation.
 5. Refresh the portal's `vendor/vui-VERSION.tgz` from `pnpm pack` after reviewing the
    library build. Update its dependency and lockfile, then run its tests and build.
 6. Use the portal's existing deployment workflow. The VUI route frames the actual
