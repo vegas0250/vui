@@ -73,7 +73,7 @@ export function mountDocumentationSite(): void {
   const layout = document.createElement('div');
   layout.className = 'documentation-layout';
   const catalog = componentCatalog();
-  layout.innerHTML = `<aside class="docs-sidebar"><a class="docs-wordmark" href="#/getting-started">VUI <span>${text('Документация', 'Documentation')} · ${libraryVersion}</span></a><nav aria-label="${text('Разделы документации', 'Documentation sections')}">${sections().map(([id, label]) => link(id!, label!)).join('')}</nav><label class="docs-search">${text('Найти компонент', 'Find a component')}<input type="search" id="component-search" autocomplete="off" /></label><nav id="docs-component-menu" aria-label="${text('Каталог компонентов', 'Component catalog')}"></nav></aside><article id="docs-page" class="docs-page"></article>`;
+  layout.innerHTML = `<aside class="docs-sidebar"><a class="docs-wordmark" href="#/getting-started">VUI <span>${text('Документация', 'Documentation')} · ${libraryVersion}</span></a><nav aria-label="${text('Разделы документации', 'Documentation sections')}">${sections().map(([id, label]) => link(id!, label!)).join('')}</nav><label class="docs-search">${text('Найти компонент', 'Find a component')}<input type="search" id="component-search" autocomplete="off" /></label><details class="docs-menu-disclosure" open><summary>${text('Каталог компонентов', 'Component catalog')}</summary><nav id="docs-component-menu" aria-label="${text('Каталог компонентов', 'Component catalog')}"></nav></details></aside><article id="docs-page" class="docs-page"></article>`;
   main.prepend(layout);
   document.body.classList.add('documentation-site');
   if (embedded) document.querySelector('.portal-menu')?.setAttribute('hidden', '');
@@ -117,7 +117,12 @@ export function mountDocumentationSite(): void {
     }).join('') || `<p role="status">${text('Компоненты не найдены', 'No components found')}</p>`;
     for (const a of menu.querySelectorAll('a')) if (a.getAttribute('href') === location.hash) a.setAttribute('aria-current', 'page');
   };
-  search.addEventListener('input', paintMenu);
+  const disclosure = layout.querySelector<HTMLDetailsElement>('.docs-menu-disclosure')!;
+  const desktop = matchMedia('(min-width: 641px)');
+  const updateMenu = () => { disclosure.open = desktop.matches || search.value.trim().length > 0; };
+  updateMenu();
+  desktop.addEventListener('change', updateMenu);
+  search.addEventListener('input', () => { updateMenu(); paintMenu(); });
   const render = () => {
     // Close active overlays before replacing their DOM so focus is restored.
     for (const el of page.querySelectorAll('vui-dialog[open], vui-drawer[open], vui-menu[open], vui-popover[open]')) {

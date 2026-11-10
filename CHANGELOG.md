@@ -1,3 +1,7 @@
+# 1.3.1
+
+- Preserve source component registration in optimized website builds, and add a production-build browser check alongside development checks.
+
 # 1.3.0
 
 - Add a bilingual documentation website with four sections, direct pages for all 69 visual components, shared live/copyable examples, and real interface compositions.

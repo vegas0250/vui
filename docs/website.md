@@ -42,7 +42,7 @@ checked-in manifest when offline. `pnpm sync:portal` refreshes that fallback.
 ## Review, build and publish
 
 1. Run `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm build`, and `pnpm build:docs`.
-2. Run `pnpm check:consumer`, `pnpm check:shake`, and relevant Playwright scenarios.
+2. Run `pnpm check:consumer`, `pnpm check:shake`, `pnpm check:website`, and relevant Playwright scenarios. The optimized-build check verifies all 69 registrations, real interaction, responsive width, and the external boot script.
 3. Commit reviewed source. `pnpm package:website` requires a clean checkout and
    packages the built site with the exact source SHA and version.
 4. In `/var/www/vegas0250`, run `npm run import:vui -- /path/to/vui-website-VERSION.tar.gz`.

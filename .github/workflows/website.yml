@@ -23,6 +23,7 @@ jobs:
       - run: pnpm typecheck && pnpm lint && pnpm test
       - run: pnpm build:docs
       - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm check:website
       - run: pnpm exec playwright test tests/e2e/documentation.spec.ts tests/e2e/theme-studio.spec.ts
       - run: pnpm package:website
       - uses: actions/upload-artifact@v4

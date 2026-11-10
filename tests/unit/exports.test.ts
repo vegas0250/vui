@@ -105,6 +105,8 @@ describe('public package surface', () => {
 
   it('preserves registration effects while allowing unused React adapters to be removed', () => {
     expect(pkg.sideEffects).not.toContain('./dist/**/*.js');
+    expect(pkg.sideEffects).toContain('./src/index.ts');
+    expect(pkg.sideEffects).toContain('./src/components/**/*.ts');
     for (const file of walk(join(root, 'src/components'))) {
       if (file.endsWith('.test.ts') || !readFileSync(file, 'utf8').includes('defineElement(')) continue;
       const entry = file.replace(join(root, 'src'), './dist').replace(/\.ts$/, '.js');

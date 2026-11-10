@@ -99,5 +99,6 @@ build boundaries and SSR limitations. Practical compositions are in
 
 Run `pnpm dev` for the bilingual catalog, interface examples and Theme Studio.
 Direct component pages use routes such as `?lang=en#/components/button`.
-`pnpm build:docs` builds the website independently from the library; see
+`pnpm build:docs` builds the website independently from the library.
+`pnpm check:website` checks that optimized build in Chromium; see
 [website architecture and publishing](docs/website.md).

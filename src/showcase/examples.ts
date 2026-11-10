@@ -88,7 +88,7 @@ export function exampleFor(tag: string): Example {
     switch: `<vui-switch>${text('Уведомления', 'Notifications')}</vui-switch>`, select, option: select,
     slider: `<vui-slider label="${text('Громкость', 'Volume')}" min="0" max="100" value="60"></vui-slider>`,
     field: `<vui-field label="${name}" hint="${text('Введите имя', 'Enter a name')}"><input aria-label="${name}" value="Ada" /></vui-field>`,
-    'field-group': `<vui-field-group label="${text('Профиль', 'Profile')}">${field}${select}</vui-field-group>`,
+    'field-group': `<vui-field-group label="${text('Профиль', 'Profile')}"><vui-vstack gap="md">${field}${select}</vui-vstack></vui-field-group>`,
     tabs, tab: tabs, 'tab-panel': tabs, nav, 'nav-item': nav, stepper: steps, step: steps,
     breadcrumbs: `<vui-breadcrumbs label="${text('Путь', 'Path')}"><a href="#/getting-started">VUI</a><span>${text('Компоненты', 'Components')}</span></vui-breadcrumbs>`,
     'path-bar': '<vui-path-bar value="/home/projects/atlas"></vui-path-bar>',
@@ -134,7 +134,7 @@ export function exampleFor(tag: string): Example {
 
 export function interfaceExample(id: string): Example {
   const name = text('Имя', 'Name'), save = text('Сохранить', 'Save');
-  const settings = `<vui-field-group label="${text('Профиль', 'Profile')}"><vui-input label="${name}" value="Ada" required></vui-input><vui-select label="${text('Язык', 'Language')}" value="ru"><vui-option value="ru">Русский</vui-option><vui-option value="en">English</vui-option></vui-select><vui-switch>${text('Уведомления', 'Notifications')}</vui-switch><vui-button data-save>${save}</vui-button></vui-field-group>`;
+  const settings = `<vui-field-group label="${text('Профиль', 'Profile')}"><vui-vstack gap="md"><vui-input label="${name}" value="Ada" required></vui-input><vui-select label="${text('Язык', 'Language')}" value="ru"><vui-option value="ru">Русский</vui-option><vui-option value="en">English</vui-option></vui-select><vui-switch>${text('Уведомления', 'Notifications')}</vui-switch><vui-button data-save>${save}</vui-button></vui-vstack></vui-field-group>`;
   if (id === 'settings') return { id, html: settings };
   if (id === 'table') return { id, html: `<vui-hstack gap="md" wrap><vui-input data-filter label="${text('Поиск проектов', 'Find projects')}"></vui-input><vui-select data-status label="${text('Статус', 'Status')}" value="all"><vui-option value="all">${text('Все', 'All')}</vui-option><vui-option value="active">${text('Активный', 'Active')}</vui-option><vui-option value="draft">${text('Черновик', 'Draft')}</vui-option></vui-select></vui-hstack><vui-data-grid label="${text('Проекты', 'Projects')}"></vui-data-grid>` };
   if (id === 'dialog') return { ...exampleFor('vui-dialog'), id };

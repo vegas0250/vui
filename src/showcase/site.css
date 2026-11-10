@@ -51,3 +51,5 @@
 .documentation-site .header-controls [hidden] { display: none !important; }
 
 .documentation-site .portal-menu[hidden] { display: none !important; }
+
+.docs-sidebar .docs-menu-disclosure { display: block; }

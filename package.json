@@ -1,6 +1,6 @@
 {
   "name": "vui",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Универсальная модульная UI-система готовых визуальных компонентов для Web, SPA и Desktop/Electron с поддержкой тем и различной плотности интерфейса.",
   "type": "module",
   "license": "UNLICENSED",
@@ -14,6 +14,17 @@
     "src/tokens"
   ],
   "sideEffects": [
+    "./src/index.ts",
+    "./src/categories/*.ts",
+    "./src/components/**/*.ts",
+    "./src/theme/index.ts",
+    "./src/foundation/index.ts",
+    "./src/contract/index.ts",
+    "./src/composition/index.ts",
+    "./src/families/index.ts",
+    "./src/interaction/index.ts",
+    "./src/**/catalog.ts",
+    "./src/interaction/profiles.ts",
     "./dist/index.js",
     "./dist/categories/*.js",
     "./dist/theme/index.js",
@@ -397,7 +408,8 @@
     "lint": "tsc --noEmit",
     "sync:portal": "node scripts/sync-portal.mjs",
     "check:next": "node scripts/next-consumer.mjs",
-    "package:website": "node scripts/package-website.mjs"
+    "package:website": "node scripts/package-website.mjs",
+    "check:website": "playwright test --config playwright.docs-build.config.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.1",
