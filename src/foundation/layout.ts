@@ -8,4 +8,4 @@ export {
   layoutOverflow,
   spaceSteps,
   tokenGap,
-} from '../core/layout';
+} from '../utils/layout';

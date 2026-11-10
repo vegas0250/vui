@@ -1,5 +1,5 @@
 import { contractFor } from '../contract/registry';
-import { connectFoundation } from '../foundation/runtime';
+import { installVuiStyles } from '../theme/install';
 import { reportDeveloper } from './dev';
 import { mountStyles } from './styles';
 
@@ -27,7 +27,7 @@ export abstract class VuiElement extends HTMLElement {
 
   connectedCallback(): void {
     this.connections += 1;
-    connectFoundation();
+    installVuiStyles();
     if (!this.rendered) {
       this.shadow.innerHTML = this.template();
       mountStyles(this.shadow, this.componentStyles(), this.styleId());

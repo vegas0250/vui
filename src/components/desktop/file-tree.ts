@@ -1,11 +1,11 @@
 import '../foundation/icon';
-import { defineElement } from '../../core/define';
+import { defineElement } from '../../utils/define';
 import { registerContract } from '../../contract/registry';
-import { VuiElement } from '../../core/element';
-import { emitChange } from '../../core/events';
-import { reflectBooleans, reflectStrings } from '../../core/reflect';
+import { VuiElement } from '../../utils/element';
+import { emitChange } from '../../utils/events';
+import { reflectBooleans, reflectStrings } from '../../utils/reflect';
 import { ownedChildren } from '../../composition/dom';
-import { reportUnexpectedChildren } from '../../core/dev';
+import { reportUnexpectedChildren } from '../../utils/dev';
 import { copyText } from '../../interaction/clipboard';
 import { applyRovingTabIndex, isRtl, moveInList, stepIndex } from '../../interaction/keyboard';
 import { SelectionModel } from '../../interaction/selection';

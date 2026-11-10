@@ -1,7 +1,7 @@
-import { defineElement } from '../../core/define';
-import { applySpace } from '../../core/layout';
-import { VuiElement } from '../../core/element';
-import { reflectStrings } from '../../core/reflect';
+import { defineElement } from '../../utils/define';
+import { applySpace } from '../../utils/layout';
+import { VuiElement } from '../../utils/element';
+import { reflectStrings } from '../../utils/reflect';
 import { registerContract } from '../../contract/registry';
 
 export class VContainer extends VuiElement {

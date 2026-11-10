@@ -16,6 +16,9 @@ export const palettes: Readonly<Record<string, Readonly<Palette>>> =
   Object.freeze(
     Object.fromEntries(
       Object.entries({
+        "midnight":{"background": "#0b1020", "surface": "#121b30", "elevated": "#1c2942", "foreground": "#e4eaf8", "muted": "#a7b6d2", "primary": "#8bb4ff", "accent": "#b9a0ff", "success": "#69d6ac", "warning": "#f0c477", "error": "#ff929f", "info": "#75d3ec"},
+        "emerald":{"background": "#081b17", "surface": "#102b24", "elevated": "#1a3b31", "foreground": "#e4f4eb", "muted": "#a5c4b4", "primary": "#52dfa5", "accent": "#8edac8", "success": "#6ce9a5", "warning": "#f1c676", "error": "#ff9a9a", "info": "#90cffa"},
+        "minimal-light":{"background": "#fafafa", "surface": "#ffffff", "elevated": "#f0f0f0", "foreground": "#202020", "muted": "#5c5c5c", "primary": "#175dcc", "accent": "#6650b8", "success": "#197344", "warning": "#825400", "error": "#b52635", "info": "#176e83"},
         'modern-light': {
           background: '#f7f8fa',
           surface: '#ffffff',

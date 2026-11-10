@@ -1,77 +1,14 @@
+import pkg from './package.json';
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import { themeBootScript } from './src/showcase/boot';
 
-const entries = [
-  resolve('src/index.ts'),
-  resolve('src/theme/index.ts'),
-  resolve('src/foundation/index.ts'),
-  resolve('src/contract/index.ts'),
-  resolve('src/composition/index.ts'),
-  resolve('src/families/index.ts'),
-  resolve('src/components/foundation/icon.ts'),
-  resolve('src/components/actions/button.ts'),
-  resolve('src/components/actions/button-group.ts'),
-  resolve('src/components/actions/icon-button.ts'),
-  resolve('src/components/actions/toggle.ts'),
-  resolve('src/components/content/avatar.ts'),
-  resolve('src/components/content/avatar-group.ts'),
-  resolve('src/components/content/badge.ts'),
-  resolve('src/components/content/chip.ts'),
-  resolve('src/components/content/kbd.ts'),
-  resolve('src/components/content/link.ts'),
-  resolve('src/components/content/separator.ts'),
-  resolve('src/components/content/text.ts'),
-  resolve('src/components/forms/input.ts'),
-  resolve('src/components/forms/textarea.ts'),
-  resolve('src/components/forms/checkbox.ts'),
-  resolve('src/components/forms/radio.ts'),
-  resolve('src/components/forms/switch.ts'),
-  resolve('src/components/forms/select.ts'),
-  resolve('src/components/forms/slider.ts'),
-  resolve('src/components/forms/field.ts'),
-  resolve('src/components/overlay/dialog.ts'),
-  resolve('src/components/overlay/menu.ts'),
-  resolve('src/components/overlay/popover.ts'),
-  resolve('src/components/overlay/drawer.ts'),
-  resolve('src/interaction/index.ts'),
-  resolve('src/components/navigation/tabs.ts'),
-  resolve('src/components/navigation/breadcrumbs.ts'),
-  resolve('src/components/navigation/pagination.ts'),
-  resolve('src/components/navigation/nav.ts'),
-  resolve('src/components/navigation/stepper.ts'),
-  resolve('src/components/feedback/tooltip.ts'),
-  resolve('src/components/feedback/alert.ts'),
-  resolve('src/components/feedback/progress.ts'),
-  resolve('src/components/feedback/spinner.ts'),
-  resolve('src/components/feedback/skeleton.ts'),
-  resolve('src/components/feedback/empty.ts'),
-  resolve('src/components/feedback/toast.ts'),
-  resolve('src/components/layout/panel.ts'),
-  resolve('src/components/layout/container.ts'),
-  resolve('src/components/layout/scroll-area.ts'),
-  resolve('src/components/layout/stack.ts'),
-  resolve('src/components/layout/grid.ts'),
-  resolve('src/components/layout/split-panel.ts'),
-  resolve('src/components/navigation/toolbar.ts'),
-  resolve('src/components/desktop/status-bar.ts'),
-  resolve('src/components/desktop/shell.ts'),
-  resolve('src/components/desktop/window.ts'),
-  resolve('src/components/desktop/file-tree.ts'),
-  resolve('src/components/data/data-grid.ts'),
-  resolve('src/components/data/list.ts'),
-  resolve('src/components/data/properties.ts'),
-  resolve('src/categories/content.ts'),
-  resolve('src/categories/foundation.ts'),
-  resolve('src/categories/layout.ts'),
-  resolve('src/categories/actions.ts'),
-  resolve('src/categories/forms.ts'),
-  resolve('src/categories/feedback.ts'),
-  resolve('src/categories/overlay.ts'),
-  resolve('src/categories/navigation.ts'),
-  resolve('src/categories/data.ts'),
-  resolve('src/categories/desktop.ts'),
-];
+// The export map is the source of truth for production entry points.
+const entries = [...new Set(Object.values(pkg.exports).flatMap((entry) =>
+  typeof entry === 'object' && entry.import.endsWith('.js')
+    ? [resolve(entry.import.replace('./dist/', 'src/').replace(/\.js$/, '.ts'))]
+    : [],
+))];
 
 export default defineConfig(({ mode }) => {
   if (mode !== 'lib') {
@@ -97,11 +34,18 @@ export default defineConfig(({ mode }) => {
   return {
     build: {
       outDir: 'dist',
+      lib: { entry: entries, formats: ['es'] },
+      // Keep published modules readable and preserve pure annotations.
+      minify: false,
       emptyOutDir: true,
       sourcemap: true,
       rollupOptions: {
         input: entries,
-        external: ['lucide'],
+        onwarn(warning, warn) {
+          if (warning.code === 'MODULE_LEVEL_DIRECTIVE' && warning.message.includes('use client')) return;
+          warn(warning);
+        },
+        external: ['lucide', 'react'],
         preserveEntrySignatures: 'strict',
         output: {
           format: 'es',
@@ -109,6 +53,9 @@ export default defineConfig(({ mode }) => {
           preserveModules: true,
           preserveModulesRoot: 'src',
           entryFileNames: '[name].js',
+          // Rollup removes module directives; keep the boundary on every adapter.
+          banner: (chunk) => chunk.facadeModuleId?.endsWith('.react.ts') || chunk.facadeModuleId?.endsWith('/react.ts')
+            ? '"use client";' : '',
           chunkFileNames: '[name].js',
         },
       },

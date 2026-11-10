@@ -1,8 +1,8 @@
 import { registerContract } from '../../contract/registry';
-import { defineElement } from '../../core/define';
-import { VuiElement } from '../../core/element';
-import { applyAlign, applyJustify, applyOverflow, applySpace, tokenGap } from '../../core/layout';
-import { reflectBooleans, reflectStrings } from '../../core/reflect';
+import { defineElement } from '../../utils/define';
+import { VuiElement } from '../../utils/element';
+import { applyAlign, applyJustify, applyOverflow, applySpace, tokenGap } from '../../utils/layout';
+import { reflectBooleans, reflectStrings } from '../../utils/reflect';
 import { containerBand, observeInlineSize } from '../../foundation/responsive';
 
 class VStackBase extends VuiElement {

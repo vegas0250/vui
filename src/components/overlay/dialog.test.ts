@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import '../../src/components/forms/select';
-import { VDialog } from '../../src/components/overlay/dialog';
-import { clearOverlays } from '../../src/core/overlay';
+import '../forms/select';
+import { VDialog } from './dialog';
+import { clearOverlays } from '../../interaction/overlay';
 
 describe('vui-dialog', () => {
   beforeEach(() => {

@@ -31,7 +31,7 @@ try {
       dependencies: { vui: `file:${tarball}` },
     }),
   );
-  execFileSync('npm', ['install', '--omit=dev', '--no-package-lock'], { cwd: work, stdio: 'inherit' });
+  execFileSync('pnpm', ['install', '--prefer-offline', '--prod', '--no-frozen-lockfile', '--store-dir', join(tmpdir(), 'vui-pnpm-store')], { cwd: work, stdio: 'inherit' });
 
   writeFileSync(
     join(work, 'index.html'),

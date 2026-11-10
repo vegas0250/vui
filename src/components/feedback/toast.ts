@@ -1,10 +1,10 @@
 import '../foundation/icon';
-import { defineElement } from '../../core/define';
+import { defineElement } from '../../utils/define';
 import { registerContract } from '../../contract/registry';
-import { VuiElement } from '../../core/element';
-import { emitClose } from '../../core/events';
+import { VuiElement } from '../../utils/element';
+import { emitClose } from '../../utils/events';
 import { pushOverlay } from '../../interaction/overlay';
-import { reflectStrings } from '../../core/reflect';
+import { reflectStrings } from '../../utils/reflect';
 import type { VIcon } from '../foundation/icon';
 
 const icons: Record<string, string> = {

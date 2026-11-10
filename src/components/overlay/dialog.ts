@@ -1,9 +1,9 @@
-import { defineElement } from '../../core/define';
+import { defineElement } from '../../utils/define';
 import { registerContract } from '../../contract/registry';
-import { VuiElement } from '../../core/element';
-import { emitClose } from '../../core/events';
+import { VuiElement } from '../../utils/element';
+import { emitClose } from '../../utils/events';
 import { pushOverlay } from '../../interaction/overlay';
-import { reflectBooleans, reflectStrings } from '../../core/reflect';
+import { reflectBooleans, reflectStrings } from '../../utils/reflect';
 
 const closeIcon = `
 <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">

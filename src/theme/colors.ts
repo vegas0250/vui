@@ -78,31 +78,30 @@ export function mix(a: string, b: string, ratio: number): string {
       .join('')
   );
 }
-export function contrast(a: string, b: string): number {
-  const composite = (
-    top: string,
-    bottom: [number, number, number],
-  ): [number, number, number] => {
-    const hex = normalizeColor(top),
-      alpha = hex.length === 9 ? parseInt(hex.slice(7), 16) / 255 : 1;
-    return channels(hex).map((n, i) => n * alpha + bottom[i] * (1 - alpha)) as [
-      number,
-      number,
-      number,
-    ];
-  };
-  const bg = composite(b, [255, 255, 255]),
-    fg = composite(a, bg);
-  const luminance = (rgb: number[]) =>
-    rgb
-      .map((n) => {
-        n /= 255;
-        return n <= 0.04045 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4;
-      })
-      .reduce((sum, v, i) => sum + v * [0.2126, 0.7152, 0.0722][i], 0);
-  const x = luminance(fg),
-    y = luminance(bg);
-  return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+type RGB = [number,number,number];
+const luminance=(rgb:RGB)=>rgb.reduce((sum,channel,index)=>{
+ const value=channel/255;
+ return sum+(value<=0.04045?value/12.92:((value+0.055)/1.055)**2.4)*[0.2126,0.7152,0.0722][index];
+},0);
+// Theme derivation compares the same surfaces thousands of times. Cache only
+// validated colors, with a fixed bound for long-running user theme sessions.
+const contrastColors=new Map<string,{rgb:RGB;alpha:number;luminance:number}>();
+function contrastColor(input:string){
+ const cached=contrastColors.get(input);if(cached)return cached;
+ const hex=normalizeColor(input),rgb=[1,3,5].map(index=>parseInt(hex.slice(index,index+2),16)) as RGB;
+ const value={rgb,alpha:hex.length===9?parseInt(hex.slice(7),16)/255:1,luminance:luminance(rgb)};
+ if(contrastColors.size>=2048)contrastColors.clear();contrastColors.set(input,value);return value;
+}
+export function contrast(a:string,b:string):number{
+ const top=contrastColor(a),bottom=contrastColor(b);
+ let x:number,y:number;
+ if(top.alpha===1&&bottom.alpha===1){x=top.luminance;y=bottom.luminance;}
+ else{
+  const bg=bottom.rgb.map(channel=>channel*bottom.alpha+255*(1-bottom.alpha)) as RGB;
+  const fg=top.rgb.map((channel,index)=>channel*top.alpha+bg[index]*(1-top.alpha)) as RGB;
+  x=luminance(fg);y=luminance(bg);
+ }
+ return (Math.max(x,y)+0.05)/(Math.min(x,y)+0.05);
 }
 export function readable(color: string, against: string, target = 4.5): string {
   if (contrast(color, against) >= target) return normalizeColor(color);

@@ -1,10 +1,10 @@
 import '../foundation/icon';
 import { ownedChildren } from '../../composition/dom';
-import { reportUnexpectedChildren } from '../../core/dev';
+import { reportUnexpectedChildren } from '../../utils/dev';
 import { registerContract } from '../../contract/registry';
-import { defineElement } from '../../core/define';
-import { VuiElement } from '../../core/element';
-import { reflectBooleans, reflectStrings } from '../../core/reflect';
+import { defineElement } from '../../utils/define';
+import { VuiElement } from '../../utils/element';
+import { reflectBooleans, reflectStrings } from '../../utils/reflect';
 import { runCommand, type CommandRegistry } from '../../interaction/commands';
 import { bindContextMenu } from '../../interaction/context-menu';
 import { applyRovingTabIndex, isActivation, isRtl, moveInList } from '../../interaction/keyboard';

@@ -1,6 +1,14 @@
+# 1.2.3
+
+- Add Midnight, Emerald and Minimal Light through the existing semantic theme engine. Retain all existing preset IDs and system defaults.
+
 # Changelog
 
 ## Unreleased
+
+- Add optional React 19 adapters through `vui/react`, with browser-only element registration, native events, typed refs and post-upgrade object properties. Existing Custom Element and theme exports remain available.
+- Add a Next.js App Router example and packed-package checks for prerendering, request-time SSR, hydration and interaction. SSR emits light DOM; shadow controls initialize in the browser.
+- Consolidate private helpers in `src/utils`, remove focus/overlay re-export wrappers, colocate component tests, derive build entries from package exports, and enable tree shaking for unused React adapters.
 
 - `neon-green` — зелёный киберпанк для рабочего стола: тёмный графит, резкий радиус, тонкая зелёная кромка. Масштаб по-прежнему задаёт плотность, не тема.
 - Подменю `vui-menu` открывается по движению указателя, в том числе по внутренней разметке пункта. Слот `bar` рисует нижнюю полосу, `layout="stack"` ставит иконку над подписью.

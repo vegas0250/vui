@@ -1,4 +1,4 @@
-import { reportDeveloper } from '../core/dev';
+import { reportDeveloper } from '../utils/dev';
 import { installVuiStyles } from './install';
 import { applyTheme, clearTheme, listThemes } from './engine';
 export * from './engine';

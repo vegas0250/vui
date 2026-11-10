@@ -1,0 +1,4 @@
+body { margin: 0; background: var(--vui-color-background); color: var(--vui-color-text); font-family: var(--vui-font-sans); }
+main { max-width: 48rem; margin: 3rem auto; padding: 1rem; }
+section { display: grid; gap: 1rem; }
+vui-input, vui-select, vui-data-grid { display: block; }

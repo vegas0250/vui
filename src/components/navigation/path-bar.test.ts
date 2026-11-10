@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import '../../src/components/navigation/path-bar';
-import type { VPathBar } from '../../src/components/navigation/path-bar';
+import './path-bar';
+import type { VPathBar } from './path-bar';
 
 describe('vui-path-bar', () => {
   it('shows crumbs until the field is clicked, then edits the address', () => {

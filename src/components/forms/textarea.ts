@@ -1,9 +1,9 @@
-import { defineElement } from '../../core/define';
+import { defineElement } from '../../utils/define';
 import { registerContract } from '../../contract/registry';
-import { emitChange, emitInput } from '../../core/events';
-import { VuiElement } from '../../core/element';
-import { reflectBooleans, reflectStrings } from '../../core/reflect';
-import { controlStyles, fieldStyles } from '../../core/styles';
+import { emitChange, emitInput } from '../../utils/events';
+import { VuiElement } from '../../utils/element';
+import { reflectBooleans, reflectStrings } from '../../utils/reflect';
+import { controlStyles, fieldStyles } from '../../utils/styles';
 
 export class VTextarea extends VuiElement {
   declare label: string;

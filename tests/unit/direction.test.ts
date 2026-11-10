@@ -3,7 +3,7 @@ import type { VMenu } from '../../src/components/overlay/menu';
 import type { VSplitPanel } from '../../src/components/layout/split-panel';
 import type { VTabs } from '../../src/components/navigation/tabs';
 import type { VFileTree } from '../../src/components/desktop/file-tree';
-import { clearOverlays } from '../../src/core/overlay';
+import { clearOverlays } from '../../src/interaction/overlay';
 import '../../src/index';
 
 describe('inline direction', () => {

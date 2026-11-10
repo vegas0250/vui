@@ -1,8 +1,8 @@
 import { registerContract } from '../../contract/registry';
-import { defineElement } from '../../core/define';
-import { emitChange } from '../../core/events';
-import { VuiElement } from '../../core/element';
-import { reflectBooleans, reflectStrings } from '../../core/reflect';
+import { defineElement } from '../../utils/define';
+import { emitChange } from '../../utils/events';
+import { VuiElement } from '../../utils/element';
+import { reflectBooleans, reflectStrings } from '../../utils/reflect';
 
 const checkIcon = `
 <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

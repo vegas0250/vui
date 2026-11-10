@@ -3,12 +3,13 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const root = join(import.meta.dirname, '../..');
-const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')) as { exports: Record<string, unknown> };
+const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')) as { exports: Record<string, unknown>; sideEffects: string[] };
 
 /** Stable public entry points. Removing or renaming one is a breaking change. */
 const publicExports = [
   '.',
   './theme',
+  './react',
   './runtime',
   './contract',
   './composition',
@@ -100,6 +101,19 @@ function walk(dir: string): string[] {
 describe('public package surface', () => {
   it('matches the frozen export map', () => {
     expect(Object.keys(pkg.exports).sort()).toEqual([...publicExports].sort());
+  });
+
+  it('preserves registration effects while allowing unused React adapters to be removed', () => {
+    expect(pkg.sideEffects).not.toContain('./dist/**/*.js');
+    for (const file of walk(join(root, 'src/components'))) {
+      if (file.endsWith('.test.ts') || !readFileSync(file, 'utf8').includes('defineElement(')) continue;
+      const entry = file.replace(join(root, 'src'), './dist').replace(/\.ts$/, '.js');
+      expect(pkg.sideEffects, file).toContain(entry);
+    }
+    for (const folder of ['foundation', 'contract', 'composition', 'families', 'interaction']) {
+      expect(pkg.sideEffects).toContain(`./dist/${folder}/index.js`);
+    }
+    expect(pkg.sideEffects).not.toContain('./dist/react.js');
   });
 
   it('does not publish core, showcase, or patterns', () => {

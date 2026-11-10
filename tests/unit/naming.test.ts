@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { defineElement } from '../../src/core/define';
+import { defineElement } from '../../src/utils/define';
 import {
   VAlert,
   VAvatar,

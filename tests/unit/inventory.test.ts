@@ -2,7 +2,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { checkCompliance, listContracts, remount } from '../../src/contract/index';
-import { clearOverlays } from '../../src/core/overlay';
+import { clearOverlays } from '../../src/interaction/overlay';
 import '../../src/index';
 
 /** Light-DOM value node. It has no shadow and is not a standalone component. */

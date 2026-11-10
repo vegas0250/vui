@@ -1,8 +1,8 @@
 import { registerContract } from '../../contract/registry';
-import { defineElement } from '../../core/define';
-import { VuiElement } from '../../core/element';
-import { applyOverflow, applySpace } from '../../core/layout';
-import { reflectStrings } from '../../core/reflect';
+import { defineElement } from '../../utils/define';
+import { VuiElement } from '../../utils/element';
+import { applyOverflow, applySpace } from '../../utils/layout';
+import { reflectStrings } from '../../utils/reflect';
 
 export class VPanel extends VuiElement {
   declare heading: string;

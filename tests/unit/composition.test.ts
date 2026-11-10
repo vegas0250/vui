@@ -9,7 +9,7 @@ import {
   checkNavigationScenario,
   checkOverlayScenario,
 } from '../../src/composition/scenarios';
-import { clearOverlays } from '../../src/core/overlay';
+import { clearOverlays } from '../../src/interaction/overlay';
 
 describe('composition and families', () => {
   beforeEach(() => {

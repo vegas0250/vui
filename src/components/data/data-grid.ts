@@ -1,10 +1,10 @@
 import '../foundation/icon';
-import { reportDeveloper } from '../../core/dev';
-import { defineElement } from '../../core/define';
+import { reportDeveloper } from '../../utils/dev';
+import { defineElement } from '../../utils/define';
 import { registerContract } from '../../contract/registry';
-import { VuiElement } from '../../core/element';
-import { emitChange } from '../../core/events';
-import { reflectBooleans, reflectStrings } from '../../core/reflect';
+import { VuiElement } from '../../utils/element';
+import { emitChange } from '../../utils/events';
+import { reflectBooleans, reflectStrings } from '../../utils/reflect';
 import { containerBand, observeInlineSize } from '../../foundation/responsive';
 import { copyText } from '../../interaction/clipboard';
 import { applyRovingTabIndex, isRtl, moveInList, stepIndex } from '../../interaction/keyboard';

@@ -1,8 +1,8 @@
 import { registerContract } from '../../contract/registry';
-import { defineElement } from '../../core/define';
-import { VuiElement } from '../../core/element';
-import { applyOverflow } from '../../core/layout';
-import { reflectStrings } from '../../core/reflect';
+import { defineElement } from '../../utils/define';
+import { VuiElement } from '../../utils/element';
+import { applyOverflow } from '../../utils/layout';
+import { reflectStrings } from '../../utils/reflect';
 import { containerBand, observeInlineSize } from '../../foundation/responsive';
 import { isRtl } from '../../interaction/keyboard';
 import { trackPointer } from '../../interaction/pointer';

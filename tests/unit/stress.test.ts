@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import '../../src/components/actions/button';
 import '../../src/components/data/data-grid';
 import '../../src/components/data/list';
-import { clearOverlays } from '../../src/core/overlay';
+import { clearOverlays } from '../../src/interaction/overlay';
 import type { VButton } from '../../src/components/actions/button';
 import type { VDataGrid } from '../../src/components/data/data-grid';
 import type { VList } from '../../src/components/data/list';

@@ -1,7 +1,7 @@
-import { defineElement } from '../../core/define';
+import { defineElement } from '../../utils/define';
 import { registerContract } from '../../contract/registry';
-import { VuiElement } from '../../core/element';
-import { reflectBooleans, reflectStrings } from '../../core/reflect';
+import { VuiElement } from '../../utils/element';
+import { reflectBooleans, reflectStrings } from '../../utils/reflect';
 
 export class VButtonGroup extends VuiElement {
   declare label: string;

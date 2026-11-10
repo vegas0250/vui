@@ -1,8 +1,8 @@
-import { defineElement } from '../../core/define';
+import { defineElement } from '../../utils/define';
 import { registerContract } from '../../contract/registry';
-import { VuiElement } from '../../core/element';
-import { reflectBooleans, reflectStrings } from '../../core/reflect';
-import { controlStyles, fieldStyles } from '../../core/styles';
+import { VuiElement } from '../../utils/element';
+import { reflectBooleans, reflectStrings } from '../../utils/reflect';
+import { controlStyles, fieldStyles } from '../../utils/styles';
 
 export class VInput extends VuiElement {
   declare label: string;

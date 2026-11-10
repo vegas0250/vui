@@ -104,7 +104,7 @@ vui/theme | runtime | contract | composition | families | interaction
 vui/themes/*
 ```
 
-Сборка — ESM, `preserveModules`, declarations, source maps. `lucide` внешний. Селективный импорт не тянет `src/index.ts`. `src/core`, showcase и patterns в exports не входят. Декларации showcase в пакет не попадают: `tsconfig.build.json` их исключает.
+Сборка — ESM, `preserveModules`, declarations, source maps. `lucide` внешний. Селективный импорт не тянет `src/index.ts`. `src/utils`, showcase и patterns в exports не входят. Декларации showcase в пакет не попадают: `tsconfig.build.json` их исключает.
 
 Бюджет после сборки: `pnpm check:budget`. Один JS-файл dist не больше 96 КБ, сумма JS не больше 2 МБ. `pnpm check:shake` сравнивает полный импорт, категорию и один компонент. `pnpm check:consumer` после `pnpm build` повторяет путь внешнего приложения.
 

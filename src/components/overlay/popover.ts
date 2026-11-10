@@ -1,8 +1,8 @@
-import { defineElement } from '../../core/define';
+import { defineElement } from '../../utils/define';
 import { registerContract } from '../../contract/registry';
-import { emitClose } from '../../core/events';
-import { VuiElement } from '../../core/element';
-import { reflectBooleans, reflectStrings } from '../../core/reflect';
+import { emitClose } from '../../utils/events';
+import { VuiElement } from '../../utils/element';
+import { reflectBooleans, reflectStrings } from '../../utils/reflect';
 import { placeLayer, pushOverlay } from '../../interaction/overlay';
 
 export class VPopover extends VuiElement {

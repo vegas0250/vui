@@ -1,4 +1,4 @@
-import { inlineThreshold, lengthToPx, observeInlineSize, readLength } from '../core/responsive';
+import { inlineThreshold, lengthToPx, observeInlineSize, readLength } from '../utils/responsive';
 
 export { inlineThreshold, lengthToPx, observeInlineSize, readLength };
 

@@ -40,6 +40,9 @@ export interface ThemePreset {
   readonly tokens: Readonly<ThemeTokens>;
 }
 const definitions: Array<[string, string, ThemeMode]> = [
+  ['midnight', 'Midnight', 'dark'],
+  ['emerald', 'Emerald', 'dark'],
+  ['minimal-light', 'Minimal Light', 'light'],
   ['tokyo-night', 'Tokyo Night', 'dark'],
   ['catppuccin-mocha', 'Catppuccin Mocha', 'dark'],
   ['dracula', 'Dracula', 'dark'],

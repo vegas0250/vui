@@ -1,10 +1,10 @@
 import { registerContract } from '../../contract/registry';
-import { defineElement } from '../../core/define';
-import { VuiElement } from '../../core/element';
+import { defineElement } from '../../utils/define';
+import { VuiElement } from '../../utils/element';
 import { deepestActiveElement, isWithin } from '../../interaction/focus';
 import { pushOverlay } from '../../interaction/overlay';
-import { reflectStrings } from '../../core/reflect';
-import { readLength } from '../../core/responsive';
+import { reflectStrings } from '../../utils/reflect';
+import { readLength } from '../../utils/responsive';
 
 let tooltipSeq = 0;
 

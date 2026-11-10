@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import '../../src/components/foundation/icon';
-import { iconNames, registerIcon } from '../../src/icons/registry';
+import './icon';
+import { iconNames, registerIcon } from '../../icons/registry';
 
 describe('vui-icon', () => {
   it('renders a built-in icon and a registered svg', () => {

@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { VButton } from '../../src/components/actions/button';
 import { VCheckbox } from '../../src/components/forms/checkbox';
 import { VInput } from '../../src/components/forms/input';
-import { clearOverlays } from '../../src/core/overlay';
+import { clearOverlays } from '../../src/interaction/overlay';
 
 describe('reflected public properties', () => {
   beforeEach(() => {

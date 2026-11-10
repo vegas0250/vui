@@ -1,8 +1,8 @@
-import { defineElement } from '../../core/define';
+import { defineElement } from '../../utils/define';
 import { registerContract } from '../../contract/registry';
-import { emitChange } from '../../core/events';
-import { VuiElement } from '../../core/element';
-import { reflectStrings } from '../../core/reflect';
+import { emitChange } from '../../utils/events';
+import { VuiElement } from '../../utils/element';
+import { reflectStrings } from '../../utils/reflect';
 
 export class VPagination extends VuiElement {
   declare label: string;

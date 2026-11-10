@@ -1,9 +1,9 @@
-import { defineElement } from '../../core/define';
+import { defineElement } from '../../utils/define';
 import { registerContract } from '../../contract/registry';
-import { emitChange, emitInput } from '../../core/events';
-import { VuiElement } from '../../core/element';
-import { reflectBooleans, reflectStrings } from '../../core/reflect';
-import { fieldStyles } from '../../core/styles';
+import { emitChange, emitInput } from '../../utils/events';
+import { VuiElement } from '../../utils/element';
+import { reflectBooleans, reflectStrings } from '../../utils/reflect';
+import { fieldStyles } from '../../utils/styles';
 
 function readNumber(element: HTMLElement, name: string, fallback: number): number {
   if (!element.hasAttribute(name)) return fallback;

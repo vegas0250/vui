@@ -1,14 +1,14 @@
-import { defineElement } from '../../core/define';
+import { defineElement } from '../../utils/define';
 import { registerContract } from '../../contract/registry';
-import { VuiElement } from '../../core/element';
-import { emitChange } from '../../core/events';
+import { VuiElement } from '../../utils/element';
+import { emitChange } from '../../utils/events';
 import { ownedChildren } from '../../composition/dom';
-import { reportUnexpectedChildren } from '../../core/dev';
+import { reportUnexpectedChildren } from '../../utils/dev';
 import { isActivation, nextEnabled } from '../../interaction/keyboard';
 import { pushOverlay } from '../../interaction/overlay';
-import { reflectBooleans, reflectStrings } from '../../core/reflect';
+import { reflectBooleans, reflectStrings } from '../../utils/reflect';
 import { readLength } from '../../foundation/responsive';
-import { controlStyles, fieldStyles } from '../../core/styles';
+import { controlStyles, fieldStyles } from '../../utils/styles';
 
 const chevron = `
 <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

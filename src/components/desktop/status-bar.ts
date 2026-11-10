@@ -1,7 +1,7 @@
 import { registerContract } from '../../contract/registry';
-import { defineElement } from '../../core/define';
-import { VuiElement } from '../../core/element';
-import { reflectStrings } from '../../core/reflect';
+import { defineElement } from '../../utils/define';
+import { VuiElement } from '../../utils/element';
+import { reflectStrings } from '../../utils/reflect';
 
 export class VStatusBar extends VuiElement {
   declare label: string;

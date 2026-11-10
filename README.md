@@ -1,294 +1,96 @@
 # VUI
 
-Универсальная модульная UI-система готовых визуальных компонентов для Web, SPA и Desktop/Electron с поддержкой тем и различной плотности интерфейса.
+Lightweight UI components for React 19, Next.js, plain HTML and Electron.
+One package, shared CSS tokens, accessible keyboard interactions, and customizable
+themes. The existing `vui-*` Web Components power every integration.
 
-VUI `1.2.1` — личная UI-платформа с зафиксированной публичной границей: компоненты, темы, взаимодействие, patterns и application shell. Это не коммерческий фреймворк с поддержкой. Ломающие изменения публичного API пишутся в `CHANGELOG.md` и ловятся тестом exports. Домен, данные и маршруты остаются у приложения.
+## Install
 
-## Назначение
-
-Один набор готовых визуальных компонентов для обычного HTML, SPA и Desktop/Electron. Компоненты не требуют Vue, React, Angular или Svelte. Вид задаётся design tokens: тема и плотность переключаются атрибутами на странице.
-
-Целевые платформы:
-
-- обычный HTML;
-- SPA;
-- Electron и другие desktop runtime на базе Web.
-
-## Особенности
-
-- Web Components и Custom Elements;
-- три уровня подключения: вся библиотека, категория, отдельный компонент;
-- темы Light, Dark, High Contrast и System (`prefers-color-scheme`);
-- плотность Comfortable, Compact и Dense;
-- desktop-компоненты используют те же tokens, темы и плотность, что и остальные;
-- доступность закладывается в интерактивные компоненты: клавиатура, ARIA, фокус, нативный `dialog`.
-
-Слои, на которых собирается следующий компонент:
-
-```text
-Foundation
-    ↓
-Interaction
-    ↓
-Component Contract
-    ↓
-Component Family
-    ↓
-Component
-    ↓
-Composition
+```sh
+pnpm add vui react react-dom
 ```
 
-Foundation runtime читает tokens, тему, плотность и полосу контейнера. Component contract регистрируется через `registerContract()` и проверяется `checkCompliance()`. Композиция и семейства — `vui/composition` и `vui/families`. Как выбрать компонент, pattern или свою сборку — в [docs/guide.md](docs/guide.md) и [docs/patterns.md](docs/patterns.md). Подробности — в [ARCHITECTURE.md](ARCHITECTURE.md).
+React is optional for applications using Web Components directly.
+
+## React / Next.js App Router
+
+```tsx
+// app/page.tsx — a Server Component
+import { Button, Panel } from 'vui/react';
+
+export default function Page() {
+  return <Panel><Button variant="primary">Save</Button></Panel>;
+}
+```
+
+For event handlers, use a Client Component:
+
+```tsx
+'use client';
+import { useState } from 'react';
+import { Input } from 'vui/react';
+
+export function Name() {
+  const [value, setValue] = useState('Ada');
+  return <Input label="Name" value={value}
+    onInput={(event) => setValue(event.currentTarget.value)} />;
+}
+```
+
+Import `vui/themes/tokens`, `vui/themes/density`, and `vui/themes/system` in
+`app/layout.tsx` for initial token styles. Set `data-vui-theme="system"` on
+`<html>` to follow OS appearance. Components install the complete theme stylesheet
+when they mount. No provider, `transpilePackages`, or `ssr: false` is required.
+
+The server renders element tags, attributes and children. Shadow DOM controls
+and interaction initialize in the browser after hydration. Use `vui/react` in
+server-rendered applications; direct element imports require a browser.
+
+See the [Next.js example](examples/next), [React guide](docs/react.md), and
+[component APIs](docs/components.md).
+
+## HTML / Electron
 
 ```ts
-import { readFoundation, containerBand } from 'vui/runtime';
-import { registerContract, checkCompliance } from 'vui/contract';
-import { registerComposition, checkComposition } from 'vui/composition';
-import { listFamilies } from 'vui/families';
-```
-
-## Установка
-
-```bash
-pnpm add vui
-```
-
-Стили тем подключаются автоматически при импорте компонентов. Отдельные CSS-файлы можно подключить и напрямую, если нужно переопределить порядок каскада.
-
-## Использование
-
-```html
-<script type="module">
-  import 'vui';
-</script>
-
-<vui-button variant="primary">Сохранить</vui-button>
+import 'vui/button'; // Or vui/forms for a category, vui for all components.
 ```
 
 ```html
-<html data-vui-theme="dark" data-vui-density="compact">
+<vui-button variant="primary">Save</vui-button>
 ```
 
-Декларативный API — Custom Elements. Класс TypeScript — тот же компонент, если он нужен из кода. Строковые и булевы properties пишут те же attributes: `button.disabled = true` равносильно `disabled` в разметке. Полный контракт — в [docs/components.md](docs/components.md), правила — в [ARCHITECTURE.md](ARCHITECTURE.md).
+Existing class imports such as `import { VButton } from 'vui/button'` remain
+available. Components work in Electron's renderer with the same tokens and API.
+
+## Themes
 
 ```ts
-import { VButton } from 'vui';
-```
-
-Имена связаны однозначно: `V` + PascalCase в TypeScript и `vui-` + kebab-case в HTML.
-
-```text
-VButton    → <vui-button>
-VDialog    → <vui-dialog>
-VDataGrid  → <vui-data-grid>
-```
-
-Кнопка использует обычное событие `click`:
-
-```ts
-document.querySelector('vui-button')?.addEventListener('click', () => {
-  // ...
-});
-```
-
-## Подключение
-
-Полная библиотека регистрирует все реализованные компоненты:
-
-```ts
-import 'vui';
-```
-
-Категория:
-
-```ts
-import 'vui/forms';
-import 'vui/desktop';
-```
-
-Отдельный компонент:
-
-```ts
-import 'vui/button';
-import 'vui/dialog';
-import 'vui/menu';
-import 'vui/data-grid';
-import { CommandRegistry } from 'vui/interaction';
-```
-
-Тема и плотность из кода:
-
-```ts
+// Browser code
 import { setTheme, setDensity } from 'vui/theme';
-
-setTheme('dark');
-setDensity('dense');
+setTheme('tokyo-night');
+setDensity('compact');
 ```
 
-CSS тем, если они нужны отдельным файлом:
+Override `--vui-*` CSS custom properties for application customization. Existing
+light, dark, system, high-contrast and palette themes remain available. Theme
+Studio supports live preview, color editing and validated JSON import/export;
+it is documentation tooling and is not included in the runtime.
 
-```ts
-import 'vui/themes/light';
-import 'vui/themes/dark';
-import 'vui/themes/high-contrast';
-```
+## Development
 
-`vui/stack` регистрирует `vui-stack`, `vui-hstack` и `vui-vstack`. `vui/select` регистрирует `vui-select` и `vui-option`. `vui/tabs` регистрирует `vui-tabs`, `vui-tab` и `vui-tab-panel`. `vui/file-tree` регистрирует `vui-file-tree` и `vui-tree-item`. `vui/toast` регистрирует `vui-toast`, `vui-toaster` и экспортирует функцию `toast()`. `vui/menu` регистрирует `vui-menu` и `vui-menu-item`.
-
-`vui/interaction` экспортирует фокус, клавиатуру, selection, команды, shortcuts, overlay, context menu, drag & drop, clipboard и pointer. Команды и сочетания клавиш регистрирует приложение. Граница платформы — в [PLATFORM.md](PLATFORM.md).
-
-## Категории
-
-Сейчас реализованы рабочие компоненты, а не заглушки.
-
-| Категория | Компоненты |
-| --- | --- |
-| Foundation | `vui-icon`. Цвета, типографика, интервалы, радиус, границы и тени — это tokens, не отдельные элементы |
-| Layout | `vui-stack`, `vui-hstack`, `vui-vstack`, `vui-grid`, `vui-panel`, `vui-split-panel`, `vui-container`, `vui-scroll-area` |
-| Actions | `vui-button`, `vui-icon-button`, `vui-button-group`, `vui-toggle`, `vui-toggle-group` |
-| Forms | `vui-input`, `vui-textarea`, `vui-checkbox`, `vui-checkbox-group`, `vui-radio`, `vui-radio-group`, `vui-switch`, `vui-select`, `vui-slider`, `vui-field`, `vui-field-group` |
-| Feedback | `vui-alert`, `vui-toast`, `vui-tooltip`, `vui-progress`, `vui-spinner`, `vui-skeleton`, `vui-empty` |
-| Overlay | `vui-dialog`, `vui-drawer`, `vui-menu`, `vui-popover` |
-| Navigation | `vui-tabs`, `vui-toolbar`, `vui-breadcrumbs`, `vui-pagination`, `vui-nav`, `vui-stepper` |
-| Data | `vui-data-grid`, `vui-list`, `vui-properties` |
-| Content | `vui-badge`, `vui-avatar`, `vui-avatar-group`, `vui-separator`, `vui-text`, `vui-link`, `vui-chip`, `vui-kbd` |
-| Desktop | `vui-toolbar`, `vui-status-bar`, `vui-file-tree`, `vui-split-panel`, `vui-shell`, `vui-window` |
-
-Карточка — это `vui-panel`. Меню действий и контекстное меню — `vui-menu`. Список значений — `vui-select`. Полоса команд — `vui-toolbar`. Окно приложения — `vui-shell`. Какое имя словаря каким элементом закрыто — в [docs/vocabulary.md](docs/vocabulary.md).
-
-## Темы
-
-```html
-<html data-vui-theme="light">
-<html data-vui-theme="dark">
-<html data-vui-theme="high-contrast">
-<html data-vui-theme="system">
-```
-
-`system` следует `prefers-color-scheme`. Цвета тем ссылаются на одну primitive palette. Своя тема задаёт те же semantic properties (`--vui-color-primary`, `--vui-color-background`, `--vui-color-surface`, `--vui-color-text`, `--vui-color-border` и остальные) селектором не слабее встроенных тем. Компонент не проверяет, какая тема активна.
-
-## Плотность
-
-```html
-<html data-vui-density="comfortable">
-<html data-vui-density="compact">
-<html data-vui-density="dense">
-```
-
-Плотность — общая шкала: высота контролов, отступы, gaps, toolbar, панель, строка состояния и строки таблицы. Для desktop-интерфейса обычно удобны `compact` и `dense`. Тема, плотность и ширина контейнера независимы: Dark + Dense + узкий контейнер допустимы так же, как Light + Comfortable + широкий.
-
-Направление текста задаёт `dir` на документе. Горизонтальные стрелки, split и вложенное меню следуют ему. Отдельной системы локали в VUI нет.
-
-## Layout
-
-`vui-stack`, `vui-hstack`, `vui-vstack`, `vui-grid`, `vui-panel` и `vui-split-panel` используют одни имена: `gap`, `padding`, `align`, `justify`, `overflow`. Шаг — `2xs|xs|sm|md|lg|xl|2xl`.
-
-```html
-<vui-hstack gap="sm" align="center" justify="space-between">
-  <vui-button>Слева</vui-button>
-  <vui-button>Справа</vui-button>
-</vui-hstack>
-
-<vui-split-panel position="32" min="15" max="70" label="Боковая панель">
-  <div slot="start">Начало</div>
-  <div slot="end">Конец</div>
-</vui-split-panel>
-```
-
-Без `min` и `max` разделитель остаётся в диапазоне 10–90. Горизонтальный split складывается, когда его контейнер не шире `--vui-layout-narrow`. Вложенные панели меняют только свой `position`.
-
-## Responsive Design
-
-VUI рассчитан на обычный Web, SPA и Desktop/Electron, включая маленькие и большие окна, split view и вложенные панели. Компонент подстраивается под **ширину своего контейнера**, а не под отдельный mobile-компонент и не только под ширину окна.
-
-```html
-<vui-toolbar>
-  <vui-button slot="start">Файл</vui-button>
-  <vui-icon-button slot="end" name="search" label="Поиск"></vui-icon-button>
-</vui-toolbar>
-```
-
-В широком контейнере панель показывает действия в одну строку. В узком группы переносятся сами: странице не нужно измерять компонент и переключать его режим.
-
-То же относится к layout (`vui-stack`, `vui-grid`, `vui-split-panel`), полям, вкладкам, строке состояния и таблице. `vui-data-grid` оставляет горизонтальную прокрутку и минимальную ширину колонок; колонка с `priority: "secondary"` скрывается, когда контейнер не шире `--vui-layout-medium`. Диалог ограничивается viewport и прокручивает содержимое.
-
-Responsive не заменяет тему и плотность. Сочетания вроде Dark + Compact + узкий контейнер и Light + Comfortable + широкий контейнер одинаково допустимы. Плотность задаёт масштаб контролов, responsive — раскладку в доступном месте.
-
-## Иконки
-
-```html
-<vui-icon name="folder"></vui-icon>
-```
-
-Встроенный набор собран из [Lucide](https://lucide.dev). Публичная регистрация дополнительных иконок принимает SVG-строку и не требует типов Lucide:
-
-```ts
-import { registerIcon } from 'vui/icon';
-
-registerIcon('mark', '<svg viewBox="0 0 24 24">...</svg>');
-```
-
-## VUI Studio
-
-```bash
+```sh
 pnpm install
-pnpm dev
-```
-
-Откроется `index.html`: Foundation, компоненты, patterns, application shell и раздел Platform Validation. Страница собрана из компонентов VUI.
-
-## Скрипты
-
-```bash
-pnpm dev         # showcase
-pnpm test        # vitest: контракт, exports, lifecycle, клавиатура, overlay
-pnpm test:e2e    # showcase, responsive, accessibility, visual regression
 pnpm typecheck
-pnpm build       # библиотека в dist/
-pnpm check:budget
+pnpm lint
+pnpm test
+pnpm build
+pnpm build:docs
 pnpm check:shake
-pnpm check:consumer  # tarball во временный Vite-проект, нужен предварительный build
+pnpm check:consumer
+pnpm check:next
+pnpm test:e2e
 ```
 
-Проверки идут слоями: unit, связка компонентов, e2e, accessibility, visual regression. Визуальная матрица — Light/Comfortable/desktop, Dark/Comfortable/desktop, Light/Compact/desktop, Dark/Compact/mobile, без перемножения всех тем на все плотности. Как добавлять компонент — в [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## Структура
-
-```text
-vui/
-├── src/
-│   ├── components/
-│   ├── categories/
-│   ├── core/
-│   ├── foundation/   tokens, theme, density, responsive, layout, accessibility, motion
-│   ├── contract/
-│   ├── composition/
-│   ├── families/
-│   ├── interaction/  focus, keyboard, selection, commands, shortcuts, overlay, context menu, drag & drop, clipboard, pointer
-│   ├── icons/
-│   ├── theme/
-│   ├── tokens/
-│   ├── showcase/
-│   └── index.ts
-├── themes/
-├── tests/
-│   ├── unit/
-│   └── e2e/          showcase, responsive, a11y, visual
-├── visual.html       харнес снимков и accessibility
-├── ARCHITECTURE.md
-├── PLATFORM.md
-├── CONTRIBUTING.md
-├── CHANGELOG.md
-├── docs/components.md
-├── index.html
-└── .cursor/rules/project.mdc
-```
-
-## Статус
-
-Версия `1.2.1`. Публичная граница и порядок обновления — в [docs/guide.md](docs/guide.md). Архитектурный контракт — в `ARCHITECTURE.md`. Краткий список для изменений в репозитории — в `.cursor/rules/project.mdc`.
-
-## Theme Studio
-
-Eleven semantic theme presets, scoped live previews, local custom themes, and validated JSON/CSS exports are described in [the integration guide](docs/theme-studio.md). Run `pnpm dev` and open `/#theme-studio`, or `pnpm build:docs` for the independent static documentation artifact.
+Read [ARCHITECTURE.md](ARCHITECTURE.md) for the source map, lifecycle, public API,
+build boundaries and SSR limitations. Practical compositions are in
+[docs/patterns.md](docs/patterns.md).

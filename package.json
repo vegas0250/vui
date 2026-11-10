@@ -1,6 +1,6 @@
 {
   "name": "vui",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Универсальная модульная UI-система готовых визуальных компонентов для Web, SPA и Desktop/Electron с поддержкой тем и различной плотности интерфейса.",
   "type": "module",
   "license": "UNLICENSED",
@@ -14,7 +14,69 @@
     "src/tokens"
   ],
   "sideEffects": [
-    "./dist/**/*.js",
+    "./dist/index.js",
+    "./dist/categories/*.js",
+    "./dist/theme/index.js",
+    "./dist/foundation/index.js",
+    "./dist/contract/index.js",
+    "./dist/composition/index.js",
+    "./dist/families/index.js",
+    "./dist/interaction/index.js",
+    "./dist/**/catalog.js",
+    "./dist/interaction/profiles.js",
+    "./dist/components/actions/button-group.js",
+    "./dist/components/actions/button.js",
+    "./dist/components/actions/icon-button.js",
+    "./dist/components/actions/toggle.js",
+    "./dist/components/content/avatar-group.js",
+    "./dist/components/content/avatar.js",
+    "./dist/components/content/badge.js",
+    "./dist/components/content/chip.js",
+    "./dist/components/content/kbd.js",
+    "./dist/components/content/link.js",
+    "./dist/components/content/separator.js",
+    "./dist/components/content/text.js",
+    "./dist/components/data/data-grid.js",
+    "./dist/components/data/list.js",
+    "./dist/components/data/properties.js",
+    "./dist/components/desktop/file-tree.js",
+    "./dist/components/desktop/shell.js",
+    "./dist/components/desktop/status-bar.js",
+    "./dist/components/desktop/titlebar.js",
+    "./dist/components/desktop/window.js",
+    "./dist/components/feedback/alert.js",
+    "./dist/components/feedback/empty.js",
+    "./dist/components/feedback/progress.js",
+    "./dist/components/feedback/skeleton.js",
+    "./dist/components/feedback/spinner.js",
+    "./dist/components/feedback/toast.js",
+    "./dist/components/feedback/tooltip.js",
+    "./dist/components/forms/checkbox.js",
+    "./dist/components/forms/field.js",
+    "./dist/components/forms/input.js",
+    "./dist/components/forms/radio.js",
+    "./dist/components/forms/select.js",
+    "./dist/components/forms/slider.js",
+    "./dist/components/forms/switch.js",
+    "./dist/components/forms/textarea.js",
+    "./dist/components/foundation/icon.js",
+    "./dist/components/layout/container.js",
+    "./dist/components/layout/grid.js",
+    "./dist/components/layout/panel.js",
+    "./dist/components/layout/scroll-area.js",
+    "./dist/components/layout/split-panel.js",
+    "./dist/components/layout/stack.js",
+    "./dist/components/navigation/breadcrumbs.js",
+    "./dist/components/navigation/nav.js",
+    "./dist/components/navigation/pagination.js",
+    "./dist/components/navigation/path-bar.js",
+    "./dist/components/navigation/stepper.js",
+    "./dist/components/navigation/tabs.js",
+    "./dist/components/navigation/toolbar.js",
+    "./dist/components/overlay/dialog.js",
+    "./dist/components/overlay/drawer.js",
+    "./dist/components/overlay/menu.js",
+    "./dist/components/overlay/popover.js",
     "./themes/**/*.css",
     "./src/tokens/**/*.css"
   ],
@@ -315,7 +377,11 @@
     "./themes/light": "./themes/light.css",
     "./themes/dark": "./themes/dark.css",
     "./themes/high-contrast": "./themes/high-contrast.css",
-    "./themes/system": "./themes/system.css"
+    "./themes/system": "./themes/system.css",
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js"
+    }
   },
   "scripts": {
     "dev": "vite",
@@ -329,19 +395,32 @@
     "check:consumer": "node scripts/consumer.mjs",
     "build:docs": "vite build",
     "lint": "tsc --noEmit",
-    "sync:portal": "node scripts/sync-portal.mjs"
+    "sync:portal": "node scripts/sync-portal.mjs",
+    "check:next": "node scripts/next-consumer.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.1",
     "happy-dom": "^20.0.10",
     "typescript": "^5.9.3",
     "vite": "^7.1.12",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0"
   },
   "dependencies": {
     "lucide": "^0.545.0"
   },
   "engines": {
     "node": ">=20"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
   }
 }

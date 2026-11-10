@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import '../../src/components/overlay/dialog';
-import '../../src/components/overlay/menu';
-import type { VDialog } from '../../src/components/overlay/dialog';
-import type { VMenu } from '../../src/components/overlay/menu';
-import { CommandRegistry } from '../../src/interaction/commands';
-import { ShortcutRegistry } from '../../src/interaction/shortcuts';
-import { clearOverlays } from '../../src/interaction/overlay';
-import { pasteText } from '../../src/interaction/clipboard';
-import type { VDataGrid } from '../../src/components/data/data-grid';
-import '../../src/components/data/data-grid';
+import './dialog';
+import './menu';
+import type { VDialog } from './dialog';
+import type { VMenu } from './menu';
+import { CommandRegistry } from '../../interaction/commands';
+import { ShortcutRegistry } from '../../interaction/shortcuts';
+import { clearOverlays } from '../../interaction/overlay';
+import { pasteText } from '../../interaction/clipboard';
+import type { VDataGrid } from '../data/data-grid';
+import '../data/data-grid';
 
 describe('vui-menu', () => {
   beforeEach(() => {

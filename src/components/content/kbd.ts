@@ -1,6 +1,6 @@
-import { defineElement } from '../../core/define';
+import { defineElement } from '../../utils/define';
 import { registerContract } from '../../contract/registry';
-import { VuiElement } from '../../core/element';
+import { VuiElement } from '../../utils/element';
 
 export class VKbd extends VuiElement {
   protected template(): string {

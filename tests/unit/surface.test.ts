@@ -9,7 +9,7 @@ import { VShell } from '../../src/components/desktop/shell';
 import { VTextarea } from '../../src/components/forms/textarea';
 import { checkCompliance, contractFor } from '../../src/contract/index';
 import type { ComponentContract } from '../../src/contract/index';
-import { clearOverlays } from '../../src/core/overlay';
+import { clearOverlays } from '../../src/interaction/overlay';
 import '../../src/components/actions/button-group';
 import '../../src/components/content/avatar';
 import '../../src/components/content/badge';

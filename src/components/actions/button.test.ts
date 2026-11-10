@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import '../../src/components/actions/button';
+import './button';
 
 describe('vui-button', () => {
   beforeEach(() => {

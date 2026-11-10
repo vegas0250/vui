@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import '../../src/components/data/data-grid';
-import type { VDataGrid } from '../../src/components/data/data-grid';
+import './data-grid';
+import type { VDataGrid } from './data-grid';
 
 describe('vui-data-grid', () => {
   beforeEach(() => {

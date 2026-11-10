@@ -42,7 +42,7 @@ import '../components/overlay/popover';
 import type { VDataGrid } from '../components/data/data-grid';
 import type { VDialog } from '../components/overlay/dialog';
 import { componentStyleText } from '../contract/compliance';
-import { clearOverlays } from '../core/overlay';
+import { clearOverlays } from '../interaction/overlay';
 import '../families/catalog';
 import { familyMembers } from '../families/registry';
 import type { FamilyName } from '../families/types';

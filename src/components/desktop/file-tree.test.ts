@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import '../../src/components/desktop/file-tree';
-import type { VFileTree } from '../../src/components/desktop/file-tree';
+import './file-tree';
+import type { VFileTree } from './file-tree';
 
 describe('vui-file-tree', () => {
   beforeEach(() => {

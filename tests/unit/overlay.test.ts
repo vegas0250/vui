@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { clearOverlays, overlayDepth, pushOverlay } from '../../src/core/overlay';
+import { clearOverlays, overlayDepth, pushOverlay } from '../../src/interaction/overlay';
 
 describe('overlay stack', () => {
   beforeEach(() => {

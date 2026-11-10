@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import '../../src/index';
 import { checkCompliance, listContracts } from '../../src/contract/index';
-import { clearOverlays } from '../../src/core/overlay';
+import { clearOverlays } from '../../src/interaction/overlay';
 import { componentStates, listFamilies } from '../../src/families/index';
 import type { VButton } from '../../src/components/actions/button';
 import type { VToggleGroup } from '../../src/components/actions/toggle';

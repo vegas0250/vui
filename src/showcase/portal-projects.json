@@ -82,6 +82,30 @@
       "url": "https://encoder.vegas0250.ru/"
     },
     {
+      "slug": "timestamp",
+      "title": {
+        "ru": "Конвертер Unix-времени",
+        "en": "Unix Timestamp Converter"
+      },
+      "url": "https://timestamp.vegas0250.ru/"
+    },
+    {
+      "slug": "diff",
+      "title": {
+        "ru": "Сравнение текста и кода",
+        "en": "Text & Code Diff"
+      },
+      "url": "https://diff.vegas0250.ru/"
+    },
+    {
+      "slug": "regex",
+      "title": {
+        "ru": "Проверка регулярных выражений",
+        "en": "Regex Tester"
+      },
+      "url": "https://regex.vegas0250.ru/"
+    },
+    {
       "slug": "vui",
       "title": {
         "ru": "VUI",

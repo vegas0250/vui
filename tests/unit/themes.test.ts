@@ -31,8 +31,8 @@ beforeEach(() => {
   document.documentElement.removeAttribute('style');
 });
 describe('palette-independent theme engine', () => {
-  it('provides eleven immutable complete palettes with readable semantic pairs', () => {
-    expect(builtInThemes).toHaveLength(11);
+  it('provides fourteen immutable complete palettes with readable semantic pairs', () => {
+    expect(builtInThemes).toHaveLength(14);
     for (const preset of builtInThemes) {
       expect(Object.isFrozen(preset.tokens)).toBe(true);
       expect(Object.keys(preset.tokens).sort()).toEqual([...tokenNames].sort());
@@ -217,4 +217,15 @@ describe('palette-independent theme engine', () => {
       }),
     ).toMatchObject({ '--vui-radius': '12px', '--vui-border-width': '2px' });
   });
+});
+
+describe('contrast computation with repeated colors',()=>{
+ it('preserves opaque and alpha compositing results after cache eviction',()=>{
+   const expected=contrast('#ffffff80','#000000');
+   expect(contrast('#ffffff','#000000')).toBeCloseTo(21,12);
+   for(let i=0;i<2200;i++)contrast('#'+i.toString(16).padStart(6,'0'),'#ffffff');
+   expect(contrast('#ffffff80','#000000')).toBeCloseTo(expected,12);
+   expect(contrast('#00000000','#ffffff')).toBe(1);
+   expect(()=>contrast('invalid','#ffffff')).toThrow();
+ });
 });

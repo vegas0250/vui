@@ -11,3 +11,5 @@ playwright/.cache/
 dist-docs/
 
 .pnpm-store/
+.next/
+*.tgz

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import '../../src/components/actions/button';
 import '../../src/components/data/list';
-import { defineElement } from '../../src/core/define';
+import { defineElement } from '../../src/utils/define';
 import { setDensity, setTheme } from '../../src/theme/index';
 import type { VButton } from '../../src/components/actions/button';
 import type { VuiDensity, VuiTheme } from '../../src/theme/index';

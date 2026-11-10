@@ -1,9 +1,9 @@
-import { reportUnexpectedChildren } from '../../core/dev';
-import { defineElement } from '../../core/define';
+import { reportUnexpectedChildren } from '../../utils/dev';
+import { defineElement } from '../../utils/define';
 import { registerContract } from '../../contract/registry';
-import { emitChange } from '../../core/events';
-import { VuiElement } from '../../core/element';
-import { reflectBooleans, reflectStrings } from '../../core/reflect';
+import { emitChange } from '../../utils/events';
+import { VuiElement } from '../../utils/element';
+import { reflectBooleans, reflectStrings } from '../../utils/reflect';
 import { isRtl, moveInList } from '../../interaction/keyboard';
 
 export class VNavItem extends VuiElement {
