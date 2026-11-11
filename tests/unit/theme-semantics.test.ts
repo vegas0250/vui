@@ -14,6 +14,9 @@ describe('semantic theme roles', () => {
   it('checks text, soft tone text, solid text, control boundaries and focus separately', () => {
     for (const { id, tokens: t } of builtInThemes) {
       for (const tone of tones) {
+        const vars = themeVariables(themeDocument(id));
+        expect(contrast(t[`${tone}Text`], vars[`--vui-color-${tone}-surface-hover`]), `${id}/${tone}/soft hover`).toBeGreaterThanOrEqual(4.5);
+        if (id !== 'retro') expect(contrast(t[toneSolidTokens[tone]], vars[`--vui-color-${tone}-hover`]), `${id}/${tone}/solid hover`).toBeGreaterThanOrEqual(4.5);
         const solid = tone === 'danger' ? t.error : t[tone];
         if (id !== 'retro') expect(contrast(t[toneSolidTokens[tone]], solid), `${id}/${tone}/solid`).toBeGreaterThanOrEqual(4.5);
         for (const bg of [t[`${tone}Soft`], t.surface, t.background, t.card, t.popover, t.modal])

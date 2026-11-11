@@ -147,6 +147,7 @@ test('all interface templates use actual VUI and original comparison stays isola
     'settings',
     'login',
     'developer',
+    'tabs',
   ]) {
     await page.locator('#ts-template').selectOption(template);
     await expect(
@@ -268,4 +269,42 @@ test('developer preview has spaced controls and a textarea resizer at the contro
   await page.mouse.move(before.x + before.width - 5, before.y + before.height + 45, { steps: 5 });
   await page.mouse.up();
   expect((await area.boundingBox())!.height).toBeGreaterThan(before.height + 20);
+});
+
+test('shape families style real tabs, boxes and selectors independently', async ({ page }) => {
+  await page.locator('[data-preset="retro"]').click();
+  await page.locator('#ts-template').selectOption('tabs');
+  await expect(page.locator('[data-appearance=radiusBox]')).toHaveValue('8');
+  await expect(page.locator('[data-appearance=radiusField]')).toHaveValue('4');
+  await expect(page.locator('[data-appearance=radiusSelector]')).toHaveValue('4');
+  await page.locator('#ts-compare').check();
+  for (const [key, value] of [['radiusBox', '20'], ['radiusField', '12'], ['radiusSelector', '2'], ['borderWidth', '2']]) {
+    await page.locator(`[data-appearance=${key}]`).evaluate((el, value) => {
+      (el as HTMLInputElement).value = value;
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    }, value);
+  }
+  const root = page.locator('#ts-live-preview');
+  await expect(root.locator('vui-panel section').first()).toHaveCSS('border-radius', '20px');
+  await expect(root.locator('vui-panel section').first()).toHaveCSS('border-top-width', '2px');
+  await expect(root.locator('vui-button button').first()).toHaveCSS('border-radius', '12px');
+  await expect(root.locator('vui-badge [part=badge]').first()).toHaveCSS('border-radius', '2px');
+  await expect(page.locator('#ts-original-preview vui-panel section').first()).toHaveCSS('border-radius', '8px');
+  await expect(root.locator('vui-tab[selected]')).toHaveCSS('box-shadow', 'none');
+  expect(await root.locator('vui-tabs').evaluate(el => getComputedStyle(el.shadowRoot!.querySelector('.tabs')!).boxShadow)).toBe('none');
+  await root.locator('vui-tab[selected]').focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(root.locator('vui-tab[panel=details]')).toHaveAttribute('selected', '');
+  await expect(root.locator('vui-tab-panel[name=details]')).toBeVisible();
+  await expect(root.locator('vui-textarea textarea')).toHaveCSS('border-radius', '12px');
+  await page.keyboard.press('End');
+  await expect(root.locator('vui-tab[panel=settings]')).toHaveAttribute('selected', '');
+  await page.locator('#ts-template').selectOption('components');
+  await expect(root.locator('vui-pagination button').first()).toHaveCSS('border-radius', '12px');
+  await expect(root.locator('vui-input .control').first()).toHaveCSS('border-radius', '12px');
+  await expect(root.locator('vui-checkbox .box').first()).toHaveCSS('border-radius', '2px');
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.locator('[data-view=preview]').click();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
 });

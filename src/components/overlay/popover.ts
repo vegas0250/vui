@@ -47,8 +47,8 @@ export class VPopover extends VuiElement {
         padding: var(--vui-space-sm);
         background: var(--vui-color-popover, var(--vui-color-surface));
         color: var(--vui-color-text);
-        border: var(--vui-border-width) solid var(--vui-color-border);
-        border-radius: var(--vui-radius);
+        border: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
+        border-radius: var(--vui-radius-box, var(--vui-radius));
         box-shadow: var(--vui-shadow-md);
       }
       .panel[hidden] { display: none; }

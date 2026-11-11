@@ -57,8 +57,8 @@ export class VPagination extends VuiElement {
         min-height: var(--vui-size-control-sm);
         min-width: var(--vui-size-control-sm);
         padding-inline: var(--vui-space-xs);
-        border: var(--vui-border-width) solid var(--vui-color-border);
-        border-radius: var(--vui-radius-sm);
+        border: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
+        border-radius: var(--vui-radius-field, var(--vui-radius-sm));
         background: var(--vui-color-surface);
         color: var(--vui-color-text);
         font: inherit;
@@ -69,6 +69,8 @@ export class VPagination extends VuiElement {
         color: var(--vui-color-text);
         border-color: var(--vui-color-primary);
       }
+      button:not(:disabled):hover { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
+      button { transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing); }
       button:focus-visible { outline: var(--vui-focus-ring); outline-offset: var(--vui-focus-offset); }
       button:disabled { opacity: 0.55; cursor: not-allowed; }
     `;

@@ -32,8 +32,8 @@ export class VEmpty extends VuiElement {
         gap: var(--vui-space-sm);
         min-width: 0;
         padding: var(--vui-panel-padding);
-        border: var(--vui-border-width) dashed var(--vui-color-border);
-        border-radius: var(--vui-radius);
+        border: var(--vui-border-width) dashed var(--vui-color-block-border, var(--vui-color-border));
+        border-radius: var(--vui-radius-box, var(--vui-radius));
         color: var(--vui-color-text-muted);
       }
       [part="heading"] {

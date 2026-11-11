@@ -20,7 +20,7 @@ export class VSeparator extends VuiElement {
       :host { display: block; min-width: 0; max-width: 100%; }
       [part="rule"] {
         border: 0;
-        border-block-start: var(--vui-border-width) solid var(--vui-color-border);
+        border-block-start: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
         min-width: 0;
       }
       :host([orientation="vertical"]) {
@@ -31,7 +31,7 @@ export class VSeparator extends VuiElement {
       }
       :host([orientation="vertical"]) [part="rule"] {
         border-block-start: 0;
-        border-inline-start: var(--vui-border-width) solid var(--vui-color-border);
+        border-inline-start: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
         min-height: 1em;
         height: 100%;
       }

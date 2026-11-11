@@ -33,8 +33,8 @@ export class VPanel extends VuiElement {
       section {
         background: var(--vui-color-card, var(--vui-color-surface));
         color: var(--vui-color-text);
-        border: var(--vui-border-width) solid var(--vui-color-border);
-        border-radius: var(--vui-radius);
+        border: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
+        border-radius: var(--vui-radius-box, var(--vui-radius));
         box-shadow: var(--vui-shadow-sm);
         min-width: 0;
         max-width: 100%;
@@ -49,7 +49,7 @@ export class VPanel extends VuiElement {
         align-items: center;
         justify-content: space-between;
         gap: var(--vui-space-sm);
-        border-bottom: var(--vui-border-width) solid var(--vui-color-border);
+        border-bottom: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
       }
       .heading { min-width: 0; flex: 1 1 auto; }
       .tools {
@@ -67,7 +67,7 @@ export class VPanel extends VuiElement {
         font-weight: var(--vui-font-weight-strong);
         overflow-wrap: anywhere;
       }
-      footer { border-top: var(--vui-border-width) solid var(--vui-color-border); }
+      footer { border-top: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border)); }
     `;
   }
 

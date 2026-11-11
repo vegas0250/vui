@@ -19,9 +19,9 @@ export class VSkeleton extends VuiElement {
       :host { display: block; min-width: 0; max-width: 100%; }
       [part="shape"] {
         min-height: var(--vui-size-control);
-        border-radius: var(--vui-radius);
+        border-radius: var(--vui-radius-box, var(--vui-radius));
         background: var(--vui-color-surface);
-        border: var(--vui-border-width) solid var(--vui-color-border);
+        border: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
       }
       :host([variant="text"]) [part="shape"] {
         min-height: var(--vui-space-sm);

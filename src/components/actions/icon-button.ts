@@ -40,7 +40,7 @@ export class VIconButton extends VuiElement {
         background: transparent;
         color: var(--vui-color-text);
       }
-      button:hover { background: var(--vui-color-surface-hover); }
+      button:hover { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       :host([size="small"]) button {
         width: var(--vui-size-control-sm);
         min-width: var(--vui-size-control-sm);
@@ -63,7 +63,7 @@ export class VIconButton extends VuiElement {
       :host([variant="primary"]) button:hover { background: var(--vui-color-primary-hover); }
       :host([variant="secondary"]) button {
         background: var(--vui-color-surface);
-        border-color: var(--vui-color-border);
+        border-color: var(--vui-color-block-border, var(--vui-color-border));
       }
       :host([variant="danger"]) button {
         background: transparent;

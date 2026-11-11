@@ -32,15 +32,15 @@ export class VToggle extends VuiElement {
         max-width: 100%;
         min-height: var(--vui-size-control);
         padding-inline: var(--vui-space-md);
-        border: var(--vui-border-width) solid var(--vui-color-border);
-        border-radius: var(--vui-radius);
+        border: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
+        border-radius: var(--vui-radius-selector, var(--vui-radius));
         background: var(--vui-color-surface);
         color: var(--vui-color-text);
         font: inherit;
         cursor: pointer;
         overflow-wrap: anywhere;
       }
-      button:hover { background: var(--vui-color-surface-hover); }
+      button:hover { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       :host([pressed]) button {
         background: var(--vui-color-primary);
         color: var(--vui-color-on-primary);

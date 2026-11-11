@@ -39,7 +39,7 @@ export class VToolbar extends VuiElement {
         padding-inline: var(--vui-space-sm);
         background: var(--vui-color-surface);
         color: var(--vui-color-text);
-        border-bottom: var(--vui-border-width) solid var(--vui-color-border);
+        border-bottom: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
       }
       :host(:focus-visible) { outline: var(--vui-focus-ring); }
       :host([wrap]) .bar { flex-wrap: wrap; height: auto; }

@@ -76,7 +76,7 @@ export class VCheckbox extends VuiElement {
         width: 1.05em;
         height: 1.05em;
         border: var(--vui-border-width) solid var(--vui-color-border-strong);
-        border-radius: var(--vui-radius-sm);
+        border-radius: var(--vui-radius-selector, var(--vui-radius-sm));
         background: var(--vui-color-field);
         color: var(--vui-color-on-primary);
         flex: 0 0 auto;
@@ -87,6 +87,8 @@ export class VCheckbox extends VuiElement {
         border-color: var(--vui-color-primary-border, var(--vui-color-primary));
       }
       input:checked + .box svg { opacity: 1; }
+      .box { transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing); }
+      :host(:not([disabled])) .field:hover input:not(:checked) + .box { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       input:focus-visible + .box {
         outline: var(--vui-focus-ring);
         outline-offset: var(--vui-focus-offset);

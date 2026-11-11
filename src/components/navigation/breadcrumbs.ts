@@ -30,7 +30,7 @@ export class VBreadcrumbs extends VuiElement {
         min-width: 0;
       }
       ::slotted(:not(:first-child)) {
-        border-inline-start: var(--vui-border-width) solid var(--vui-color-border);
+        border-inline-start: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
         padding-inline-start: var(--vui-space-xs);
       }
       :host(:focus-visible) { outline: var(--vui-focus-ring); }

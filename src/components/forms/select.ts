@@ -140,8 +140,8 @@ export class VSelect extends VuiElement {
         overflow: auto;
         background: var(--vui-color-popover, var(--vui-color-surface-raised));
         color: var(--vui-color-text);
-        border: var(--vui-border-width) solid var(--vui-color-border);
-        border-radius: var(--vui-radius);
+        border: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
+        border-radius: var(--vui-radius-box, var(--vui-radius-lg));
         box-shadow: var(--vui-shadow-md);
       }
       .listbox [role="option"] {
@@ -149,10 +149,10 @@ export class VSelect extends VuiElement {
         align-items: center;
         min-height: var(--vui-size-control);
         padding-inline: var(--vui-space-sm);
-        border-radius: var(--vui-radius-sm);
+        border-radius: var(--vui-radius-field, var(--vui-radius-sm));
         cursor: pointer;
       }
-      .listbox [role="option"]:hover:not([aria-disabled="true"]) { background: var(--vui-color-surface-hover); }
+      .listbox [role="option"]:hover:not([aria-disabled="true"]) { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       .listbox [role="option"][aria-selected="true"],
       .listbox [role="option"].active {
         background: var(--vui-color-selected);

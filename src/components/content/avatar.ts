@@ -32,7 +32,7 @@ export class VAvatar extends VuiElement {
         border-radius: 50%;
         background: var(--vui-color-surface);
         color: var(--vui-color-text);
-        border: var(--vui-border-width) solid var(--vui-color-border);
+        border: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
         overflow: hidden;
         font-size: var(--vui-font-size-sm);
         font-weight: var(--vui-font-weight-strong);

@@ -123,6 +123,7 @@ export class VDataGrid extends VuiElement {
           <tbody></tbody>
         </table>
       </div>
+      tbody tr[data-id] { transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing); }
     `;
   }
 
@@ -144,8 +145,8 @@ export class VDataGrid extends VuiElement {
         overflow: auto;
         overflow-anchor: none;
         max-width: 100%;
-        border: var(--vui-border-width) solid var(--vui-color-border);
-        border-radius: var(--vui-radius);
+        border: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
+        border-radius: var(--vui-radius-box, var(--vui-radius));
         background: var(--vui-color-surface);
       }
       :host([fill]) .frame {
@@ -162,7 +163,7 @@ export class VDataGrid extends VuiElement {
         height: var(--vui-row-height);
         min-width: var(--vui-column-min);
         padding-inline: var(--vui-space-sm);
-        border-bottom: var(--vui-border-width) solid var(--vui-color-border);
+        border-bottom: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
         text-align: start;
         white-space: nowrap;
         font-variant-numeric: tabular-nums;
@@ -178,7 +179,7 @@ export class VDataGrid extends VuiElement {
       }
       tbody tr:last-child td { border-bottom: 0; }
       tbody tr[data-id] { cursor: pointer; }
-      tbody tr[data-id]:hover:not([aria-selected="true"]) { background: var(--vui-color-surface-hover); }
+      tbody tr[data-id]:hover:not([aria-selected="true"]) { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       tbody tr[aria-selected="true"] {
         background: var(--vui-color-selected);
         box-shadow: inset 2px 0 0 var(--vui-color-focus);

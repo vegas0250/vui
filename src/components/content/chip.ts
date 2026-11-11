@@ -43,8 +43,8 @@ export class VChip extends VuiElement {
         max-width: 100%;
         min-height: var(--vui-size-control-sm);
         padding: var(--vui-space-2xs) var(--vui-space-xs);
-        border: var(--vui-border-width) solid var(--vui-color-border);
-        border-radius: var(--vui-radius-full);
+        border: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
+        border-radius: var(--vui-radius-selector, var(--vui-radius-full));
         background: var(--vui-color-surface);
         color: var(--vui-color-text);
         font-size: var(--vui-font-size-sm);
@@ -63,11 +63,12 @@ export class VChip extends VuiElement {
         height: 1.25em;
         padding: 0;
         border: 0;
-        border-radius: var(--vui-radius-full);
+        border-radius: var(--vui-radius-selector, var(--vui-radius-full));
         background: transparent;
         color: inherit;
         cursor: pointer;
       }
+      button:hover { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       button:focus-visible { outline: var(--vui-focus-ring); outline-offset: var(--vui-focus-offset); }
       button[hidden] { display: none; }
       button svg { width: 0.85em; height: 0.85em; }

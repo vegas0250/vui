@@ -125,9 +125,14 @@ export const controlStyles = `
   min-height: var(--vui-size-control);
   padding-inline: var(--vui-space-sm);
   border: var(--vui-border-width) solid var(--vui-color-control-border, var(--vui-color-border));
-  border-radius: var(--vui-radius);
+  border-radius: var(--vui-radius-field, var(--vui-radius));
   background: var(--vui-color-field);
   color: var(--vui-color-text);
+}
+.control { transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing); }
+:host(:not([disabled]):not([readonly])) .control:hover {
+  border-color: var(--vui-color-border-strong);
+  background: color-mix(in srgb, var(--vui-color-field) 96%, var(--vui-color-text));
 }
 .control:has(:focus-visible) {
   border-color: var(--vui-color-focus);

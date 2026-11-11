@@ -36,13 +36,14 @@ export class VTab extends VuiElement {
         align-items: center;
         gap: var(--vui-space-2xs);
         flex: 0 0 auto;
-        width: 12rem;
-        height: 2rem;
-        min-height: 2rem;
+        width: auto;
+        min-height: var(--vui-size-control);
         margin: 0;
-        padding-inline: var(--vui-space-sm) var(--vui-space-2xs);
-        border: 0;
-        border-radius: var(--vui-radius) var(--vui-radius) 0 0;
+        padding: var(--vui-space-xs) var(--vui-space-md);
+        border: var(--vui-border-width) solid transparent;
+        border-radius: var(--vui-radius-field, var(--vui-radius));
+        box-shadow: none;
+        transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing), color var(--vui-duration) var(--vui-easing);
         background: transparent;
         color: var(--vui-color-text-muted);
         min-width: 0;
@@ -64,18 +65,19 @@ export class VTab extends VuiElement {
         white-space: nowrap;
         min-width: 0;
       }
-      :host(:hover) { color: var(--vui-color-text); background: var(--vui-color-surface-hover); }
+      :host(:not([disabled]):hover) { color: var(--vui-color-text); background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       :host(:focus-visible) {
         outline: var(--vui-focus-ring);
         outline-offset: calc(var(--vui-focus-offset) * -1);
       }
       :host([selected]) {
         color: var(--vui-color-text);
-        background: var(--vui-color-selected);
-        box-shadow: inset 0 2px 0 var(--vui-color-focus);
+        background: var(--vui-color-card, var(--vui-color-surface));
+        border-color: var(--vui-color-block-border, var(--vui-color-border));
+        box-shadow: none;
         z-index: 1;
       }
-      :host([selected]:hover) { background: var(--vui-color-selected); }
+      :host([selected]:not([disabled]):hover) { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       :host([disabled]) { opacity: 0.72; cursor: not-allowed; }
       button {
         display: none;
@@ -86,7 +88,7 @@ export class VTab extends VuiElement {
         margin-inline-start: var(--vui-space-2xs);
         padding: 0;
         border: 0;
-        border-radius: var(--vui-radius-sm);
+        border-radius: var(--vui-radius-field, var(--vui-radius-sm));
         background: transparent;
         color: inherit;
         cursor: pointer;
@@ -95,7 +97,7 @@ export class VTab extends VuiElement {
       :host([closable][selected]) button,
       :host([closable]:hover) button,
       :host([closable]:focus-within) button { opacity: 1; }
-      button:hover { background: var(--vui-color-surface-hover); }
+      button:not(:disabled):hover { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       button:focus-visible { outline: var(--vui-focus-ring); outline-offset: calc(var(--vui-focus-offset) * -1); }
       vui-icon { width: 0.85em; height: 0.85em; }
     `;
@@ -145,7 +147,7 @@ export class VTabPanel extends VuiElement {
 
   protected componentStyles(): string {
     return `
-      :host { display: block; min-width: 0; max-width: 100%; padding-top: var(--vui-space-md); }
+      :host { display: block; min-width: 0; max-width: 100%; }
       :host([hidden]) { display: none; }
       :host(:focus-visible) { outline: var(--vui-focus-ring); outline-offset: var(--vui-focus-offset); }
     `;
@@ -196,7 +198,14 @@ export class VTabs extends VuiElement {
         flex-direction: column;
         width: 100%;
         min-width: 0;
+        border: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
+        border-radius: var(--vui-radius-box, var(--vui-radius));
+        background: var(--vui-color-card, var(--vui-color-surface));
+        overflow: hidden;
+        box-shadow: none;
       }
+      .tabs-only [role="tablist"] { border-bottom: 0; }
+      .panels { padding: var(--vui-space-md); min-width: 0; }
       [role="tablist"] {
         display: flex;
         flex-wrap: nowrap;
@@ -205,8 +214,9 @@ export class VTabs extends VuiElement {
         width: 100%;
         min-width: 0;
         min-height: 2.4rem;
-        padding-top: var(--vui-space-xs);
-        background: transparent;
+        padding: var(--vui-space-xs);
+        border-bottom: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
+        background: var(--vui-color-surface);
       }
       .strip {
         display: flex;
@@ -282,6 +292,8 @@ export class VTabs extends VuiElement {
     try {
       const tabs = this.tabs();
       const panels = this.panels();
+      this.qs<HTMLElement>('.panels').hidden = panels.length === 0;
+      this.qs('.tabs').classList.toggle('tabs-only', panels.length === 0);
       for (const tab of tabs) {
         if (tab.getAttribute('slot') !== 'tab') tab.setAttribute('slot', 'tab');
       }

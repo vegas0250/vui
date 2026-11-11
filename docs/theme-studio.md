@@ -5,7 +5,7 @@ The theme engine extends the existing `vui/theme` API and the existing component
 ## Architecture and files
 
 - `src/theme/palettes.ts`: upstream base colors, independent of components.
-- `src/theme/presets.ts`: eleven immutable presets and 28 semantic color tokens, with derived hover, border and contrast values.
+- `src/theme/presets.ts`: fifteen immutable presets and the allowlisted semantic color tokens, with derived hover, border and contrast values.
 - `src/theme/colors.ts`: strict portable HEX/RGB/HSL normalization and contrast utilities.
 - `src/theme/engine.ts`: application, registration, validation, persistence, history, JSON and CSS exports.
 - `src/theme/install.ts`: installs all preset selectors once; component styles are shared across themes.
@@ -39,7 +39,7 @@ applyTheme("nord");
 6. Set a unique name and **Save new**. Select a saved theme, rename it or delete it. To create a variation, use a new name and save again. Up to 50 local themes are supported. If storage is blocked, editing and exports still work and the page reports the issue.
 7. **Copy CSS**, **Download CSS**, **Download JSON** and **Import JSON** use schema version 1. Imports are limited to 64 KiB, allowlisted tokens, finite bounded appearance values and normalized color literals. JSON is data, never executable code.
 
-Radius, border width, shadow strength and the existing density scale are optional appearance overrides. Secondary is the existing bordered button style; VUI does not acquire an invented outline API solely for the preview. `vui-panel` is the actual card primitive; `vui-data-grid` is the actual table primitive. Authentication and dashboard previews are local demonstrations, not backend services.
+Global radius, independent Boxes/Fields/Selectors radii, border width, shadow strength and the existing density scale are optional appearance overrides. All radius values are pixels in the range 0–32; border width is 0–4 px. The existing secondary variant remains available, alongside semantic tones and solid/soft/outline/ghost variants. `vui-panel` is the actual card primitive; `vui-data-grid` is the actual table primitive. Authentication and dashboard previews are local demonstrations, not backend services.
 
 ## Import and export
 
@@ -90,3 +90,27 @@ The `interactiveText` token separates readable link/tab text from the specified 
 Modern Light is an original neutral light palette with blue primary actions and a purple accent. It is derived by the same semantic engine and contrast checks as the other presets. Catppuccin Mocha and Catppuccin Latte are the OS defaults.
 
 See [semantic mappings and tone API](theme-semantics.md) for the six reference adaptations.
+
+
+### Shape, strokes and hover
+
+`appearance.radiusBox`, `radiusField` and `radiusSelector` map to
+`--vui-radius-box`, `--vui-radius-field` and `--vui-radius-selector`. Boxes cover
+cards/panels, tables, dialogs, menus and feedback containers. Fields cover
+buttons, inputs, selects and tabs. Selectors cover checkboxes, switches, toggles,
+badges and chips. Radios, avatars and spinners retain their circular geometry.
+The old `appearance.radius` remains a global fallback; explicit family overrides
+win. Missing JSON properties inherit the preset defaults. Retro uses 8/4/4 px,
+a 1 px border and zero shadow strength, matching the supplied generator settings.
+
+`blockBorder` is the editable decorative stroke used by cards and structural
+containers. It derives from card/background text at a low tint. `controlBorder`
+keeps field boundaries readable; tone borders and `focusRing` remain separate.
+All ordinary strokes use `appearance.borderWidth`; focus outlines stay visible
+even at border width zero. Legacy CSS entry points fall back to the old tokens.
+
+Interactive rows, navigation, fields and buttons share soft color transitions.
+Semantic soft/outline/ghost actions use a tint on hover instead of inset shadows.
+Generated hover colors retain readable text for contrast-adjusted presets.
+The **Tabs** preview includes live panels, keyboard navigation and a disabled tab.
+Tabs use content widths, family radii and decorative borders with no box shadow.

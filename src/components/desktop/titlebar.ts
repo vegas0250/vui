@@ -42,7 +42,7 @@ export class VTitlebar extends VuiElement {
         max-width: 100%;
         color: var(--vui-color-text);
         background: var(--vui-color-surface);
-        border-bottom: var(--vui-border-width) solid var(--vui-color-border);
+        border-bottom: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
         -webkit-app-region: drag;
         app-region: drag;
         user-select: none;
@@ -117,7 +117,7 @@ export class VTitlebar extends VuiElement {
         color: inherit;
         cursor: pointer;
       }
-      button:hover { background: var(--vui-color-surface-hover); }
+      button:hover { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       button:focus-visible { outline: var(--vui-focus-ring); outline-offset: calc(var(--vui-focus-offset) * -1); }
       [part="close"]:hover {
         background: var(--vui-color-danger);

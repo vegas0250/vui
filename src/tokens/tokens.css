@@ -143,6 +143,9 @@
   --vui-z-tooltip: 1500;
 
   /* Shape and stroke. Themes assign --vui-border-width. */
+  /* Optional family overrides: --vui-radius-box/field/selector and
+     --vui-color-block-border/hover are assigned by the theme engine.
+     Components fall back locally so nested legacy themes keep working. */
   --vui-radius-full: 999px;
   --vui-stroke-width: 1.5px;
   --vui-border-width-strong: 2px;

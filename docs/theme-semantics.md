@@ -91,6 +91,6 @@ hover and active states are derived through the shared VUI rules.
 
 Some source solid/content pairs (including accent) are below WCAG AA. Theme
 Studio reports them instead of silently changing the requested palette. Tests
-verify the exact source colors separately from derived contrast roles. Generator
-geometry and effects are not imported. Existing presets and OS defaults stay
+verify the exact source colors separately from derived contrast roles. Generator shape defaults are now applied: Boxes 8 px, Fields 4 px, Selectors
+4 px, border 1 px and zero shadow strength. Noise effects are not imported. Existing presets and OS defaults stay
 unchanged. Select Retro in Theme Studio to create an editable draft.

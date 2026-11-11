@@ -32,13 +32,13 @@ export class VNavItem extends VuiElement {
         gap: var(--vui-nav-item-gap, var(--vui-space-sm));
         min-height: var(--vui-size-control);
         padding-inline: var(--vui-space-sm);
-        border-radius: var(--vui-radius);
+        border-radius: var(--vui-radius-field, var(--vui-radius));
         color: var(--vui-color-text);
         text-decoration: none;
         overflow-wrap: anywhere;
         cursor: pointer;
       }
-      a:hover { background: var(--vui-color-surface-hover); }
+      a:hover { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       :host([selected]) a {
         background: var(--vui-color-selected);
         color: var(--vui-color-text);
@@ -49,6 +49,7 @@ export class VNavItem extends VuiElement {
       a:focus { outline: none; }
       a:focus-visible { outline: var(--vui-focus-ring); outline-offset: calc(var(--vui-focus-offset) * -1); }
       :host([disabled]) a { opacity: 0.72; cursor: not-allowed; }
+      a { transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing); }
     `;
   }
 

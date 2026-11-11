@@ -70,8 +70,8 @@ export class VDialog extends VuiElement {
         min-width: 0;
         background: var(--vui-color-modal, var(--vui-color-surface-raised));
         color: var(--vui-color-text);
-        border: var(--vui-border-width) solid var(--vui-color-border);
-        border-radius: var(--vui-radius-lg);
+        border: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
+        border-radius: var(--vui-radius-box, var(--vui-radius-lg));
         box-shadow: var(--vui-shadow-lg);
       }
       :host([size="small"]) dialog { width: var(--vui-dialog-inline-sm); }
@@ -82,7 +82,7 @@ export class VDialog extends VuiElement {
         align-items: center;
         justify-content: space-between;
         gap: var(--vui-space-sm);
-        border-bottom: var(--vui-border-width) solid var(--vui-color-border);
+        border-bottom: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
       }
       h2 {
         margin: 0;
@@ -102,7 +102,7 @@ export class VDialog extends VuiElement {
         justify-content: flex-end;
         flex-wrap: wrap;
         gap: var(--vui-space-sm);
-        border-top: var(--vui-border-width) solid var(--vui-color-border);
+        border-top: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
       }
       /* 30rem matches --vui-overlay-full. Media queries cannot read custom properties. */
       @media (max-width: 30rem) {
@@ -128,13 +128,13 @@ export class VDialog extends VuiElement {
         justify-content: center;
         width: var(--vui-size-control);
         height: var(--vui-size-control);
-        border-radius: var(--vui-radius);
+        border-radius: var(--vui-radius-field, var(--vui-radius));
         border: var(--vui-border-width) solid transparent;
         background: transparent;
         color: inherit;
         cursor: pointer;
       }
-      .close:hover { background: var(--vui-color-surface-hover); }
+      .close:hover { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       .close:focus-visible {
         outline: var(--vui-focus-ring);
         outline-offset: var(--vui-focus-offset);

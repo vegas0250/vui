@@ -20,6 +20,7 @@ import {
   ThemeHistory,
   themeById,
   themeDocument,
+  themeAppearance,
   themeVariables,
   tokenNames,
   updateToken,
@@ -203,6 +204,22 @@ describe('palette-independent theme engine', () => {
     expect(history.canRedo).toBe(false);
     history.commit(base);
     expect(history.current.tokens).toEqual({});
+  });
+
+  it('resolves independent shape families, source defaults and legacy global radius', () => {
+    const retro = themeDocument('retro');
+    expect(themeAppearance(retro)).toMatchObject({ radiusBox: 8, radiusField: 4, radiusSelector: 4, borderWidth: 1, shadowIntensity: 0 });
+    const legacy = { ...retro, appearance: { radius: 18 } };
+    expect(themeVariables(legacy)).toMatchObject({ '--vui-radius': '18px', '--vui-radius-box': '18px', '--vui-radius-field': '18px', '--vui-radius-selector': '18px' });
+    const shaped = { ...retro, appearance: { radius: 18, radiusBox: 24, radiusField: 6, radiusSelector: 0, borderWidth: 2 } };
+    const restored = importThemeJSON(exportThemeJSON(shaped));
+    expect(restored).toEqual(shaped);
+    expect(themeVariables(restored)).toMatchObject({ '--vui-radius-box': '24px', '--vui-radius-field': '6px', '--vui-radius-selector': '0px', '--vui-border-width': '2px' });
+    for (const key of ['radiusBox', 'radiusField', 'radiusSelector']) for (const value of [-1, 33, Infinity, '4', {}, null])
+      expect(() => validateTheme({ ...retro, appearance: { [key]: value } })).toThrow();
+    expect(themeAppearance(retro).radiusField).toBe(4);
+    expect(themeVariables(updateToken(retro, 'blockBorder', '#123456'))['--vui-color-block-border']).toBe('#123456');
+    expect(themeVariables(updateToken(retro, 'border', '#234567'))['--vui-color-block-border']).toBe('#234567');
   });
   it('exports appearance tokens within bounded ranges', () => {
     expect(

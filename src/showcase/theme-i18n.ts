@@ -3,6 +3,13 @@ export const docsLocale =
 const ru: Record<string, string> = {
   'VUI adaptation': 'адаптация VUI',
   Neutral: 'Нейтральный',
+  Tabs: 'Вкладки',
+  'Tabs preview description': 'Переключайте вкладки мышью или стрелками клавиатуры. Цвета, границы и радиусы обновляются вместе с темой.',
+  'Live tabs use your draft colors, borders and radii.': 'Вкладки используют цвета, границы и радиусы редактируемой темы.',
+  'Boxes radius': 'Радиус контейнеров (Boxes)',
+  'Fields radius': 'Радиус полей и кнопок (Fields)',
+  'Selectors radius': 'Радиус переключателей (Selectors)',
+  blockBorder: 'Граница карточек и блоков',
   'Semantic tones': 'Семантические тона',
   field: 'Поле ввода',
   surfaceHover: 'Поверхность при наведении',

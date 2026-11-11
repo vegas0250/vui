@@ -48,7 +48,7 @@ export class VAlert extends VuiElement {
         gap: var(--vui-space-sm);
         padding: var(--vui-space-sm) var(--vui-space-md);
         border: var(--vui-border-width) solid var(--vui-color-info);
-        border-radius: var(--vui-radius);
+        border-radius: var(--vui-radius-box, var(--vui-radius));
         background: var(--vui-color-info-surface); color: var(--vui-color-info-text, var(--vui-color-text));
       }
       .content { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
@@ -65,7 +65,7 @@ export class VAlert extends VuiElement {
         background: var(--vui-color-danger-surface); color: var(--vui-color-danger-text, var(--vui-color-text));
       }
       :host([variant="neutral"]) .alert {
-        border-color: var(--vui-color-border);
+        border-color: var(--vui-color-block-border, var(--vui-color-border));
         background: var(--vui-color-surface);
       }
       :host([banner]) .alert {
@@ -80,12 +80,12 @@ export class VAlert extends VuiElement {
         width: var(--vui-size-control-sm);
         height: var(--vui-size-control-sm);
         border: 0;
-        border-radius: var(--vui-radius-sm);
+        border-radius: var(--vui-radius-field, var(--vui-radius-sm));
         background: transparent;
         color: inherit;
         cursor: pointer;
       }
-      .close:hover { background: var(--vui-color-surface-hover); }
+      .close:hover { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       .close:focus-visible {
         outline: var(--vui-focus-ring);
         outline-offset: var(--vui-focus-offset);

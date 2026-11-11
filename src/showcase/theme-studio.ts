@@ -13,6 +13,7 @@ import {
   ThemeHistory,
   themeById,
   themeDocument,
+  themeAppearance,
   tokenNames,
   tones,
   toneSolidTokens,
@@ -112,6 +113,9 @@ export function mountThemeStudio(host: HTMLElement): void {
  <div class="ts-tokens">${groups.map(([name, keys]) => `<fieldset class="ts-token-group"><legend>${t(name)}</legend>${keys.map((key) => `<div class="ts-token" data-token="${key}"><div class="ts-token-title"><label for="ts-value-${key}">${t(key)}</label><code>${key}</code><span class="ts-modified" hidden>${t('Modified')}</span></div><div class="ts-token-controls"><input type="color" data-color="${key}" aria-label="${t(key)}"/><input id="ts-value-${key}" type="text" data-value="${key}" spellcheck="false" aria-describedby="ts-error-${key}"/><button type="button" data-copy="${key}" aria-label="${t('Copy color')}: ${t(key)}">⧉</button><button type="button" data-reset="${key}" aria-label="${t('Reset color')}: ${t(key)}">↺</button></div><span class="ts-color-error" id="ts-error-${key}" role="status"></span></div>`).join('')}</fieldset>`).join('')}<p id="ts-no-tokens" hidden>${t('No matching tokens.')}</p></div>
  <fieldset class="ts-appearance"><legend>${t('Visual styling')}</legend>${[
    ['radius', 'Radius', 32, 8],
+   ['radiusBox', 'Boxes radius', 32, 8],
+   ['radiusField', 'Fields radius', 32, 8],
+   ['radiusSelector', 'Selectors radius', 32, 4],
    ['borderWidth', 'Border width', 4, 1],
    ['shadowIntensity', 'Shadow intensity', 100, 100],
  ]
@@ -244,10 +248,13 @@ export function mountThemeStudio(host: HTMLElement): void {
     query<HTMLInputElement>('#ts-name').value = working.name;
     for (const [key, fallback] of [
       ['radius', 8],
+      ['radiusBox', 8],
+      ['radiusField', 8],
+      ['radiusSelector', 4],
       ['borderWidth', 1],
       ['shadowIntensity', 100],
     ] as const) {
-      const v = working.appearance?.[key] ?? fallback;
+      const v = themeAppearance(working)[key] ?? fallback;
       query<HTMLInputElement>(`[data-appearance=${key}]`).value = String(v);
       query(`[data-appearance-output=${key}]`).textContent = String(v);
     }
@@ -294,13 +301,20 @@ export function mountThemeStudio(host: HTMLElement): void {
     if (input.dataset.appearance) {
       const key = input.dataset.appearance as
         | 'radius'
+        | 'radiusBox'
+        | 'radiusField'
+        | 'radiusSelector'
         | 'borderWidth'
         | 'shadowIntensity';
       working = {
         ...working,
         appearance: { ...working.appearance, [key]: Number(input.value) },
       };
-      query(`[data-appearance-output=${key}]`).textContent = input.value;
+      for (const role of ['radius', 'radiusBox', 'radiusField', 'radiusSelector', 'borderWidth', 'shadowIntensity'] as const) {
+        const value = String(themeAppearance(working)[role]);
+        query<HTMLInputElement>(`[data-appearance=${role}]`).value = value;
+        query(`[data-appearance-output=${role}]`).textContent = value;
+      }
       schedule();
     }
     if (input.id === 'ts-search') {

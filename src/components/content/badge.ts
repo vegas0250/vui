@@ -26,8 +26,8 @@ export class VBadge extends VuiElement {
         min-width: 0;
         max-width: 100%;
         padding: var(--vui-space-2xs) var(--vui-space-xs);
-        border: var(--vui-border-width) solid var(--vui-color-border);
-        border-radius: var(--vui-radius-sm);
+        border: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
+        border-radius: var(--vui-radius-selector, var(--vui-radius-sm));
         background: var(--vui-color-surface);
         color: var(--vui-color-text);
         font-size: var(--vui-font-size-sm);

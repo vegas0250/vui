@@ -38,7 +38,7 @@ export class VStatusBar extends VuiElement {
         padding-inline: var(--vui-space-sm);
         background: var(--vui-color-surface-sunken);
         color: var(--vui-color-text-muted);
-        border-top: var(--vui-border-width) solid var(--vui-color-border);
+        border-top: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
         font-size: var(--vui-font-size-sm);
       }
       :host(:focus-visible) { outline: var(--vui-focus-ring); }

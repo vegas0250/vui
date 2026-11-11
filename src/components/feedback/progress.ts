@@ -45,7 +45,7 @@ export class VProgress extends VuiElement {
       [part="track"] {
         height: var(--vui-space-xs);
         border-radius: var(--vui-radius-sm);
-        background: var(--vui-color-border);
+        background: var(--vui-color-block-border, var(--vui-color-border));
         overflow: hidden;
       }
       [part="bar"] {

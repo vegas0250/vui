@@ -70,21 +70,21 @@ export class VDrawer extends VuiElement {
         min-width: 0;
         background: var(--vui-color-surface-raised);
         color: var(--vui-color-text);
-        border-inline-start: var(--vui-border-width) solid var(--vui-color-border);
+        border-inline-start: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
         box-shadow: var(--vui-shadow-lg);
       }
-      :host([placement="start"]) .surface { border-inline-start: 0; border-inline-end: var(--vui-border-width) solid var(--vui-color-border); }
+      :host([placement="start"]) .surface { border-inline-start: 0; border-inline-end: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border)); }
       header, .body, footer { padding: var(--vui-panel-padding); min-width: 0; }
       header {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: var(--vui-space-sm);
-        border-bottom: var(--vui-border-width) solid var(--vui-color-border);
+        border-bottom: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
       }
       h2 { margin: 0; min-width: 0; overflow-wrap: anywhere; font-size: var(--vui-heading-3); }
       .body { overflow: auto; flex: 1 1 auto; min-height: 0; }
-      footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--vui-space-sm); border-top: var(--vui-border-width) solid var(--vui-color-border); }
+      footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--vui-space-sm); border-top: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border)); }
       footer.hidden { display: none; }
       .close {
         appearance: none;
@@ -94,12 +94,12 @@ export class VDrawer extends VuiElement {
         width: var(--vui-size-control);
         height: var(--vui-size-control);
         border: 0;
-        border-radius: var(--vui-radius);
+        border-radius: var(--vui-radius-field, var(--vui-radius));
         background: transparent;
         color: inherit;
         cursor: pointer;
       }
-      .close:hover { background: var(--vui-color-surface-hover); }
+      .close:hover { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       .close:focus-visible { outline: var(--vui-focus-ring); outline-offset: var(--vui-focus-offset); }
       @media (max-width: 30rem) {
         dialog { width: 100%; }

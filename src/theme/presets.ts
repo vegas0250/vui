@@ -11,7 +11,7 @@ export const toneSolidTokens = {
 } as const;
 export const tokenNames = [
   ...Object.values(toneSolidTokens),
-  'field', 'surfaceHover', 'controlBorder', 'neutral',
+  'field', 'surfaceHover', 'controlBorder', 'neutral', 'blockBorder',
   ...tones.flatMap((tone) => [`${tone}Soft`, `${tone}Text`, `${tone}Border`] as const),
   'background',
   'surface',
@@ -42,11 +42,21 @@ export const tokenNames = [
 export type ThemeToken = (typeof tokenNames)[number];
 export type ThemeTokens = Record<ThemeToken, string>;
 export type ThemeMode = 'light' | 'dark';
+export interface ThemeAppearance {
+  radius?: number;
+  radiusBox?: number;
+  radiusField?: number;
+  radiusSelector?: number;
+  borderWidth?: number;
+  shadowIntensity?: number;
+  density?: 'comfortable' | 'compact' | 'dense';
+}
 export interface ThemePreset {
   readonly id: string;
   readonly name: string;
   readonly mode: ThemeMode;
   readonly tokens: Readonly<ThemeTokens>;
+  readonly appearance?: Readonly<ThemeAppearance>;
 }
 const definitions: Array<[string, string, ThemeMode]> = [
   ['midnight', 'Midnight', 'dark'],
@@ -141,7 +151,7 @@ export const builtInThemes: readonly ThemePreset[] = Object.freeze(
         [toneSolidTokens[tone], source?.[toneSolidTokens[tone]] ?? (tone === 'secondary' ? base.secondaryForeground : on(color))],
       ];
     }));
-    const tokens = { ...resolved, field: roles?.field ?? source?.field ?? resolved.surface,
+    const tokens = { ...resolved, blockBorder: mix(resolved.card, resolved.foreground, 0.18), field: roles?.field ?? source?.field ?? resolved.surface,
       surfaceHover: roles?.surfaceHover ?? source?.surfaceHover ?? resolved.secondary,
       controlBorder: readable(resolved.borderHover, roles?.field ?? source?.field ?? resolved.surface, 3),
       ...toneTokens } as ThemeTokens;
@@ -157,7 +167,9 @@ export const builtInThemes: readonly ThemePreset[] = Object.freeze(
       tokens[`${tone}Text`] = [...actualSurfaces, tokens[`${tone}Soft`]].reduce((color, bg) => readable(color, bg), tokens[`${tone}Text`]);
     }
     tokens.controlBorder = [tokens.field, tokens.surface, tokens.card].reduce((color, bg) => readable(color, bg, 3), tokens.controlBorder);
-    return Object.freeze({ id, name, mode, tokens: Object.freeze(tokens) });
+    return Object.freeze({ id, name, mode, tokens: Object.freeze(tokens),
+      ...(id === 'retro' ? { appearance: Object.freeze({ radiusBox: 8, radiusField: 4, radiusSelector: 4, borderWidth: 1, shadowIntensity: 0 }) } : {}),
+    });
   }),
 );
 export const defaultThemes = Object.freeze({

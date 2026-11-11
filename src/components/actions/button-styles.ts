@@ -16,8 +16,8 @@ button {
   min-height: var(--vui-size-control);
   padding-inline: var(--vui-space-md);
   overflow-wrap: anywhere;
-  border-radius: var(--vui-radius);
-  border: var(--vui-border-width) solid transparent;
+  border-radius: var(--vui-radius-field, var(--vui-radius));
+  border: var(--vui-border-width) solid color-mix(in srgb, var(--vui-color-primary) 88%, #000);
   background: var(--vui-color-primary);
   color: var(--vui-color-on-primary);
   font: inherit;
@@ -52,7 +52,7 @@ button:disabled,
   height: 1em;
   flex: 0 0 auto;
   box-sizing: border-box;
-  border: var(--vui-border-width) solid var(--vui-color-border);
+  border: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
   border-inline-start-color: currentColor;
   border-radius: 50%;
   animation: vui-spin calc(var(--vui-duration) * 8) linear infinite;
@@ -62,17 +62,19 @@ button:disabled,
 :host([variant="secondary"]) button {
   background: var(--vui-color-secondary, var(--vui-color-surface));
   color: var(--vui-color-on-secondary, var(--vui-color-text));
-  border-color: var(--vui-color-border);
+  border-color: var(--vui-color-block-border, var(--vui-color-border));
 }
-:host([variant="secondary"]) button:hover { background: var(--vui-color-surface-hover); }
-:host([variant="secondary"]) button:active { background: var(--vui-color-surface-sunken); }
+:host([variant="secondary"]) button:hover { background: var(--vui-color-secondary-hover, var(--vui-color-hover, var(--vui-color-surface-hover))); }
+:host([variant="secondary"]) button:active { background: var(--vui-color-secondary-hover, var(--vui-color-hover, var(--vui-color-surface-hover))); }
 :host([variant="ghost"]) button {
+  border-color: transparent;
   background: transparent;
   color: var(--vui-color-text);
 }
 :host([variant="ghost"]) button:hover,
-:host([variant="ghost"]) button:active { background: var(--vui-color-surface-hover); }
+:host([variant="ghost"]) button:active { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
 :host([variant="danger"]) button {
+  border-color: color-mix(in srgb, var(--vui-color-danger) 88%, #000);
   background: var(--vui-color-danger);
   color: var(--vui-color-on-danger);
 }

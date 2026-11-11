@@ -41,7 +41,7 @@ export class VLink extends VuiElement {
         justify-content: center;
         min-height: var(--vui-size-control);
         padding-inline: var(--vui-space-md);
-        border-radius: var(--vui-radius);
+        border-radius: var(--vui-radius-field, var(--vui-radius));
         background: var(--vui-color-primary);
         color: var(--vui-color-on-primary);
         text-decoration: none;

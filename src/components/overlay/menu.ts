@@ -46,6 +46,7 @@ export class VMenuItem extends VuiElement {
       <span class="shortcut" part="shortcut" hidden></span>
       <span class="caret" part="caret" hidden aria-hidden="true"></span>
       <slot name="submenu"></slot>
+      :host { transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing); }
     `;
   }
 
@@ -59,12 +60,12 @@ export class VMenuItem extends VuiElement {
         max-width: 100%;
         min-height: var(--vui-size-control);
         padding-inline: var(--vui-space-sm);
-        border-radius: var(--vui-radius-sm);
+        border-radius: var(--vui-radius-field, var(--vui-radius-sm));
         cursor: pointer;
         user-select: none;
       }
       :host(:focus),
-      :host([data-current]) { background: var(--vui-color-surface-hover); }
+      :host([data-current]) { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       :host(:focus-visible) {
         outline: var(--vui-focus-ring);
         outline-offset: calc(var(--vui-focus-offset) * -1);
@@ -247,8 +248,8 @@ export class VMenu extends VuiElement {
         overflow: auto;
         background: var(--vui-color-popover, var(--vui-color-surface-raised));
         color: var(--vui-color-text);
-        border: var(--vui-border-width) solid var(--vui-color-border);
-        border-radius: var(--vui-radius);
+        border: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
+        border-radius: var(--vui-radius-box, var(--vui-radius));
         box-shadow: var(--vui-shadow-lg);
       }
       :host([open]) { display: block; }
@@ -262,7 +263,7 @@ export class VMenu extends VuiElement {
         min-width: 18rem;
         margin-top: var(--vui-space-2xs);
         padding-top: var(--vui-space-2xs);
-        border-top: var(--vui-border-width) solid var(--vui-color-border);
+        border-top: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
       }
       ::slotted(hr) {
         width: auto;
@@ -270,7 +271,7 @@ export class VMenu extends VuiElement {
         height: 0;
         margin: var(--vui-space-2xs) var(--vui-space-xs);
         border: 0;
-        border-block-start: var(--vui-border-width) solid var(--vui-color-border);
+        border-block-start: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
       }
     `;
   }

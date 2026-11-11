@@ -59,8 +59,8 @@ export class VPathBar extends VuiElement {
         min-width: 0;
         min-height: inherit;
         padding-inline: var(--vui-space-xs);
-        border: var(--vui-border-width) solid var(--vui-color-border);
-        border-radius: var(--vui-radius);
+        border: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
+        border-radius: var(--vui-radius-field, var(--vui-radius));
         background: var(--vui-color-field);
         cursor: text;
       }
@@ -79,7 +79,7 @@ export class VPathBar extends VuiElement {
         max-width: 12rem;
         overflow: hidden;
         border: 0;
-        border-radius: var(--vui-radius-sm);
+        border-radius: var(--vui-radius-field, var(--vui-radius-sm));
         padding: var(--vui-space-2xs) var(--vui-space-xs);
         background: transparent;
         color: inherit;
@@ -88,7 +88,7 @@ export class VPathBar extends VuiElement {
         white-space: nowrap;
         cursor: pointer;
       }
-      button:hover { background: var(--vui-color-surface-hover); }
+      button:hover { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       button[aria-current="page"] { font-weight: var(--vui-font-weight-strong); }
       button:focus-visible { outline: var(--vui-focus-ring); outline-offset: calc(var(--vui-focus-offset) * -1); }
       .sep {

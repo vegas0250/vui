@@ -60,11 +60,21 @@ for (const id of ['catppuccin-mocha', 'catppuccin-latte', 'tokyo-night', 'tokyo-
     const base = action.locator('button');
     const background = await base.evaluate(el => getComputedStyle(el).backgroundColor);
     await action.hover();
-    await expect(base).toHaveCSS('background-color', background);
+    await expect(base).not.toHaveCSS('background-color', background);
+    const hovered = await root.evaluate(el => {
+      const probe = document.createElement('span');
+      probe.style.color = getComputedStyle(el).getPropertyValue('--vui-color-accent-surface-hover');
+      el.append(probe);
+      const color = getComputedStyle(probe).color;
+      probe.remove();
+      return color;
+    });
+    await expect(base).toHaveCSS('background-color', hovered);
+    await expect(base).toHaveCSS('box-shadow', 'none');
     await base.focus();
     await expect(base).toBeFocused();
     await page.mouse.down();
-    await expect(base).toHaveCSS('background-color', background);
+    await expect(base).toHaveCSS('background-color', hovered);
     await page.mouse.up();
     await root.locator('vui-menu').evaluate(el => (el as VMenu).showAt(250, 200));
     await expect(root.locator('vui-menu-item').first()).toBeVisible();

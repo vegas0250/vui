@@ -74,9 +74,11 @@ export class VRadio extends VuiElement {
         flex: 0 0 auto;
       }
       input:checked + .mark {
-        border-color: var(--vui-color-primary);
+        border-color: var(--vui-color-primary-border, var(--vui-color-primary));
         background: radial-gradient(circle at center, var(--vui-color-primary) 0 40%, var(--vui-color-field) 45% 100%);
       }
+      .mark { transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing); }
+      :host(:not([disabled])) .field:hover input:not(:checked) + .mark { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       input:focus-visible + .mark {
         outline: var(--vui-focus-ring);
         outline-offset: var(--vui-focus-offset);

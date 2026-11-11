@@ -89,7 +89,7 @@ export class VShell extends VuiElement {
         padding: var(--vui-space-2xs) var(--vui-space-xs);
         background: var(--vui-color-surface);
         color: var(--vui-color-text);
-        border-radius: var(--vui-radius-sm);
+        border-radius: var(--vui-radius-field, var(--vui-radius-sm));
       }
       .skip:focus {
         transform: none;
@@ -109,7 +109,7 @@ export class VShell extends VuiElement {
         width: var(--vui-shell-nav, 16rem);
         max-width: min(32rem, 50%);
         background: var(--vui-color-surface);
-        border-inline-end: var(--vui-border-width) solid var(--vui-color-border);
+        border-inline-end: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
       }
       .rail .pane,
       .aside-rail .pane {
@@ -191,13 +191,13 @@ export class VShell extends VuiElement {
         height: 2.75rem;
         margin-inline: 2px;
         padding: 0;
-        border: var(--vui-border-width) solid var(--vui-color-border);
-        border-radius: var(--vui-radius);
+        border: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
+        border-radius: var(--vui-radius-field, var(--vui-radius));
         background: var(--vui-color-surface-raised);
         color: var(--vui-color-text);
         cursor: pointer;
       }
-      .aside-rail button:hover { background: var(--vui-color-surface-hover); color: var(--vui-color-interactive-text, var(--vui-color-primary)); }
+      .aside-rail button:hover { background: var(--vui-color-hover, var(--vui-color-surface-hover)); color: var(--vui-color-interactive-text, var(--vui-color-primary)); }
       .aside-rail button:focus-visible { outline: var(--vui-focus-ring); outline-offset: calc(var(--vui-focus-offset) * -1); }
       .aside-rail vui-icon { width: var(--vui-icon-size); height: var(--vui-icon-size); }
       :host([aside-collapsed]) .aside-sep { display: none; }
@@ -234,7 +234,7 @@ export class VShell extends VuiElement {
           max-width: 100%;
           flex-basis: auto;
           border-inline: 0;
-          border-block-end: var(--vui-border-width) solid var(--vui-color-border);
+          border-block-end: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
         }
         .aside-sep { display: none; }
         .sep { cursor: default; }

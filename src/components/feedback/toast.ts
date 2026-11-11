@@ -59,9 +59,9 @@ export class VToast extends VuiElement {
         width: min(var(--vui-toast-inline), calc(100vw - var(--vui-overlay-gutter) * 2));
         max-width: 100%;
         padding: var(--vui-space-sm) var(--vui-space-md);
-        border: var(--vui-border-width) solid var(--vui-color-border);
+        border: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
         border-inline-start: var(--vui-border-width-accent) solid var(--vui-color-info);
-        border-radius: var(--vui-radius);
+        border-radius: var(--vui-radius-box, var(--vui-radius));
         background: var(--vui-color-surface-raised);
         box-shadow: var(--vui-shadow-md);
       }
@@ -79,13 +79,13 @@ export class VToast extends VuiElement {
         background: transparent;
         color: inherit;
         cursor: pointer;
-        border-radius: var(--vui-radius-sm);
+        border-radius: var(--vui-radius-field, var(--vui-radius-sm));
         width: var(--vui-size-control-sm);
         height: var(--vui-size-control-sm);
         align-items: center;
         justify-content: center;
       }
-      .close:hover { background: var(--vui-color-surface-hover); }
+      .close:hover { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       .close:focus-visible {
         outline: var(--vui-focus-ring);
         outline-offset: var(--vui-focus-offset);

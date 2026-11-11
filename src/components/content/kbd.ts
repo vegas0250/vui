@@ -17,7 +17,7 @@ export class VKbd extends VuiElement {
         max-width: 100%;
         padding: var(--vui-space-2xs) var(--vui-space-xs);
         border: var(--vui-border-width) solid var(--vui-color-border-strong);
-        border-radius: var(--vui-radius-sm);
+        border-radius: var(--vui-radius-selector, var(--vui-radius-sm));
         background: var(--vui-color-surface);
         color: var(--vui-color-text);
         font-family: var(--vui-font-mono);

@@ -36,7 +36,7 @@ export class VSpinner extends VuiElement {
         height: 1em;
         flex: 0 0 auto;
         box-sizing: border-box;
-        border: var(--vui-border-width) solid var(--vui-color-border);
+        border: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
         border-inline-start-color: var(--vui-color-primary);
         border-radius: 50%;
         animation: vui-spin calc(var(--vui-duration) * 8) linear infinite;

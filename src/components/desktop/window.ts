@@ -33,8 +33,8 @@ export class VWindow extends VuiElement {
         flex: 1 1 auto;
         background: var(--vui-color-surface);
         color: var(--vui-color-text);
-        border: var(--vui-border-width) solid var(--vui-color-border);
-        border-radius: var(--vui-radius);
+        border: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
+        border-radius: var(--vui-radius-box, var(--vui-radius));
       }
       header {
         display: flex;
@@ -44,7 +44,7 @@ export class VWindow extends VuiElement {
         min-width: 0;
         min-height: var(--vui-toolbar-height);
         padding-inline: var(--vui-space-sm);
-        border-bottom: var(--vui-border-width) solid var(--vui-color-border);
+        border-bottom: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
       }
       h2 {
         margin: 0;

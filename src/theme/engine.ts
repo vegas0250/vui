@@ -1,6 +1,7 @@
 import { normalizeColor, readable, contrast, mix } from './colors';
 import { builtInThemes, defaultThemes, tokenNames, tones, toneSolidTokens } from './presets';
 import type {
+  ThemeAppearance,
   ThemeMode,
   ThemePreset,
   ThemeToken,
@@ -12,12 +13,7 @@ export interface ThemeDocument {
   baseTheme: string;
   mode: ThemeMode;
   tokens: Partial<ThemeTokens>;
-  appearance?: {
-    radius?: number;
-    borderWidth?: number;
-    shadowIntensity?: number;
-    density?: 'comfortable' | 'compact' | 'dense';
-  };
+  appearance?: ThemeAppearance;
 }
 const registeredDocuments = new Map<string, ThemeDocument>();
 const registry = new Map<string, ThemePreset>(
@@ -31,6 +27,7 @@ export const tokenProperties: Record<ThemeToken, string> = {
     [`${tone}Soft`, `${tone}-surface`], [`${tone}Text`, `${tone}-text`],
     [`${tone}Border`, `${tone}-border`],
   ])) as Record<`${typeof tones[number]}${'Soft' | 'Text' | 'Border'}`, string>,
+  blockBorder: 'block-border',
   neutral: 'neutral',
   neutralOnSolid: 'on-neutral-solid',
   successOnSolid: 'on-success-solid',
@@ -132,11 +129,11 @@ export function validateTheme(input: unknown): ThemeDocument {
         )
           throw new Error('Invalid density');
       } else if (
-        !['radius', 'borderWidth', 'shadowIntensity'].includes(key) ||
+        !['radius', 'radiusBox', 'radiusField', 'radiusSelector', 'borderWidth', 'shadowIntensity'].includes(key) ||
         typeof value !== 'number' ||
         !Number.isFinite(value) ||
         value < 0 ||
-        value > (key === 'radius' ? 32 : key === 'borderWidth' ? 4 : 100)
+        value > (key.startsWith('radius') ? 32 : key === 'borderWidth' ? 4 : 100)
       )
         throw new Error('Invalid appearance');
     }
@@ -168,6 +165,10 @@ export function resolveTheme(document: ThemeDocument): ThemeTokens {
   if (valid.tokens.border && !valid.tokens.controlBorder) tokens.controlBorder = tokens.border;
   if ((valid.tokens.field || valid.tokens.surface || valid.tokens.borderHover) && !valid.tokens.controlBorder && !valid.tokens.border)
     tokens.controlBorder = readable(tokens.borderHover, tokens.field, 3);
+  if (!valid.tokens.blockBorder) {
+    if (valid.tokens.border) tokens.blockBorder = tokens.border;
+    else if (valid.tokens.card || valid.tokens.foreground) tokens.blockBorder = mix(tokens.card, tokens.foreground, 0.18);
+  }
   return tokens;
 }
 export function themeDocument(id: string): ThemeDocument {
@@ -209,9 +210,28 @@ export function registerTheme(id: string, input: ThemeDocument): void {
     }),
   );
 }
+/** Resolve family geometry without losing schema-1 global-radius overrides. */
+export function themeAppearance(input: ThemeDocument): Required<ThemeAppearance> {
+  const d = validateTheme(input), preset = themeById(d.baseTheme).appearance ?? {}, own = d.appearance ?? {};
+  const radius = own.radius ?? preset.radius ?? 8;
+  return {
+    radius,
+    radiusBox: own.radiusBox ?? own.radius ?? preset.radiusBox ?? radius,
+    radiusField: own.radiusField ?? own.radius ?? preset.radiusField ?? radius,
+    radiusSelector: own.radiusSelector ?? own.radius ?? preset.radiusSelector ?? 4,
+    borderWidth: own.borderWidth ?? preset.borderWidth ?? 1,
+    shadowIntensity: own.shadowIntensity ?? preset.shadowIntensity ?? 100,
+    density: own.density ?? preset.density ?? 'comfortable',
+  };
+}
+function hoverColor(background: string, foreground: string): string {
+  const tint = mix(background, foreground, 0.06);
+  if (contrast(tint, foreground) >= 4.5) return tint;
+  return mix(background, contrast('#ffffff', foreground) > contrast('#000000', foreground) ? '#ffffff' : '#000000', 0.04);
+}
 export function themeVariables(input: ThemeDocument): Record<string, string> {
   const d = validateTheme(input),
-    t = resolveTheme(d),
+    t = resolveTheme(d), appearance = themeAppearance(d),
     vars: Record<string, string> = {};
   for (const key of tokenNames)
     vars[`--vui-color-${tokenProperties[key]}`] = t[key];
@@ -226,7 +246,13 @@ export function themeVariables(input: ThemeDocument): Record<string, string> {
     '--vui-focus-shadow':
       '0 0 0 3px color-mix(in srgb, var(--vui-color-focus) 28%, transparent)',
   });
-  const strength = d.appearance?.shadowIntensity ?? 100;
+  vars['--vui-color-hover'] = mix(t.surface, t.surfaceHover, 0.3);
+  for (const tone of tones) {
+    const color = tone === 'danger' ? t.error : t[tone];
+    if (tone !== 'primary') vars[`--vui-color-${tone}-hover`] = hoverColor(color, t[toneSolidTokens[tone]]);
+    vars[`--vui-color-${tone}-surface-hover`] = hoverColor(t[`${tone}Soft`], t[`${tone}Text`]);
+  }
+  const strength = appearance.shadowIntensity;
   for (const [size, offset] of Object.entries({
     sm: '0 1px 3px',
     md: '0 8px 24px',
@@ -234,8 +260,10 @@ export function themeVariables(input: ThemeDocument): Record<string, string> {
   }))
     vars[`--vui-shadow-${size}`] =
       `${offset} color-mix(in srgb, ${t.shadow} ${strength}%, transparent)`;
-  vars['--vui-radius'] = `${d.appearance?.radius ?? 8}px`;
-  vars['--vui-border-width'] = `${d.appearance?.borderWidth ?? 1}px`;
+  vars['--vui-radius'] = `${appearance.radius}px`;
+  vars['--vui-border-width'] = `${appearance.borderWidth}px`;
+  for (const [suffix, key] of [['box', 'radiusBox'], ['field', 'radiusField'], ['selector', 'radiusSelector']] as const)
+    vars[`--vui-radius-${suffix}`] = `${appearance[key]}px`;
   return vars;
 }
 const applications = new WeakMap<HTMLElement, string[]>();

@@ -10,13 +10,15 @@ export function toneStyles(
     const color = tone;
     const fallback = tone === 'neutral' ? 'var(--vui-color-text)' : 'var(--vui-color-secondary)';
     return `--vui-tone-color:var(--vui-color-${color}, ${fallback});
+      --vui-tone-hover:var(--vui-color-${tone}-hover, var(--vui-tone-color));
+      --vui-tone-soft-hover:var(--vui-color-${tone}-surface-hover, var(--vui-tone-soft));
       --vui-tone-soft:var(--vui-color-${tone}-surface, var(--vui-color-surface));
       --vui-tone-text:var(--vui-color-${tone}-text, var(--vui-color-text));
       --vui-tone-border:var(--vui-color-${tone}-border, var(--vui-color-border));
       --vui-tone-on:var(--vui-color-on-${tone}-solid, var(--vui-color-on-${color}, var(--vui-color-surface)));`;
   };
   const variants = {
-    solid: 'background:var(--vui-tone-color);color:var(--vui-tone-on);border-color:var(--vui-tone-color);',
+    solid: 'background:var(--vui-tone-color);color:var(--vui-tone-on);border-color:color-mix(in srgb, var(--vui-tone-color) 88%, #000);',
     soft: 'background:var(--vui-tone-soft);color:var(--vui-tone-text);border-color:transparent;',
     outline: 'background:transparent;color:var(--vui-tone-text);border-color:var(--vui-tone-border);',
     ghost: 'background:transparent;color:var(--vui-tone-text);border-color:transparent;',
@@ -28,10 +30,15 @@ export function toneStyles(
     :host([tone]) ${target} { ${variants[defaultVariant]} }
     ${Object.entries(variants).map(([variant, css]) => `${selectors(variant)} { ${css} }`).join('')}
     ${target === 'button' ? `
-      :host([tone]) button:not(:disabled):hover, :host([variant="solid"]) button:not(:disabled):hover { ${variants[defaultVariant]} box-shadow:inset 0 0 0 1px currentColor; }
-      :host([tone]) button:not(:disabled):active { ${variants[defaultVariant]} box-shadow:inset 0 0 0 2px currentColor; }
-      ${Object.entries(variants).map(([variant, css]) => `${selectors(variant)}:not(:disabled):hover { ${css} box-shadow:inset 0 0 0 1px currentColor; } ${selectors(variant)}:not(:disabled):active { ${css} box-shadow:inset 0 0 0 2px currentColor; }`).join('')}
-      :host([disabled][tone]) [part="base"], :host([loading][tone]) [part="base"], :host([disabled]) [part="base"], :host([loading]) [part="base"] { background:var(--vui-color-secondary);color:var(--vui-color-text-disabled);border-color:var(--vui-color-border);box-shadow:none; }
+      :host([tone]) button:not(:disabled):hover, :host([variant="solid"]) button:not(:disabled):hover,
+      :host([tone]) button:not(:disabled):active {
+        ${variants[defaultVariant]}
+        background:var(${defaultVariant === 'solid' ? '--vui-tone-hover' : '--vui-tone-soft-hover'});
+      }
+      ${Object.entries(variants).map(([variant, css]) => `${selectors(variant)}:not(:disabled):hover, ${selectors(variant)}:not(:disabled):active {
+        ${css} background:var(${variant === 'solid' ? '--vui-tone-hover' : '--vui-tone-soft-hover'});
+      }`).join('')}
+      :host([disabled][tone]) [part="base"], :host([loading][tone]) [part="base"], :host([disabled]) [part="base"], :host([loading]) [part="base"] { background:var(--vui-color-secondary);color:var(--vui-color-text-disabled);border-color:var(--vui-color-block-border, var(--vui-color-border));box-shadow:none; }
     ` : ''}
   `;
 }

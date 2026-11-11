@@ -23,6 +23,7 @@ export class VListItem extends VuiElement {
       <span part="label"><slot></slot></span>
       <span part="meta" hidden><slot name="meta"></slot></span>
       <span part="end" hidden><slot name="end"></slot></span>
+      :host { transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing); }
     `;
   }
 
@@ -48,7 +49,7 @@ export class VListItem extends VuiElement {
         font-variant-numeric: tabular-nums;
       }
       [part="meta"][hidden], [part="end"][hidden] { display: none; }
-      :host(:hover) { background: var(--vui-color-surface-hover); }
+      :host(:hover) { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       :host([selected]) {
         background: var(--vui-color-selected);
         box-shadow: inset 2px 0 0 var(--vui-color-focus);

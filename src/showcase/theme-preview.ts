@@ -8,6 +8,7 @@ export const previewTemplates = [
   'settings',
   'login',
   'developer',
+  'tabs',
 ] as const;
 export const templateLabels = {
   components: 'Components',
@@ -15,6 +16,7 @@ export const templateLabels = {
   settings: 'Settings',
   login: 'Login',
   developer: 'Developer tools',
+  tabs: 'Tabs',
 };
 const t = (s: string) => escapeHTML(tr(s));
 const buttons = () =>
@@ -42,6 +44,7 @@ export function previewMarkup(
       )}</div><vui-panel heading="${t('Activity')}"><vui-data-grid data-preview-grid label="${t('Projects')}"></vui-data-grid></vui-panel></div></div>`,
     settings: `<vui-panel heading="${t('Settings')}"><form class="ts-preview-form"><vui-input label="${t('Name')}" value="Ada"></vui-input><vui-input label="${t('Email')}" type="email" value="ada@example.com"></vui-input><vui-select label="${t('Plan')}" value="monthly"><vui-option value="monthly">${t('Monthly')}</vui-option><vui-option value="yearly">${t('Yearly')}</vui-option></vui-select><vui-switch checked>${t('Notifications')}</vui-switch><vui-button type="submit" data-demo-action>${t('Save')}</vui-button></form></vui-panel>`,
     login: `<vui-panel class="ts-login" heading="${t('Sign in')}"><form class="ts-preview-form"><vui-input label="${t('Email')}" type="email"></vui-input><vui-input label="${t('Password')}" type="password"></vui-input><vui-button type="submit" data-demo-action>${t('Sign in')}</vui-button><vui-link href="#theme-integration">${t('Documentation')}</vui-link><p>${t('Demo only. No credentials are sent.')}</p></form></vui-panel>`,
+    tabs: `<vui-panel heading="${t('Tabs')}"><vui-vstack gap="lg"><p>${t('Tabs preview description')}</p><vui-tabs label="${t('Projects')}"><vui-tab panel="overview" selected>${t('Overview')}</vui-tab><vui-tab panel="details">${t('Details')}</vui-tab><vui-tab panel="settings">${t('Settings')}</vui-tab><vui-tab panel="disabled" disabled>${t('Disabled')}</vui-tab><vui-tab-panel name="overview"><vui-vstack gap="md"><vui-hstack gap="sm" wrap><vui-badge tone="success" variant="soft">${t('Ready')}</vui-badge><vui-text>VUI</vui-text></vui-hstack><p>${t('Live tabs use your draft colors, borders and radii.')}</p>${buttons()}</vui-vstack></vui-tab-panel><vui-tab-panel name="details"><vui-vstack gap="md"><vui-textarea label="${t('Notes')}" rows="3" value="VUI"></vui-textarea><vui-alert tone="info" variant="soft">${t('Ready')}</vui-alert></vui-vstack></vui-tab-panel><vui-tab-panel name="settings"><vui-vstack gap="md"><vui-input label="${t('Name')}" value="VUI"></vui-input><vui-switch checked>${t('Notifications')}</vui-switch><vui-button data-demo-action>${t('Save')}</vui-button></vui-vstack></vui-tab-panel><vui-tab-panel name="disabled"></vui-tab-panel></vui-tabs></vui-vstack></vui-panel>`,
     developer: `<vui-panel heading="${t('Developer tools')}"><vui-vstack gap="md"><vui-toolbar label="${t('Developer tools')}" wrap><vui-button slot="start" data-copy-code>${t('Copy')}</vui-button><vui-button slot="end" data-demo-action>${t('Run preview')}</vui-button></vui-toolbar><vui-textarea data-code-input label="${t('Code')}" rows="9" value="&lt;vui-button&gt;VUI&lt;/vui-button&gt;"></vui-textarea><vui-alert variant="info">${t('Ready')}</vui-alert><vui-button data-preview-toast>${t('Show toast')}</vui-button></vui-vstack></vui-panel>`,
   };
   return `${content[template]}<p class="ts-preview-result" role="status"></p><vui-dialog data-preview-dialog heading="${t('Confirm action')}"><p>${t('A real VUI dialog using your draft tokens.')}</p><vui-button data-preview-close>${t('Close')}</vui-button></vui-dialog><vui-toaster data-preview-toaster></vui-toaster>`;

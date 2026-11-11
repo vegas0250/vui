@@ -49,6 +49,7 @@ export class VTreeItem extends VuiElement {
         <span class="actions" part="actions" hidden><slot name="actions"></slot></span>
       </div>
       <div class="children" role="group"><slot></slot></div>
+      .row { transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing); }
     `;
   }
 
@@ -62,12 +63,12 @@ export class VTreeItem extends VuiElement {
         gap: var(--vui-space-xs);
         min-height: var(--vui-row-height);
         padding-inline: var(--vui-space-xs);
-        border-radius: var(--vui-radius-sm);
+        border-radius: var(--vui-radius-field, var(--vui-radius-sm));
         cursor: pointer;
         user-select: none;
       }
       :host([disabled]) .row { cursor: default; }
-      :host(:hover) .row { background: var(--vui-color-surface-hover); }
+      :host(:hover) .row { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       :host([selected]) .row {
         background: var(--vui-color-selected);
         box-shadow: inset 2px 0 0 var(--vui-color-primary);
@@ -116,8 +117,8 @@ export class VTreeItem extends VuiElement {
         text-overflow: ellipsis;
         white-space: nowrap;
         padding-inline: var(--vui-space-xs);
-        border: var(--vui-border-width) solid var(--vui-color-border);
-        border-radius: var(--vui-radius-sm);
+        border: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
+        border-radius: var(--vui-radius-field, var(--vui-radius-sm));
         color: var(--vui-color-text-muted);
         font-size: var(--vui-font-size-sm);
         line-height: 1.3;

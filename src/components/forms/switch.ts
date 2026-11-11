@@ -68,7 +68,7 @@ export class VSwitch extends VuiElement {
         position: relative;
         width: calc(var(--vui-size-control) * 1.2);
         height: calc(var(--vui-size-control) * 0.66);
-        border-radius: var(--vui-radius-full);
+        border-radius: var(--vui-radius-selector, var(--vui-radius-full));
         border: var(--vui-border-width) solid var(--vui-color-border-strong);
         background: var(--vui-color-surface-sunken);
         flex: 0 0 auto;
@@ -79,7 +79,7 @@ export class VSwitch extends VuiElement {
         inset-inline-start: var(--vui-space-2xs);
         width: calc(var(--vui-size-control) * 0.66 - (var(--vui-space-2xs) + var(--vui-border-width)) * 2);
         height: calc(var(--vui-size-control) * 0.66 - (var(--vui-space-2xs) + var(--vui-border-width)) * 2);
-        border-radius: var(--vui-radius-full);
+        border-radius: var(--vui-radius-selector, var(--vui-radius-full));
         background: var(--vui-color-text-muted);
         transition: inset-inline var(--vui-duration) var(--vui-easing), background var(--vui-duration) var(--vui-easing);
       }
@@ -92,6 +92,8 @@ export class VSwitch extends VuiElement {
         inset-inline-start: auto;
         inset-inline-end: var(--vui-space-2xs);
       }
+      .track { transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing); }
+      :host(:not([disabled])) .field:hover input:not(:checked) + .track { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       input:focus-visible + .track {
         outline: var(--vui-focus-ring);
         outline-offset: var(--vui-focus-offset);
