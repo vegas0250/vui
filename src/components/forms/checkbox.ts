@@ -84,7 +84,7 @@ export class VCheckbox extends VuiElement {
       .box svg { width: 0.85em; height: 0.85em; opacity: 0; }
       input:checked + .box {
         background: var(--vui-color-primary);
-        border-color: var(--vui-color-primary);
+        border-color: var(--vui-color-primary-border, var(--vui-color-primary));
       }
       input:checked + .box svg { opacity: 1; }
       input:focus-visible + .box {

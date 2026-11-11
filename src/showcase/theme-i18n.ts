@@ -2,6 +2,7 @@ export const docsLocale =
   new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'ru';
 const ru: Record<string, string> = {
   'VUI adaptation': 'адаптация VUI',
+  Neutral: 'Нейтральный',
   'Semantic tones': 'Семантические тона',
   field: 'Поле ввода',
   surfaceHover: 'Поверхность при наведении',
@@ -150,6 +151,7 @@ const ru: Record<string, string> = {
   primaryHover: 'Наведение',
   primaryActive: 'Нажатие',
   primaryForeground: 'Текст на основном цвете',
+  neutral: 'Нейтральный цвет',
   secondary: 'Вторичный цвет',
   secondaryForeground: 'Текст на вторичном цвете',
   accent: 'Акцент',
@@ -163,7 +165,7 @@ const ru: Record<string, string> = {
   overlay: 'Подложка диалога',
   shadow: 'Цвет тени',
 };
-for (const [tone, label] of Object.entries({ neutral: 'Нейтральный', primary: 'Основной', accent: 'Акцент', success: 'Успех', warning: 'Предупреждение', danger: 'Опасность', info: 'Информация' })) {
+for (const [tone, label] of Object.entries({ neutral: 'Нейтральный', primary: 'Основной', secondary: 'Вторичный', accent: 'Акцент', success: 'Успех', warning: 'Предупреждение', danger: 'Опасность', info: 'Информация' })) {
   for (const [suffix, role] of Object.entries({ Soft: 'мягкий фон', Text: 'текст', Border: 'граница', OnSolid: 'текст на заливке' }))
     ru[tone + suffix] = `${label}: ${role}`;
 }

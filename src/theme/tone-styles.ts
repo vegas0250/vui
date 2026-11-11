@@ -7,8 +7,9 @@ export function toneStyles(
   defaultVariant: 'solid' | 'soft',
 ): string {
   const assignments = (tone: string) => {
-    const color = tone === 'neutral' ? 'text' : tone;
-    return `--vui-tone-color:var(--vui-color-${color});
+    const color = tone;
+    const fallback = tone === 'neutral' ? 'var(--vui-color-text)' : 'var(--vui-color-secondary)';
+    return `--vui-tone-color:var(--vui-color-${color}, ${fallback});
       --vui-tone-soft:var(--vui-color-${tone}-surface, var(--vui-color-surface));
       --vui-tone-text:var(--vui-color-${tone}-text, var(--vui-color-text));
       --vui-tone-border:var(--vui-color-${tone}-border, var(--vui-color-border));

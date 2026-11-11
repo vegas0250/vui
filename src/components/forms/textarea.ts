@@ -64,16 +64,19 @@ export class VTextarea extends VuiElement {
         container-type: inline-size;
         container-name: vui-field;
       }
+      .control { padding: 0; align-items: stretch; overflow: hidden; }
       textarea {
         flex: 1 1 auto;
         width: 100%;
         min-width: 0;
         min-height: calc(var(--vui-size-control) * 2);
         resize: vertical;
+        display: block;
         border: 0;
+        border-radius: inherit;
         outline: none;
         background: transparent;
-        padding-block: var(--vui-space-xs);
+        padding: var(--vui-space-xs) var(--vui-space-sm);
         field-sizing: content;
       }
       .label:empty, .hint:empty { display: none; }

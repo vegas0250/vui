@@ -31,6 +31,7 @@ export const tokenProperties: Record<ThemeToken, string> = {
     [`${tone}Soft`, `${tone}-surface`], [`${tone}Text`, `${tone}-text`],
     [`${tone}Border`, `${tone}-border`],
   ])) as Record<`${typeof tones[number]}${'Soft' | 'Text' | 'Border'}`, string>,
+  neutral: 'neutral',
   neutralOnSolid: 'on-neutral-solid',
   successOnSolid: 'on-success-solid',
   warningOnSolid: 'on-warning-solid',
@@ -149,12 +150,14 @@ export function resolveTheme(document: ThemeDocument): ThemeTokens {
   // Schema 1 documents can override old colors without supplying the new roles.
   // Explicit new tokens always win, including intentionally low-contrast drafts.
   for (const tone of tones) {
-    const source = tone === 'neutral' ? 'foreground' : tone === 'danger' ? 'error' : tone;
+    const source = tone === 'danger' ? 'error' : tone;
+    // Old documents used foreground as the neutral solid color.
+    if (tone === 'neutral' && valid.tokens.foreground && !valid.tokens.neutral) tokens.neutral = tokens.foreground;
     const color = tokens[source];
-    if (valid.tokens[source] || valid.tokens.surface) {
+    if (valid.tokens[source] || (tone === 'neutral' && valid.tokens.foreground) || valid.tokens.surface) {
       if (!valid.tokens[`${tone}Soft`]) tokens[`${tone}Soft`] = mix(tokens.surface, color, 0.08);
     }
-    if (valid.tokens[source] || valid.tokens.surface || valid.tokens[`${tone}Soft`]) {
+    if (valid.tokens[source] || (tone === 'neutral' && valid.tokens.foreground) || valid.tokens.surface || valid.tokens[`${tone}Soft`]) {
       if (!valid.tokens[`${tone}Text`]) tokens[`${tone}Text`] = [tokens[`${tone}Soft`], tokens.surface, tokens.background, tokens.card].reduce((fg, bg) => readable(fg, bg), color);
       if (!valid.tokens[`${tone}Border`]) tokens[`${tone}Border`] = readable(color, tokens[`${tone}Soft`], 3);
       if (tone !== 'primary' && tone !== 'accent' && !valid.tokens[toneSolidTokens[tone]]) tokens[toneSolidTokens[tone]] = contrast('#ffffff', color) > contrast('#000000', color) ? '#ffffff' : '#000000';

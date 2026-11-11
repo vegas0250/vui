@@ -236,3 +236,36 @@ test('system mode initializes defaults, explicit choice wins, and initial head b
       .evaluate((el) => el.style.getPropertyValue('--vui-color-background')),
   ).toBe('#21222c');
 });
+
+test('developer preview has spaced controls and a textarea resizer at the control edge', async ({ page }) => {
+  await page.locator('[data-preset="retro"]').click();
+  await page.locator('#ts-template').selectOption('developer');
+  for (const width of [1280, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+    if (width === 390) await page.locator('[data-view=preview]').click();
+    const preview = page.locator('#ts-live-preview');
+    const boxes = await preview.locator('vui-vstack').evaluate(stack => Array.from(stack.children).map(el => {
+      const r = el.getBoundingClientRect(); return { top: r.top, bottom: r.bottom };
+    }));
+    expect(boxes).toHaveLength(4);
+    for (let i = 1; i < boxes.length; i++) expect(boxes[i].top - boxes[i - 1].bottom).toBeGreaterThanOrEqual(12);
+    const area = preview.locator('vui-textarea textarea');
+    const geometry = await area.evaluate(el => {
+      const outer = el.parentElement!.getBoundingClientRect(), inner = el.getBoundingClientRect();
+      return { right: outer.right - inner.right, bottom: outer.bottom - inner.bottom, resize: getComputedStyle(el).resize };
+    });
+    expect(geometry.right).toBeLessThanOrEqual(2);
+    expect(geometry.bottom).toBeLessThanOrEqual(2);
+    expect(geometry.resize).toBe('vertical');
+    expect(await preview.evaluate(el => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
+  }
+  await page.setViewportSize({ width: 1280, height: 844 });
+  const area = page.locator('#ts-live-preview vui-textarea textarea');
+  await area.scrollIntoViewIfNeeded();
+  const before = (await area.boundingBox())!;
+  await page.mouse.move(before.x + before.width - 5, before.y + before.height - 5);
+  await page.mouse.down();
+  await page.mouse.move(before.x + before.width - 5, before.y + before.height + 45, { steps: 5 });
+  await page.mouse.up();
+  expect((await area.boundingBox())!.height).toBeGreaterThan(before.height + 20);
+});

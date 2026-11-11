@@ -56,16 +56,41 @@ Visual inspection confirmed distinct family surfaces and accents. Existing palet
 
 Firefox and WebKit were not run in this environment (only Chromium is installed). Text and boundary pair checks do not constitute a complete accessibility audit of every consumer layout. User-edited colors can still fail contrast, which the editor reports without silently rewriting explicit values. Legacy `light`, `dark`, `system` CSS entry points retain their existing semantics; the Catppuccin default pair belongs to the preset initializer and documentation preference flow.
 
+### Semantic color vocabulary
+
+VUI supports the complete set of semantic roles described in
+[daisyUI colors](https://daisyui.com/docs/colors/) through the existing tokens:
+
+| daisyUI role | VUI token |
+| --- | --- |
+| base-100 / base-200 / base-300 / base-content | background / surface / surfaceElevated / foreground |
+| primary / primary-content | primary / primaryForeground |
+| secondary / secondary-content | secondary / secondaryForeground |
+| accent / accent-content | accent / accentForeground |
+| neutral / neutral-content | neutral / neutralOnSolid |
+| info / info-content | info / infoOnSolid |
+| success / success-content | success / successOnSolid |
+| warning / warning-content | warning / warningOnSolid |
+| error / error-content | error / dangerOnSolid |
+
+`neutral` is now independent of page text. `tone="secondary"` supports solid,
+soft, outline and ghost variants alongside the other tones. Every preset and
+validated partial theme document includes these roles; existing CSS names and
+legacy variants remain available. Older documents overriding foreground still
+derive neutral from it unless they explicitly provide neutral. Secondary no
+longer needs to double as the hover surface: surfaceHover is independently editable.
+
 ### Retro
 
-`retro` adapts the user-provided daisyUI Theme Generator payload (`name: retro`,
-light scheme). Source OKLCH values are converted to sRGB HEX for the existing
-VUI color engine: base-100/200/300 become background/surface/elevated;
-base-content becomes foreground; primary, secondary, accent, info, success,
-warning and error retain their source roles. Secondary content is preserved.
-VUI derives readable text, control colors, hover states and soft tones through
-its shared contrast rules, so some resulting colors differ from the source.
-DaisyUI's neutral/content pair has no equivalent separate solid token in VUI;
-neutral tones follow the existing foreground-based convention. Generator
+`retro` uses the colors from the user-provided daisyUI Theme Generator payload
+(`name: retro`, light scheme). `src/theme/retro.ts` records all twenty source
+OKLCH colors and their sRGB HEX conversions, including the content colors.
+No contrast correction is applied to these source fills or content colors.
+Cards, fields, popovers and modals use base-100. Soft text, boundaries, focus,
+hover and active states are derived through the shared VUI rules.
+
+Some source solid/content pairs (including accent) are below WCAG AA. Theme
+Studio reports them instead of silently changing the requested palette. Tests
+verify the exact source colors separately from derived contrast roles. Generator
 geometry and effects are not imported. Existing presets and OS defaults stay
 unchanged. Select Retro in Theme Studio to create an editable draft.

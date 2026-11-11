@@ -19,7 +19,7 @@ for (const id of ['catppuccin-mocha', 'catppuccin-latte', 'tokyo-night', 'tokyo-
       Object.assign((el as HTMLElement).style, { maxWidth: '1120px', margin: 'auto', padding: '24px' });
       el.insertAdjacentHTML('afterbegin', '<vui-panel heading="Project dashboard"><vui-hstack gap="lg"><strong>VUI · 12 active projects</strong><vui-badge tone="success" variant="soft">All systems operational</vui-badge></vui-hstack></vui-panel>');
       const variants = ['solid', 'soft', 'outline', 'ghost'];
-      const tones = ['neutral', 'primary', 'accent', 'success', 'warning', 'danger', 'info'];
+      const tones = ['neutral', 'primary', 'secondary', 'accent', 'success', 'warning', 'danger', 'info'];
       const scene = document.createElement('div');
       scene.dataset.semanticScene = '';
       for (const tone of tones) for (const variant of variants) {

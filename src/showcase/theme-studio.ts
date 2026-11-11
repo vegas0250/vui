@@ -194,7 +194,7 @@ export function mountThemeStudio(host: HTMLElement): void {
       ['foreground', 'field'],
       ['foreground', 'surfaceHover'],
       ...tones.map(tone => [`${tone}Text`, `${tone}Soft`]),
-      ...tones.map(tone => [toneSolidTokens[tone], tone === 'neutral' ? 'foreground' : tone === 'danger' ? 'error' : tone]),
+      ...tones.map(tone => [toneSolidTokens[tone], tone === 'danger' ? 'error' : tone]),
       ['foreground', 'background'],
       ['foreground', 'surface'],
       ['textMuted', 'surface'],
