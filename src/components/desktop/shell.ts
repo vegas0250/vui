@@ -130,7 +130,7 @@ export class VShell extends VuiElement {
         content: "";
         width: 2px;
         height: 2.75rem;
-        border-radius: 999px;
+        border-radius: var(--vui-radius-full);
         background: var(--vui-color-border-strong);
       }
       .sep:hover::before,
@@ -148,7 +148,7 @@ export class VShell extends VuiElement {
         content: "";
         width: 2px;
         height: 2.75rem;
-        border-radius: 999px;
+        border-radius: var(--vui-radius-full);
         background: var(--vui-color-border-strong);
       }
       .aside-sep:hover::before,

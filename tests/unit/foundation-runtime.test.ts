@@ -1,21 +1,37 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { containerBand, getDensity, getTheme, readFoundation, setDensity, setTheme } from '../../src/foundation/index';
-import type { VuiDensity, VuiTheme } from '../../src/foundation/index';
+import {
+  containerBand,
+  getTheme,
+  getUIMode,
+  readFoundation,
+  setTheme,
+  setUIMode,
+} from '../../src/foundation/index';
+import type { VuiTheme, VuiUIMode } from '../../src/foundation/index';
 
-const themes: VuiTheme[] = ['light', 'dark', 'high-contrast', 'system', 'neon-green', 'neon-magenta', 'neon-cyan'];
-const densities: VuiDensity[] = ['comfortable', 'compact', 'dense'];
+const themes: VuiTheme[] = [
+  'light',
+  'dark',
+  'high-contrast',
+  'system',
+  'neon-green',
+  'neon-magenta',
+  'neon-cyan',
+];
+const modes: VuiUIMode[] = ['web', 'desktop', 'terminal'];
 
 describe('foundation runtime', () => {
   beforeEach(() => {
     document.body.replaceChildren();
     document.documentElement.setAttribute('data-vui-theme', 'light');
-    document.documentElement.setAttribute('data-vui-density', 'comfortable');
+    document.documentElement.setAttribute('data-vui-ui', 'web');
   });
 
-  it('reads one snapshot of theme, density, tokens, motion, and layers', () => {
+  it('reads one snapshot of theme, UI mode, tokens, motion, and layers', () => {
     const snapshot = readFoundation();
     expect(snapshot.theme).toBe('light');
-    expect(snapshot.density).toBe('comfortable');
+    expect(snapshot.uiMode).toBe('web');
+    expect(snapshot.density).toBe('web');
     expect(snapshot.tokens).toHaveProperty('--vui-color-background');
     expect(snapshot.tokens).toHaveProperty('--vui-size-control');
     expect(snapshot.motion.duration).toBeTypeOf('string');
@@ -24,16 +40,16 @@ describe('foundation runtime', () => {
     expect(snapshot.thresholds.medium).toBeGreaterThan(snapshot.thresholds.narrow);
   });
 
-  it('keeps theme, density, and container band independent', () => {
+  it('keeps theme, UI mode, and container band independent', () => {
     for (const theme of themes) {
-      for (const density of densities) {
+      for (const mode of modes) {
         setTheme(theme);
-        setDensity(density);
+        setUIMode(mode);
         const snapshot = readFoundation();
         expect(snapshot.theme).toBe(theme);
-        expect(snapshot.density).toBe(density);
+        expect(snapshot.uiMode).toBe(mode);
         expect(getTheme()).toBe(theme);
-        expect(getDensity()).toBe(density);
+        expect(getUIMode()).toBe(mode);
         expect(containerBand(snapshot.thresholds.narrow)).toBe('narrow');
         expect(containerBand(snapshot.thresholds.narrow + 1)).toBe('medium');
         expect(containerBand(snapshot.thresholds.medium)).toBe('medium');

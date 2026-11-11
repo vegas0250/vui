@@ -5,16 +5,16 @@ test.beforeEach(async ({ page }) => {
 });
 
 const cases = [
-  { name: 'light-comfortable-desktop', theme: 'light', density: 'comfortable', width: 1280, height: 900 },
-  { name: 'dark-comfortable-desktop', theme: 'dark', density: 'comfortable', width: 1280, height: 900 },
-  { name: 'light-compact-desktop', theme: 'light', density: 'compact', width: 1280, height: 900 },
-  { name: 'dark-compact-mobile', theme: 'dark', density: 'compact', width: 390, height: 844 },
+  { name: 'light-web-desktop', theme: 'light', ui: 'web', width: 1280, height: 900 },
+  { name: 'dark-web-desktop', theme: 'dark', ui: 'web', width: 1280, height: 900 },
+  { name: 'light-desktop-desktop', theme: 'light', ui: 'desktop', width: 1280, height: 900 },
+  { name: 'dark-desktop-mobile', theme: 'dark', ui: 'desktop', width: 390, height: 844 },
 ];
 
 for (const item of cases) {
   test(`board ${item.name}`, async ({ page }) => {
     await page.setViewportSize({ width: item.width, height: item.height });
-    await page.goto(`/visual.html?theme=${item.theme}&density=${item.density}`);
+    await page.goto(`/visual.html?theme=${item.theme}&ui=${item.ui}`);
     await page.evaluate(() => document.fonts.ready);
     const board = page.locator('#board');
     await expect(board).toBeVisible();
@@ -24,7 +24,7 @@ for (const item of cases) {
 
 test('button hover and focus', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
-  await page.goto('/visual.html?theme=light&density=comfortable');
+  await page.goto('/visual.html?theme=light&ui=web');
   await page.evaluate(() => document.fonts.ready);
   const wrap = page.locator('#btn-wrap');
   await page.locator('#btn-primary').hover();
@@ -37,7 +37,7 @@ test('button hover and focus', async ({ page }) => {
 
 test('menu open focus disabled and checked', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
-  await page.goto('/visual.html?theme=light&density=comfortable&states=menu');
+  await page.goto('/visual.html?theme=light&ui=web&states=menu');
   await page.evaluate(() => document.fonts.ready);
   const menu = page.locator('#state-menu');
   await expect(menu).toHaveAttribute('open', '');
@@ -45,35 +45,35 @@ test('menu open focus disabled and checked', async ({ page }) => {
   await expect(page.locator('#menu-states')).toHaveScreenshot('menu-open-focus.png');
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/visual.html?theme=dark&density=compact&states=menu');
+  await page.goto('/visual.html?theme=dark&ui=desktop&states=menu');
   await page.evaluate(() => document.fonts.ready);
-  await expect(page.locator('#menu-states')).toHaveScreenshot('menu-open-dark-compact.png');
+  await expect(page.locator('#menu-states')).toHaveScreenshot('menu-open-dark-desktop.png');
 });
 
-test('family strip in light and rtl dark compact', async ({ page }) => {
+test('family strip in light and rtl dark desktop', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
-  await page.goto('/visual.html?theme=light&density=comfortable&strip=1');
+  await page.goto('/visual.html?theme=light&ui=web&strip=1');
   await page.evaluate(() => document.fonts.ready);
-  await expect(page.locator('#families')).toHaveScreenshot('families-light-comfortable.png');
+  await expect(page.locator('#families')).toHaveScreenshot('families-light-web.png');
 
-  await page.goto('/visual.html?theme=dark&density=compact&dir=rtl&strip=1');
+  await page.goto('/visual.html?theme=dark&ui=desktop&dir=rtl&strip=1');
   await page.evaluate(() => document.fonts.ready);
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
-  await expect(page.locator('#families')).toHaveScreenshot('families-dark-compact-rtl.png');
+  await expect(page.locator('#families')).toHaveScreenshot('families-dark-desktop-rtl.png');
 });
 
-test('dialog light desktop and dark compact mobile', async ({ page }) => {
+test('dialog light web and dark desktop mobile', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
-  await page.goto('/visual.html?theme=light&density=comfortable');
+  await page.goto('/visual.html?theme=light&ui=web');
   await page.evaluate(() => document.fonts.ready);
   await page.locator('#open-dialog').click();
   await expect(page.locator('#focus-dialog')).toHaveAttribute('open', '');
-  await expect(page).toHaveScreenshot('dialog-light-comfortable-desktop.png');
+  await expect(page).toHaveScreenshot('dialog-light-web-desktop.png');
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/visual.html?theme=dark&density=compact');
+  await page.goto('/visual.html?theme=dark&ui=desktop');
   await page.evaluate(() => document.fonts.ready);
   await page.locator('#open-dialog').click();
   await expect(page.locator('#focus-dialog')).toHaveAttribute('open', '');
-  await expect(page).toHaveScreenshot('dialog-dark-compact-mobile.png');
+  await expect(page).toHaveScreenshot('dialog-dark-desktop-mobile.png');
 });

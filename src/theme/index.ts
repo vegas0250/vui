@@ -14,7 +14,10 @@ export type VuiTheme =
   | 'neon-magenta'
   | 'neon-cyan'
   | (string & {});
-export type VuiDensity = 'comfortable' | 'compact' | 'dense';
+/** Structural interface scale: web, desktop (Fluent 2), or terminal (TUI). */
+export type VuiUIMode = 'web' | 'desktop' | 'terminal';
+/** @deprecated Use VuiUIMode. */
+export type VuiDensity = VuiUIMode;
 
 const themes = new Set<VuiTheme>([
   'light',
@@ -25,7 +28,7 @@ const themes = new Set<VuiTheme>([
   'neon-magenta',
   'neon-cyan',
 ]);
-const densities = new Set<VuiDensity>(['comfortable', 'compact', 'dense']);
+const uiModes = new Set<VuiUIMode>(['web', 'desktop', 'terminal']);
 
 export function setTheme(
   theme: VuiTheme,
@@ -46,18 +49,31 @@ export function setTheme(
   root.setAttribute('data-vui-theme', theme);
 }
 
-export function setDensity(
-  density: VuiDensity,
+export function setUIMode(
+  mode: VuiUIMode,
   root: HTMLElement = document.documentElement,
 ): void {
-  if (!densities.has(density)) {
+  if (!uiModes.has(mode)) {
     reportDeveloper(
-      'density',
-      `Unknown density "${String(density)}". Expected comfortable|compact|dense. The current density stays.`,
+      'ui',
+      `Unknown UI mode "${String(mode)}". Expected web|desktop|terminal. The current UI mode stays.`,
     );
     return;
   }
-  root.setAttribute('data-vui-density', density);
+  root.setAttribute('data-vui-ui', mode);
+  root.removeAttribute('data-vui-density');
+  // Drop inline elevation so ui.css mode recipes (especially terminal: none) can apply.
+  for (const key of ['--vui-shadow-sm', '--vui-shadow-md', '--vui-shadow-lg']) {
+    root.style.removeProperty(key);
+  }
+}
+
+/** @deprecated Use setUIMode. */
+export function setDensity(
+  density: VuiUIMode | 'comfortable' | 'compact' | 'dense',
+  root: HTMLElement = document.documentElement,
+): void {
+  setUIMode(normalizeUIMode(density), root);
 }
 
 export function getTheme(
@@ -70,13 +86,31 @@ export function getTheme(
     : 'light';
 }
 
+export function getUIMode(
+  root: HTMLElement = document.documentElement,
+): VuiUIMode {
+  const value = root.getAttribute('data-vui-ui');
+  if (value !== null && uiModes.has(value as VuiUIMode)) return value as VuiUIMode;
+  const legacy = root.getAttribute('data-vui-density');
+  if (legacy === 'web' || legacy === 'desktop') return legacy;
+  if (legacy === 'comfortable') return 'web';
+  if (legacy === 'compact' || legacy === 'dense') return 'desktop';
+  return 'web';
+}
+
+/** @deprecated Use getUIMode. */
 export function getDensity(
   root: HTMLElement = document.documentElement,
-): VuiDensity {
-  const value = root.getAttribute('data-vui-density');
-  return value !== null && densities.has(value as VuiDensity)
-    ? (value as VuiDensity)
-    : 'comfortable';
+): VuiUIMode {
+  return getUIMode(root);
+}
+
+export function normalizeUIMode(
+  value: string | null | undefined,
+): VuiUIMode {
+  if (value === 'terminal') return 'terminal';
+  if (value === 'desktop' || value === 'compact' || value === 'dense') return 'desktop';
+  return 'web';
 }
 
 installVuiStyles();

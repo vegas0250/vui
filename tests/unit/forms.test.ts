@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import '../../src/categories/forms';
-import { getDensity, getTheme, setDensity, setTheme } from '../../src/theme/index';
+import { getTheme, getUIMode, setTheme, setUIMode } from '../../src/theme/index';
 
 describe('forms', () => {
   beforeEach(() => {
     document.body.replaceChildren();
     document.documentElement.removeAttribute('data-vui-theme');
-    document.documentElement.removeAttribute('data-vui-density');
+    document.documentElement.removeAttribute('data-vui-ui');
   });
 
   it('registers form controls without pulling dialog', () => {
@@ -48,19 +48,24 @@ describe('forms', () => {
   });
 });
 
-describe('theme and density', () => {
-  it('sets theme and density attributes', () => {
+describe('theme and UI mode', () => {
+  it('sets theme and UI mode attributes', () => {
     setTheme('dark');
-    setDensity('dense');
+    setUIMode('desktop');
     expect(getTheme()).toBe('dark');
-    expect(getDensity()).toBe('dense');
+    expect(getUIMode()).toBe('desktop');
     expect(document.documentElement.getAttribute('data-vui-theme')).toBe('dark');
-    expect(document.documentElement.getAttribute('data-vui-density')).toBe('dense');
+    expect(document.documentElement.getAttribute('data-vui-ui')).toBe('desktop');
 
     const css = document.getElementById('vui-styles')?.textContent ?? '';
     expect(css).toContain('--vui-color-primary');
     expect(css).toContain('[data-vui-theme="high-contrast"]');
-    expect(css).toContain('[data-vui-density="dense"]');
+    expect(css).toContain('[data-vui-ui="desktop"]');
+    expect(css).toContain('[data-vui-ui="terminal"]');
     expect(css).toContain('prefers-color-scheme: dark');
+
+    setUIMode('terminal');
+    expect(getUIMode()).toBe('terminal');
+    expect(document.documentElement.getAttribute('data-vui-ui')).toBe('terminal');
   });
 });

@@ -20,9 +20,25 @@ body {
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vui-space-sm);
+  color: var(--vui-color-text);
+  text-decoration: none;
+  min-height: var(--vui-size-control);
+}
+
+.brand-mark {
+  flex: none;
+  display: block;
+  border-radius: var(--vui-radius-sm);
+}
+
+.brand-text {
   font-size: var(--vui-heading-3);
   font-weight: var(--vui-font-weight-strong);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
+  line-height: 1;
 }
 
 .header-controls {
@@ -31,6 +47,29 @@ body {
   align-items: end;
   justify-content: flex-end;
   gap: var(--vui-space-sm);
+}
+
+.documentation-site .topbar {
+  border-bottom: var(--vui-border-width) solid var(--vui-color-border);
+  background: color-mix(in srgb, var(--vui-color-surface) 88%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.docs-theme-control {
+  display: grid;
+  gap: var(--vui-space-2xs);
+  font-size: var(--vui-font-size-sm);
+  color: var(--vui-color-text-muted);
+}
+
+.docs-theme-control select {
+  min-height: var(--vui-size-control-sm);
+  padding: 0 var(--vui-space-sm);
+  border: var(--vui-border-width) solid var(--vui-color-border);
+  border-radius: var(--vui-radius);
+  background: var(--vui-color-field, var(--vui-color-surface));
+  color: var(--vui-color-text);
+  font: inherit;
 }
 
 main {

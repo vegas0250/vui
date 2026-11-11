@@ -15,7 +15,7 @@ VUI предоставляет:
 - visual primitives;
 - design tokens;
 - themes;
-- density;
+- UI mode (`web` | `desktop` | `terminal`);
 - responsive behavior;
 - accessibility;
 - Web Components;
@@ -99,7 +99,7 @@ VUI
 ├── Foundation
 │   ├── Tokens
 │   ├── Theme
-│   ├── Density
+│   ├── UI mode
 │   ├── Responsive
 │   ├── Layout
 │   ├── Accessibility

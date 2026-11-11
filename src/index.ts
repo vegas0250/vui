@@ -80,8 +80,15 @@ export {
   normalizeShortcut,
 } from './interaction/index';
 export type { Command, Shortcut, SelectionMode } from './interaction/index';
-export { getDensity, getTheme, setDensity, setTheme } from './theme/index';
-export type { VuiDensity, VuiTheme } from './theme/index';
+export {
+  getDensity,
+  getTheme,
+  getUIMode,
+  setDensity,
+  setTheme,
+  setUIMode,
+} from './theme/index';
+export type { VuiDensity, VuiTheme, VuiUIMode } from './theme/index';
 export { containerBand, prefersForcedColors, prefersReducedMotion, readFoundation, readToken } from './foundation/index';
 export type { ContainerBand, FoundationSnapshot } from './foundation/index';
 export { checkCompliance, listContracts, registerContract } from './contract/index';

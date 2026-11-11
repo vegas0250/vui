@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test('showcase switches theme and density', async ({ page }) => {
+test('showcase switches theme and UI mode', async ({ page }) => {
   await page.goto('/?legacy=1');
   await expect(page.getByRole('heading', { name: 'VUI Studio' })).toBeVisible();
   await expect(page.locator('vui-button', { hasText: 'Сохранить' }).first()).toBeVisible();
@@ -16,10 +16,10 @@ test('showcase switches theme and density', async ({ page }) => {
   await page.locator('#docs-theme').selectOption('tokyo-night');
   await expect(page.locator('html')).toHaveAttribute('data-vui-theme', 'tokyo-night');
 
-  const density = page.locator('#density-select');
-  await density.locator('button').click();
-  await density.locator('[role="option"]', { hasText: 'Dense' }).click();
-  await expect(page.locator('html')).toHaveAttribute('data-vui-density', 'dense');
+  const uiMode = page.locator('#ui-mode-select');
+  await uiMode.locator('button').click();
+  await uiMode.locator('[role="option"]', { hasText: 'Desktop design' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-vui-ui', 'desktop');
 
   await expect(page.locator('#platform-shell')).toBeVisible();
   await expect(page.locator('#platform-grid')).toContainText('Button');

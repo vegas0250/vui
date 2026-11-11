@@ -213,7 +213,7 @@ export class VTabs extends VuiElement {
         gap: var(--vui-space-2xs);
         width: 100%;
         min-width: 0;
-        min-height: 2.4rem;
+        min-height: var(--vui-size-control);
         padding: var(--vui-space-xs);
         border-bottom: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
         background: var(--vui-color-surface);

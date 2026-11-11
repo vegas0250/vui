@@ -21,9 +21,9 @@ npm install vui
 ```html
 <script type="module">
   import 'vui';
-  import { setTheme, setDensity } from 'vui/theme';
+  import { setTheme, setUIMode } from 'vui/theme';
   setTheme('dark');
-  setDensity('compact');
+  setUIMode('desktop');
 </script>
 <vui-button variant="primary">Save</vui-button>
 ```
@@ -33,7 +33,7 @@ npm install vui
 Направление текста — атрибут документа, не тема:
 
 ```html
-<html dir="rtl" data-vui-theme="light" data-vui-density="comfortable">
+<html dir="rtl" data-vui-theme="light" data-vui-ui="web"><!-- data-vui-ui: web | desktop | terminal -->
 ```
 
 ## Architecture
@@ -42,11 +42,11 @@ npm install vui
 Foundation → Interaction → Contracts → Components → Composition → Patterns → Application Shell → Studio
 ```
 
-Foundation: tokens, theme, density, responsive, motion, a11y runtime. Interaction: focus, keyboard, selection, commands, overlay, pointer, drag, clipboard. Contracts проверяют attributes, семейства и сборку. Components — custom elements. Composition описывает слоты и детей. Patterns и shell собирают уже опубликованный API.
+Foundation: tokens, theme, UI mode, responsive, motion, a11y runtime. Interaction: focus, keyboard, selection, commands, overlay, pointer, drag, clipboard. Contracts проверяют attributes, семейства и сборку. Components — custom elements. Composition описывает слоты и детей. Patterns и shell собирают уже опубликованный API.
 
-## Foundation, tokens, themes, density, responsive, layout
+## Foundation, tokens, themes, UI mode, responsive, layout
 
-Три слоя токенов: primitive (`src/tokens/tokens.css`), semantic (`themes/`), component (высоты chrome). Плотность меняет шкалу, не палитру. Responsive читает ширину контейнера. Пороги 22rem, 36rem и 40rem не зависят от темы. Layout-словарь: `gap`, `padding`, `align`, `justify`, `overflow`.
+Три слоя токенов: primitive (`src/tokens/tokens.css`), semantic (`themes/`), component (высоты chrome). UI mode (`web` | `desktop` | `terminal`) меняет структурную шкалу в `ui.css`, не палитру. Responsive читает ширину контейнера. Пороги 22rem, 36rem и 40rem не зависят от темы. Layout-словарь: `gap`, `padding`, `align`, `justify`, `overflow`.
 
 Своя тема переопределяет semantic properties (`--vui-color-*`, `--vui-shadow-*`, `--vui-focus-ring`), а не имена компонентов.
 
@@ -84,7 +84,7 @@ Pattern — страница из этих primitive для типового с�
 Unit → Compliance → Interaction → Composition → Accessibility → Visual → Build / package
 ```
 
-`pnpm test` гоняет unit, compliance, interaction, composition, матрицу exports и повторный mount. `pnpm test:e2e` гоняет Studio, responsive, accessibility и visual matrix в `visual.html`: четыре сочетания темы и viewport, состояния, плюс полоса семейств в light и в dark/compact/rtl. Снимки не умножаются на все темы и плотности. `checkCompliance()` проходит по всему реестру.
+`pnpm test` гоняет unit, compliance, interaction, composition, матрицу exports и повторный mount. `pnpm test:e2e` гоняет Studio, responsive, accessibility и visual matrix в `visual.html`: четыре сочетания темы, UI mode и viewport, состояния, плюс полоса семейств в light/web и в dark/desktop/rtl. Снимки не умножаются на все темы и режимы. `checkCompliance()` проходит по всему реестру.
 
 Публичная карта exports заморожена тестом `tests/unit/exports.test.ts`. `tests/unit/export-matrix.test.ts` проверяет, что каждый элемент доступен из файла компонента, категории и `import 'vui'`, и что зарегистрированный класс — тот же. Удаление ключа — ломающее изменение.
 
@@ -110,7 +110,7 @@ vui/themes/*
 
 ## Theming, customization
 
-`setTheme` / `setDensity` или атрибуты `data-vui-theme` и `data-vui-density`. Своя тема — тот же набор semantic properties. `part` — точка внешней стилизации. Внутренние классы shadow контрактом не являются.
+`setTheme` / `setUIMode` или атрибуты `data-vui-theme` и `data-vui-ui` (`web` | `desktop` | `terminal`). Тема задаёт semantic colors; UI mode — structural scale в `vui/themes/ui`. Своя тема — тот же набор semantic properties. `part` — точка внешней стилизации. Внутренние классы shadow контрактом не являются.
 
 ## Migration / versioning
 

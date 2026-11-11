@@ -3,13 +3,19 @@ import { VDataGrid } from '../components/data/data-grid';
 import { VDialog } from '../components/overlay/dialog';
 
 const themes = new Set(['light', 'dark', 'high-contrast', 'system', 'neon-green', 'neon-magenta', 'neon-cyan']);
-const densities = new Set(['comfortable', 'compact', 'dense']);
+const uiModes = new Set(['web', 'desktop', 'terminal']);
 const params = new URLSearchParams(location.search);
 const theme = params.get('theme') ?? 'light';
-const density = params.get('density') ?? 'comfortable';
+const rawUI = params.get('ui') ?? params.get('density') ?? 'web';
+const uiMode =
+  rawUI === 'terminal'
+    ? 'terminal'
+    : rawUI === 'desktop' || rawUI === 'compact' || rawUI === 'dense'
+      ? 'desktop'
+      : 'web';
 const dir = params.get('dir');
 document.documentElement.setAttribute('data-vui-theme', themes.has(theme) ? theme : 'light');
-document.documentElement.setAttribute('data-vui-density', densities.has(density) ? density : 'comfortable');
+document.documentElement.setAttribute('data-vui-ui', uiModes.has(uiMode) ? uiMode : 'web');
 if (dir === 'rtl' || dir === 'ltr') document.documentElement.setAttribute('dir', dir);
 
 const style = document.createElement('style');

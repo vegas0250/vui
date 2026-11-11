@@ -37,7 +37,7 @@ export function Name() {
 }
 ```
 
-Import `vui/themes/tokens`, `vui/themes/density`, and `vui/themes/system` in
+Import `vui/themes/tokens`, `vui/themes/ui`, and `vui/themes/system` in
 `app/layout.tsx` for initial token styles. Set `data-vui-theme="system"` on
 `<html>` to follow OS appearance. Components install the complete theme stylesheet
 when they mount. No provider, `transpilePackages`, or `ssr: false` is required.
@@ -66,15 +66,17 @@ available. Components work in Electron's renderer with the same tokens and API.
 
 ```ts
 // Browser code
-import { setTheme, setDensity } from 'vui/theme';
+import { setTheme, setUIMode } from 'vui/theme';
 setTheme('tokyo-night');
-setDensity('compact');
+setUIMode('desktop'); // or 'web' | 'terminal'
 ```
 
-Override `--vui-*` CSS custom properties for application customization. Existing
-light, dark, system, high-contrast and palette themes remain available. Theme
-Studio supports live preview, color editing and validated JSON import/export;
-it is documentation tooling and is not included in the runtime.
+Theme (semantic colors) and UI mode (structural scale) are independent axes.
+`terminal` is a monospace TUI-inspired visual mode, not a shell. Override
+`--vui-*` CSS custom properties for application customization. Existing light,
+dark, system, high-contrast and palette themes remain available. Theme Studio
+supports live preview, color editing and validated JSON import/export; it is
+documentation tooling and is not included in the runtime.
 
 ## Development
 

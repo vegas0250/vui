@@ -47,29 +47,29 @@ test('responsive containers adapt without a horizontal page scroll', async ({ pa
   expect(pageOverflow).toBe(true);
 });
 
-test('theme and density stay valid for every combination', async ({ page }) => {
+test('theme and UI mode stay valid for every combination', async ({ page }) => {
   await page.goto('/?legacy=1');
   const themes = [
     ['catppuccin-latte', 'catppuccin-latte', 'Catppuccin Latte'],
     ['tokyo-night', 'tokyo-night', 'Tokyo Night'],
     ['nord', 'nord', 'Nord'],
   ] as const;
-  const densities = [
-    ['Comfortable', 'comfortable'],
-    ['Compact', 'compact'],
-    ['Dense', 'dense'],
+  const modes = [
+    ['Web design', 'web'],
+    ['Desktop design', 'desktop'],
+    ['Terminal design', 'terminal'],
   ] as const;
 
   for (const [themeLabel, theme, themeReadout] of themes) {
     await page.locator('#docs-theme').selectOption(themeLabel);
     await expect(page.locator('html')).toHaveAttribute('data-vui-theme', theme);
 
-    for (const [densityLabel, density] of densities) {
-      const densitySelect = page.locator('#density-select');
-      await densitySelect.locator('button').click();
-      await densitySelect.locator('[role="option"]', { hasText: densityLabel }).click();
-      await expect(page.locator('html')).toHaveAttribute('data-vui-density', density);
-      await expect(page.locator('#responsive-readout')).toContainText(`${themeReadout} + ${densityLabel}`);
+    for (const [modeLabel, mode] of modes) {
+      const uiSelect = page.locator('#ui-mode-select');
+      await uiSelect.locator('button').click();
+      await uiSelect.locator('[role="option"]', { hasText: modeLabel }).click();
+      await expect(page.locator('html')).toHaveAttribute('data-vui-ui', mode);
+      await expect(page.locator('#responsive-readout')).toContainText(`${themeReadout} + ${modeLabel}`);
       await expect(page.locator('#responsive-toolbar')).toBeVisible();
       await expect(page.locator('vui-button', { hasText: 'Сохранить' }).first()).toBeVisible();
     }

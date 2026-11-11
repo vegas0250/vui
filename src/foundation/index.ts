@@ -1,4 +1,6 @@
 export { focusRingToken, prefersForcedColors, prefersReducedMotion } from './accessibility';
+export { getUIMode, setUIMode } from './ui';
+export type { VuiUIMode } from './ui';
 export { getDensity, setDensity } from './density';
 export type { VuiDensity } from './density';
 export { readLayers, layerTokens } from './layers';

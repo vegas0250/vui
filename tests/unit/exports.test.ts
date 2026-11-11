@@ -81,6 +81,7 @@ const publicExports = [
   './data',
   './desktop',
   './themes/tokens',
+  './themes/ui',
   './themes/density',
   './themes/light',
   './themes/dark',
@@ -109,7 +110,10 @@ describe('public package surface', () => {
     expect(pkg.sideEffects).toContain('./src/components/**/*.ts');
     for (const file of walk(join(root, 'src/components'))) {
       if (file.endsWith('.test.ts') || !readFileSync(file, 'utf8').includes('defineElement(')) continue;
-      const entry = file.replace(join(root, 'src'), './dist').replace(/\.ts$/, '.js');
+      const entry = file
+        .replace(join(root, 'src'), './dist')
+        .replace(/\\/g, '/')
+        .replace(/\.ts$/, '.js');
       expect(pkg.sideEffects, file).toContain(entry);
     }
     for (const folder of ['foundation', 'contract', 'composition', 'families', 'interaction']) {

@@ -386,7 +386,8 @@
       "import": "./dist/categories/desktop.js"
     },
     "./themes/tokens": "./src/tokens/tokens.css",
-    "./themes/density": "./src/tokens/density.css",
+    "./themes/ui": "./src/tokens/ui.css",
+    "./themes/density": "./src/tokens/ui.css",
     "./themes/light": "./themes/light.css",
     "./themes/dark": "./themes/dark.css",
     "./themes/high-contrast": "./themes/high-contrast.css",

@@ -1,7 +1,7 @@
 /*
-  Primitive tokens and component metrics that do not follow density.
+  Primitive tokens and component metrics that do not follow UI mode.
   Semantic colors, shadows, and border width are assigned in themes/.
-  Space, type, radius, control size, and chrome heights are assigned in density.css.
+  Space, type, radius, control size, chrome heights and UI-mode focus recipes are assigned in ui.css (web | desktop | terminal).
   @container cannot read var(); component CSS repeats the threshold lengths below.
 */
 

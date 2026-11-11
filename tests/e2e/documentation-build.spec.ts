@@ -30,11 +30,11 @@ test('optimized website registers every component and runs the real examples', a
 
 test('documentation uses VUI metrics and keeps content within responsive columns', async ({ page }) => {
   await page.goto('/?lang=en#/getting-started');
-  for (const density of ['comfortable', 'compact', 'dense']) {
-    await page.locator('#density-select').evaluate((element, value) => {
+  for (const mode of ['web', 'desktop']) {
+    await page.locator('#ui-mode-select').evaluate((element, value) => {
       (element as HTMLElement & { value: string }).value = value;
       element.dispatchEvent(new Event('change'));
-    }, density);
+    }, mode);
     await expect.poll(() => page.locator('h1').evaluate((heading) => {
       const styles = getComputedStyle(heading);
       return styles.fontSize === styles.getPropertyValue('--vui-heading-1').trim();

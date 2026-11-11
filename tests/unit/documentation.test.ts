@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import '../../src/index';
 import { componentCatalog, componentImport, description } from '../../src/showcase/component-data';
-import { exampleCode, exampleFor, exampleMarkup, interfaceExample } from '../../src/showcase/examples';
+import { buttonSections, exampleCode, exampleFor, exampleJsx, exampleMarkup, interfaceExample } from '../../src/showcase/examples';
 import pkg from '../../package.json';
 
 describe('documentation completeness', () => {
@@ -44,5 +44,20 @@ describe('documentation completeness', () => {
       expect(copied).toContain('type="module"');
       expect(copied).not.toContain('src/showcase');
     }
+  });
+  it('documents every button tone, variant family, size and state', () => {
+    const html = buttonSections().map((section) => section.example.html).join('\n');
+    for (const tone of ['neutral', 'primary', 'secondary', 'accent', 'success', 'warning', 'danger', 'info']) {
+      expect(html).toContain(`tone="${tone}"`);
+    }
+    for (const variant of ['solid', 'soft', 'outline', 'ghost', 'primary', 'secondary', 'danger']) {
+      expect(html).toContain(`variant="${variant}"`);
+    }
+    for (const size of ['small', 'medium', 'large']) expect(html).toContain(`size="${size}"`);
+    expect(html).toContain('disabled');
+    expect(html).toContain('loading');
+    const jsx = exampleJsx(buttonSections()[0]!.example);
+    expect(jsx).toContain("import { Button } from 'vui/react'");
+    expect(jsx).toContain('<Button>');
   });
 });

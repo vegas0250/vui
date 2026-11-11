@@ -22,7 +22,7 @@ not need an application provider, state manager, router, or dependency injection
 | `src/components/` | Elements grouped by purpose; adjacent React adapters and component tests |
 | `src/theme/` | Presets, validation, import/export, applying CSS variables |
 | `src/utils/` | Element lifecycle, property reflection, styles, events, React adapter |
-| `src/tokens/` | Shared CSS custom properties and density scales |
+| `src/tokens/` | Shared CSS custom properties and UI mode scales |
 | `src/interaction/` | Shared keyboard, focus, selection, overlay and pointer behavior |
 | `src/showcase/` | Documentation, Theme Studio drafts, documentation navigation and preview templates; never published |
 
@@ -80,7 +80,7 @@ forms, a modal and grid object props.
 
 CSS custom properties are the rendering source of truth. Components consume the
 same `--vui-*` tokens for every palette. Presets provide validated values for
-those tokens; density changes scale and spacing without changing theme state.
+those tokens; UI mode changes scale and spacing without changing theme state.
 Legacy theme entry points remain available. Explicit preferences win over OS
 preferences; documentation defaults to Tokyo Night for dark and Catppuccin Latte
 for light. Theme Studio draft state is separate from the documentation theme.

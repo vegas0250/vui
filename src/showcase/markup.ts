@@ -9,10 +9,10 @@ export const showcaseMarkup = `
           <vui-option value="high-contrast">Контрастная</vui-option>
           <vui-option value="system">Системная</vui-option>
         </vui-select>
-        <vui-select id="density-select" label="Плотность" size="small" value="comfortable">
-          <vui-option value="comfortable">Comfortable</vui-option>
-          <vui-option value="compact">Compact</vui-option>
-          <vui-option value="dense">Dense</vui-option>
+        <vui-select id="ui-mode-select" label="UI mode" size="small" value="web">
+          <vui-option value="web">Web design</vui-option>
+          <vui-option value="desktop">Desktop design</vui-option>
+          <vui-option value="terminal">Terminal design</vui-option>
         </vui-select>
         <vui-select id="dir-select" label="Направление" size="small" value="ltr">
           <vui-option value="ltr">LTR</vui-option>
@@ -140,9 +140,9 @@ export const showcaseMarkup = `
             <p class="demo-note">Light, Dark, High Contrast и System меняют семантические tokens. Имена свойств остаются теми же. Компонент не ветвится по имени темы.</p>
           </vui-panel>
 
-          <h3 id="foundation-density">Density</h3>
-          <vui-panel heading="Плотность">
-            <p class="demo-note">Comfortable, Compact и Dense меняют размеры контролов, интервалы и высоты chrome. Пороги контейнера от плотности не зависят.</p>
+          <h3 id="foundation-density">UI mode</h3>
+          <vui-panel heading="UI mode">
+            <p class="demo-note">Web, Desktop и Terminal меняют структурную шкалу (тип, отступы, радиусы, chrome). Палитра темы не меняется. Пороги контейнера от UI mode не зависят.</p>
           </vui-panel>
 
           <h3 id="foundation-responsive">Responsive</h3>

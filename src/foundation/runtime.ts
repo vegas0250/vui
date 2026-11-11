@@ -1,18 +1,20 @@
 import { installVuiStyles } from '../theme/install';
 import { prefersForcedColors, prefersReducedMotion } from './accessibility';
-import { getDensity } from './density';
 import { readLayers } from './layers';
 import { readMotion } from './motion';
 import { inlineThreshold } from './responsive';
 import { getTheme } from './theme';
+import { getUIMode } from './ui';
 import { componentTokens, primitiveTokens, readToken, semanticTokens } from './tokens';
-import type { VuiDensity } from './density';
 import type { LayerName } from './layers';
 import type { VuiTheme } from './theme';
+import type { VuiUIMode } from './ui';
 
 export interface FoundationSnapshot {
   theme: VuiTheme;
-  density: VuiDensity;
+  uiMode: VuiUIMode;
+  /** @deprecated Use uiMode. */
+  density: VuiUIMode;
   reducedMotion: boolean;
   forcedColors: boolean;
   motion: { duration: string; easing: string };
@@ -26,15 +28,17 @@ export function connectFoundation(): void {
   installVuiStyles();
 }
 
-/** Current theme, density, tokens, motion, layers, and container thresholds. The three axes stay independent. */
+/** Current theme, UI mode, tokens, motion, layers, and container thresholds. The three axes stay independent. */
 export function readFoundation(root: HTMLElement = document.documentElement): FoundationSnapshot {
   connectFoundation();
   const names = [...primitiveTokens, ...semanticTokens, ...componentTokens];
   const tokens: Record<string, string> = {};
   for (const name of names) tokens[name] = readToken(name, root);
+  const uiMode = getUIMode(root);
   return {
     theme: getTheme(root),
-    density: getDensity(root),
+    uiMode,
+    density: uiMode,
     reducedMotion: prefersReducedMotion(),
     forcedColors: prefersForcedColors(),
     motion: readMotion(root),

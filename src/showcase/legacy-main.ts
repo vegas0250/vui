@@ -3,16 +3,16 @@ import {
   ShortcutRegistry,
   draggable,
   dropTarget,
-  getDensity,
   getTheme,
+  getUIMode,
   familyMembers,
   iconNames,
   listCompositions,
   listContracts,
-  setDensity,
   setTheme,
+  setUIMode,
   toast,
-  type VuiDensity,
+  type VuiUIMode,
   type VuiTheme,
   builtInThemes,
 } from '../index';
@@ -31,10 +31,10 @@ if (!app) throw new Error('Showcase root is missing');
 app.innerHTML = showcaseMarkup.replace('</main>', `${studioMarkup}</main>`);
 
 const themes = new Set<VuiTheme>(['light', 'dark', 'high-contrast', 'system', 'neon-green', 'neon-magenta', 'neon-cyan']);
-const densities = new Set<VuiDensity>(['comfortable', 'compact', 'dense']);
+const uiModes = new Set<VuiUIMode>(['web', 'desktop', 'terminal']);
 
 const themeSelect = document.querySelector('#theme-select');
-const densitySelect = document.querySelector('#density-select');
+const uiModeSelect = document.querySelector('#ui-mode-select');
 
 const themeLabels: Record<string, string> = {
   ...Object.fromEntries(builtInThemes.map(theme => [theme.id,theme.name])),
@@ -46,10 +46,10 @@ const themeLabels: Record<string, string> = {
   'neon-magenta': 'Neon Magenta',
   'neon-cyan': 'Neon Cyan',
 };
-const densityLabels: Record<VuiDensity, string> = {
-  comfortable: 'Comfortable',
-  compact: 'Compact',
-  dense: 'Dense',
+const uiModeLabels: Record<VuiUIMode, string> = {
+  web: 'Web design',
+  desktop: 'Desktop design',
+  terminal: 'Terminal design',
 };
 
 const updateResponsiveReadout = (): void => {
@@ -57,7 +57,7 @@ const updateResponsiveReadout = (): void => {
   const stage = document.querySelector('#resize-stage');
   if (!readout || !(stage instanceof HTMLElement)) return;
   const width = Math.round(stage.getBoundingClientRect().width);
-  readout.textContent = `${themeLabels[getTheme()]} + ${densityLabels[getDensity()]} + ${width}px`;
+  readout.textContent = `${themeLabels[getTheme()]} + ${uiModeLabels[getUIMode()]} + ${width}px`;
   paintFoundation(width);
 };
 
@@ -68,7 +68,7 @@ const paintFoundation = (stageWidth = 0): void => {
   const band = containerBand(stageWidth);
   const rows: Array<[string, string]> = [
     ['theme', snapshot.theme],
-    ['density', snapshot.density],
+    ['uiMode', snapshot.uiMode],
     ['band', stageWidth > 0 ? band : '—'],
     ['background', snapshot.tokens['--vui-color-background'] || '—'],
     ['control', snapshot.tokens['--vui-size-control'] || '—'],
@@ -107,10 +107,10 @@ if (themeSelect instanceof HTMLElement) {
   });
 }
 
-if (densitySelect instanceof HTMLElement) {
-  densitySelect.addEventListener('change', () => {
-    const value = densitySelect.getAttribute('value') ?? '';
-    if (densities.has(value as VuiDensity)) setDensity(value as VuiDensity);
+if (uiModeSelect instanceof HTMLElement) {
+  uiModeSelect.addEventListener('change', () => {
+    const value = uiModeSelect.getAttribute('value') ?? '';
+    if (uiModes.has(value as VuiUIMode)) setUIMode(value as VuiUIMode);
     updateResponsiveReadout();
   });
 }

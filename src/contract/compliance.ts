@@ -91,7 +91,7 @@ export function checkCompliance(element: HTMLElement, contract: ComponentContrac
   if (colors.length) failures.push(`hardcoded design color: ${colors.join(', ')}`);
   if (!css.includes('var(--vui-')) failures.push('styles do not use Foundation tokens');
   if (!css.includes('--vui-color-text')) failures.push('theme token --vui-color-text is missing from base styles');
-  if (!css.includes('--vui-font-size')) failures.push('density token --vui-font-size is missing from base styles');
+  if (!css.includes('--vui-font-size')) failures.push('UI mode token --vui-font-size is missing from base styles');
   if (!css.includes('prefers-reduced-motion')) failures.push('reduced motion is missing from base styles');
   if (contract.focus === 'native' && !css.includes(':focus-visible') && !css.includes('--vui-focus-ring')) {
     failures.push('focus-visible ring is missing');

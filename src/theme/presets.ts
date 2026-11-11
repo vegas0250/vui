@@ -49,7 +49,10 @@ export interface ThemeAppearance {
   radiusSelector?: number;
   borderWidth?: number;
   shadowIntensity?: number;
-  density?: 'comfortable' | 'compact' | 'dense';
+  /** Preferred structural scale. Color-only themes omit this and keep the host mode. */
+  uiMode?: 'web' | 'desktop' | 'terminal';
+  /** @deprecated Use uiMode. */
+  density?: 'web' | 'desktop' | 'terminal' | 'comfortable' | 'compact' | 'dense';
 }
 export interface ThemePreset {
   readonly id: string;
@@ -74,7 +77,25 @@ const definitions: Array<[string, string, ThemeMode]> = [
   ['rose-pine-dawn', 'Rosé Pine Dawn', 'light'],
   ['modern-light', 'Modern Light', 'light'],
   ['retro', 'Retro', 'light'],
+  ['fluent-light', 'Fluent Light', 'light'],
+  ['fluent-dark', 'Fluent Dark', 'dark'],
+  ['radix-light', 'Radix Light', 'light'],
+  ['radix-dark', 'Radix Dark', 'dark'],
 ];
+/* Structural presets prefer a UI mode; radii/shadows come from ui.css unless a delta is intentional. */
+const structuralAppearance: Record<string, Readonly<ThemeAppearance>> = {
+  retro: Object.freeze({
+    radiusBox: 8,
+    radiusField: 4,
+    radiusSelector: 4,
+    borderWidth: 1,
+    shadowIntensity: 0,
+  }),
+  'fluent-light': Object.freeze({ uiMode: 'desktop' }),
+  'fluent-dark': Object.freeze({ uiMode: 'desktop', shadowIntensity: 120 }),
+  'radix-light': Object.freeze({ uiMode: 'web' }),
+  'radix-dark': Object.freeze({ uiMode: 'web', shadowIntensity: 90 }),
+};
 export const builtInThemes: readonly ThemePreset[] = Object.freeze(
   definitions.map(([id, name, mode]) => {
     const roles = referenceRoles[id];
@@ -167,8 +188,12 @@ export const builtInThemes: readonly ThemePreset[] = Object.freeze(
       tokens[`${tone}Text`] = [...actualSurfaces, tokens[`${tone}Soft`]].reduce((color, bg) => readable(color, bg), tokens[`${tone}Text`]);
     }
     tokens.controlBorder = [tokens.field, tokens.surface, tokens.card].reduce((color, bg) => readable(color, bg, 3), tokens.controlBorder);
-    return Object.freeze({ id, name, mode, tokens: Object.freeze(tokens),
-      ...(id === 'retro' ? { appearance: Object.freeze({ radiusBox: 8, radiusField: 4, radiusSelector: 4, borderWidth: 1, shadowIntensity: 0 }) } : {}),
+    return Object.freeze({
+      id,
+      name,
+      mode,
+      tokens: Object.freeze(tokens),
+      ...(structuralAppearance[id] ? { appearance: structuralAppearance[id] } : {}),
     });
   }),
 );

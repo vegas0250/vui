@@ -2,7 +2,7 @@ import { inlineThreshold, lengthToPx, observeInlineSize, readLength } from '../u
 
 export { inlineThreshold, lengthToPx, observeInlineSize, readLength };
 
-/** Container width band. Theme and density do not participate. */
+/** Container width band. Theme and UI mode do not participate. */
 export type ContainerBand = 'narrow' | 'medium' | 'wide';
 
 /**

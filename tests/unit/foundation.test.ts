@@ -6,7 +6,7 @@ import neonCyanCss from '../../themes/neon-cyan.css?raw';
 import neonGreenCss from '../../themes/neon-green.css?raw';
 import neonMagentaCss from '../../themes/neon-magenta.css?raw';
 import systemCss from '../../themes/system.css?raw';
-import densityCss from '../../src/tokens/density.css?raw';
+import uiCss from '../../src/tokens/ui.css?raw';
 import '../../src/components/layout/grid';
 import '../../src/components/layout/panel';
 import '../../src/components/layout/split-panel';
@@ -28,7 +28,10 @@ describe('token contract', () => {
     for (const css of [lightCss, darkCss, highContrastCss, systemCss, neonGreenCss, neonMagentaCss, neonCyanCss]) {
       expect(css).toContain('--vui-color-selected:');
     }
-    expect(densityCss.match(/--vui-panel-padding: var\(--vui-space-lg\)/g)).toHaveLength(3);
+    expect(uiCss.match(/--vui-panel-padding: var\(--vui-space-lg\)/g)).toHaveLength(3);
+    expect(uiCss).toContain('[data-vui-ui="terminal"]');
+    expect(uiCss).toContain('--vui-font-sans: var(--vui-font-mono)');
+    expect(uiCss).toContain('--vui-shadow-sm: none');
   });
 });
 

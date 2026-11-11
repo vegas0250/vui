@@ -76,12 +76,12 @@ test('standalone documentation persists preferences and fits a narrow viewport',
   await page.locator('#docs-theme').selectOption('nord');
   await expect(page.locator('[data-example-code]').first()).toContainText('applyTheme("nord")');
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem('vui.theme.preference.v1')!))).toBe('nord');
-  await page.locator('#density-select button').click();
-  await page.getByRole('option', { name: 'Compact', exact: true }).click();
-  await expect(page.locator('[data-example-code]').first()).toContainText("setDensity('compact')");
+  await page.locator('#ui-mode-select button').click();
+  await page.getByRole('option', { name: 'Desktop design', exact: true }).click();
+  await expect(page.locator('[data-example-code]').first()).toContainText("setUIMode('desktop')");
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-vui-theme', 'nord');
-  await expect(page.locator('html')).toHaveAttribute('data-vui-density', 'compact');
+  await expect(page.locator('html')).toHaveAttribute('data-vui-ui', 'desktop');
   await page.evaluate(() => { location.hash = '#/themes'; });
   await page.locator('[data-value="primary"]').fill('#123456');
   await expect(page.locator('html')).toHaveAttribute('data-vui-theme', 'nord');

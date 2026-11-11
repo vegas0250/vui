@@ -1,5 +1,5 @@
-import densityCss from '../tokens/density.css?raw';
 import tokensCss from '../tokens/tokens.css?raw';
+import uiCss from '../tokens/ui.css?raw';
 import darkCss from '../../themes/dark.css?raw';
 import highContrastCss from '../../themes/high-contrast.css?raw';
 import lightCss from '../../themes/light.css?raw';
@@ -9,12 +9,12 @@ import neonMagentaCss from '../../themes/neon-magenta.css?raw';
 import systemCss from '../../themes/system.css?raw';
 
 import { builtInThemes } from './presets';
-import { themeDocument, themeVariables } from './engine';
+import { themeDocument, themeExportVariables } from './engine';
 const presetCss = builtInThemes
   .map(
     (theme) =>
       `[data-vui-theme="${theme.id}"] { color-scheme: ${theme.mode}; ${Object.entries(
-        themeVariables(themeDocument(theme.id)),
+        themeExportVariables(themeDocument(theme.id)),
       )
         .map(([key, value]) => `${key}:${value};`)
         .join('')} }`,
@@ -33,9 +33,9 @@ export function installVuiStyles(): void {
 
   const style = document.createElement('style');
   style.id = STYLE_ID;
+  // ui.css last so mode-specific structure (e.g. terminal shadows) wins over theme CSS.
   style.textContent = [
     tokensCss,
-    densityCss,
     lightCss,
     darkCss,
     highContrastCss,
@@ -44,6 +44,7 @@ export function installVuiStyles(): void {
     neonCyanCss,
     systemCss,
     presetCss,
+    uiCss,
   ].join('\n');
   document.head.append(style);
   installed = true;

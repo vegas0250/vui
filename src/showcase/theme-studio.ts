@@ -6,6 +6,7 @@ import {
   contrast,
   exportThemeCSS,
   exportThemeJSON,
+  getUIMode,
   importThemeJSON,
   readCustomThemes,
   resolveTheme,
@@ -20,7 +21,7 @@ import {
   updateToken,
   writeCustomThemes,
 } from '../theme';
-import type { ThemeDocument, ThemeToken } from '../theme';
+import type { ThemeDocument, ThemeToken, VuiUIMode } from '../theme';
 import { documentationStorage } from './preferences';
 import { escapeHTML, tr } from './theme-i18n';
 import {
@@ -125,7 +126,7 @@ export function mountThemeStudio(host: HTMLElement): void {
    )
    .join(
      '',
-   )}<label>${t('Density')}<select id="ts-density">${['comfortable', 'compact', 'dense'].map((v) => `<option value="${v}">${t(v[0].toUpperCase() + v.slice(1))}</option>`).join('')}</select></label></fieldset>
+   )}<label>${t('UI mode')}<select id="ts-ui-mode">${[['', 'Inherit'], ['web', 'Web design'], ['desktop', 'Desktop design'], ['terminal', 'Terminal design']].map(([v, label]) => `<option value="${v}">${t(label)}</option>`).join('')}</select></label></fieldset>
  </div><section class="ts-preview-section" id="ts-preview-section" role="tabpanel" aria-labelledby="ts-preview-tab"><div class="ts-preview-heading"><h3>${t('Preview')}</h3><label><input id="ts-compare" type="checkbox"/>${t('Compare original')}</label></div><p id="ts-contrast" role="status"></p><div class="ts-preview-panels"><div class="ts-modified-preview"><h4>${t('Edited')}</h4><div class="ts-preview" id="ts-live-preview"></div></div><div class="ts-original-preview" hidden><h4>${t('Original')}</h4><div class="ts-preview" id="ts-original-preview"></div></div></div></section></div>`;
   const query = <T extends Element>(selector: string) =>
     host.querySelector<T>(selector)!;
@@ -169,13 +170,11 @@ export function mountThemeStudio(host: HTMLElement): void {
     paint();
   }
   function paint(): void {
+    const mode = themeAppearance(working, getUIMode()).uiMode as VuiUIMode;
+    live.setAttribute('data-vui-ui', mode);
+    original.setAttribute('data-vui-ui', mode);
     applyTheme(working, live);
     applyTheme(themeDocument(working.baseTheme), original);
-    live.setAttribute(
-      'data-vui-density',
-      working.appearance?.density ?? 'comfortable',
-    );
-    original.setAttribute('data-vui-density', 'comfortable');
     const values = resolveTheme(working),
       base = themeById(working.baseTheme).tokens;
     for (const key of tokenNames) {
@@ -258,8 +257,18 @@ export function mountThemeStudio(host: HTMLElement): void {
       query<HTMLInputElement>(`[data-appearance=${key}]`).value = String(v);
       query(`[data-appearance-output=${key}]`).textContent = String(v);
     }
-    query<HTMLSelectElement>('#ts-density').value =
-      working.appearance?.density ?? 'comfortable';
+    query<HTMLSelectElement>('#ts-ui-mode').value =
+      working.appearance?.uiMode ??
+      (working.appearance?.density === 'compact' ||
+      working.appearance?.density === 'dense' ||
+      working.appearance?.density === 'desktop'
+        ? 'desktop'
+        : working.appearance?.density === 'terminal'
+          ? 'terminal'
+          : working.appearance?.density === 'web' ||
+              working.appearance?.density === 'comfortable'
+            ? 'web'
+            : '');
     paint();
   }
   function commit(): void {
@@ -368,13 +377,18 @@ export function mountThemeStudio(host: HTMLElement): void {
         format = input.value as typeof format;
         paint();
       }
-      if (input.id === 'ts-density') {
+      if (input.id === 'ts-ui-mode') {
+        const appearance = { ...working.appearance };
+        if (!input.value) {
+          delete appearance.uiMode;
+          delete appearance.density;
+        } else {
+          appearance.uiMode = input.value as VuiUIMode;
+          delete appearance.density;
+        }
         working = {
           ...working,
-          appearance: {
-            ...working.appearance,
-            density: input.value as 'comfortable',
-          },
+          appearance: Object.keys(appearance).length ? appearance : undefined,
         };
         commit();
       }

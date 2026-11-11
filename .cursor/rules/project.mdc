@@ -25,13 +25,13 @@ TypeScript, Custom Elements, DOM, CSS custom properties, Vite, Vitest, Playwrigh
 src/components/{foundation,layout,actions,forms,feedback,overlay,navigation,data,desktop}
 src/categories/     точки входа категорий
 src/core/           VuiElement, defineElement, reflect, layout, общие стили, события, responsive
-src/foundation/     runtime: tokens, theme, density, responsive, layout, accessibility, motion, layers
+src/foundation/     runtime: tokens, theme, UI mode, responsive, layout, accessibility, motion, layers
 src/contract/       контракт компонента, реестр и compliance
 src/composition/    контракт композиции: слот, light DOM, свойство, атрибут, событие
 src/families/       общие правила семейств и componentStates, без иерархии классов
 src/interaction/    focus, keyboard, selection, commands, shortcuts, overlay, context menu, drag & drop, clipboard, pointer
 src/icons/          реестр иконок
-src/theme/          setTheme, setDensity, установка стилей
+src/theme/          setTheme, setUIMode, установка стилей
 src/tokens/         primitive tokens, пороги контейнера, плотность
 src/showcase/       разметка и поведение showcase
 themes/             light, dark, high-contrast, system
@@ -57,11 +57,11 @@ docs/components.md  каталог публичного API
 
 `vui/interaction` — primitives без регистрации элементов: focus, keyboard, selection, commands, shortcuts, overlay, context menu, drag & drop, clipboard, pointer. `vui/menu` включает `vui-menu-item`.
 
-`vui/runtime` — Foundation runtime: `readFoundation`, `readToken`, `containerBand`, `setTheme`, `setDensity`, `prefersReducedMotion`, `prefersForcedColors`. `vui/contract` — `registerContract`, `listContracts`, `checkCompliance`. `vui/composition` — `registerComposition`, `checkComposition`, `ownedChildren`. `vui/families` — правила Action, Field, Overlay, Navigation, Data, Feedback, Layout, Content и Desktop. `componentStates` — общие имена состояний. `vui/foundation` по-прежнему регистрирует иконку, а не runtime.
+`vui/runtime` — Foundation runtime: `readFoundation`, `readToken`, `containerBand`, `setTheme`, `setUIMode`, `prefersReducedMotion`, `prefersForcedColors`. `vui/contract` — `registerContract`, `listContracts`, `checkCompliance`. `vui/composition` — `registerComposition`, `checkComposition`, `ownedChildren`. `vui/families` — правила Action, Field, Overlay, Navigation, Data, Feedback, Layout, Content и Desktop. `componentStates` — общие имена состояний. `vui/foundation` по-прежнему регистрирует иконку, а не runtime.
 
 `vui/stack`, `vui/hstack` и `vui/vstack` — один модуль. `vui/checkbox` включает `vui-checkbox-group`. `vui/radio` включает `vui-radio-group`. `vui/toggle` включает `vui-toggle-group`. `vui/field` включает `vui-field-group`. `vui/nav` включает `vui-nav-item`. `vui/stepper` включает `vui-step`. `vui/list` включает `vui-list-item`. `vui/properties` включает `vui-property`. `vui/select` включает `vui-option`. `vui/tabs` включает `vui-tab` и `vui-tab-panel`. `vui/file-tree` включает `vui-tree-item`. `vui/toast` включает `vui-toaster` и `toast()`. `vui/desktop` реэкспортирует toolbar, split panel, shell и window; исходники toolbar и split остаются в navigation и layout.
 
-Тема: `vui/theme` (`setTheme`, `setDensity`, `getTheme`, `getDensity`). CSS: `vui/themes/tokens`, `vui/themes/density`, `vui/themes/light`, `vui/themes/dark`, `vui/themes/high-contrast`, `vui/themes/system`.
+Тема: `vui/theme` (`setTheme`, `setUIMode`, `getTheme`, `getUIMode`; `setDensity`/`getDensity` — deprecated aliases). CSS: `vui/themes/tokens`, `vui/themes/ui`, `vui/themes/density` (alias), `vui/themes/light`, `vui/themes/dark`, `vui/themes/high-contrast`, `vui/themes/system`.
 
 Каждая точка входа экспортирует и класс компонента. `import { VButton } from 'vui'` и `import { VButton } from 'vui/button'` — один класс. Основной декларативный API — Custom Elements. Не заставляйте пользователя создавать компонент через класс.
 
@@ -86,11 +86,11 @@ VHStack         → <vui-hstack>
 VVStack         → <vui-vstack>
 ```
 
-`VuiElement` — внутренний базовый класс, не custom element. Он держит открытый shadow, один шаблон на первое подключение, `sync()` и `hold(name, dispose)` для снятия слушателей в `disconnectedCallback`. `VuiTheme` и `VuiDensity` — типы API темы, не компоненты. Части, которые не являются самостоятельными элементами, остаются в модуле родителя: `VOption` → `vui-option`, `VTab` → `vui-tab`, `VTabPanel` → `vui-tab-panel`, `VTreeItem` → `vui-tree-item`, `VToaster` → `vui-toaster`.
+`VuiElement` — внутренний базовый класс, не custom element. Он держит открытый shadow, один шаблон на первое подключение, `sync()` и `hold(name, dispose)` для снятия слушателей в `disconnectedCallback`. `VuiTheme` и `VuiUIMode` — типы API темы, не компоненты. Части, которые не являются самостоятельными элементами, остаются в модуле родителя: `VOption` → `vui-option`, `VTab` → `vui-tab`, `VTabPanel` → `vui-tab-panel`, `VTreeItem` → `vui-tree-item`, `VToaster` → `vui-toaster`.
 
 ## Foundation
 
-Новый компонент наследует правила в этом порядке: Foundation → Component Contract → Accessibility → Responsive → Density / Theme → Layout → Component.
+Новый компонент наследует правила в этом порядке: Foundation → Component Contract → Accessibility → Responsive → UI mode / Theme → Layout → Component.
 
 Tokens разделены на три слоя:
 
@@ -98,7 +98,7 @@ Tokens разделены на три слоя:
 - semantic — цвета, тени, `--vui-border-width`, `--vui-focus-ring` (`themes/`);
 - component — только там, где шкала сама не выражает размер: `--vui-toolbar-height`, `--vui-statusbar-height`, `--vui-row-height`, `--vui-icon-size`, `--vui-panel-padding`, размеры dialog, menu, toast, tooltip и split.
 
-`--vui-panel-padding` равен `--vui-space-lg` на каждой плотности. Высоты toolbar, status bar, строки и иконки задаёт density, не CSS компонента. Своя тема переопределяет semantic tokens, а не палитру и не имена.
+`--vui-panel-padding` равен `--vui-space-lg` в каждом UI mode. Высоты toolbar, status bar, строки и иконки задаёт UI mode, не CSS компонента. Своя тема переопределяет semantic tokens, а не палитру и не имена.
 
 ## Component Contract
 
@@ -150,12 +150,12 @@ Responsive — часть компонента, отдельно от темы �
 Атрибуты, обычно на `<html>`:
 
 ```html
-<html data-vui-theme="light|dark|high-contrast|system" data-vui-density="comfortable|compact|dense">
+<html data-vui-theme="light|dark|high-contrast|system" data-vui-ui="web|desktop|terminal">
 ```
 
 `system` использует `prefers-color-scheme`. Тёмная ветка `themes/system.css` ссылается на те же primitive palette names, что и `themes/dark.css`.
 
-Компоненты берут semantic и component tokens (`--vui-color-*`, `--vui-space-*`, `--vui-size-control`, `--vui-font-*`, `--vui-radius*`, `--vui-shadow-*`, `--vui-border-width`, `--vui-z-*`, `--vui-toolbar-height`, `--vui-statusbar-height`, `--vui-row-height`). Не зашивайте цвета, отступы и радиусы в CSS компонента, если token уже есть. Своя тема переопределяет те же semantic properties. Плотность — шкала интерфейса: controls, spacing, gaps, toolbar, panel, status bar и строки data-grid. Компонент не хранит свою таблицу плотности.
+Компоненты берут semantic и component tokens (`--vui-color-*`, `--vui-space-*`, `--vui-size-control`, `--vui-font-*`, `--vui-radius*`, `--vui-shadow-*`, `--vui-border-width`, `--vui-z-*`, `--vui-toolbar-height`, `--vui-statusbar-height`, `--vui-row-height`). Не зашивайте цвета, отступы и радиусы в CSS компонента, если token уже есть. Своя тема переопределяет только semantic colors. UI mode — ортогональная структурная шкала в `src/tokens/ui.css`: `web` (Radix Themes), `desktop` (Fluent 2 / WinUI), `terminal` (моноширинный TUI: плотная сетка, нулевой радиус, без теней и лишнего motion). Компоненты не ветвятся по имени темы или UI mode. Семейства радиусов (`--vui-radius-box/field/selector`) и focus/elevation recipes задаёт UI mode; `appearance` в ThemeDocument — малые дельты плюс опциональный `uiMode`. Пресеты `fluent-light`/`fluent-dark` и `radix-light`/`radix-dark` задают preferred `appearance.uiMode`; цветовые пресеты без `uiMode` сохраняют текущий `data-vui-ui` хоста. CSS export пишет `[data-vui-theme="custom"]` (цвета + дельты) и опирается на `[data-vui-ui]` для structural scale.
 
 Импорт любого компонента вызывает `installVuiStyles()`, который добавляет один тег `#vui-styles`. Исходные CSS-файлы остаются пригодными сами по себе.
 
@@ -214,7 +214,7 @@ Shadow DOM открытый. У layout-компонентов на host стои
 Foundation
 ├── Tokens
 ├── Theme
-├── Density
+├── UI mode
 ├── Responsive
 ├── Layout
 ├── Accessibility
@@ -222,7 +222,7 @@ Foundation
 └── Runtime
 ```
 
-`readFoundation()` возвращает текущие тему, плотность, tokens, motion, z-index и пороги контейнера. `containerBand(width)` даёт `narrow`, `medium` или `wide` только по ширине. Theme × density × band не порождают отдельных компонентов: это три независимых измерения одного снимка.
+`readFoundation()` возвращает текущие тему, UI mode, tokens, motion, z-index и пороги контейнера. `containerBand(width)` даёт `narrow`, `medium` или `wide` только по ширине. Theme × UI mode × band не порождают отдельных компонентов: это три независимых измерения одного снимка.
 
 `prefers-reduced-motion` применяется базовыми стилями. Компонент не добавляет вторую политику движения. Z-index tokens читает runtime; стек overlay остаётся в `src/interaction/overlay.ts`.
 
@@ -236,7 +236,7 @@ Foundation
 
 ## Compliance
 
-`checkCompliance()` для подключённого элемента проверяет регистрацию, открытый shadow, отсутствие цветовых литералов, использование Foundation tokens, базовые theme/density/reduced-motion стили, responsive-ограничение, слоты, parts, методы, роль, отражение properties, `disabled`, `invalid` и `loading`. `remount()` проверяет, что shadow переживает отключение.
+`checkCompliance()` для подключённого элемента проверяет регистрацию, открытый shadow, отсутствие цветовых литералов, использование Foundation tokens, базовые theme/UI mode/reduced-motion стили, responsive-ограничение, слоты, parts, методы, роль, отражение properties, `disabled`, `invalid` и `loading`. `remount()` проверяет, что shadow переживает отключение.
 
 ## Композиция и семейства
 
@@ -254,7 +254,7 @@ Interaction contract объявляет клавиши из общего наб�
 
 ## Showcase
 
-`pnpm dev` отдаёт VUI Studio (`index.html`). Страница собрана из элементов VUI и показывает Foundation, темы, плотность, направление `dir`, Layout, компоненты, patterns, shell, Platform Validation, контракт и Responsive Design. У каждого реализованного компонента там есть рабочий пример. Без примера компонент не считается готовым. Переключатели темы и плотности вызывают `setTheme` и `setDensity`. В разделе Responsive Design есть пресеты wide, medium и narrow и ручка изменения ширины. Табло показывает текущие тему, плотность и ширину контейнера. Раздел Contract показывает lifecycle, состояния, клавиатуру, фокус, две ширины поля и таблицу зарегистрированных контрактов. Раздел Composition показывает форму, вкладки, таблицу и диалог, собранные из тех же контрактов. Снимок Foundation читает `readFoundation()`.
+`pnpm dev` отдаёт VUI Studio (`index.html`). Страница собрана из элементов VUI и показывает Foundation, темы, UI mode, направление `dir`, Layout, компоненты, patterns, shell, Platform Validation, контракт и Responsive Design. У каждого реализованного компонента там есть рабочий пример. Без примера компонент не считается готовым. Переключатели темы и UI mode вызывают `setTheme` и `setUIMode`. В разделе Responsive Design есть пресеты wide, medium и narrow и ручка изменения ширины. Табло показывает текущие тему, UI mode и ширину контейнера. Раздел Contract показывает lifecycle, состояния, клавиатуру, фокус, две ширины поля и таблицу зарегистрированных контрактов. Раздел Composition показывает форму, вкладки, таблицу и диалог, собранные из тех же контрактов. Снимок Foundation читает `readFoundation()`.
 
 ## Тесты
 

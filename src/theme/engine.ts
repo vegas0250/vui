@@ -7,6 +7,8 @@ import type {
   ThemeToken,
   ThemeTokens,
 } from './presets';
+
+type AppearanceUIMode = 'web' | 'desktop' | 'terminal';
 export interface ThemeDocument {
   schemaVersion: 1;
   name: string;
@@ -122,12 +124,12 @@ export function validateTheme(input: unknown): ThemeDocument {
       throw new Error('Invalid appearance');
     const a = v.appearance as Record<string, unknown>;
     for (const [key, value] of Object.entries(a)) {
-      if (key === 'density') {
+      if (key === 'uiMode' || key === 'density') {
         if (
           typeof value !== 'string' ||
-          !['comfortable', 'compact', 'dense'].includes(value)
+          !['web', 'desktop', 'terminal', 'comfortable', 'compact', 'dense'].includes(value)
         )
-          throw new Error('Invalid density');
+          throw new Error('Invalid UI mode');
       } else if (
         !['radius', 'radiusBox', 'radiusField', 'radiusSelector', 'borderWidth', 'shadowIntensity'].includes(key) ||
         typeof value !== 'number' ||
@@ -210,61 +212,245 @@ export function registerTheme(id: string, input: ThemeDocument): void {
     }),
   );
 }
-/** Resolve family geometry without losing schema-1 global-radius overrides. */
-export function themeAppearance(input: ThemeDocument): Required<ThemeAppearance> {
-  const d = validateTheme(input), preset = themeById(d.baseTheme).appearance ?? {}, own = d.appearance ?? {};
-  const radius = own.radius ?? preset.radius ?? 8;
+const modeDefaults: Record<
+  AppearanceUIMode,
+  {
+    radius: number;
+    radiusBox: number;
+    radiusField: number;
+    radiusSelector: number;
+    borderWidth: number;
+    shadowIntensity: number;
+  }
+> = {
+  web: {
+    radius: 8,
+    radiusBox: 12,
+    radiusField: 8,
+    radiusSelector: 4,
+    borderWidth: 1,
+    shadowIntensity: 80,
+  },
+  desktop: {
+    radius: 4,
+    radiusBox: 8,
+    radiusField: 4,
+    radiusSelector: 2,
+    borderWidth: 1,
+    shadowIntensity: 100,
+  },
+  terminal: {
+    radius: 0,
+    radiusBox: 0,
+    radiusField: 0,
+    radiusSelector: 0,
+    borderWidth: 1,
+    shadowIntensity: 0,
+  },
+};
+
+/** Explicit appearance keys from the document and its structural preset (no mode defaults). */
+export function themeAppearanceOverrides(input: ThemeDocument): ThemeAppearance {
+  const d = validateTheme(input);
+  const preset = themeById(d.baseTheme).appearance ?? {};
+  const own = d.appearance ?? {};
+  const merged: ThemeAppearance = { ...preset, ...own };
+  // Schema-1 global radius fills families unless the document sets a family key.
+  if (own.radius != null) {
+    if (own.radiusBox == null) merged.radiusBox = own.radius;
+    if (own.radiusField == null) merged.radiusField = own.radius;
+    if (own.radiusSelector == null) merged.radiusSelector = own.radius;
+  }
+  return merged;
+}
+
+/** Resolve appearance: explicit overrides → preset → host UI mode → web. */
+export function themeAppearance(
+  input: ThemeDocument,
+  preferredUIMode?: AppearanceUIMode,
+): Required<ThemeAppearance> {
+  const d = validateTheme(input);
+  const preset = themeById(d.baseTheme).appearance ?? {};
+  const own = d.appearance ?? {};
+  const uiMode = normalizeAppearanceUIMode(
+    own.uiMode ?? own.density ?? preset.uiMode ?? preset.density ?? preferredUIMode,
+  );
+  const defaults = modeDefaults[uiMode];
+  const radius = own.radius ?? preset.radius ?? defaults.radius;
   return {
     radius,
-    radiusBox: own.radiusBox ?? own.radius ?? preset.radiusBox ?? radius,
-    radiusField: own.radiusField ?? own.radius ?? preset.radiusField ?? radius,
-    radiusSelector: own.radiusSelector ?? own.radius ?? preset.radiusSelector ?? 4,
-    borderWidth: own.borderWidth ?? preset.borderWidth ?? 1,
-    shadowIntensity: own.shadowIntensity ?? preset.shadowIntensity ?? 100,
-    density: own.density ?? preset.density ?? 'comfortable',
+    radiusBox: own.radiusBox ?? own.radius ?? preset.radiusBox ?? defaults.radiusBox,
+    radiusField:
+      own.radiusField ?? own.radius ?? preset.radiusField ?? defaults.radiusField,
+    radiusSelector:
+      own.radiusSelector ??
+      own.radius ??
+      preset.radiusSelector ??
+      defaults.radiusSelector,
+    borderWidth: own.borderWidth ?? preset.borderWidth ?? defaults.borderWidth,
+    shadowIntensity:
+      own.shadowIntensity ?? preset.shadowIntensity ?? defaults.shadowIntensity,
+    uiMode,
+    density: uiMode,
   };
 }
+
+function normalizeAppearanceUIMode(value: string | undefined): AppearanceUIMode {
+  if (value === 'terminal') return 'terminal';
+  if (value === 'desktop' || value === 'compact' || value === 'dense') return 'desktop';
+  return 'web';
+}
+
 function hoverColor(background: string, foreground: string): string {
   const tint = mix(background, foreground, 0.06);
   if (contrast(tint, foreground) >= 4.5) return tint;
-  return mix(background, contrast('#ffffff', foreground) > contrast('#000000', foreground) ? '#ffffff' : '#000000', 0.04);
+  return mix(
+    background,
+    contrast('#ffffff', foreground) > contrast('#000000', foreground)
+      ? '#ffffff'
+      : '#000000',
+    0.04,
+  );
 }
-export function themeVariables(input: ThemeDocument): Record<string, string> {
-  const d = validateTheme(input),
-    t = resolveTheme(d), appearance = themeAppearance(d),
-    vars: Record<string, string> = {};
-  for (const key of tokenNames)
-    vars[`--vui-color-${tokenProperties[key]}`] = t[key];
-  Object.assign(vars, {
-    '--vui-color-surface-sunken': t.background,
-    '--vui-color-danger-hover': t.error,
-    '--vui-color-on-danger': t.dangerOnSolid,
-    '--vui-color-tooltip-bg': t.foreground,
-    '--vui-color-tooltip-text': t.background,
-    '--vui-color-tooltip-border': t.border,
-    '--vui-focus-ring': '2px solid var(--vui-color-focus)',
-    '--vui-focus-shadow':
-      '0 0 0 3px color-mix(in srgb, var(--vui-color-focus) 28%, transparent)',
-  });
-  vars['--vui-color-hover'] = mix(t.surface, t.surfaceHover, 0.3);
-  for (const tone of tones) {
-    const color = tone === 'danger' ? t.error : t[tone];
-    if (tone !== 'primary') vars[`--vui-color-${tone}-hover`] = hoverColor(color, t[toneSolidTokens[tone]]);
-    vars[`--vui-color-${tone}-surface-hover`] = hoverColor(t[`${tone}Soft`], t[`${tone}Text`]);
+
+function elevationShadows(
+  uiMode: AppearanceUIMode,
+  shadow: string,
+  strength: number,
+): Record<'sm' | 'md' | 'lg', string> {
+  if (uiMode === 'terminal' || strength <= 0) {
+    return { sm: 'none', md: 'none', lg: 'none' };
   }
+  const ink = `color-mix(in srgb, ${shadow} ${strength}%, transparent)`;
+  const soft = `color-mix(in srgb, ${shadow} ${Math.max(20, Math.round(strength * 0.35))}%, transparent)`;
+  if (uiMode === 'desktop') {
+    return {
+      sm: `0 0.5px 1px ${ink}, 0 0 1px ${soft}`,
+      md: `0 2px 4px ${ink}, 0 0 2px ${soft}`,
+      lg: `0 8px 16px ${ink}, 0 0 2px ${soft}`,
+    };
+  }
+  return {
+    sm: `0 1px 2px ${ink}`,
+    md: `0 4px 16px ${ink}`,
+    lg: `0 12px 40px ${ink}`,
+  };
+}
+
+function themeColorVariables(tokens: ThemeTokens): Record<string, string> {
+  const vars: Record<string, string> = {};
+  for (const key of tokenNames)
+    vars[`--vui-color-${tokenProperties[key]}`] = tokens[key];
+  Object.assign(vars, {
+    '--vui-color-surface-sunken': tokens.background,
+    '--vui-color-danger-hover': tokens.error,
+    '--vui-color-on-danger': tokens.dangerOnSolid,
+    '--vui-color-tooltip-bg': tokens.foreground,
+    '--vui-color-tooltip-text': tokens.background,
+    '--vui-color-tooltip-border': tokens.border,
+  });
+  vars['--vui-color-hover'] = mix(tokens.surface, tokens.surfaceHover, 0.3);
+  for (const tone of tones) {
+    const color = tone === 'danger' ? tokens.error : tokens[tone];
+    if (tone !== 'primary')
+      vars[`--vui-color-${tone}-hover`] = hoverColor(
+        color,
+        tokens[toneSolidTokens[tone]],
+      );
+    vars[`--vui-color-${tone}-surface-hover`] = hoverColor(
+      tokens[`${tone}Soft`],
+      tokens[`${tone}Text`],
+    );
+  }
+  return vars;
+}
+
+function appearanceDeltaVariables(
+  overrides: ThemeAppearance,
+  tokens: ThemeTokens,
+  uiMode: AppearanceUIMode,
+): Record<string, string> {
+  const vars: Record<string, string> = {};
+  if (overrides.radius != null) {
+    vars['--vui-radius'] = `${overrides.radius}px`;
+    // Schema-1 global radius also fills families unless a family override exists.
+    if (overrides.radiusBox == null)
+      vars['--vui-radius-box'] = `${overrides.radius}px`;
+    if (overrides.radiusField == null)
+      vars['--vui-radius-field'] = `${overrides.radius}px`;
+    if (overrides.radiusSelector == null)
+      vars['--vui-radius-selector'] = `${overrides.radius}px`;
+  }
+  if (overrides.radiusBox != null)
+    vars['--vui-radius-box'] = `${overrides.radiusBox}px`;
+  if (overrides.radiusField != null)
+    vars['--vui-radius-field'] = `${overrides.radiusField}px`;
+  if (overrides.radiusSelector != null)
+    vars['--vui-radius-selector'] = `${overrides.radiusSelector}px`;
+  if (overrides.borderWidth != null)
+    vars['--vui-border-width'] = `${overrides.borderWidth}px`;
+  if (overrides.shadowIntensity != null) {
+    // Non-zero shadows are mode recipes; skip them when the active mode is terminal
+    // so `[data-vui-ui="terminal"]` can clear elevation without inline fights.
+    if (uiMode === 'terminal' || overrides.shadowIntensity <= 0) {
+      vars['--vui-shadow-sm'] = 'none';
+      vars['--vui-shadow-md'] = 'none';
+      vars['--vui-shadow-lg'] = 'none';
+    } else {
+      const elevation = elevationShadows(
+        uiMode,
+        tokens.shadow,
+        overrides.shadowIntensity,
+      );
+      for (const [size, value] of Object.entries(elevation))
+        vars[`--vui-shadow-${size}`] = value;
+    }
+  }
+  return vars;
+}
+
+/** Full resolved variables for live preview (colors + resolved appearance). */
+export function themeVariables(
+  input: ThemeDocument,
+  options?: { uiMode?: AppearanceUIMode },
+): Record<string, string> {
+  const d = validateTheme(input);
+  const t = resolveTheme(d);
+  const appearance = themeAppearance(d, options?.uiMode);
+  const vars = themeColorVariables(t);
   const strength = appearance.shadowIntensity;
-  for (const [size, offset] of Object.entries({
-    sm: '0 1px 3px',
-    md: '0 8px 24px',
-    lg: '0 18px 48px',
-  }))
-    vars[`--vui-shadow-${size}`] =
-      `${offset} color-mix(in srgb, ${t.shadow} ${strength}%, transparent)`;
+  const elevation = elevationShadows(appearance.uiMode!, t.shadow, strength);
+  for (const [size, value] of Object.entries(elevation))
+    vars[`--vui-shadow-${size}`] = value;
   vars['--vui-radius'] = `${appearance.radius}px`;
   vars['--vui-border-width'] = `${appearance.borderWidth}px`;
-  for (const [suffix, key] of [['box', 'radiusBox'], ['field', 'radiusField'], ['selector', 'radiusSelector']] as const)
+  for (const [suffix, key] of [
+    ['box', 'radiusBox'],
+    ['field', 'radiusField'],
+    ['selector', 'radiusSelector'],
+  ] as const)
     vars[`--vui-radius-${suffix}`] = `${appearance[key]}px`;
   return vars;
+}
+
+/**
+ * CSS export / installed preset vars: semantic colors + explicit appearance deltas only.
+ * Structural scales stay on `[data-vui-ui]` in ui.css.
+ */
+export function themeExportVariables(
+  input: ThemeDocument,
+  options?: { uiMode?: AppearanceUIMode },
+): Record<string, string> {
+  const d = validateTheme(input);
+  const t = resolveTheme(d);
+  const overrides = themeAppearanceOverrides(d);
+  const uiMode = normalizeAppearanceUIMode(
+    overrides.uiMode ?? overrides.density ?? options?.uiMode,
+  );
+  return {
+    ...themeColorVariables(t),
+    ...appearanceDeltaVariables(overrides, t, uiMode),
+  };
 }
 const applications = new WeakMap<HTMLElement, string[]>();
 export function clearTheme(root: HTMLElement): void {
@@ -291,7 +477,11 @@ export function applyTheme(
           tokens: { ...preset.tokens },
         });
   } else d = validateTheme(input);
-  const vars = themeVariables(d);
+  const preferredUI = normalizeAppearanceUIMode(
+    root.getAttribute('data-vui-ui') ?? undefined,
+  );
+  // Colors + explicit appearance deltas only; structural scale stays on data-vui-ui.
+  const vars = themeExportVariables(d, { uiMode: preferredUI });
   for (const key of applications.get(root) ?? [])
     if (!(key in vars)) root.style.removeProperty(key);
   for (const [key, value] of Object.entries(vars))
@@ -304,8 +494,12 @@ export function applyTheme(
     typeof input === 'string' ? input : d.baseTheme,
   );
   root.setAttribute('data-vui-mode', d.mode);
-  if (d.appearance?.density)
-    root.setAttribute('data-vui-density', d.appearance.density);
+  const overrides = themeAppearanceOverrides(d);
+  if (overrides.uiMode || overrides.density) {
+    const mode = normalizeAppearanceUIMode(overrides.uiMode ?? overrides.density);
+    root.setAttribute('data-vui-ui', mode);
+    root.removeAttribute('data-vui-density');
+  }
   root.dispatchEvent(
     new CustomEvent('vui-theme-change', {
       detail: {
@@ -325,8 +519,13 @@ export function importThemeJSON(json: string): ThemeDocument {
 }
 export function exportThemeCSS(input: ThemeDocument): string {
   const d = validateTheme(input);
-  return `/* VUI adaptation: ${d.baseTheme}; schema 1. See VUI THIRD_PARTY_NOTICES.md. */\n[data-vui-theme="custom"] {\n  color-scheme: ${d.mode};\n${Object.entries(
-    themeVariables(d),
+  const overrides = themeAppearanceOverrides(d);
+  const modeHint = overrides.uiMode ?? overrides.density;
+  const modeNote = modeHint
+    ? ` Set data-vui-ui="${normalizeAppearanceUIMode(String(modeHint))}" for the preferred structural scale.`
+    : ' Structural scales come from data-vui-ui (web|desktop|terminal) in vui/themes/ui.';
+  return `/* VUI adaptation: ${d.baseTheme}; schema 1. See VUI THIRD_PARTY_NOTICES.md.${modeNote} */\n[data-vui-theme="custom"] {\n  color-scheme: ${d.mode};\n${Object.entries(
+    themeExportVariables(d),
   )
     .map(([k, v]) => `  ${k}: ${v};`)
     .join('\n')}\n}\n`;

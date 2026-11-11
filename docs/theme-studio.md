@@ -5,7 +5,7 @@ The theme engine extends the existing `vui/theme` API and the existing component
 ## Architecture and files
 
 - `src/theme/palettes.ts`: upstream base colors, independent of components.
-- `src/theme/presets.ts`: fifteen immutable presets and the allowlisted semantic color tokens, with derived hover, border and contrast values.
+- `src/theme/presets.ts`: nineteen immutable presets and the allowlisted semantic color tokens, with derived hover, border and contrast values.
 - `src/theme/colors.ts`: strict portable HEX/RGB/HSL normalization and contrast utilities.
 - `src/theme/engine.ts`: application, registration, validation, persistence, history, JSON and CSS exports.
 - `src/theme/install.ts`: installs all preset selectors once; component styles are shared across themes.
@@ -39,7 +39,7 @@ applyTheme("nord");
 6. Set a unique name and **Save new**. Select a saved theme, rename it or delete it. To create a variation, use a new name and save again. Up to 50 local themes are supported. If storage is blocked, editing and exports still work and the page reports the issue.
 7. **Copy CSS**, **Download CSS**, **Download JSON** and **Import JSON** use schema version 1. Imports are limited to 64 KiB, allowlisted tokens, finite bounded appearance values and normalized color literals. JSON is data, never executable code.
 
-Global radius, independent Boxes/Fields/Selectors radii, border width, shadow strength and the existing density scale are optional appearance overrides. All radius values are pixels in the range 0–32; border width is 0–4 px. The existing secondary variant remains available, alongside semantic tones and solid/soft/outline/ghost variants. `vui-panel` is the actual card primitive; `vui-data-grid` is the actual table primitive. Authentication and dashboard previews are local demonstrations, not backend services.
+Global radius, independent Boxes/Fields/Selectors radii, border width, shadow strength and UI mode (`web` | `desktop`) are optional appearance overrides. All radius values are pixels in the range 0–32; border width is 0–4 px. The existing secondary variant remains available, alongside semantic tones and solid/soft/outline/ghost variants. `vui-panel` is the actual card primitive; `vui-data-grid` is the actual table primitive. Authentication and dashboard previews are local demonstrations, not backend services.
 
 ## Import and export
 
@@ -57,7 +57,7 @@ applyTheme("my-brand");
 const css = exportThemeCSS(draft);
 ```
 
-CSS export contains a `[data-vui-theme="custom"]` selector. Import it **after** VUI's standard token CSS and set `data-vui-theme="custom"` on your app root. Set the separate `data-vui-density` attribute when using an appearance density override; the JS API does this automatically. Scope a custom selector further if the application contains several independent theme roots.
+CSS export contains a `[data-vui-theme="custom"]` selector with semantic colors and optional appearance deltas only. Import it **after** VUI's standard token CSS and set `data-vui-theme="custom"` on your app root. Structural scales live on `[data-vui-ui]` (`web` | `desktop` | `terminal`) from `vui/themes/ui` — they are not duplicated in the export. Set `data-vui-ui` when using an appearance UI mode override; the JS API does this automatically. Scope a custom selector further if the application contains several independent theme roots.
 
 JSON stores `schemaVersion`, `name`, `baseTheme`, `mode`, only changed `tokens`, and optional `appearance`. Presets remain frozen and are never modified by imported data. Unknown versions, unknown fields, unknown tokens, CSS URLs and arbitrary CSS expressions are rejected. Keep JSON as the source of truth for later editing; CSS is the runtime artifact.
 
@@ -80,6 +80,9 @@ Base palettes were checked against these upstream sources. Semantic surfaces and
 - [Rosé Pine](https://github.com/rose-pine/neovim/blob/main/lua/rose-pine/palette.lua): main and dawn.
 - [Kanagawa](https://github.com/rebelot/kanagawa.nvim/blob/master/lua/kanagawa/colors.lua): Wave.
 - [SynthWave](https://github.com/robb0wen/synthwave-vscode/blob/master/themes/synthwave-color-theme.json): SynthWave '84, without expensive glow effects.
+- [Fluent 2 color tokens](https://fluent2.microsoft.design/color-tokens): Fluent Light and Fluent Dark adaptations; selecting them also sets `appearance.uiMode` to `desktop` (structure from `ui.css`).
+- [Radix Colors](https://www.radix-ui.com/colors/docs/palette-composition/scales): Radix Light and Radix Dark (slate + indigo/purple) adaptations; selecting them sets `appearance.uiMode` to `web`.
+- Terminal UI mode is structural only (monospace, dense, square, no elevation). Any color theme can pair with `data-vui-ui="terminal"`.
 
 The `interactiveText` token separates readable link/tab text from the specified solid primary button color. Text and muted colors are checked against the canvas, all surfaces, selection and state surfaces. Custom colors can violate contrast. The editor reports normal-text contrast below 4.5:1; disabled text is deliberately exempt. Preset tests enforce normal-text pairs and primary button hover/active states for contrast-adjusted presets. Retro preserves its supplied source colors, including low-contrast solid/content pairs, and reports these in the editor. All eight semantic tones, including secondary and an independent neutral color, support solid, soft, outline and ghost variants. Alpha foregrounds are composited against the checked background. Translucent backgrounds are evaluated over white; verify consumer-specific underlays separately.
 

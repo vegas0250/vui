@@ -48,7 +48,7 @@ import { familyMembers } from '../families/registry';
 import type { FamilyName } from '../families/types';
 import { containerBand } from '../foundation/responsive';
 import '../interaction/profiles';
-import { getDensity, getTheme, setDensity, setTheme } from '../theme/index';
+import { getTheme, getUIMode, setTheme, setUIMode } from '../theme/index';
 import { checkComposition, checkFamilyMember } from './check';
 import './catalog';
 import { compositionForHost, listCompositions } from './registry';
@@ -59,13 +59,13 @@ function settle(): Promise<void> {
   });
 }
 
-/** Field parts: label, control, description, and invalid. Theme and density do not change the container band. */
+/** Field parts: label, control, description, and invalid. Theme and UI mode do not change the container band. */
 export async function checkFormScenario(): Promise<string[]> {
   const failures: string[] = [];
   const themeAttr = document.documentElement.getAttribute('data-vui-theme');
-  const densityAttr = document.documentElement.getAttribute('data-vui-density');
+  const uiAttr = document.documentElement.getAttribute('data-vui-ui');
   const theme = getTheme();
-  const density = getDensity();
+  const uiMode = getUIMode();
   const wide = containerBand(900);
   const narrow = containerBand(200);
   const field = document.createElement('vui-input');
@@ -94,23 +94,23 @@ export async function checkFormScenario(): Promise<string[]> {
     if (!input?.disabled) failures.push('field disabled does not reach the control');
     const css = componentStyleText(field);
     if (!css.includes('var(--vui-color-danger)')) failures.push('field error color is not a theme token');
-    if (!css.includes('--vui-font-size')) failures.push('field does not use density type');
+    if (!css.includes('--vui-font-size')) failures.push('field does not use UI mode type');
     if (!/min-width:\s*0|max-width:\s*100%/.test(css) || !css.includes('36rem')) {
       failures.push('field does not adapt to its container');
     }
     agree.setAttribute('disabled', '');
     if (!agree.shadowRoot?.querySelector('input')?.disabled) failures.push('sibling checkbox does not disable on its own');
     setTheme(theme === 'dark' ? 'light' : 'dark');
-    setDensity(density === 'dense' ? 'comfortable' : 'dense');
+    setUIMode(uiMode === 'desktop' ? 'web' : 'desktop');
     if (containerBand(900) !== wide || containerBand(200) !== narrow) {
-      failures.push('composition band changes with theme or density');
+      failures.push('composition band changes with theme or UI mode');
     }
     failures.push(...checkFamilyMember(field));
   } finally {
     if (themeAttr === null) document.documentElement.removeAttribute('data-vui-theme');
     else setTheme(theme);
-    if (densityAttr === null) document.documentElement.removeAttribute('data-vui-density');
-    else setDensity(density);
+    if (uiAttr === null) document.documentElement.removeAttribute('data-vui-ui');
+    else setUIMode(uiMode);
     host.remove();
   }
   return failures;
@@ -176,7 +176,7 @@ export async function checkDataScenario(): Promise<string[]> {
   if (!hidden) failures.push('secondary column stays visible in a compact container');
   const css = componentStyleText(grid);
   if (!css.includes('overflow: auto')) failures.push('grid does not scroll overflow');
-  if (!css.includes('--vui-row-height')) failures.push('grid row height does not follow density');
+  if (!css.includes('--vui-row-height')) failures.push('grid row height does not follow UI mode');
   grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
   if (grid.selectedId !== 'b') failures.push('arrow does not select the next row');
   grid.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));

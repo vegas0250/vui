@@ -1,9 +1,9 @@
 import { componentCatalog, componentGroup, componentImport, description, extraProperties, libraryVersion } from './component-data';
-import { exampleFor, interfaceExample, renderExample, exampleCode, text, wireExample } from './examples';
+import { buttonSections, exampleFor, interfaceExample, renderExample, exampleJsx, prettyMarkup, text, wireExample } from './examples';
 import type { Example } from './examples';
 import type { ComponentContract } from '../contract';
-import { setDensity } from '../theme';
-import type { VuiDensity } from '../theme';
+import { setUIMode } from '../theme';
+import type { VuiUIMode } from '../theme';
 import { docsLocale, escapeHTML } from './theme-i18n';
 import { documentationStorage } from './preferences';
 import './site.css';
@@ -41,6 +41,7 @@ function api(contract: ComponentContract): string {
     heading(text('Доступность', 'Accessibility'), `<p>${text('Задайте понятную подпись для интерактивного элемента. Не убирайте видимый фокус; проверяйте интерфейс без мыши и с увеличенным масштабом.', 'Give interactive elements meaningful labels. Keep focus visible; test without a mouse and with browser zoom.')}</p><dl><dt>${text('Клавиатура', 'Keyboard')}</dt><dd>${labels(contract.keyboard)}</dd><dt>${text('Фокус', 'Focus')}</dt><dd>${contract.focus === 'roving' ? text('Один Tab-вход; перемещение внутри стрелками.', 'One Tab stop; use arrow keys within the component.') : contract.keyboard.length ? text('Нативный фокус и видимый индикатор.', 'Native focus and a visible indicator.') : text('Неинтерактивный элемент: не добавляйте лишние Tab-остановки.', 'Non-interactive element: avoid unnecessary Tab stops.')}</dd>${contract.role ? `<dt>ARIA</dt><dd><code>${contract.role}</code></dd>` : ''}</dl><p>${['vui-dialog', 'vui-drawer'].includes(contract.element) ? text('Диалог удерживает фокус и возвращает его к кнопке открытия. Escape закрывает верхний допустимый слой.', 'The dialog contains focus and restores it to its trigger. Escape dismisses the top eligible layer.') : text('Дочерние элементы используйте с родителем, показанным в примере. Декоративные иконки не заменяют текстовую подпись.', 'Use child elements with the parent shown in the example. Decorative icons do not replace a text label.')}</p>`);
 }
 function variants(contract: ComponentContract): Example[] {
+  if (contract.element === 'vui-button') return buttonSections().map((section) => section.example);
   const examples: Example[] = [];
   for (const attribute of contract.attributes.filter((a) => a.kind === 'enum')) {
     for (const value of attribute.values?.slice(0, 4) ?? []) {
@@ -48,7 +49,7 @@ function variants(contract: ComponentContract): Example[] {
       const template = document.createElement('template');
       template.innerHTML = example.html;
       template.content.querySelector(contract.element)?.setAttribute(attribute.name, value);
-      examples.push({ id: `${example.id}-${attribute.name}-${value}`, html: `<p><code>${attribute.name}="${value}"</code></p>${template.innerHTML}` });
+      examples.push({ id: `${example.id}-${attribute.name}-${value}`, html: template.innerHTML });
     }
   }
   for (const state of contract.states) {
@@ -56,9 +57,19 @@ function variants(contract: ComponentContract): Example[] {
     const template = document.createElement('template');
     template.innerHTML = example.html;
     template.content.querySelector(contract.element)?.setAttribute(state, '');
-    examples.push({ id: `${example.id}-${state}`, html: `<p><code>${state}</code></p>${template.innerHTML}` });
+    examples.push({ id: `${example.id}-${state}`, html: template.innerHTML });
   }
   return examples;
+}
+
+function demoSections(contract: ComponentContract, show: (example: Example) => string): string {
+  if (contract.element === 'vui-button') {
+    return buttonSections().map((section) => heading(section.title, show(section.example))).join('');
+  }
+  const items = variants(contract);
+  return heading(text('Живой пример', 'Live example'), show(exampleFor(contract.element)))
+    + heading(text('Варианты и состояния', 'Variants and states'), items.map((example) => show(example)).join('')
+      || `<p>${text('Использует общие токены темы и режима UI. Собственных вариантов нет.', 'Uses shared theme and UI mode tokens; no component-specific variants.')}</p>`);
 }
 
 export function mountDocumentationSite(): void {
@@ -90,28 +101,40 @@ export function mountDocumentationSite(): void {
     renderedExamples.set(example.id, example);
     return renderExample(example);
   };
-  const refreshCode = () => {
-    for (const pre of layout.querySelectorAll<HTMLElement>('[data-example-code]')) {
-      const example = renderedExamples.get(pre.dataset.exampleCode!);
-      if (example) pre.querySelector('code')!.textContent = exampleCode(example);
-    }
-  };
-  document.documentElement.addEventListener('vui-theme-change', (event) => {
-    if (event.target === document.documentElement) refreshCode();
-  });
-  const density = document.querySelector<HTMLElement & { value: string }>('#density-select');
-  density?.setAttribute('label', text('Плотность', 'Density'));
-  for (const option of density?.querySelectorAll('vui-option') ?? []) {
+  const uiMode = document.querySelector<HTMLElement & { value: string }>('#ui-mode-select');
+  uiMode?.setAttribute('label', text('Режим UI', 'UI mode'));
+  for (const option of uiMode?.querySelectorAll('vui-option') ?? []) {
     const value = option.getAttribute('value');
-    option.textContent = value === 'comfortable' ? text('Свободная', 'Comfortable') : value === 'compact' ? text('Компактная', 'Compact') : text('Плотная', 'Dense');
+    option.textContent =
+      value === 'desktop'
+        ? text('Desktop design', 'Desktop design')
+        : value === 'terminal'
+          ? text('Terminal design', 'Terminal design')
+          : text('Web design', 'Web design');
   }
   try {
-    const saved = documentationStorage.getItem('vui.docs.density');
-    if (['comfortable', 'compact', 'dense'].includes(saved ?? '') && density) {
-      density.value = saved!; setDensity(saved as VuiDensity);
+    const saved = documentationStorage.getItem('vui.docs.ui');
+    const legacy = documentationStorage.getItem('vui.docs.density');
+    const next =
+      saved === 'web' || saved === 'desktop' || saved === 'terminal'
+        ? saved
+        : legacy === 'compact' || legacy === 'dense' || legacy === 'desktop'
+          ? 'desktop'
+          : legacy === 'comfortable' || legacy === 'web'
+            ? 'web'
+            : null;
+    if (next && uiMode) {
+      uiMode.value = next;
+      setUIMode(next as VuiUIMode);
     }
   } catch { /* Storage is optional. */ }
-  density?.addEventListener('change', () => { setDensity(density.value as VuiDensity); refreshCode(); try { documentationStorage.setItem('vui.docs.density', density.value); } catch { /* Storage is optional. */ } });
+  uiMode?.addEventListener('change', () => {
+    setUIMode(uiMode.value as VuiUIMode);
+    try {
+      documentationStorage.setItem('vui.docs.ui', uiMode.value);
+      documentationStorage.removeItem('vui.docs.density');
+    } catch { /* Storage is optional. */ }
+  });
   const page = layout.querySelector<HTMLElement>('#docs-page')!;
   const menu = layout.querySelector<HTMLElement>('#docs-component-menu')!;
   const search = layout.querySelector<HTMLInputElement>('#component-search')!;
@@ -144,7 +167,7 @@ export function mountDocumentationSite(): void {
       const contract = catalog.find((c) => c.element === `vui-${path[1]}`);
       if (contract) {
         name = title(contract.element);
-        page.innerHTML = `<p class="docs-eyebrow">${link('components', text('Компоненты', 'Components'))} / ${groupName(componentGroup(contract.element))}</p><h1 tabindex="-1">${name}</h1><p class="docs-lead">${description(contract.element, docsLocale)}</p><pre class="docs-import"><code>import '${componentImport(contract.element)}';</code></pre>${heading(text('Живой пример', 'Live example'), showExample(exampleFor(contract.element)))}${heading(text('Варианты и состояния', 'Variants and states'), variants(contract).map(showExample).join('') || `<p>${text('Использует общие токены темы и плотности. Собственных вариантов нет.', 'Uses shared theme and density tokens; no component-specific variants.')}</p>`)}${api(contract)}`;
+        page.innerHTML = `<p class="docs-eyebrow">${link('components', text('Компоненты', 'Components'))} / ${groupName(componentGroup(contract.element))}</p><h1 tabindex="-1">${name}</h1><p class="docs-lead">${description(contract.element, docsLocale)}</p><pre class="docs-import"><code>import '${componentImport(contract.element)}';</code></pre>${demoSections(contract, showExample)}${api(contract)}`;
       } else page.innerHTML = `<h1>${name}</h1>${link('components', text('Открыть каталог', 'Open catalog'))}`;
     } else if (section === 'components') {
       page.innerHTML = `<h1 tabindex="-1">${name}</h1><p class="docs-lead">${catalog.length} ${text('компонентов. Выберите элемент, изучите состояния и скопируйте рабочий пример.', 'components. Choose an element, explore its states, and copy a working example.')}</p><div class="docs-cards">${catalog.map((c) => `<a class="docs-card" href="#/components/${c.element.slice(4)}"><strong>${title(c.element)}</strong><code>${c.element}</code><p>${description(c.element, docsLocale)}</p></a>`).join('')}</div>`;
@@ -155,16 +178,34 @@ export function mountDocumentationSite(): void {
         page.innerHTML = `<p>${link('examples', text('Примеры интерфейсов', 'Interface Examples'))}</p><h1 tabindex="-1">${name}</h1><p class="docs-lead">${example[2]}</p>${showExample(interfaceExample(example[0]!))}`;
       } else page.innerHTML = `<h1 tabindex="-1">${name}</h1><p class="docs-lead">${text('Рабочие сценарии из настоящих компонентов VUI, без копирования их реализации.', 'Working scenarios composed from real VUI components.')}</p><div class="docs-cards">${interfaces().map(([id, label, description]) => `<a class="docs-card" href="#/examples/${id}"><strong>${label}</strong><p>${description}</p></a>`).join('')}</div>`;
     } else if (section === 'themes') {
-      page.innerHTML = `<h1 tabindex="-1">${name}</h1><p class="docs-lead">${text('Тема документации меняется на верхней панели. Черновик редактора применяется только к просмотру, пока вы явно не примените его к документации.', 'Change the documentation theme in the top bar. Editor drafts affect only the preview until explicitly applied to documentation.')}</p>${heading(text('Подключение темы', 'Theme integration'), `<pre><code>import { initializeTheme, setDensity } from 'vui/theme';\ninitializeTheme();\nsetDensity('compact');</code></pre><p>${text('Используйте JSON для импорта, CSS — для подключения экспортированных токенов. Импорт исполняемого CSS не поддерживается.', 'Import JSON or use exported CSS tokens in your application. Importing executable CSS is not supported.')}</p>`)}`;
+      page.innerHTML = `<h1 tabindex="-1">${name}</h1><p class="docs-lead">${text('Тема документации меняется на верхней панели. Черновик редактора применяется только к просмотру, пока вы явно не примените его к документации.', 'Change the documentation theme in the top bar. Editor drafts affect only the preview until explicitly applied to documentation.')}</p>${heading(text('Подключение темы', 'Theme integration'), `<pre><code>import { initializeTheme, setUIMode } from 'vui/theme';\ninitializeTheme();\nsetUIMode('desktop');</code></pre><p>${text('Используйте JSON для импорта, CSS — для подключения экспортированных токенов. Импорт исполняемого CSS не поддерживается.', 'Import JSON or use exported CSS tokens in your application. Importing executable CSS is not supported.')}</p>`)}`;
     } else {
       page.innerHTML = `<p class="docs-eyebrow">WEB COMPONENTS · REACT · NEXT.JS · ELECTRON</p><h1 tabindex="-1">${text('Интерфейсы из понятных компонентов', 'Build interfaces from clear components')}</h1><p class="docs-lead">${text('Найдите компонент, проверьте его поведение и перенесите готовый пример в свой проект. Одна библиотека и общие токены для всех тем.', 'Find a component, explore its behavior, and take a working example into your project. One library and shared tokens for every theme.')}</p><div class="docs-actions">${link('components', text('Открыть каталог', 'Browse components'))}${link('examples', text('Собрать интерфейс', 'Build an interface'))}</div>${heading(text('Установка', 'Installation'), '<pre><code>pnpm add vui</code></pre>')}${heading(text('Первый компонент', 'Your first component'), showExample(exampleFor('vui-button')))}${heading('React / Next.js', `<pre><code>import { Button } from 'vui/react';\n\nexport default function Page() {\n  return &lt;Button variant="primary"&gt;${text('Сохранить', 'Save')}&lt;/Button&gt;;\n}</code></pre><p>${text('Обработчики событий размещайте в Client Component. SSR выводит теги и содержимое; Shadow DOM и интерактивность появляются после загрузки JavaScript.', 'Place event handlers in a Client Component. SSR emits tags and light DOM; shadow controls and interaction initialize after JavaScript loads.')}</p>`)}<p>${text('HTML-примеры рассчитаны на Vite или другой сборщик ESM, разрешающий импорты npm. В Electron используйте их в renderer.', 'HTML examples assume Vite or another ESM bundler that resolves npm imports. In Electron, use them in the renderer.')}</p>`;
     }
     document.title = `${name} · VUI`;
     for (const root of page.querySelectorAll<HTMLElement>('[data-example]')) wireExample(root);
+    for (const demo of page.querySelectorAll<HTMLElement>('.docs-demo')) {
+      const tabs = [...demo.querySelectorAll<HTMLElement>('[data-demo-tab]')];
+      const panels = [...demo.querySelectorAll<HTMLElement>('[data-demo-panel]')];
+      const activate = (name: string) => {
+        for (const tab of tabs) tab.setAttribute('aria-selected', String(tab.dataset.demoTab === name));
+        for (const panel of panels) panel.hidden = panel.dataset.demoPanel !== name;
+      };
+      for (const tab of tabs) tab.addEventListener('click', () => activate(tab.dataset.demoTab!));
+    }
     for (const copy of page.querySelectorAll<HTMLElement>('[data-copy]')) copy.addEventListener('click', async () => {
-      const code = copy.parentElement!.querySelector('pre')!.textContent!;
-      try { await navigator.clipboard.writeText(code); copy.textContent = text('Скопировано', 'Copied'); }
-      catch { copy.textContent = text('Выделите код для копирования', 'Select the code to copy'); }
+      const demo = copy.closest('.docs-demo')!;
+      const active = demo.querySelector<HTMLElement>('[data-demo-panel]:not([hidden])')!;
+      const example = renderedExamples.get(demo.getAttribute('data-demo')!);
+      let code = active.querySelector('pre')?.textContent ?? '';
+      if (active.dataset.demoPanel === 'preview' && example) code = prettyMarkup(example.html);
+      if (active.dataset.demoPanel === 'jsx' && example) code = exampleJsx({ ...example, html: prettyMarkup(example.html) });
+      try {
+        await navigator.clipboard.writeText(code);
+        copy.textContent = text('Скопировано', 'Copied');
+      } catch {
+        copy.textContent = text('Выделите код для копирования', 'Select the code to copy');
+      }
     });
     for (const a of layout.querySelectorAll('nav > a')) {
       const active = a.getAttribute('href') === `#/${section}`;

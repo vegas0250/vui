@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
-  await page.goto('/visual.html?theme=light&density=comfortable');
+  await page.goto('/visual.html?theme=light&ui=web');
   await page.locator('#board').waitFor();
 });
 

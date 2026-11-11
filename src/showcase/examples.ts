@@ -1,10 +1,12 @@
 import { componentImport } from './component-data';
 import { docsLocale, escapeHTML } from './theme-i18n';
-import { getDensity, getTheme, getThemePreference } from '../theme';
+import { getTheme, getThemePreference, getUIMode } from '../theme';
 import { documentationStorage } from './preferences';
+import { tones } from '../theme/presets';
 import exampleCSS from './examples.css?raw';
 export const text = (ru: string, en: string): string => docsLocale === 'ru' ? ru : en;
 export interface Example { id: string; html: string }
+export interface DemoSection { title: string; example: Example }
 
 /** This self-contained function is both executed live and included in copied code. */
 export function wireExample(root: HTMLElement): void {
@@ -148,8 +150,121 @@ export function exampleCode(example: Example): string {
   const markup = exampleMarkup(example);
   const modules = [...new Set([...markup.matchAll(/<(vui-[a-z-]+)/g)].map((match) => componentImport(match[1]!)))];
   const theme = JSON.stringify(getThemePreference(documentationStorage) ?? getTheme()).replace(/</g, '\\u003c');
-  return `<style>\n${exampleCSS}\n</style>\n${markup}\n<script type="module">\n${modules.map((name) => `import '${name}';`).join('\n')}\nimport { applyTheme, setDensity } from 'vui/theme';\napplyTheme(${theme});\nsetDensity('${getDensity()}');\nconst root = document.querySelector('[data-example="${example.id}"]');\n(${wireExample.toString()})(root);\n</script>`;
+  return `<style>\n${exampleCSS}\n</style>\n${markup}\n<script type="module">\n${modules.map((name) => `import '${name}';`).join('\n')}\nimport { applyTheme, setUIMode } from 'vui/theme';\napplyTheme(${theme});\nsetUIMode('${getUIMode()}');\nconst root = document.querySelector('[data-example="${example.id}"]');\n(${wireExample.toString()})(root);\n</script>`;
 }
+
+function reactName(tag: string): string {
+  return tag.replace(/^vui-/, '').split('-').map((part) => part[0]!.toUpperCase() + part.slice(1)).join('');
+}
+
+/** Convert light-DOM VUI markup into React JSX using `vui/react` exports. */
+export function exampleJsx(example: Example): string {
+  const names = [...new Set([...example.html.matchAll(/<(vui-[a-z-]+)/g)].map((match) => reactName(match[1]!)))].sort();
+  const imports = names.length ? `import { ${names.join(', ')} } from 'vui/react';\n\n` : '';
+  const jsx = example.html
+    .replace(/<\/?([a-z][a-z0-9-]*)/gi, (full, tag: string) => {
+      if (!tag.startsWith('vui-')) return full;
+      return full[1] === '/' ? `</${reactName(tag)}` : `<${reactName(tag)}`;
+    })
+    .replace(/\s([a-z][a-z0-9-]*)=""/gi, ' $1')
+    .replace(/\sclass="/g, ' className="');
+  return `${imports}export function Example() {\n  return (\n    <>\n${jsx.split('\n').map((line) => (line ? `      ${line}` : '')).join('\n')}\n    </>\n  );\n}\n`;
+}
+
+export function prettyMarkup(html: string): string {
+  return html
+    .replace(/></g, '>\n<')
+    .replace(/\n<(vui-(?:option|tab|tab-panel|menu-item|tree-item|list-item|nav-item|step|property|radio|checkbox|avatar)\b)/g, '\n  <$1');
+}
+
+export function buttonSections(): DemoSection[] {
+  const label = text('Кнопка', 'Button');
+  const row = (...buttons: string[]) => `<vui-hstack gap="sm" wrap>${buttons.join('')}</vui-hstack>`;
+  const btn = (attrs: string, textLabel = label) => `<vui-button${attrs ? ` ${attrs}` : ''}>${textLabel}</vui-button>`;
+  const toneLabel = (tone: string) => tone[0]!.toUpperCase() + tone.slice(1);
+  return [
+    { title: text('Кнопка', 'Button'), example: { id: 'button', html: btn('') } },
+    {
+      title: text('Цвета', 'Colors'),
+      example: {
+        id: 'button-colors',
+        html: row(...tones.map((tone) => btn(`tone="${tone}" variant="solid"`, toneLabel(tone)))),
+      },
+    },
+    {
+      title: text('Мягкие кнопки', 'Soft buttons'),
+      example: {
+        id: 'button-soft',
+        html: row(btn('variant="soft"', text('По умолчанию', 'Default')), ...tones.map((tone) => btn(`tone="${tone}" variant="soft"`, toneLabel(tone)))),
+      },
+    },
+    {
+      title: text('Контурные кнопки', 'Outline buttons'),
+      example: {
+        id: 'button-outline',
+        html: row(btn('variant="outline"', text('По умолчанию', 'Default')), ...tones.map((tone) => btn(`tone="${tone}" variant="outline"`, toneLabel(tone)))),
+      },
+    },
+    {
+      title: text('Прозрачные кнопки', 'Ghost buttons'),
+      example: {
+        id: 'button-ghost',
+        html: row(btn('variant="ghost"', text('По умолчанию', 'Default')), ...tones.map((tone) => btn(`tone="${tone}" variant="ghost"`, toneLabel(tone)))),
+      },
+    },
+    {
+      title: text('Классические варианты', 'Classic variants'),
+      example: {
+        id: 'button-classic',
+        html: row(
+          btn('variant="primary"', 'Primary'),
+          btn('variant="secondary"', 'Secondary'),
+          btn('variant="ghost"', 'Ghost'),
+          btn('variant="danger"', 'Danger'),
+        ),
+      },
+    },
+    {
+      title: text('Размеры', 'Sizes'),
+      example: {
+        id: 'button-sizes',
+        html: row(
+          btn('size="small"', text('Маленькая', 'Small')),
+          btn('size="medium"', text('Средняя', 'Medium')),
+          btn('size="large"', text('Большая', 'Large')),
+        ),
+      },
+    },
+    {
+      title: text('Состояния', 'States'),
+      example: {
+        id: 'button-states',
+        html: row(
+          btn('disabled', text('Недоступна', 'Disabled')),
+          btn('loading', text('Загрузка', 'Loading')),
+          btn('tone="danger" variant="solid" disabled', text('Опасная · недоступна', 'Danger · disabled')),
+          btn('tone="primary" variant="soft" loading', text('Мягкая · загрузка', 'Soft · loading')),
+        ),
+      },
+    },
+  ];
+}
+
 export function renderExample(example: Example): string {
-  return `<div class="docs-live">${exampleMarkup(example)}</div><details class="docs-code" open><summary>${text('Код примера', 'Example code')}</summary><vui-button data-copy variant="secondary">${text('Копировать пример', 'Copy example')}</vui-button><pre tabindex="0" data-example-code="${example.id}"><code>${escapeHTML(exampleCode(example))}</code></pre></details>`;
+  const html = prettyMarkup(example.html);
+  const jsx = exampleJsx({ ...example, html });
+  const preview = text('Просмотр', 'Preview');
+  return `<div class="docs-demo" data-demo="${example.id}">
+  <div class="docs-demo-toolbar">
+    <div class="docs-demo-tabs" role="tablist" aria-label="${preview} / HTML / JSX">
+      <button type="button" role="tab" aria-selected="true" data-demo-tab="preview">${preview}</button>
+      <button type="button" role="tab" aria-selected="false" data-demo-tab="html">HTML</button>
+      <button type="button" role="tab" aria-selected="false" data-demo-tab="jsx">JSX</button>
+    </div>
+    <vui-button data-copy variant="ghost" size="small">${text('Копировать', 'Copy')}</vui-button>
+  </div>
+  <div class="docs-demo-panel docs-live" data-demo-panel="preview">${exampleMarkup(example)}</div>
+  <div class="docs-demo-panel" data-demo-panel="html" hidden><pre tabindex="0" data-example-code="${example.id}" data-code-kind="html"><code>${escapeHTML(html)}</code></pre></div>
+  <div class="docs-demo-panel" data-demo-panel="jsx" hidden><pre tabindex="0" data-code-kind="jsx"><code>${escapeHTML(jsx)}</code></pre></div>
+</div>`;
 }

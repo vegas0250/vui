@@ -32,8 +32,8 @@ beforeEach(() => {
   document.documentElement.removeAttribute('style');
 });
 describe('palette-independent theme engine', () => {
-  it('provides fifteen immutable complete palettes with readable semantic pairs', () => {
-    expect(builtInThemes).toHaveLength(15);
+  it('provides nineteen immutable complete palettes with readable semantic pairs', () => {
+    expect(builtInThemes).toHaveLength(19);
     for (const preset of builtInThemes) {
       expect(Object.isFrozen(preset.tokens)).toBe(true);
       expect(Object.keys(preset.tokens).sort()).toEqual([...tokenNames].sort());
@@ -137,6 +137,8 @@ describe('palette-independent theme engine', () => {
     const css = exportThemeCSS(draft);
     expect(css).toContain('--vui-color-text: #ffffff;');
     expect(css).toContain('[data-vui-theme="custom"]');
+    expect(css).toContain('data-vui-ui');
+    expect(css).not.toContain('--vui-space-md');
     expect(css).not.toContain('undefined');
   });
   it('rejects hostile or unsupported imports', () => {
@@ -229,10 +231,58 @@ describe('palette-independent theme engine', () => {
           radius: 12,
           borderWidth: 2,
           shadowIntensity: 35,
-          density: 'compact',
+          uiMode: 'desktop',
         },
       }),
     ).toMatchObject({ '--vui-radius': '12px', '--vui-border-width': '2px' });
+  });
+  it('aligns Fluent and Radix presets to desktop/web structural chrome', () => {
+    expect(themeAppearance(themeDocument('fluent-light'))).toMatchObject({
+      uiMode: 'desktop',
+      radius: 4,
+      radiusBox: 8,
+      radiusField: 4,
+      radiusSelector: 2,
+    });
+    expect(themeAppearance(themeDocument('radix-dark'))).toMatchObject({
+      uiMode: 'web',
+      radius: 8,
+      radiusBox: 12,
+      radiusField: 8,
+      radiusSelector: 4,
+    });
+    expect(themeVariables(themeDocument('fluent-dark'))['--vui-shadow-sm']).toMatch(/^0 0\.5px/);
+    expect(themeVariables(themeDocument('radix-light'))['--vui-shadow-sm']).toMatch(/^0 1px 2px/);
+    expect(themeAppearance(themeDocument('nord'), 'desktop').radiusField).toBe(4);
+    expect(themeAppearance(themeDocument('nord'), 'web').radiusField).toBe(8);
+  });
+  it('resolves terminal mode independently from semantic colors', () => {
+    const nord = themeDocument('nord');
+    expect(themeAppearance(nord, 'terminal')).toMatchObject({
+      uiMode: 'terminal',
+      radius: 0,
+      radiusBox: 0,
+      radiusField: 0,
+      radiusSelector: 0,
+      shadowIntensity: 0,
+    });
+    expect(themeVariables(nord, { uiMode: 'terminal' })['--vui-shadow-md']).toBe(
+      'none',
+    );
+    const root = document.createElement('div');
+    root.setAttribute('data-vui-ui', 'terminal');
+    applyTheme(nord, root);
+    expect(root.getAttribute('data-vui-ui')).toBe('terminal');
+    expect(root.style.getPropertyValue('--vui-color-background')).toBeTruthy();
+    expect(root.style.getPropertyValue('--vui-radius')).toBe('');
+    applyTheme(themeDocument('fluent-light'), root);
+    expect(root.getAttribute('data-vui-ui')).toBe('desktop');
+    expect(
+      validateTheme({
+        ...nord,
+        appearance: { uiMode: 'terminal' },
+      }).appearance?.uiMode,
+    ).toBe('terminal');
   });
 });
 

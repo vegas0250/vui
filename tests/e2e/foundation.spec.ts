@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test('foundation, theme, and density share one token contract', async ({ page }) => {
+test('foundation, theme, and UI mode share one token contract', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/?legacy=1');
   await expect(page.getByRole('heading', { name: 'Foundation' })).toBeVisible();
@@ -20,7 +20,9 @@ test('foundation, theme, and density share one token contract', async ({ page })
     page.evaluate((token) => getComputedStyle(document.documentElement).getPropertyValue(token).trim(), name);
 
   const lightBackground = await read('--vui-color-background');
-  const comfortableControl = await read('--vui-size-control');
+  expect(await read('--vui-size-control')).toBe('32px');
+  expect(await read('--vui-space-md')).toBe('12px');
+  expect(await read('--vui-row-height')).toBe('40px');
 
   await page.locator('#docs-theme').selectOption('tokyo-night');
   await expect(page.locator('html')).toHaveAttribute('data-vui-theme', 'tokyo-night');
@@ -28,13 +30,13 @@ test('foundation, theme, and density share one token contract', async ({ page })
   expect(darkBackground).not.toBe(lightBackground);
   expect(darkBackground === '#16161e').toBe(true);
 
-  const density = page.locator('#density-select');
-  await density.locator('button').click();
-  await density.locator('[role="option"]', { hasText: 'Dense' }).click();
-  await expect(page.locator('html')).toHaveAttribute('data-vui-density', 'dense');
-  const denseControl = await read('--vui-size-control');
-  expect(denseControl).not.toBe(comfortableControl);
-  expect(denseControl).toBe('22px');
+  const uiMode = page.locator('#ui-mode-select');
+  await uiMode.locator('button').click();
+  await uiMode.locator('[role="option"]', { hasText: 'Desktop design' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-vui-ui', 'desktop');
+  expect(await read('--vui-size-control')).toBe('32px');
+  expect(await read('--vui-space-md')).toBe('8px');
+  expect(await read('--vui-row-height')).toBe('32px');
   await expect(page.locator('#contract-primary')).toBeVisible();
 });
 

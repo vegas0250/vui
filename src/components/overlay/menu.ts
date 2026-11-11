@@ -106,7 +106,7 @@ export class VMenuItem extends VuiElement {
         flex: 1 1 0;
         flex-direction: column;
         justify-content: center;
-        gap: 2px;
+        gap: var(--vui-space-2xs);
         min-width: 0;
         padding: var(--vui-space-2xs);
         text-align: center;
@@ -259,7 +259,7 @@ export class VMenu extends VuiElement {
       .bar { display: none; }
       :host(:has([slot="bar"])) .bar {
         display: flex;
-        gap: 2px;
+        gap: var(--vui-space-2xs);
         min-width: 18rem;
         margin-top: var(--vui-space-2xs);
         padding-top: var(--vui-space-2xs);

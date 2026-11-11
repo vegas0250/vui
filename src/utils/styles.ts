@@ -25,7 +25,7 @@ export const baseStyles = `
 :host::-webkit-scrollbar-thumb,
 :host *::-webkit-scrollbar-thumb {
   border: 3px solid transparent;
-  border-radius: 999px;
+  border-radius: var(--vui-radius-full);
   background-color: color-mix(in srgb, var(--vui-color-text) 35%, transparent);
   background-clip: padding-box;
 }
