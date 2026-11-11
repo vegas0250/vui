@@ -1,3 +1,12 @@
+# Unreleased
+
+- Theme Studio chrome uses `vui-*` (toolbar, select, input, slider, checkbox, button, icon-button, panel). Dense color token rows keep native color/text inputs. Docs theme control and catalog search use `vui-select` / `vui-input`.
+- Structural focus recipes (`--vui-focus-ring` / `--vui-focus-shadow`) belong only to UI mode (`src/tokens/ui.css`). Static themes keep elevation ink only (`--vui-shadow-ink`, `--vui-shadow-strength-*`, optional neon `--vui-shadow-glow`); `--vui-shadow-sm|md|lg` are composed in `ui.css` per UI mode (terminal: none); high-contrast thickens focus and clears shadows after the mode scale. Custom themes export `--vui-shadow-ink`.
+- `system` theme is complete for light OS preference and no longer uses a higher-specificity `:root` selector that overrode terminal/desktop focus.
+- Fix CSS leaked into HTML templates in menu, list, data-grid, and file-tree. Ghost `vui-icon-button` no longer inherits a primary border; loading hides the icon.
+- Normalize disabled opacity, selection accent width, toolbar wrap, select flip height, shell resizers, drawer width, and scrollbar metrics on UI-mode tokens.
+- Visual harness covers nearly every public component; regression boards add terminal + tablet. Copied HTML examples are runnable (`exampleCode` with theme/UI mode). `setUIMode` emits `vui-ui-change`.
+
 # 1.3.1
 
 - Preserve source component registration in optimized website builds, and add a production-build browser check alongside development checks.

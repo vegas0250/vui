@@ -7,7 +7,10 @@ for (const id of ['catppuccin-mocha', 'catppuccin-latte', 'tokyo-night', 'tokyo-
   test(`${id}: the same dashboard, form, table, menu and dialog`, async ({ page }) => {
     await page.goto('/?lang=en&legacy=1');
     await page.locator(`[data-preset="${id}"]`).click();
-    await page.locator('#ts-template').selectOption('components');
+    await page.locator('#ts-template').evaluate((el) => {
+      (el as HTMLElement & { value: string }).value = 'components';
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    });
     const root = page.locator('#ts-live-preview');
     await expect(root).toHaveAttribute('data-vui-theme', id);
     await expect(root.locator('vui-data-grid')).toBeVisible();

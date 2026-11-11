@@ -290,7 +290,11 @@ export class VSelect extends VuiElement {
     list.style.left = `${left}px`;
     list.style.width = `${width}px`;
     const below = window.innerHeight - rect.bottom;
-    if (below < 180 && rect.top > below) {
+    const needed = Math.min(
+      Math.max(list.offsetHeight, list.scrollHeight, readLength(this, '--vui-size-control', 32) * 4),
+      window.innerHeight - gutter * 2,
+    );
+    if (below < needed && rect.top > below) {
       list.style.top = 'auto';
       list.style.bottom = `${window.innerHeight - rect.top + margin}px`;
     } else {

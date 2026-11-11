@@ -45,8 +45,8 @@ export const showcaseMarkup = `
       <section class="category" id="foundation">
         <h2>Foundation</h2>
         <p class="section-lead">
-          Runtime читает tokens, тему, плотность и пороги контейнера. Компонент не заводит свою шкалу.
-          Переключатели темы и плотности на панели сверху меняют этот раздел вместе со страницей.
+          Runtime читает tokens, тему, UI mode и пороги контейнера. Компонент не заводит свою шкалу.
+          Переключатели темы и UI mode на панели сверху меняют этот раздел вместе со страницей.
         </p>
         <div class="stack-gap">
           <h3 id="foundation-tokens">Tokens</h3>
@@ -71,7 +71,7 @@ export const showcaseMarkup = `
               <p class="type-sample" style="font-size: var(--vui-heading-1); margin: 0">Заголовок H1</p>
               <p class="type-sample" style="font-size: var(--vui-heading-2); margin: 0">Заголовок H2</p>
               <p class="type-sample" style="font-size: var(--vui-heading-3); margin: 0">Заголовок H3</p>
-              <p class="type-sample" style="margin: 0">Основной текст интерфейса. Размер и интервалы меняются вместе с плотностью.</p>
+              <p class="type-sample" style="margin: 0">Основной текст интерфейса. Размер и интервалы меняются вместе с UI mode.</p>
               <p class="type-sample" style="margin: 0; font-size: var(--vui-font-size-sm); color: var(--vui-color-text-muted)">Мелкий текст и подписи.</p>
               <p class="type-sample" style="margin: 0; font-family: var(--vui-font-mono)">const theme = "dark";</p>
             </vui-vstack>
@@ -237,7 +237,7 @@ export const showcaseMarkup = `
         <h2>Contract</h2>
         <p class="section-lead">
           Lifecycle, состояния, клавиатура, фокус и ширина контейнера — один контракт для каждого <code>vui-*</code>.
-          Тема и плотность к этому контракту не добавляют отдельных версий компонента.
+          Тема и UI mode к этому контракту не добавляют отдельных версий компонента.
           <code>loading</code> зарезервирован: компонент объявляет его только когда состояние реально есть, и тогда ставит <code>aria-busy</code>.
         </p>
         <div class="stack-gap">
@@ -290,7 +290,7 @@ export const showcaseMarkup = `
 
           <h3>Compliance</h3>
           <vui-panel heading="Зарегистрированные контракты">
-            <p class="demo-note">Эти компоненты проходят автоматическую проверку: регистрация, lifecycle, tokens, тема, плотность, responsive, disabled, invalid, ARIA и стандартные события.</p>
+            <p class="demo-note">Эти компоненты проходят автоматическую проверку: регистрация, lifecycle, tokens, тема, UI mode, responsive, disabled, invalid, ARIA и стандартные события.</p>
             <div class="table-wrap">
               <table id="compliance-table" class="contract-table">
                 <thead>
@@ -313,7 +313,7 @@ export const showcaseMarkup = `
         <h2>Composition</h2>
         <p class="section-lead">
           Составной интерфейс собирается из тех же слотов, атрибутов, событий и interaction primitives.
-          Переключатели темы и плотности сверху действуют и на эти сценарии. Отдельной связи между парами компонентов нет.
+          Переключатели темы и UI mode сверху действуют и на эти сценарии. Отдельной связи между парами компонентов нет.
         </p>
         <div class="stack-gap">
           <h3>Form</h3>
@@ -579,7 +579,7 @@ toast({ title: "Готово", message: "Проект собран", variant: "s
               <vui-tab panel="general" selected>Общие</vui-tab>
               <vui-tab panel="view">Вид</vui-tab>
               <vui-tab panel="keys">Клавиши</vui-tab>
-              <vui-tab-panel name="general">Тема и плотность применяются ко всей странице.</vui-tab-panel>
+              <vui-tab-panel name="general">Тема и UI mode применяются ко всей странице.</vui-tab-panel>
               <vui-tab-panel name="view">Панели, таблицы и дерево используют те же токены.</vui-tab-panel>
               <vui-tab-panel name="keys">Стрелки переключают вкладки. Home и End переходят к краям.</vui-tab-panel>
             </vui-tabs>
@@ -673,7 +673,7 @@ grid.addEventListener("change", () =&gt; grid.selectedId);</pre>
                   <vui-tabs label="Редактор">
                     <vui-tab panel="readme" selected>README.md</vui-tab>
                     <vui-tab panel="button-file">button.ts</vui-tab>
-                    <vui-tab-panel name="readme">Персональная библиотека компонентов. Темы и плотность общие для Web и Desktop.</vui-tab-panel>
+                    <vui-tab-panel name="readme">Персональная библиотека компонентов. Темы и UI mode общие для Web, Desktop и Terminal.</vui-tab-panel>
                     <vui-tab-panel name="button-file">export class VButton extends VuiElement {}</vui-tab-panel>
                   </vui-tabs>
                 </div>
@@ -708,11 +708,11 @@ grid.addEventListener("change", () =&gt; grid.selectedId);</pre>
       <section class="category" id="responsive">
         <h2>Responsive Design</h2>
         <p class="section-lead">
-          Тема, плотность и доступная ширина независимы. Компонент подстраивается под свой контейнер:
+          Тема, UI mode и доступная ширина независимы. Компонент подстраивается под свой контейнер:
           широкий, средний и узкий. Перетащите правый край или выберите ширину. Сочетания Light, Dark,
-          High Contrast и Comfortable, Compact, Dense переключаются на панели сверху и действуют на этот блок.
+          High Contrast и Web, Desktop, Terminal переключаются на панели сверху и действуют на этот блок.
         </p>
-        <p id="responsive-readout" class="demo-note">Light + Comfortable</p>
+        <p id="responsive-readout" class="demo-note">Light + Web design</p>
         <vui-hstack gap="sm" wrap>
           <vui-button id="size-wide" variant="secondary" size="small">Широкий</vui-button>
           <vui-button id="size-medium" variant="secondary" size="small">Средний</vui-button>

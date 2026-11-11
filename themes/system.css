@@ -1,11 +1,12 @@
 /*
   System follows the OS color scheme.
   Dark assignments use the same palette names as themes/dark.css.
-  Theme files stay plain CSS and do not depend on a preprocessor.
+  Light assignments mirror themes/light.css so standalone import is complete.
+  Focus geometry lives in vui/themes/ui (web|desktop|terminal), not here.
 */
 
 @media (prefers-color-scheme: dark) {
-  :root[data-vui-theme="system"] {
+  [data-vui-theme="system"] {
     color-scheme: dark;
     --vui-color-background: var(--vui-palette-ink-900);
     --vui-color-surface: var(--vui-palette-ink-800);
@@ -37,17 +38,51 @@
     --vui-color-tooltip-bg: var(--vui-palette-ink-50);
     --vui-color-tooltip-text: var(--vui-palette-slate-900);
     --vui-color-tooltip-border: transparent;
-    --vui-shadow-sm: var(--vui-palette-shadow-dark-sm);
-    --vui-shadow-md: var(--vui-palette-shadow-dark-md);
-    --vui-shadow-lg: var(--vui-palette-shadow-dark-lg);
-    --vui-focus-ring: 2px solid var(--vui-color-focus);
-    --vui-focus-shadow: 0 0 0 3px color-mix(in srgb, var(--vui-color-focus) 35%, transparent);
+    --vui-shadow-ink: var(--vui-palette-shadow-ink-dark);
+    --vui-shadow-strength-sm: 35%;
+    --vui-shadow-strength-md: 36%;
+    --vui-shadow-strength-lg: 46%;
     --vui-border-width: 1px;
   }
 }
 
 @media (prefers-color-scheme: light) {
-  :root[data-vui-theme="system"] {
+  [data-vui-theme="system"] {
     color-scheme: light;
+    --vui-color-background: var(--vui-palette-slate-50);
+    --vui-color-surface: var(--vui-palette-slate-0);
+    --vui-color-surface-raised: var(--vui-palette-slate-0);
+    --vui-color-surface-sunken: var(--vui-palette-slate-150);
+    --vui-color-surface-hover: var(--vui-palette-slate-100);
+    --vui-color-field: var(--vui-palette-slate-0);
+    --vui-color-text: var(--vui-palette-slate-900);
+    --vui-color-text-muted: var(--vui-palette-slate-600);
+    --vui-color-border: var(--vui-palette-slate-300);
+    --vui-color-border-strong: var(--vui-palette-slate-400);
+    --vui-color-primary: var(--vui-palette-blue-600);
+    --vui-color-primary-hover: var(--vui-palette-blue-700);
+    --vui-color-primary-active: var(--vui-palette-blue-800);
+    --vui-color-on-primary: var(--vui-palette-slate-0);
+    --vui-color-danger: var(--vui-palette-red-600);
+    --vui-color-danger-hover: var(--vui-palette-red-700);
+    --vui-color-on-danger: var(--vui-palette-slate-0);
+    --vui-color-success: var(--vui-palette-green-700);
+    --vui-color-warning: var(--vui-palette-amber-800);
+    --vui-color-info: var(--vui-palette-blue-600);
+    --vui-color-danger-surface: var(--vui-palette-red-50);
+    --vui-color-success-surface: var(--vui-palette-green-50);
+    --vui-color-warning-surface: var(--vui-palette-amber-50);
+    --vui-color-info-surface: var(--vui-palette-blue-50);
+    --vui-color-backdrop: var(--vui-palette-backdrop-light);
+    --vui-color-selected: color-mix(in srgb, var(--vui-color-primary) 14%, var(--vui-color-surface));
+    --vui-color-focus: var(--vui-palette-blue-600);
+    --vui-color-tooltip-bg: var(--vui-palette-slate-900);
+    --vui-color-tooltip-text: var(--vui-palette-slate-0);
+    --vui-color-tooltip-border: transparent;
+    --vui-shadow-ink: var(--vui-palette-shadow-ink-light);
+    --vui-shadow-strength-sm: 6%;
+    --vui-shadow-strength-md: 10%;
+    --vui-shadow-strength-lg: 16%;
+    --vui-border-width: 1px;
   }
 }

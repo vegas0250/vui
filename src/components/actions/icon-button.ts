@@ -37,10 +37,12 @@ export class VIconButton extends VuiElement {
         width: var(--vui-size-control);
         min-width: var(--vui-size-control);
         padding-inline: 0;
+        border-color: transparent;
         background: transparent;
         color: var(--vui-color-text);
       }
-      button:hover { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
+      button:hover:not(:disabled) { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
+      :host([loading]) [part="icon"] { display: none; }
       :host([size="small"]) button {
         width: var(--vui-size-control-sm);
         min-width: var(--vui-size-control-sm);
@@ -60,7 +62,7 @@ export class VIconButton extends VuiElement {
         background: var(--vui-color-primary);
         color: var(--vui-color-on-primary);
       }
-      :host([variant="primary"]) button:hover { background: var(--vui-color-primary-hover); }
+      :host([variant="primary"]) button:hover:not(:disabled) { background: var(--vui-color-primary-hover); }
       :host([variant="secondary"]) button {
         background: var(--vui-color-surface);
         border-color: var(--vui-color-block-border, var(--vui-color-border));
@@ -69,7 +71,7 @@ export class VIconButton extends VuiElement {
         background: transparent;
         color: var(--vui-color-danger);
       }
-      :host([variant="danger"]) button:hover {
+      :host([variant="danger"]) button:hover:not(:disabled) {
         background: var(--vui-color-danger-surface);
       }
     ` + toneStyles('button', 'primary', 'solid');

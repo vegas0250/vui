@@ -38,7 +38,7 @@ export class VTooltip extends VuiElement {
         overflow-wrap: anywhere;
         padding: var(--vui-space-2xs) var(--vui-space-xs);
         border: var(--vui-border-width) solid var(--vui-color-tooltip-border);
-        border-radius: var(--vui-radius-sm);
+        border-radius: var(--vui-radius-box, var(--vui-radius-sm));
         background: var(--vui-color-tooltip-bg);
         color: var(--vui-color-tooltip-text);
         font-size: var(--vui-font-size-sm);

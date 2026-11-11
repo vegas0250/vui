@@ -49,7 +49,7 @@ export class VDrawer extends VuiElement {
         margin: 0;
         padding: 0;
         border: 0;
-        width: min(24rem, 100%);
+        width: min(var(--vui-drawer-inline, 24rem), 100%);
         max-width: 100%;
         height: 100dvh;
         max-height: 100dvh;

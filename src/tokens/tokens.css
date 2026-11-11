@@ -48,7 +48,6 @@
   --vui-palette-ink-700: #212a36;
   --vui-palette-ink-800: #171f29;
   --vui-palette-ink-900: #0e1318;
-  --vui-palette-ink-950: #0e1318;
   --vui-palette-navy-900: #0d1b2e;
   --vui-palette-info-900: #1c2a3d;
   --vui-palette-danger-900: #3a2224;
@@ -107,21 +106,12 @@
   --vui-palette-neon-danger-ink: #2a0d12;
   --vui-palette-neon-warn: #e8ff47;
   --vui-palette-neon-info: #4dffe0;
-  --vui-palette-shadow-neon-green-sm: 0 1px 0 rgba(61, 255, 138, 0.1);
-  --vui-palette-shadow-neon-green-md: 0 8px 20px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(61, 255, 138, 0.12);
-  --vui-palette-shadow-neon-green-lg: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(61, 255, 138, 0.16);
-  --vui-palette-shadow-neon-magenta-sm: 0 1px 0 rgba(255, 43, 214, 0.12);
-  --vui-palette-shadow-neon-magenta-md: 0 8px 20px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(255, 43, 214, 0.14);
-  --vui-palette-shadow-neon-magenta-lg: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 43, 214, 0.18);
-  --vui-palette-shadow-neon-cyan-sm: 0 1px 0 rgba(45, 226, 230, 0.12);
-  --vui-palette-shadow-neon-cyan-md: 0 8px 20px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(45, 226, 230, 0.14);
-  --vui-palette-shadow-neon-cyan-lg: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(45, 226, 230, 0.18);
-  --vui-palette-shadow-light-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
-  --vui-palette-shadow-light-md: 0 8px 20px rgba(16, 24, 40, 0.1);
-  --vui-palette-shadow-light-lg: 0 16px 36px rgba(16, 24, 40, 0.16);
-  --vui-palette-shadow-dark-sm: 0 1px 1px rgba(0, 0, 0, 0.35);
-  --vui-palette-shadow-dark-md: 0 8px 20px rgba(0, 0, 0, 0.36);
-  --vui-palette-shadow-dark-lg: 0 16px 36px rgba(0, 0, 0, 0.46);
+  /* Elevation ink: colors only. Geometry and opacity steps live in src/tokens/ui.css. */
+  --vui-palette-shadow-ink-light: #101828;
+  --vui-palette-shadow-ink-dark: #000000;
+  --vui-palette-shadow-glow-neon-green: #3dff8a;
+  --vui-palette-shadow-glow-neon-magenta: #ff2bd6;
+  --vui-palette-shadow-glow-neon-cyan: #2de2e6;
 
   /* Typography */
   --vui-font-sans: "Segoe UI", "Segoe UI Variable", system-ui, sans-serif;
@@ -130,8 +120,7 @@
   --vui-font-weight-strong: 600;
   --vui-color-selected: color-mix(in srgb, var(--vui-color-primary) 16%, var(--vui-color-surface));
 
-  /* Motion */
-  --vui-duration: 120ms;
+  /* Motion (duration scale is owned by ui.css / UI mode) */
   --vui-easing: cubic-bezier(0.2, 0, 0, 1);
 
   /* Elevation */
@@ -150,7 +139,6 @@
   --vui-stroke-width: 1.5px;
   --vui-border-width-strong: 2px;
   --vui-border-width-accent: 3px;
-  --vui-focus-offset: 2px;
 
   /* Container thresholds. Component CSS repeats 22rem, 36rem, 40rem, and 30rem. */
   --vui-layout-narrow: 22rem;
@@ -160,9 +148,8 @@
   --vui-field-label-min: 7rem;
   --vui-field-label-size: 9rem;
   --vui-column-min: 6rem;
-  --vui-control-min-inline: 10rem;
 
-  /* Component metrics that stay outside the density scale. */
+  /* Component metrics that stay outside the UI-mode scale. */
   --vui-overlay-gutter: max(0.75rem, var(--vui-space-md, 0.75rem));
   --vui-overlay-max-block: 70dvh;
   --vui-dialog-block: min(85dvh, calc(100dvh - var(--vui-overlay-gutter) * 2));

@@ -48,7 +48,7 @@ Foundation: tokens, theme, UI mode, responsive, motion, a11y runtime. Interactio
 
 Три слоя токенов: primitive (`src/tokens/tokens.css`), semantic (`themes/`), component (высоты chrome). UI mode (`web` | `desktop` | `terminal`) меняет структурную шкалу в `ui.css`, не палитру. Responsive читает ширину контейнера. Пороги 22rem, 36rem и 40rem не зависят от темы. Layout-словарь: `gap`, `padding`, `align`, `justify`, `overflow`.
 
-Своя тема переопределяет semantic properties (`--vui-color-*`, `--vui-shadow-*`, `--vui-focus-ring`), а не имена компонентов.
+Своя тема переопределяет semantic properties (`--vui-color-*`, `--vui-shadow-ink`, `--vui-shadow-strength-*`, `--vui-focus-ring`), а не имена компонентов.
 
 ## Interaction, keyboard, focus
 

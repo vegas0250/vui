@@ -1,7 +1,36 @@
-import { expect, test } from '@playwright/test';
+import { expect, type Page, test } from '@playwright/test';
 test.setTimeout(90_000);
 const studio = '#theme-studio';
 const token = (name: string) => `[data-value="${name}"]`;
+
+async function setSelect(page: Page, selector: string, value: string) {
+  await page.locator(selector).evaluate((el, next) => {
+    (el as HTMLElement & { value: string }).value = next;
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  }, value);
+}
+
+async function setChecked(page: Page, selector: string, checked = true) {
+  await page.locator(selector).evaluate((el, next) => {
+    (el as HTMLElement & { checked: boolean }).checked = next;
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  }, checked);
+}
+
+async function fillName(page: Page, value: string) {
+  await page.locator('#ts-name').evaluate((el, next) => {
+    (el as HTMLElement & { value: string }).value = next;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  }, value);
+}
+
+async function appearanceValue(page: Page, key: string) {
+  return page.locator(`[data-appearance=${key}]`).evaluate(
+    (el) => (el as HTMLElement & { value: string }).value,
+  );
+}
+
 test.beforeEach(async ({ page }) => {
   await page.goto('/?lang=en&legacy=1');
   await expect(page.locator(studio)).toBeVisible();
@@ -10,7 +39,7 @@ test('nineteen palettes switch instantly; documentation preference is independen
   page,
 }) => {
   await expect(page.locator('.ts-preset')).toHaveCount(19);
-  await page.locator('#docs-theme').selectOption('nord');
+  await setSelect(page, '#docs-theme', 'nord');
   for (const id of [
     'tokyo-night',
     'catppuccin-mocha',
@@ -90,17 +119,30 @@ test('custom themes save, reload, rename, apply, export, import and delete', asy
 }) => {
   await page.locator(token('primary')).fill('rgb(18 52 86)');
   await page.locator(token('primary')).blur();
-  await page.locator('#ts-name').fill('My theme');
+  await fillName(page, 'My theme');
   await page.locator('[data-ts-action=save]').click();
-  await expect(page.locator('#ts-saved option')).toHaveCount(2);
+  await expect(page.locator('#ts-saved vui-option')).toHaveCount(2);
   await page.reload();
-  await page.locator('#ts-saved').selectOption('0');
+  await setSelect(page, '#ts-saved', '0');
   await expect(page.locator(token('primary'))).toHaveValue('#123456');
-  await page.locator('#ts-name').fill('Renamed');
+  await fillName(page, 'Renamed');
   await page.locator('[data-ts-action=rename]').click();
-  await expect(page.locator('#ts-saved option:checked')).toHaveText('Renamed');
+  await expect
+    .poll(() =>
+      page.locator('#ts-saved').evaluate((el) => {
+        const value = (el as HTMLElement & { value: string }).value;
+        return (
+          el.querySelector(`vui-option[value="${value}"]`)?.textContent ?? ''
+        );
+      }),
+    )
+    .toBe('Renamed');
   await page.locator('[data-ts-action=apply]').click();
-  await expect(page.locator('#docs-theme')).toHaveValue('custom');
+  await expect
+    .poll(() =>
+      page.locator('#docs-theme').evaluate((el) => (el as HTMLElement & { value: string }).value),
+    )
+    .toBe('custom');
   const downloadPromise = page.waitForEvent('download');
   await page.locator('[data-ts-action=json]').click();
   const download = await downloadPromise;
@@ -134,16 +176,16 @@ test('custom themes save, reload, rename, apply, export, import and delete', asy
     ),
   });
   await expect(page.locator('#ts-status')).toContainText('Invalid theme file');
-  await page.locator('#ts-saved').selectOption('0');
+  await setSelect(page, '#ts-saved', '0');
   await page.locator('[data-ts-action=delete]').click();
-  await expect(page.locator('#ts-saved option')).toHaveCount(1);
+  await expect(page.locator('#ts-saved vui-option')).toHaveCount(1);
 });
 test('all interface templates use actual VUI and original comparison stays isolated', async ({
   page,
 }) => {
   await page.locator(token('surface')).fill('#123456');
   await page.locator(token('surface')).blur();
-  await page.locator('#ts-compare').check();
+  await setChecked(page, '#ts-compare');
   await expect(page.locator('#ts-original-preview')).toBeVisible();
   for (const template of [
     'components',
@@ -153,7 +195,7 @@ test('all interface templates use actual VUI and original comparison stays isola
     'developer',
     'tabs',
   ]) {
-    await page.locator('#ts-template').selectOption(template);
+    await setSelect(page, '#ts-template', template);
     await expect(
       page.locator('#ts-live-preview vui-panel').first(),
     ).toBeVisible();
@@ -176,7 +218,7 @@ test('all interface templates use actual VUI and original comparison stays isola
       )
       .toBe('#1a1b26');
   }
-  await page.locator('#ts-template').selectOption('components');
+  await setSelect(page, '#ts-template', 'components');
   await page.locator('#ts-live-preview [data-preview-modal]').click();
   await expect(
     page.locator('#ts-live-preview [data-preview-dialog]'),
@@ -222,7 +264,7 @@ test('system mode initializes defaults, explicit choice wins, and initial head b
     'data-vui-theme',
     'catppuccin-latte',
   );
-  await page.locator('#docs-theme').selectOption('dracula');
+  await setSelect(page, '#docs-theme', 'dracula');
   await page.emulateMedia({ colorScheme: 'dark' });
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute(
@@ -244,7 +286,7 @@ test('system mode initializes defaults, explicit choice wins, and initial head b
 
 test('developer preview has spaced controls and a textarea resizer at the control edge', async ({ page }) => {
   await page.locator('[data-preset="retro"]').click();
-  await page.locator('#ts-template').selectOption('developer');
+  await setSelect(page, '#ts-template', 'developer');
   for (const width of [1280, 390]) {
     await page.setViewportSize({ width, height: 844 });
     if (width === 390) await page.locator('[data-view=preview]').click();
@@ -277,14 +319,14 @@ test('developer preview has spaced controls and a textarea resizer at the contro
 
 test('shape families style real tabs, boxes and selectors independently', async ({ page }) => {
   await page.locator('[data-preset="retro"]').click();
-  await page.locator('#ts-template').selectOption('tabs');
-  await expect(page.locator('[data-appearance=radiusBox]')).toHaveValue('8');
-  await expect(page.locator('[data-appearance=radiusField]')).toHaveValue('4');
-  await expect(page.locator('[data-appearance=radiusSelector]')).toHaveValue('4');
-  await page.locator('#ts-compare').check();
+  await setSelect(page, '#ts-template', 'tabs');
+  expect(await appearanceValue(page, 'radiusBox')).toBe('8');
+  expect(await appearanceValue(page, 'radiusField')).toBe('4');
+  expect(await appearanceValue(page, 'radiusSelector')).toBe('4');
+  await setChecked(page, '#ts-compare');
   for (const [key, value] of [['radiusBox', '20'], ['radiusField', '12'], ['radiusSelector', '2'], ['borderWidth', '2']]) {
-    await page.locator(`[data-appearance=${key}]`).evaluate((el, value) => {
-      (el as HTMLInputElement).value = value;
+    await page.locator(`[data-appearance=${key}]`).evaluate((el, next) => {
+      (el as HTMLElement & { value: string }).value = next;
       el.dispatchEvent(new Event('input', { bubbles: true }));
       el.dispatchEvent(new Event('change', { bubbles: true }));
     }, value);
@@ -304,7 +346,7 @@ test('shape families style real tabs, boxes and selectors independently', async 
   await expect(root.locator('vui-textarea textarea')).toHaveCSS('border-radius', '12px');
   await page.keyboard.press('End');
   await expect(root.locator('vui-tab[panel=settings]')).toHaveAttribute('selected', '');
-  await page.locator('#ts-template').selectOption('components');
+  await setSelect(page, '#ts-template', 'components');
   await expect(root.locator('vui-pagination button').first()).toHaveCSS('border-radius', '12px');
   await expect(root.locator('vui-input .control').first()).toHaveCSS('border-radius', '12px');
   await expect(root.locator('vui-checkbox .box').first()).toHaveCSS('border-radius', '2px');

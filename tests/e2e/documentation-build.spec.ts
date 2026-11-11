@@ -15,7 +15,10 @@ test('optimized website registers every component and runs the real examples', a
   await page.getByRole('textbox', { name: 'Name', exact: true }).fill('Production');
   await page.getByRole('button', { name: 'Save', exact: true }).click();
   await expect(page.locator('#docs-page [data-result]')).toHaveText('Saved: Production');
-  await page.locator('#docs-theme').selectOption('tokyo-night');
+  await page.locator('#docs-theme').evaluate((el) => {
+    (el as HTMLElement & { value: string }).value = 'tokyo-night';
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  });
   await page.screenshot({ path: test.info().outputPath('website-desktop.png') });
   for (const width of [1044, 734, 670, 356]) {
     await page.setViewportSize({ width, height: 844 });

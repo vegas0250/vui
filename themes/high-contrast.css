@@ -30,11 +30,7 @@
   --vui-color-tooltip-bg: var(--vui-palette-hc-black);
   --vui-color-tooltip-text: var(--vui-palette-hc-white);
   --vui-color-tooltip-border: var(--vui-palette-hc-white);
-  --vui-shadow-sm: none;
-  --vui-shadow-md: none;
-  --vui-shadow-lg: none;
-  --vui-focus-ring: 3px solid var(--vui-color-focus);
-  --vui-focus-shadow: none;
+  --vui-shadow-ink: var(--vui-palette-shadow-ink-dark);
   --vui-border-width: 2px;
   --vui-border-width-strong: 3px;
 }

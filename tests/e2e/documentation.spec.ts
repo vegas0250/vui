@@ -53,9 +53,11 @@ test('settings, filters, dialog and shell are working compositions', async ({ pa
 test('copied example runs independently with its declared imports', async ({ page, context, baseURL }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.goto('/?lang=en#/examples/settings');
-  const code = await page.locator('[data-example-code]').textContent();
+  const code = (await page.locator('[data-example-code]').textContent())?.replace(/\r\n/g, '\n');
   await page.getByRole('button', { name: 'Copy example', exact: true }).click();
-  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(code);
+  expect(
+    (await page.evaluate(() => navigator.clipboard.readText())).replace(/\r\n/g, '\n'),
+  ).toBe(code);
   const imports = Object.fromEntries(Object.entries(pkg.exports).flatMap(([name, entry]) =>
     typeof entry === 'object' ? [[`vui${name.slice(1)}`, `${baseURL}/${entry.import.replace('./dist/', 'src/').replace(/\.js$/, '.ts')}`]] : [],
   ));
@@ -73,7 +75,10 @@ test('copied example runs independently with its declared imports', async ({ pag
 
 test('standalone documentation persists preferences and fits a narrow viewport', async ({ page }) => {
   await page.goto('/?lang=en#/components/button');
-  await page.locator('#docs-theme').selectOption('nord');
+  await page.locator('#docs-theme').evaluate((el) => {
+    (el as HTMLElement & { value: string }).value = 'nord';
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  });
   await expect(page.locator('[data-example-code]').first()).toContainText('applyTheme("nord")');
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem('vui.theme.preference.v1')!))).toBe('nord');
   await page.locator('#ui-mode-select button').click();

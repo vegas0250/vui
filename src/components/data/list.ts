@@ -23,7 +23,6 @@ export class VListItem extends VuiElement {
       <span part="label"><slot></slot></span>
       <span part="meta" hidden><slot name="meta"></slot></span>
       <span part="end" hidden><slot name="end"></slot></span>
-      :host { transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing); }
     `;
   }
 
@@ -39,6 +38,7 @@ export class VListItem extends VuiElement {
         padding-inline: var(--vui-space-sm);
         cursor: pointer;
         overflow-wrap: anywhere;
+        transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing);
       }
       [part="label"] { flex: 1 1 auto; min-width: 0; }
       [part="meta"], [part="end"] {
@@ -49,15 +49,15 @@ export class VListItem extends VuiElement {
         font-variant-numeric: tabular-nums;
       }
       [part="meta"][hidden], [part="end"][hidden] { display: none; }
-      :host(:hover) { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
+      :host(:hover:not([disabled])) { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       :host([selected]) {
         background: var(--vui-color-selected);
-        box-shadow: inset 2px 0 0 var(--vui-color-focus);
+        box-shadow: inset var(--vui-border-width-accent) 0 0 var(--vui-color-focus);
       }
-      :host([selected]:hover) { background: var(--vui-color-selected); }
-      :host-context([dir="rtl"]):host([selected]) { box-shadow: inset -2px 0 0 var(--vui-color-focus); }
+      :host([selected]:hover:not([disabled])) { background: var(--vui-color-selected); }
+      :host-context([dir="rtl"]):host([selected]) { box-shadow: inset calc(var(--vui-border-width-accent) * -1) 0 0 var(--vui-color-focus); }
       :host(:focus-visible) { outline: var(--vui-focus-ring); outline-offset: calc(var(--vui-focus-offset) * -1); }
-      :host([disabled]) { opacity: 0.72; cursor: not-allowed; }
+      :host([disabled]) { opacity: var(--vui-opacity-disabled, 0.55); cursor: not-allowed; }
     `;
   }
 

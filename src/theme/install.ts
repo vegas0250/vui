@@ -33,7 +33,8 @@ export function installVuiStyles(): void {
 
   const style = document.createElement('style');
   style.id = STYLE_ID;
-  // ui.css last so mode-specific structure (e.g. terminal shadows) wins over theme CSS.
+  // ui.css last so mode structure (focus, terminal elevation) wins over theme colors.
+  // High-contrast a11y focus/elevation overrides live at the end of ui.css.
   style.textContent = [
     tokensCss,
     lightCss,

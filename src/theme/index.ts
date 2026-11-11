@@ -66,6 +66,9 @@ export function setUIMode(
   for (const key of ['--vui-shadow-sm', '--vui-shadow-md', '--vui-shadow-lg']) {
     root.style.removeProperty(key);
   }
+  root.dispatchEvent(
+    new CustomEvent('vui-ui-change', { bubbles: true, detail: { uiMode: mode } }),
+  );
 }
 
 /** @deprecated Use setUIMode. */

@@ -19,12 +19,12 @@ export const baseStyles = `
 }
 :host::-webkit-scrollbar,
 :host *::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: var(--vui-scrollbar-size, 10px);
+  height: var(--vui-scrollbar-size, 10px);
 }
 :host::-webkit-scrollbar-thumb,
 :host *::-webkit-scrollbar-thumb {
-  border: 3px solid transparent;
+  border: var(--vui-scrollbar-gutter, 3px) solid transparent;
   border-radius: var(--vui-radius-full);
   background-color: color-mix(in srgb, var(--vui-color-text) 35%, transparent);
   background-clip: padding-box;

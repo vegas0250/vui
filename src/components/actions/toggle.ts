@@ -40,7 +40,7 @@ export class VToggle extends VuiElement {
         cursor: pointer;
         overflow-wrap: anywhere;
       }
-      button:hover { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
+      button:hover:not(:disabled) { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       :host([pressed]) button {
         background: var(--vui-color-primary);
         color: var(--vui-color-on-primary);
@@ -48,7 +48,7 @@ export class VToggle extends VuiElement {
       }
       button:focus { outline: none; }
       button:focus-visible { outline: var(--vui-focus-ring); outline-offset: var(--vui-focus-offset); }
-      button:disabled { opacity: 0.5; cursor: not-allowed; }
+      button:disabled { opacity: var(--vui-opacity-disabled, 0.55); cursor: not-allowed; }
       @media (forced-colors: active) {
         button { border: var(--vui-border-width) solid ButtonText; background: ButtonFace; color: ButtonText; }
         :host([pressed]) button { background: Highlight; color: HighlightText; }
@@ -134,7 +134,7 @@ export class VToggleGroup extends VuiElement {
       :host { display: inline-flex; max-width: 100%; min-width: 0; vertical-align: middle; container-type: inline-size; container-name: vui-toggle; }
       [part="group"] { display: inline-flex; flex-wrap: wrap; gap: var(--vui-space-2xs); min-width: 0; max-width: 100%; }
       :host([orientation="vertical"]) [part="group"] { flex-direction: column; align-items: stretch; }
-      :host([disabled]) { opacity: 0.55; }
+      :host([disabled]) { opacity: var(--vui-opacity-disabled, 0.55); }
       :host(:focus-visible) { outline: var(--vui-focus-ring); }
       @container vui-toggle (max-width: 22rem) {
         [part="group"] { flex-direction: column; align-items: stretch; }

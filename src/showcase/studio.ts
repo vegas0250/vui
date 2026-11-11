@@ -83,7 +83,7 @@ export const studioMarkup = `
           <vui-option value="system">System</vui-option>
           <vui-option value="dark">Dark</vui-option>
         </vui-select>
-        <vui-switch checked>Compact density</vui-switch>
+        <vui-switch checked>Desktop layout</vui-switch>
         <vui-radio-group label="Start page" name="start" value="studio">
           <vui-radio value="studio" checked>Studio</vui-radio>
           <vui-radio value="files">Files</vui-radio>
@@ -242,7 +242,7 @@ export const studioMarkup = `
 <section class="category" id="platform">
   <h2>Platform Validation</h2>
   <p class="section-lead">
-    Одна reference-сборка: тема, плотность, направление, shell, дерево, таблица, поиск, диалог, меню и toast.
+    Одна reference-сборка: тема, UI mode, направление, shell, дерево, таблица, поиск, диалог, меню и toast.
     Это не приложение. Данные статичны, фильтрация живёт в странице студии.
   </p>
   <div class="platform-frame">

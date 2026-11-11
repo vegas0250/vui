@@ -32,16 +32,24 @@ export function mountDocumentation(): void {
     (old as HTMLElement).hidden = true;
   }
   const controls = document.querySelector('.header-controls');
-  const label = document.createElement('label');
-  label.className = 'docs-theme-control';
-  label.textContent = tr('Theme');
-  const select = document.createElement('select');
+  const select = document.createElement('vui-select') as HTMLElement & {
+    value: string;
+  };
   select.id = 'docs-theme';
-  select.setAttribute('aria-label', tr('Theme'));
-  select.add(new Option(tr('Follow system'), 'system'));
-  for (const p of builtInThemes) select.add(new Option(p.name, p.id));
-  label.append(select);
-  controls?.prepend(label);
+  select.className = 'docs-theme-control';
+  select.setAttribute('label', tr('Theme'));
+  select.setAttribute('size', 'small');
+  const system = document.createElement('vui-option') as HTMLElement & { value: string };
+  system.value = 'system';
+  system.textContent = tr('Follow system');
+  select.append(system);
+  for (const preset of builtInThemes) {
+    const option = document.createElement('vui-option') as HTMLElement & { value: string };
+    option.value = preset.id;
+    option.textContent = preset.name;
+    select.append(option);
+  }
+  controls?.prepend(select);
   const sync = () => {
     let pref: ReturnType<typeof getThemePreference> = null;
     try {
@@ -50,8 +58,12 @@ export function mountDocumentation(): void {
       /* private browsing */
     }
     if (pref && typeof pref === 'object') {
-      if (!select.querySelector('[value=custom]'))
-        select.add(new Option(tr('Custom documentation theme'), 'custom'));
+      if (!select.querySelector('[value=custom]')) {
+        const custom = document.createElement('vui-option') as HTMLElement & { value: string };
+        custom.value = 'custom';
+        custom.textContent = tr('Custom documentation theme');
+        select.append(custom);
+      }
       select.value = 'custom';
     } else select.value = pref ?? 'system';
   };
@@ -100,24 +112,25 @@ export function mountDocumentation(): void {
   }
   const tools = document.createElement('div');
   tools.className = 'docs-tools';
-  tools.innerHTML = `<label>${escapeHTML(tr('Search components'))}<input type="search" id="docs-component-search"/></label><a href="#theme-studio">${escapeHTML(tr('Theme Studio'))} ↗</a>`;
+  tools.innerHTML = `<vui-input id="docs-component-search" type="search" size="small" label="${escapeHTML(tr('Search components'))}"></vui-input><a href="#theme-studio">${escapeHTML(tr('Theme Studio'))} ↗</a>`;
   document.querySelector('#components')?.prepend(tools);
   const panels = [
     ...document.querySelectorAll<HTMLElement>('vui-panel'),
   ].filter((p) => !p.closest('#theme-studio'));
   for (const p of panels) p.classList.add('docs-catalog-panel');
-  tools.querySelector('input')?.addEventListener('input', (event) => {
-    const search = (event.target as HTMLInputElement).value
-      .toLowerCase()
-      .trim();
+  tools.querySelector('#docs-component-search')?.addEventListener('input', (event) => {
+    const host = event.currentTarget as HTMLElement & { value: string };
+    const search = host.value.toLowerCase().trim();
     for (const p of panels) {
       const content = `${p.textContent} ${p.getAttribute('heading')} ${[...p.querySelectorAll('*')].map((el) => el.localName).join(' ')}`;
       p.hidden = !content.toLowerCase().includes(search);
     }
   });
   const addCopy = (pre: HTMLPreElement) => {
-    const button = document.createElement('button');
-    button.type = 'button';
+    const button = document.createElement('vui-button');
+    button.setAttribute('type', 'button');
+    button.setAttribute('size', 'small');
+    button.setAttribute('variant', 'ghost');
     button.className = 'docs-example-copy';
     button.textContent = tr('Copy example');
     button.addEventListener('click', async () => {

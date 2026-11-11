@@ -18,7 +18,7 @@ export function toneStyles(
       --vui-tone-on:var(--vui-color-on-${tone}-solid, var(--vui-color-on-${color}, var(--vui-color-surface)));`;
   };
   const variants = {
-    solid: 'background:var(--vui-tone-color);color:var(--vui-tone-on);border-color:color-mix(in srgb, var(--vui-tone-color) 88%, #000);',
+    solid: 'background:var(--vui-tone-color);color:var(--vui-tone-on);border-color:var(--vui-tone-border);',
     soft: 'background:var(--vui-tone-soft);color:var(--vui-tone-text);border-color:transparent;',
     outline: 'background:transparent;color:var(--vui-tone-text);border-color:var(--vui-tone-border);',
     ghost: 'background:transparent;color:var(--vui-tone-text);border-color:transparent;',

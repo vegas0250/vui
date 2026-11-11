@@ -206,9 +206,9 @@ export class VCheckboxGroup extends VuiElement {
       .hint { color: var(--vui-color-text-muted); font-size: var(--vui-font-size-sm); }
       :host([invalid]) .hint { color: var(--vui-color-danger); }
       legend:empty, .hint:empty { display: none; }
-      :host([disabled]) { opacity: 0.55; }
+      :host([disabled]) { opacity: var(--vui-opacity-disabled, 0.55); }
       :host(:focus-visible) { outline: var(--vui-focus-ring); }
-      @container vui-field (max-width: 22rem) {
+      @container vui-field (max-width: 36rem) {
         .options { flex-direction: column; align-items: flex-start; }
       }
     `;

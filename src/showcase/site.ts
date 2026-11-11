@@ -1,5 +1,5 @@
 import { componentCatalog, componentGroup, componentImport, description, extraProperties, libraryVersion } from './component-data';
-import { buttonSections, exampleFor, interfaceExample, renderExample, exampleJsx, prettyMarkup, text, wireExample } from './examples';
+import { buttonSections, exampleCode, exampleFor, interfaceExample, renderExample, exampleJsx, prettyMarkup, text, wireExample } from './examples';
 import type { Example } from './examples';
 import type { ComponentContract } from '../contract';
 import { setUIMode } from '../theme';
@@ -84,7 +84,7 @@ export function mountDocumentationSite(): void {
   const layout = document.createElement('div');
   layout.className = 'documentation-layout';
   const catalog = componentCatalog();
-  layout.innerHTML = `<aside class="docs-sidebar"><a class="docs-wordmark" href="#/getting-started">VUI <span>${text('Документация', 'Documentation')} · ${libraryVersion}</span></a><nav aria-label="${text('Разделы документации', 'Documentation sections')}">${sections().map(([id, label]) => link(id!, label!)).join('')}</nav><label class="docs-search">${text('Найти компонент', 'Find a component')}<input type="search" id="component-search" autocomplete="off" /></label><details class="docs-menu-disclosure" open><summary>${text('Каталог компонентов', 'Component catalog')}</summary><nav id="docs-component-menu" aria-label="${text('Каталог компонентов', 'Component catalog')}"></nav></details></aside><article id="docs-page" class="docs-page"></article>`;
+  layout.innerHTML = `<aside class="docs-sidebar"><a class="docs-wordmark" href="#/getting-started">VUI <span>${text('Документация', 'Documentation')} · ${libraryVersion}</span></a><nav aria-label="${text('Разделы документации', 'Documentation sections')}">${sections().map(([id, label]) => link(id!, label!)).join('')}</nav><vui-input class="docs-search" id="component-search" type="search" size="small" label="${text('Найти компонент', 'Find a component')}" autocomplete="off"></vui-input><details class="docs-menu-disclosure" open><summary>${text('Каталог компонентов', 'Component catalog')}</summary><nav id="docs-component-menu" aria-label="${text('Каталог компонентов', 'Component catalog')}"></nav></details></aside><article id="docs-page" class="docs-page"></article>`;
   const content = document.createElement('div');
   content.className = 'docs-content';
   content.append(layout.querySelector('#docs-page')!, studio);
@@ -137,7 +137,7 @@ export function mountDocumentationSite(): void {
   });
   const page = layout.querySelector<HTMLElement>('#docs-page')!;
   const menu = layout.querySelector<HTMLElement>('#docs-component-menu')!;
-  const search = layout.querySelector<HTMLInputElement>('#component-search')!;
+  const search = layout.querySelector<HTMLElement & { value: string }>('#component-search')!;
   const paintMenu = () => {
     const query = search.value.trim().toLowerCase();
     const found = catalog.filter((c) => `${c.element} ${description(c.element, 'ru')} ${description(c.element, 'en')}`.toLowerCase().includes(query));
@@ -180,7 +180,7 @@ export function mountDocumentationSite(): void {
     } else if (section === 'themes') {
       page.innerHTML = `<h1 tabindex="-1">${name}</h1><p class="docs-lead">${text('Тема документации меняется на верхней панели. Черновик редактора применяется только к просмотру, пока вы явно не примените его к документации.', 'Change the documentation theme in the top bar. Editor drafts affect only the preview until explicitly applied to documentation.')}</p>${heading(text('Подключение темы', 'Theme integration'), `<pre><code>import { initializeTheme, setUIMode } from 'vui/theme';\ninitializeTheme();\nsetUIMode('desktop');</code></pre><p>${text('Используйте JSON для импорта, CSS — для подключения экспортированных токенов. Импорт исполняемого CSS не поддерживается.', 'Import JSON or use exported CSS tokens in your application. Importing executable CSS is not supported.')}</p>`)}`;
     } else {
-      page.innerHTML = `<p class="docs-eyebrow">WEB COMPONENTS · REACT · NEXT.JS · ELECTRON</p><h1 tabindex="-1">${text('Интерфейсы из понятных компонентов', 'Build interfaces from clear components')}</h1><p class="docs-lead">${text('Найдите компонент, проверьте его поведение и перенесите готовый пример в свой проект. Одна библиотека и общие токены для всех тем.', 'Find a component, explore its behavior, and take a working example into your project. One library and shared tokens for every theme.')}</p><div class="docs-actions">${link('components', text('Открыть каталог', 'Browse components'))}${link('examples', text('Собрать интерфейс', 'Build an interface'))}</div>${heading(text('Установка', 'Installation'), '<pre><code>pnpm add vui</code></pre>')}${heading(text('Первый компонент', 'Your first component'), showExample(exampleFor('vui-button')))}${heading('React / Next.js', `<pre><code>import { Button } from 'vui/react';\n\nexport default function Page() {\n  return &lt;Button variant="primary"&gt;${text('Сохранить', 'Save')}&lt;/Button&gt;;\n}</code></pre><p>${text('Обработчики событий размещайте в Client Component. SSR выводит теги и содержимое; Shadow DOM и интерактивность появляются после загрузки JavaScript.', 'Place event handlers in a Client Component. SSR emits tags and light DOM; shadow controls and interaction initialize after JavaScript loads.')}</p>`)}<p>${text('HTML-примеры рассчитаны на Vite или другой сборщик ESM, разрешающий импорты npm. В Electron используйте их в renderer.', 'HTML examples assume Vite or another ESM bundler that resolves npm imports. In Electron, use them in the renderer.')}</p>`;
+      page.innerHTML = `<p class="docs-eyebrow">WEB COMPONENTS · REACT · NEXT.JS · ELECTRON</p><h1 tabindex="-1">${text('Интерфейсы из понятных компонентов', 'Build interfaces from clear components')}</h1><p class="docs-lead">${text('Найдите компонент, проверьте его поведение и перенесите готовый пример в свой проект. Одна библиотека и общие токены для всех тем.', 'Find a component, explore its behavior, and take a working example into your project. One library and shared tokens for every theme.')}</p><div class="docs-actions">${link('components', text('Открыть каталог', 'Browse components'))}${link('examples', text('Собрать интерфейс', 'Build an interface'))}</div>${heading(text('Установка', 'Installation'), '<pre><code>pnpm add vui</code></pre>')}${heading(text('Первый компонент', 'Your first component'), showExample(exampleFor('vui-button')))}${heading(text('Три UI mode', 'Three UI modes'), `<p class="docs-lead">${text('Цветовая тема и структурный режим независимы. Переключатель сверху меняет Web, Desktop или Terminal для всей документации.', 'Color theme and structural mode are independent. The top switch applies Web, Desktop, or Terminal to the whole documentation site.')}</p><div class="docs-cards docs-ui-modes"><div class="docs-card"><strong>Web</strong><p>Radix-like spacing, soft radii, web control chrome.</p><code>data-vui-ui="web"</code></div><div class="docs-card"><strong>Desktop</strong><p>Fluent 2 density, tighter geometry, dual-shadow elevation.</p><code>data-vui-ui="desktop"</code></div><div class="docs-card"><strong>Terminal</strong><p>Monospace TUI scale, square corners, no elevation.</p><code>data-vui-ui="terminal"</code></div></div>${showExample(exampleFor('vui-button'))}`)}${heading('React / Next.js', `<pre><code>import { Button } from 'vui/react';\n\nexport default function Page() {\n  return &lt;Button variant="primary"&gt;${text('Сохранить', 'Save')}&lt;/Button&gt;;\n}</code></pre><p>${text('Обработчики событий размещайте в Client Component. SSR выводит теги и содержимое; Shadow DOM и интерактивность появляются после загрузки JavaScript.', 'Place event handlers in a Client Component. SSR emits tags and light DOM; shadow controls and interaction initialize after JavaScript loads.')}</p>`)}<p>${text('HTML-примеры рассчитаны на Vite или другой сборщик ESM, разрешающий импорты npm. В Electron используйте их в renderer.', 'HTML examples assume Vite or another ESM bundler that resolves npm imports. In Electron, use them in the renderer.')}</p>`;
     }
     document.title = `${name} · VUI`;
     for (const root of page.querySelectorAll<HTMLElement>('[data-example]')) wireExample(root);
@@ -198,7 +198,7 @@ export function mountDocumentationSite(): void {
       const active = demo.querySelector<HTMLElement>('[data-demo-panel]:not([hidden])')!;
       const example = renderedExamples.get(demo.getAttribute('data-demo')!);
       let code = active.querySelector('pre')?.textContent ?? '';
-      if (active.dataset.demoPanel === 'preview' && example) code = prettyMarkup(example.html);
+      if (active.dataset.demoPanel === 'preview' && example) code = exampleCode(example);
       if (active.dataset.demoPanel === 'jsx' && example) code = exampleJsx({ ...example, html: prettyMarkup(example.html) });
       try {
         await navigator.clipboard.writeText(code);
@@ -217,6 +217,14 @@ export function mountDocumentationSite(): void {
     page.querySelector<HTMLElement>('h1')?.focus({ preventScroll: true });
   };
   window.addEventListener('hashchange', render);
+  document.documentElement.addEventListener('vui-theme-change', () => {
+    if (!studio.hidden) return;
+    render();
+  });
+  document.documentElement.addEventListener('vui-ui-change', () => {
+    if (!studio.hidden) return;
+    render();
+  });
   if (!location.hash.startsWith('#/')) history.replaceState(null, '', `${location.pathname}${location.search}#/getting-started`);
   render();
 }

@@ -4,7 +4,7 @@ test('responsive containers adapt without a horizontal page scroll', async ({ pa
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/?legacy=1');
   await expect(page.getByRole('heading', { name: 'Responsive Design' })).toBeVisible();
-  await expect(page.locator('#responsive-readout')).toContainText('Catppuccin Latte + Comfortable');
+  await expect(page.locator('#responsive-readout')).toContainText('Catppuccin Latte + Web design');
 
   await page.locator('#size-narrow').click();
   await expect(page.locator('#responsive-split')).toHaveAttribute('data-stacked', '');
@@ -61,7 +61,10 @@ test('theme and UI mode stay valid for every combination', async ({ page }) => {
   ] as const;
 
   for (const [themeLabel, theme, themeReadout] of themes) {
-    await page.locator('#docs-theme').selectOption(themeLabel);
+    await page.locator('#docs-theme').evaluate((el, value) => {
+      (el as HTMLElement & { value: string }).value = value;
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    }, themeLabel);
     await expect(page.locator('html')).toHaveAttribute('data-vui-theme', theme);
 
     for (const [modeLabel, mode] of modes) {

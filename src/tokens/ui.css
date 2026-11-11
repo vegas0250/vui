@@ -3,7 +3,8 @@
   web — Radix Themes structure (space, shape, type, control chrome, elevation)
   desktop — Fluent 2 / WinUI structure
   terminal — monospace TUI-inspired structure (dense, square, no elevation)
-  Themes own semantic colors; this file owns spacing, radius, type, chrome and focus recipes.
+  Themes own semantic colors and elevation ink (--vui-shadow-ink, --vui-shadow-strength-*, optional --vui-shadow-glow);
+  this file owns spacing, radius, type, chrome, focus and elevation geometry (--vui-shadow-sm|md|lg).
   Components read these tokens and do not branch on mode names.
 */
 
@@ -36,10 +37,13 @@
   --vui-radius-box: 12px;
   --vui-radius-field: 8px;
   --vui-radius-selector: 4px;
-  /* Soft Radix-like elevation recipes (color comes from the theme) */
+  /* Elevation recipe: geometry here, ink color (+ optional neon glow) from the theme. */
   --vui-shadow-offset-sm: 0 1px 2px;
   --vui-shadow-offset-md: 0 4px 16px;
   --vui-shadow-offset-lg: 0 12px 40px;
+  --vui-shadow-sm: var(--vui-shadow-offset-sm) color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-sm, 6%), transparent);
+  --vui-shadow-md: var(--vui-shadow-offset-md) color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-md, 10%), transparent), 0 0 0 1px var(--vui-shadow-glow, transparent);
+  --vui-shadow-lg: var(--vui-shadow-offset-lg) color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-lg, 16%), transparent), 0 0 0 1px var(--vui-shadow-glow, transparent);
   --vui-focus-offset: 2px;
   --vui-focus-ring: 2px solid var(--vui-color-focus);
   --vui-focus-shadow: 0 0 0 3px color-mix(in srgb, var(--vui-color-focus) 28%, transparent);
@@ -49,6 +53,12 @@
   --vui-icon-size: 16px;
   --vui-panel-padding: var(--vui-space-lg);
   --vui-duration: 120ms;
+  --vui-opacity-disabled: 0.55;
+  --vui-scrollbar-size: 10px;
+  --vui-scrollbar-gutter: 3px;
+  --vui-drawer-inline: 24rem;
+  --vui-resizer-hit-size: 10px;
+  --vui-resizer-stroke: 2px;
 }
 
 [data-vui-ui="desktop"] {
@@ -77,10 +87,16 @@
   --vui-radius-box: 8px;
   --vui-radius-field: 4px;
   --vui-radius-selector: 2px;
-  /* Fluent dual-shadow recipes simplified to key+ambient stacks */
-  --vui-shadow-offset-sm: 0 0.5px 1px, 0 0 1px;
-  --vui-shadow-offset-md: 0 2px 4px, 0 0 2px;
-  --vui-shadow-offset-lg: 0 8px 16px, 0 0 2px;
+  /* Fluent key + ambient stack; ambient layer is the key ink softened to 35%. */
+  --vui-shadow-offset-sm: 0 0.5px 1px;
+  --vui-shadow-offset-md: 0 2px 4px;
+  --vui-shadow-offset-lg: 0 8px 16px;
+  --vui-shadow-ambient-sm: 0 0 1px;
+  --vui-shadow-ambient-md: 0 0 2px;
+  --vui-shadow-ambient-lg: 0 0 2px;
+  --vui-shadow-sm: var(--vui-shadow-offset-sm) color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-sm, 6%), transparent), var(--vui-shadow-ambient-sm) color-mix(in srgb, color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-sm, 6%), transparent) 35%, transparent);
+  --vui-shadow-md: var(--vui-shadow-offset-md) color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-md, 10%), transparent), var(--vui-shadow-ambient-md) color-mix(in srgb, color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-md, 10%), transparent) 35%, transparent), 0 0 0 1px var(--vui-shadow-glow, transparent);
+  --vui-shadow-lg: var(--vui-shadow-offset-lg) color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-lg, 16%), transparent), var(--vui-shadow-ambient-lg) color-mix(in srgb, color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-lg, 16%), transparent) 35%, transparent), 0 0 0 1px var(--vui-shadow-glow, transparent);
   --vui-focus-offset: 1px;
   --vui-focus-ring: 2px solid var(--vui-color-focus);
   --vui-focus-shadow: 0 0 0 1px var(--vui-color-background), 0 0 0 3px var(--vui-color-focus);
@@ -90,6 +106,12 @@
   --vui-icon-size: 16px;
   --vui-panel-padding: var(--vui-space-lg);
   --vui-duration: 120ms;
+  --vui-opacity-disabled: 0.55;
+  --vui-scrollbar-size: 10px;
+  --vui-scrollbar-gutter: 3px;
+  --vui-drawer-inline: 24rem;
+  --vui-resizer-hit-size: 8px;
+  --vui-resizer-stroke: 1px;
 }
 
 [data-vui-ui="terminal"] {
@@ -119,9 +141,13 @@
   --vui-radius-field: 0px;
   --vui-radius-selector: 0px;
   --vui-radius-full: 0px;
+  /* Terminal: no decorative elevation, no glow. */
   --vui-shadow-offset-sm: 0 0 0;
   --vui-shadow-offset-md: 0 0 0;
   --vui-shadow-offset-lg: 0 0 0;
+  --vui-shadow-ambient-sm: 0 0 0;
+  --vui-shadow-ambient-md: 0 0 0;
+  --vui-shadow-ambient-lg: 0 0 0;
   --vui-shadow-sm: none;
   --vui-shadow-md: none;
   --vui-shadow-lg: none;
@@ -134,9 +160,28 @@
   --vui-icon-size: 14px;
   --vui-panel-padding: var(--vui-space-lg);
   --vui-duration: 0ms;
+  --vui-opacity-disabled: 0.5;
+  --vui-scrollbar-size: 8px;
+  --vui-scrollbar-gutter: 2px;
+  --vui-drawer-inline: 24rem;
+  --vui-resizer-hit-size: 6px;
+  --vui-resizer-stroke: 1px;
   /* Optional ASCII/Unicode affordances for apps that opt in */
   --vui-terminal-prompt: "❯";
   --vui-terminal-bullet: "•";
   --vui-terminal-sep: "─";
   --vui-terminal-corner: "+";
+}
+
+/*
+  High-contrast accessibility overlays structural elevation/focus after UI mode.
+  Colors and border width stay in themes/high-contrast.css.
+*/
+[data-vui-theme="high-contrast"] {
+  --vui-shadow-sm: none;
+  --vui-shadow-md: none;
+  --vui-shadow-lg: none;
+  --vui-focus-ring: 3px solid var(--vui-color-focus);
+  --vui-focus-shadow: none;
+  --vui-opacity-disabled: 0.72;
 }

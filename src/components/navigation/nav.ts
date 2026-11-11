@@ -39,16 +39,17 @@ export class VNavItem extends VuiElement {
         cursor: pointer;
       }
       a:hover { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
+      :host([disabled]) a:hover { background: transparent; }
       :host([selected]) a {
         background: var(--vui-color-selected);
         color: var(--vui-color-text);
-        box-shadow: inset 2px 0 0 var(--vui-color-focus);
+        box-shadow: inset var(--vui-border-width-accent) 0 0 var(--vui-color-focus);
       }
-      :host-context([dir="rtl"]):host([selected]) a { box-shadow: inset -2px 0 0 var(--vui-color-focus); }
+      :host-context([dir="rtl"]):host([selected]) a { box-shadow: inset calc(var(--vui-border-width-accent) * -1) 0 0 var(--vui-color-focus); }
       :host([selected]) a:hover { background: var(--vui-color-selected); }
       a:focus { outline: none; }
       a:focus-visible { outline: var(--vui-focus-ring); outline-offset: calc(var(--vui-focus-offset) * -1); }
-      :host([disabled]) a { opacity: 0.72; cursor: not-allowed; }
+      :host([disabled]) a { opacity: var(--vui-opacity-disabled, 0.55); cursor: not-allowed; pointer-events: none; }
       a { transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing); }
     `;
   }

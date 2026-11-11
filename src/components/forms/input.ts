@@ -67,13 +67,15 @@ export class VInput extends VuiElement {
       }
       input {
         flex: 1 1 auto;
+        align-self: stretch;
         width: 100%;
         min-width: 0;
+        min-height: 0;
+        height: auto;
         border: 0;
         outline: none;
         background: transparent;
         padding: 0;
-        height: calc(var(--vui-size-control) - (var(--vui-border-width) * 2));
       }
       .label:empty, .hint:empty { display: none; }
       :host([readonly]) input { cursor: default; }

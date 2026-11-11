@@ -123,7 +123,6 @@ export class VDataGrid extends VuiElement {
           <tbody></tbody>
         </table>
       </div>
-      tbody tr[data-id] { transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing); }
     `;
   }
 
@@ -178,17 +177,24 @@ export class VDataGrid extends VuiElement {
         font-weight: var(--vui-font-weight-strong);
       }
       tbody tr:last-child td { border-bottom: 0; }
-      tbody tr[data-id] { cursor: pointer; }
+      tbody tr[data-id] {
+        cursor: pointer;
+        transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing);
+      }
       tbody tr[data-id]:hover:not([aria-selected="true"]) { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       tbody tr[aria-selected="true"] {
         background: var(--vui-color-selected);
-        box-shadow: inset 2px 0 0 var(--vui-color-focus);
+        box-shadow: inset var(--vui-border-width-accent) 0 0 var(--vui-color-focus);
       }
-      :host-context([dir="rtl"]) tbody tr[aria-selected="true"] { box-shadow: inset -2px 0 0 var(--vui-color-focus); }
+      :host-context([dir="rtl"]) tbody tr[aria-selected="true"] { box-shadow: inset calc(var(--vui-border-width-accent) * -1) 0 0 var(--vui-color-focus); }
+      tbody tr[data-current="true"] td:focus-visible,
+      td:focus-visible {
+        outline: var(--vui-focus-ring);
+        outline-offset: calc(var(--vui-focus-offset) * -1);
+      }
       tbody tr[data-current="true"]:not([aria-selected="true"]) {
-        box-shadow: inset 0 0 0 1px var(--vui-color-border-strong);
+        box-shadow: inset 0 0 0 var(--vui-border-width) var(--vui-color-border-strong);
       }
-      td:focus-visible { outline: none; }
       .empty {
         text-align: center;
         color: var(--vui-color-text-muted);

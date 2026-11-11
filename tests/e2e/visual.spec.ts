@@ -9,6 +9,9 @@ const cases = [
   { name: 'dark-web-desktop', theme: 'dark', ui: 'web', width: 1280, height: 900 },
   { name: 'light-desktop-desktop', theme: 'light', ui: 'desktop', width: 1280, height: 900 },
   { name: 'dark-desktop-mobile', theme: 'dark', ui: 'desktop', width: 390, height: 844 },
+  { name: 'light-terminal-desktop', theme: 'light', ui: 'terminal', width: 1280, height: 900 },
+  { name: 'dark-terminal-desktop', theme: 'dark', ui: 'terminal', width: 1280, height: 900 },
+  { name: 'light-web-tablet', theme: 'light', ui: 'web', width: 768, height: 1024 },
 ];
 
 for (const item of cases) {

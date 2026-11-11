@@ -13,7 +13,7 @@ The theme engine extends the existing `vui/theme` API and the existing component
 - `src/showcase/theme-preview.ts`: live components plus dashboard, settings, login and developer-tool reference compositions.
 - `src/showcase/documentation.ts`: documentation preferences, search and copy actions.
 
-Semantic tokens map to existing properties, for example `foreground` → `--vui-color-text` and `primaryForeground` → `--vui-color-on-primary`. New card, modal, popover, secondary, accent, interactive text and disabled tokens extend the existing vocabulary; components fall back to the original tokens for older integrations. Shadow is an editable color, while the engine generates the existing `--vui-shadow-sm/md/lg` values. No unvalidated CSS expressions are accepted in imports.
+Semantic tokens map to existing properties, for example `foreground` → `--vui-color-text` and `primaryForeground` → `--vui-color-on-primary`. New card, modal, popover, secondary, accent, interactive text and disabled tokens extend the existing vocabulary; components fall back to the original tokens for older integrations. Shadow is an editable color, while the engine generates `--vui-shadow-sm/md/lg` from the same geometry as the `ui.css` recipes (override only when shadow intensity is set). No unvalidated CSS expressions are accepted in imports.
 
 ## Defaults and persistence
 

@@ -31,10 +31,9 @@
   --vui-color-tooltip-bg: var(--vui-palette-slate-900);
   --vui-color-tooltip-text: var(--vui-palette-slate-0);
   --vui-color-tooltip-border: transparent;
-  --vui-shadow-sm: var(--vui-palette-shadow-light-sm);
-  --vui-shadow-md: var(--vui-palette-shadow-light-md);
-  --vui-shadow-lg: var(--vui-palette-shadow-light-lg);
-  --vui-focus-ring: 2px solid var(--vui-color-focus);
-  --vui-focus-shadow: 0 0 0 3px color-mix(in srgb, var(--vui-color-focus) 28%, transparent);
+  --vui-shadow-ink: var(--vui-palette-shadow-ink-light);
+  --vui-shadow-strength-sm: 6%;
+  --vui-shadow-strength-md: 10%;
+  --vui-shadow-strength-lg: 16%;
   --vui-border-width: 1px;
 }

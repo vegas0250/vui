@@ -49,14 +49,13 @@ export class VTreeItem extends VuiElement {
         <span class="actions" part="actions" hidden><slot name="actions"></slot></span>
       </div>
       <div class="children" role="group"><slot></slot></div>
-      .row { transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing); }
     `;
   }
 
   protected componentStyles(): string {
     return `
       :host { display: block; max-width: 100%; min-width: 0; }
-      :host([disabled]) { opacity: 0.72; }
+      :host([disabled]) { opacity: var(--vui-opacity-disabled, 0.55); }
       .row {
         display: flex;
         align-items: center;
@@ -66,15 +65,16 @@ export class VTreeItem extends VuiElement {
         border-radius: var(--vui-radius-field, var(--vui-radius-sm));
         cursor: pointer;
         user-select: none;
+        transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing);
       }
       :host([disabled]) .row { cursor: default; }
-      :host(:hover) .row { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
+      :host(:hover:not([disabled])) .row { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       :host([selected]) .row {
         background: var(--vui-color-selected);
-        box-shadow: inset 2px 0 0 var(--vui-color-primary);
+        box-shadow: inset var(--vui-border-width-accent) 0 0 var(--vui-color-focus);
       }
-      :host([selected]:hover) .row { background: var(--vui-color-selected); }
-      :host-context([dir="rtl"]):host([selected]) .row { box-shadow: inset -2px 0 0 var(--vui-color-primary); }
+      :host([selected]:hover:not([disabled])) .row { background: var(--vui-color-selected); }
+      :host-context([dir="rtl"]):host([selected]) .row { box-shadow: inset calc(var(--vui-border-width-accent) * -1) 0 0 var(--vui-color-focus); }
       :host(:focus-visible) .row {
         outline: var(--vui-focus-ring);
         outline-offset: calc(var(--vui-focus-offset) * -1);

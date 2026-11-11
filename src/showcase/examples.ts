@@ -252,6 +252,7 @@ export function buttonSections(): DemoSection[] {
 
 export function renderExample(example: Example): string {
   const html = prettyMarkup(example.html);
+  const runnable = exampleCode(example);
   const jsx = exampleJsx({ ...example, html });
   const preview = text('Просмотр', 'Preview');
   return `<div class="docs-demo" data-demo="${example.id}">
@@ -261,10 +262,10 @@ export function renderExample(example: Example): string {
       <button type="button" role="tab" aria-selected="false" data-demo-tab="html">HTML</button>
       <button type="button" role="tab" aria-selected="false" data-demo-tab="jsx">JSX</button>
     </div>
-    <vui-button data-copy variant="ghost" size="small">${text('Копировать', 'Copy')}</vui-button>
+    <vui-button data-copy variant="ghost" size="small">${text('Копировать пример', 'Copy example')}</vui-button>
   </div>
   <div class="docs-demo-panel docs-live" data-demo-panel="preview">${exampleMarkup(example)}</div>
-  <div class="docs-demo-panel" data-demo-panel="html" hidden><pre tabindex="0" data-example-code="${example.id}" data-code-kind="html"><code>${escapeHTML(html)}</code></pre></div>
+  <div class="docs-demo-panel" data-demo-panel="html" hidden><pre tabindex="0" data-example-code="${example.id}" data-code-kind="html"><code>${escapeHTML(runnable)}</code></pre></div>
   <div class="docs-demo-panel" data-demo-panel="jsx" hidden><pre tabindex="0" data-code-kind="jsx"><code>${escapeHTML(jsx)}</code></pre></div>
 </div>`;
 }

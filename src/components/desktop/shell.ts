@@ -119,7 +119,7 @@ export class VShell extends VuiElement {
       }
       .rail .pane { flex: 1 1 auto; }
       .sep {
-        flex: 0 0 10px;
+        flex: 0 0 var(--vui-resizer-hit-size, 10px);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -128,15 +128,15 @@ export class VShell extends VuiElement {
       }
       .sep::before {
         content: "";
-        width: 2px;
-        height: 2.75rem;
+        width: var(--vui-resizer-stroke, 2px);
+        height: var(--vui-toolbar-height);
         border-radius: var(--vui-radius-full);
         background: var(--vui-color-border-strong);
       }
       .sep:hover::before,
       .sep:focus-visible::before { background: var(--vui-color-primary); }
       .aside-sep {
-        flex: 0 0 10px;
+        flex: 0 0 var(--vui-resizer-hit-size, 10px);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -146,8 +146,8 @@ export class VShell extends VuiElement {
       }
       .aside-sep::before {
         content: "";
-        width: 2px;
-        height: 2.75rem;
+        width: var(--vui-resizer-stroke, 2px);
+        height: var(--vui-toolbar-height);
         border-radius: var(--vui-radius-full);
         background: var(--vui-color-border-strong);
       }
@@ -187,9 +187,9 @@ export class VShell extends VuiElement {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 1.25rem;
-        height: 2.75rem;
-        margin-inline: 2px;
+        width: var(--vui-size-control-sm);
+        height: var(--vui-toolbar-height);
+        margin-inline: var(--vui-space-2xs);
         padding: 0;
         border: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
         border-radius: var(--vui-radius-field, var(--vui-radius));
@@ -197,7 +197,7 @@ export class VShell extends VuiElement {
         color: var(--vui-color-text);
         cursor: pointer;
       }
-      .aside-rail button:hover { background: var(--vui-color-hover, var(--vui-color-surface-hover)); color: var(--vui-color-interactive-text, var(--vui-color-primary)); }
+      .aside-rail button:hover:not(:disabled) { background: var(--vui-color-hover, var(--vui-color-surface-hover)); color: var(--vui-color-interactive-text, var(--vui-color-primary)); }
       .aside-rail button:focus-visible { outline: var(--vui-focus-ring); outline-offset: calc(var(--vui-focus-offset) * -1); }
       .aside-rail vui-icon { width: var(--vui-icon-size); height: var(--vui-icon-size); }
       :host([aside-collapsed]) .aside-sep { display: none; }

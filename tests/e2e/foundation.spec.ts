@@ -24,7 +24,10 @@ test('foundation, theme, and UI mode share one token contract', async ({ page })
   expect(await read('--vui-space-md')).toBe('12px');
   expect(await read('--vui-row-height')).toBe('40px');
 
-  await page.locator('#docs-theme').selectOption('tokyo-night');
+  await page.locator('#docs-theme').evaluate((el) => {
+    (el as HTMLElement & { value: string }).value = 'tokyo-night';
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  });
   await expect(page.locator('html')).toHaveAttribute('data-vui-theme', 'tokyo-night');
   const darkBackground = await read('--vui-color-background');
   expect(darkBackground).not.toBe(lightBackground);

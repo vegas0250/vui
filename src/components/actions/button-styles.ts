@@ -17,7 +17,7 @@ button {
   padding-inline: var(--vui-space-md);
   overflow-wrap: anywhere;
   border-radius: var(--vui-radius-field, var(--vui-radius));
-  border: var(--vui-border-width) solid color-mix(in srgb, var(--vui-color-primary) 88%, #000);
+  border: var(--vui-border-width) solid var(--vui-color-primary-active, var(--vui-color-primary));
   background: var(--vui-color-primary);
   color: var(--vui-color-on-primary);
   font: inherit;
@@ -30,8 +30,8 @@ button {
     border-color var(--vui-duration) var(--vui-easing),
     color var(--vui-duration) var(--vui-easing);
 }
-button:hover { background: var(--vui-color-primary-hover); }
-button:active { background: var(--vui-color-primary-active); }
+button:hover:not(:disabled) { background: var(--vui-color-primary-hover); }
+button:active:not(:disabled) { background: var(--vui-color-primary-active); }
 button:focus {
   outline: none;
 }
@@ -42,7 +42,7 @@ button:focus-visible {
 button:disabled,
 :host([disabled]) button,
 :host([loading]) button {
-  opacity: 0.72;
+  opacity: var(--vui-opacity-disabled, 0.55);
   color: var(--vui-color-text-disabled, var(--vui-color-on-primary));
   background: var(--vui-color-secondary, var(--vui-color-primary));
   cursor: not-allowed;
@@ -64,22 +64,22 @@ button:disabled,
   color: var(--vui-color-on-secondary, var(--vui-color-text));
   border-color: var(--vui-color-block-border, var(--vui-color-border));
 }
-:host([variant="secondary"]) button:hover { background: var(--vui-color-secondary-hover, var(--vui-color-hover, var(--vui-color-surface-hover))); }
-:host([variant="secondary"]) button:active { background: var(--vui-color-secondary-hover, var(--vui-color-hover, var(--vui-color-surface-hover))); }
+:host([variant="secondary"]) button:hover:not(:disabled) { background: var(--vui-color-secondary-hover, var(--vui-color-hover, var(--vui-color-surface-hover))); }
+:host([variant="secondary"]) button:active:not(:disabled) { background: var(--vui-color-secondary-hover, var(--vui-color-hover, var(--vui-color-surface-hover))); }
 :host([variant="ghost"]) button {
   border-color: transparent;
   background: transparent;
   color: var(--vui-color-text);
 }
-:host([variant="ghost"]) button:hover,
-:host([variant="ghost"]) button:active { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
+:host([variant="ghost"]) button:hover:not(:disabled),
+:host([variant="ghost"]) button:active:not(:disabled) { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
 :host([variant="danger"]) button {
-  border-color: color-mix(in srgb, var(--vui-color-danger) 88%, #000);
+  border-color: var(--vui-color-danger-hover, var(--vui-color-danger));
   background: var(--vui-color-danger);
   color: var(--vui-color-on-danger);
 }
-:host([variant="danger"]) button:hover,
-:host([variant="danger"]) button:active { background: var(--vui-color-danger-hover); }
+:host([variant="danger"]) button:hover:not(:disabled),
+:host([variant="danger"]) button:active:not(:disabled) { background: var(--vui-color-danger-hover); }
 :host([size="small"]) button {
   min-height: var(--vui-size-control-sm);
   padding-inline: var(--vui-space-sm);

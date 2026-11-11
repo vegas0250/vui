@@ -46,11 +46,12 @@ export class VToolbar extends VuiElement {
       .group {
         display: flex;
         align-items: center;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         gap: var(--vui-space-xs);
         min-width: 0;
         max-width: 100%;
       }
+      :host([wrap]) .group { flex-wrap: wrap; }
       .center { flex: 1 1 auto; justify-content: center; min-width: 0; }
       .center > slot {
         display: flex;

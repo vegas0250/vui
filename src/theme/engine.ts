@@ -313,6 +313,11 @@ function hoverColor(background: string, foreground: string): string {
   );
 }
 
+/**
+ * Studio appearance override. Geometry and the 35% ambient softening mirror the
+ * --vui-shadow-* recipes in src/tokens/ui.css; keep both in sync (tests compare them).
+ * Here the single `strength` replaces the per-size `--vui-shadow-strength-*` ink steps.
+ */
 function elevationShadows(
   uiMode: AppearanceUIMode,
   shadow: string,
@@ -322,7 +327,7 @@ function elevationShadows(
     return { sm: 'none', md: 'none', lg: 'none' };
   }
   const ink = `color-mix(in srgb, ${shadow} ${strength}%, transparent)`;
-  const soft = `color-mix(in srgb, ${shadow} ${Math.max(20, Math.round(strength * 0.35))}%, transparent)`;
+  const soft = `color-mix(in srgb, ${ink} 35%, transparent)`;
   if (uiMode === 'desktop') {
     return {
       sm: `0 0.5px 1px ${ink}, 0 0 1px ${soft}`,
@@ -348,6 +353,8 @@ function themeColorVariables(tokens: ThemeTokens): Record<string, string> {
     '--vui-color-tooltip-bg': tokens.foreground,
     '--vui-color-tooltip-text': tokens.background,
     '--vui-color-tooltip-border': tokens.border,
+    /* Ink only — ui.css owns geometry for --vui-shadow-sm|md|lg. */
+    '--vui-shadow-ink': tokens.shadow,
   });
   vars['--vui-color-hover'] = mix(tokens.surface, tokens.surfaceHover, 0.3);
   for (const tone of tones) {

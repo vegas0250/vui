@@ -9,7 +9,7 @@ test.beforeEach(async ({ page }) => {
 test('board exposes names, roles, and states in the accessibility tree', async ({ page }) => {
   const board = page.locator('#board');
   await expect(board.getByRole('heading', { name: 'VUI states', level: 1 })).toBeVisible();
-  await expect(board.getByRole('button', { name: 'Save' })).toBeEnabled();
+  await expect(board.locator('#btn-primary').getByRole('button', { name: 'Save' })).toBeEnabled();
   await expect(board.getByRole('button', { name: 'Disabled' })).toBeDisabled();
   await expect(board.getByRole('textbox', { name: 'Email' })).toHaveAccessibleDescription('Enter a valid email');
   await expect(board.getByRole('textbox', { name: 'Locked' })).toBeDisabled();
@@ -24,7 +24,7 @@ test('board exposes names, roles, and states in the accessibility tree', async (
 
 test('button name, keyboard activation, and skipped disabled control', async ({ page }) => {
   const button = page.locator('#btn-primary');
-  await expect(page.getByRole('button', { name: 'Save' })).toHaveAccessibleName('Save');
+  await expect(page.locator('#btn-primary').getByRole('button', { name: 'Save' })).toHaveAccessibleName('Save');
   await button.evaluate((element) => {
     element.addEventListener('click', () => {
       element.setAttribute('data-clicks', String(Number(element.getAttribute('data-clicks') ?? '0') + 1));

@@ -46,7 +46,6 @@ export class VMenuItem extends VuiElement {
       <span class="shortcut" part="shortcut" hidden></span>
       <span class="caret" part="caret" hidden aria-hidden="true"></span>
       <slot name="submenu"></slot>
-      :host { transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing); }
     `;
   }
 
@@ -63,6 +62,7 @@ export class VMenuItem extends VuiElement {
         border-radius: var(--vui-radius-field, var(--vui-radius-sm));
         cursor: pointer;
         user-select: none;
+        transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing);
       }
       :host(:focus),
       :host([data-current]) { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
@@ -70,11 +70,11 @@ export class VMenuItem extends VuiElement {
         outline: var(--vui-focus-ring);
         outline-offset: calc(var(--vui-focus-offset) * -1);
       }
-      :host([disabled]) { opacity: 0.72; cursor: not-allowed; }
+      :host([disabled]) { opacity: var(--vui-opacity-disabled, 0.55); cursor: not-allowed; }
       :host([variant="danger"]) { color: var(--vui-color-danger); }
       :host([variant="danger"]) vui-icon { color: var(--vui-color-danger); }
-      :host([checked]) { box-shadow: inset 2px 0 0 var(--vui-color-focus); }
-      :host-context([dir="rtl"]):host([checked]) { box-shadow: inset -2px 0 0 var(--vui-color-focus); }
+      :host([checked]) { box-shadow: inset var(--vui-border-width-accent) 0 0 var(--vui-color-focus); }
+      :host-context([dir="rtl"]):host([checked]) { box-shadow: inset calc(var(--vui-border-width-accent) * -1) 0 0 var(--vui-color-focus); }
       .mark {
         width: 1em;
         flex: 0 0 auto;
@@ -260,7 +260,7 @@ export class VMenu extends VuiElement {
       :host(:has([slot="bar"])) .bar {
         display: flex;
         gap: var(--vui-space-2xs);
-        min-width: 18rem;
+        min-width: min(18rem, 100%);
         margin-top: var(--vui-space-2xs);
         padding-top: var(--vui-space-2xs);
         border-top: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));

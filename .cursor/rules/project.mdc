@@ -95,8 +95,9 @@ VVStack         → <vui-vstack>
 Tokens разделены на три слоя:
 
 - primitive — палитра, шрифтовые семьи, motion, z-index, пороги контейнера (`src/tokens/tokens.css`);
-- semantic — цвета, тени, `--vui-border-width`, `--vui-focus-ring` (`themes/`);
-- component — только там, где шкала сама не выражает размер: `--vui-toolbar-height`, `--vui-statusbar-height`, `--vui-row-height`, `--vui-icon-size`, `--vui-panel-padding`, размеры dialog, menu, toast, tooltip и split.
+- semantic — цвета, `--vui-border-width` и только чернила elevation: `--vui-shadow-ink`, шаги непрозрачности `--vui-shadow-strength-sm|md|lg` и необязательный неоновый `--vui-shadow-glow` (`themes/`); готовых `--vui-shadow-sm|md|lg` в темах нет;
+- structural — space, type, radius, control size, chrome heights, focus recipes (`--vui-focus-ring` / `--vui-focus-shadow`), геометрия и сборка elevation (`--vui-shadow-offset-*`, `--vui-shadow-ambient-*`, итоговые `--vui-shadow-sm|md|lg` из `--vui-shadow-ink` + strength + glow; terminal — `none`), `--vui-opacity-disabled`, scrollbar и resizer metrics (`src/tokens/ui.css`); high-contrast дополнительно усиливает focus и снимает elevation после UI mode;
+- component — только там, где шкала сама не выражает размер: `--vui-toolbar-height`, `--vui-statusbar-height`, `--vui-row-height`, `--vui-icon-size`, `--vui-panel-padding`, `--vui-drawer-inline`, размеры dialog, menu, toast, tooltip и split.
 
 `--vui-panel-padding` равен `--vui-space-lg` в каждом UI mode. Высоты toolbar, status bar, строки и иконки задаёт UI mode, не CSS компонента. Своя тема переопределяет semantic tokens, а не палитру и не имена.
 
