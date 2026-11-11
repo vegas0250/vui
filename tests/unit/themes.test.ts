@@ -31,8 +31,8 @@ beforeEach(() => {
   document.documentElement.removeAttribute('style');
 });
 describe('palette-independent theme engine', () => {
-  it('provides fourteen immutable complete palettes with readable semantic pairs', () => {
-    expect(builtInThemes).toHaveLength(14);
+  it('provides fifteen immutable complete palettes with readable semantic pairs', () => {
+    expect(builtInThemes).toHaveLength(15);
     for (const preset of builtInThemes) {
       expect(Object.isFrozen(preset.tokens)).toBe(true);
       expect(Object.keys(preset.tokens).sort()).toEqual([...tokenNames].sort());

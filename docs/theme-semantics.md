@@ -55,3 +55,17 @@ When distributing upstream material, retain its copyright and full license text.
 Visual inspection confirmed distinct family surfaces and accents. Existing palette expectations were updated for intentional surface/default changes. No screenshot baselines or generated builds were added to Git.
 
 Firefox and WebKit were not run in this environment (only Chromium is installed). Text and boundary pair checks do not constitute a complete accessibility audit of every consumer layout. User-edited colors can still fail contrast, which the editor reports without silently rewriting explicit values. Legacy `light`, `dark`, `system` CSS entry points retain their existing semantics; the Catppuccin default pair belongs to the preset initializer and documentation preference flow.
+
+### Retro
+
+`retro` adapts the user-provided daisyUI Theme Generator payload (`name: retro`,
+light scheme). Source OKLCH values are converted to sRGB HEX for the existing
+VUI color engine: base-100/200/300 become background/surface/elevated;
+base-content becomes foreground; primary, secondary, accent, info, success,
+warning and error retain their source roles. Secondary content is preserved.
+VUI derives readable text, control colors, hover states and soft tones through
+its shared contrast rules, so some resulting colors differ from the source.
+DaisyUI's neutral/content pair has no equivalent separate solid token in VUI;
+neutral tones follow the existing foreground-based convention. Generator
+geometry and effects are not imported. Existing presets and OS defaults stay
+unchanged. Select Retro in Theme Studio to create an editable draft.

@@ -63,6 +63,7 @@ const definitions: Array<[string, string, ThemeMode]> = [
   ['tokyo-night-day', 'Tokyo Night Day', 'light'],
   ['rose-pine-dawn', 'Rosé Pine Dawn', 'light'],
   ['modern-light', 'Modern Light', 'light'],
+  ['retro', 'Retro', 'light'],
 ];
 export const builtInThemes: readonly ThemePreset[] = Object.freeze(
   definitions.map(([id, name, mode]) => {
@@ -118,8 +119,8 @@ export const builtInThemes: readonly ThemePreset[] = Object.freeze(
       primaryHover: mix(primary, hoverEnd, 0.08),
       primaryActive: mix(primary, hoverEnd, 0.16),
       primaryForeground: on(primary),
-      secondary: p.elevated,
-      secondaryForeground: readable(p.foreground, p.elevated),
+      secondary: p.secondary ?? p.elevated,
+      secondaryForeground: readable(p.secondaryForeground ?? p.foreground, p.secondary ?? p.elevated),
       accent,
       accentForeground: on(accent),
       ...states,
