@@ -1,3 +1,5 @@
+import { toneStyles } from '../../theme/tone-styles';
+import { tones, type VuiTone } from '../../theme/presets';
 import { buttonStyles } from './button-styles';
 import { registerContract } from '../../contract/registry';
 import { defineElement } from '../../utils/define';
@@ -6,6 +8,7 @@ import { reflectBooleans, reflectStrings } from '../../utils/reflect';
 
 export class VButton extends VuiElement {
   declare variant: string;
+  declare tone: VuiTone;
   declare size: string;
   declare name: string;
   declare value: string;
@@ -14,7 +17,7 @@ export class VButton extends VuiElement {
   declare loading: boolean;
 
   static get observedAttributes(): string[] {
-    return ['variant', 'size', 'disabled', 'loading', 'type', 'name', 'value', 'form'];
+    return ['tone', 'variant', 'size', 'disabled', 'loading', 'type', 'name', 'value', 'form'];
   }
 
   protected template(): string {
@@ -28,7 +31,7 @@ export class VButton extends VuiElement {
   }
 
   protected componentStyles(): string {
-    return buttonStyles;
+    return buttonStyles + toneStyles('button', 'primary', 'solid');
   }
 
   protected sync(): void {
@@ -53,13 +56,14 @@ export class VButton extends VuiElement {
 
 reflectStrings(VButton, ['variant', 'size', 'type', 'name', 'value', 'form']);
 reflectBooleans(VButton, ['disabled', 'loading']);
+reflectStrings(VButton, ['tone']);
 defineElement('vui-button', VButton);
 
 registerContract({
   element: 'vui-button',
   className: 'VButton',
-  attributes: [
-    { name: 'variant', kind: 'enum', values: ['primary', 'secondary', 'ghost', 'danger'], reflected: true },
+  attributes: [{ name: 'tone', kind: 'enum', values: [...tones], reflected: true },
+    { name: 'variant', kind: 'enum', values: ['primary', 'secondary', 'ghost', 'danger', 'solid', 'soft', 'outline'], reflected: true },
     { name: 'size', kind: 'enum', values: ['small', 'medium', 'large'], reflected: true },
     { name: 'type', kind: 'enum', values: ['button', 'submit', 'reset'], reflected: true },
     { name: 'disabled', kind: 'boolean', reflected: true },

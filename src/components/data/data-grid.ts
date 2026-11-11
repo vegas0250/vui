@@ -181,9 +181,9 @@ export class VDataGrid extends VuiElement {
       tbody tr[data-id]:hover:not([aria-selected="true"]) { background: var(--vui-color-surface-hover); }
       tbody tr[aria-selected="true"] {
         background: var(--vui-color-selected);
-        box-shadow: inset 2px 0 0 var(--vui-color-primary);
+        box-shadow: inset 2px 0 0 var(--vui-color-focus);
       }
-      :host-context([dir="rtl"]) tbody tr[aria-selected="true"] { box-shadow: inset -2px 0 0 var(--vui-color-primary); }
+      :host-context([dir="rtl"]) tbody tr[aria-selected="true"] { box-shadow: inset -2px 0 0 var(--vui-color-focus); }
       tbody tr[data-current="true"]:not([aria-selected="true"]) {
         box-shadow: inset 0 0 0 1px var(--vui-color-border-strong);
       }

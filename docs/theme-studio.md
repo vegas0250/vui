@@ -20,7 +20,7 @@ Semantic tokens map to existing properties, for example `foreground` → `--vui-
 ```ts
 import { initializeTheme, applyTheme, saveThemePreference } from "vui/theme";
 const stopFollowingSystem = initializeTheme();
-// No preference: Tokyo Night for dark systems, Catppuccin Latte for light systems.
+// No preference: Catppuccin Mocha for dark systems, Catppuccin Latte for light systems.
 saveThemePreference("nord");
 applyTheme("nord");
 ```
@@ -87,4 +87,6 @@ The `interactiveText` token separates readable link/tab text from the specified 
 
 `pnpm typecheck`, `pnpm test`, `pnpm build`, `pnpm build:docs`, `pnpm check:budget`, `pnpm check:shake`, `pnpm check:consumer`, and `pnpm test:e2e`. `pnpm lint` performs the project's TypeScript static analysis; there is no added lint framework. `dist-docs` is the independent static documentation artifact. Do not publish the docs or push changes without separate authorization for this task.
 
-Modern Light is an original neutral light palette with blue primary actions and a purple accent. It is derived by the same semantic engine and contrast checks as the other presets. Tokyo Night and Catppuccin Latte remain the OS defaults.
+Modern Light is an original neutral light palette with blue primary actions and a purple accent. It is derived by the same semantic engine and contrast checks as the other presets. Catppuccin Mocha and Catppuccin Latte are the OS defaults.
+
+See [semantic mappings and tone API](theme-semantics.md) for the six reference adaptations.

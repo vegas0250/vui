@@ -14,6 +14,8 @@ import {
   themeById,
   themeDocument,
   tokenNames,
+  tones,
+  toneSolidTokens,
   updateToken,
   writeCustomThemes,
 } from '../theme';
@@ -61,6 +63,7 @@ const groups: Array<[string, ThemeToken[]]> = [
     ['border', 'borderHover', 'selection', 'overlay', 'shadow'],
   ],
 ];
+groups.push(['Semantic tones', tokenNames.filter(key => !groups.some(([, keys]) => keys.includes(key)))]);
 const t = (s: string) => escapeHTML(tr(s));
 export function mountThemeStudio(host: HTMLElement): void {
   const history = new ThemeHistory(themeDocument('tokyo-night'));
@@ -94,7 +97,7 @@ export function mountThemeStudio(host: HTMLElement): void {
  <div class="ts-mobile-tabs" role="tablist" aria-label="${t('Theme Studio')}"><button type="button" role="tab" id="ts-customize-tab" aria-controls="ts-editor" aria-selected="true" data-view="customize">${t('Customize')}</button><button type="button" role="tab" id="ts-preview-tab" aria-controls="ts-preview-section" aria-selected="false" tabindex="-1" data-view="preview">${t('Preview')}</button></div>
  <p id="ts-status" role="status" aria-live="polite"></p>
  <div class="ts-workspace" data-mobile-view="customize"><div class="ts-editor" id="ts-editor" role="tabpanel" aria-labelledby="ts-customize-tab">
- <h3>${t('Theme presets')}</h3><div class="ts-presets">${builtInThemes.map((p) => `<button type="button" class="ts-preset" data-preset="${p.id}" aria-pressed="false"><span>${escapeHTML(p.name)}</span><span class="ts-mini-palette" aria-hidden="true">${['background', 'foreground', 'primary', 'accent', 'success'].map((key) => `<i style="background:${p.tokens[key as ThemeToken]}"></i>`).join('')}</span></button>`).join('')}</div>
+ <h3>${t('Theme presets')}</h3><div class="ts-presets">${builtInThemes.map((p) => `<button type="button" class="ts-preset" data-preset="${p.id}" aria-pressed="false"><span>${escapeHTML(p.name)} · ${t('VUI adaptation')}</span><span class="ts-mini-palette" aria-hidden="true">${['background', 'foreground', 'primary', 'accent', 'success'].map((key) => `<i style="background:${p.tokens[key as ThemeToken]}"></i>`).join('')}</span></button>`).join('')}</div>
  <label>${t('Custom themes')}<select id="ts-saved"><option value="">${t('Choose a saved theme')}</option></select></label><label>${t('Theme name')}<input id="ts-name" maxlength="80" value="Tokyo Night custom"/></label><div class="ts-actions">${[
    ['save', 'Save new'],
    ['rename', 'Rename'],
@@ -188,6 +191,10 @@ export function mountThemeStudio(host: HTMLElement): void {
     }
     const failures: Array<string> = [];
     for (const [fg, bg] of [
+      ['foreground', 'field'],
+      ['foreground', 'surfaceHover'],
+      ...tones.map(tone => [`${tone}Text`, `${tone}Soft`]),
+      ...tones.map(tone => [toneSolidTokens[tone], tone === 'neutral' ? 'foreground' : tone === 'danger' ? 'error' : tone]),
       ['foreground', 'background'],
       ['foreground', 'surface'],
       ['textMuted', 'surface'],
@@ -209,9 +216,13 @@ export function mountThemeStudio(host: HTMLElement): void {
       if (ratio < 4.5)
         failures.push(`${tr(fg)} / ${tr(bg)}: ${ratio.toFixed(2)}:1`);
     }
+    for (const [fg, bg] of [['controlBorder', 'field'], ['focusRing', 'field'], ['focusRing', 'selection']] as const) {
+      const ratio = contrast(values[fg], values[bg]);
+      if (ratio < 3) failures.push(`${tr(fg)} / ${tr(bg)}: ${ratio.toFixed(2)}:1 (<3)`);
+    }
     query('#ts-contrast').textContent = failures.length
       ? `${tr('Low contrast')}: ${failures.join('; ')}`
-      : tr('All checked text pairs meet WCAG AA.');
+      : tr('All checked pairs meet WCAG AA.');
     query('#ts-contrast').classList.toggle(
       'ts-low-contrast',
       failures.length > 0,

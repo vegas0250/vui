@@ -18,7 +18,7 @@ export const templateLabels = {
 };
 const t = (s: string) => escapeHTML(tr(s));
 const buttons = () =>
-  `<vui-hstack gap="sm" wrap><vui-button data-demo-action>${t('Primary')}</vui-button><vui-button variant="secondary" data-demo-action>${t('Secondary')}</vui-button><vui-button variant="ghost" data-demo-action>${t('Ghost')}</vui-button><vui-button data-demo-action style="--vui-color-primary:var(--vui-color-accent);--vui-color-on-primary:var(--vui-color-on-accent);--vui-color-primary-hover:var(--vui-color-accent);--vui-color-primary-active:var(--vui-color-accent)">${t('Accent')}</vui-button><vui-button disabled>${t('Disabled')}</vui-button></vui-hstack>`;
+  `<vui-hstack gap="sm" wrap><vui-button data-demo-action>${t('Primary')}</vui-button><vui-button variant="secondary" data-demo-action>${t('Secondary')}</vui-button><vui-button variant="ghost" data-demo-action>${t('Ghost')}</vui-button><vui-button data-demo-action tone="accent" variant="solid">${t('Accent')}</vui-button><vui-button disabled>${t('Disabled')}</vui-button></vui-hstack>`;
 const fields = () =>
   `<vui-input label="${t('Name')}" value="VUI"></vui-input><vui-textarea label="${t('Notes')}" rows="2"></vui-textarea><vui-select label="${t('Category')}" value="design"><vui-option value="design">${t('Design')}</vui-option><vui-option value="development">${t('Development')}</vui-option></vui-select><vui-checkbox checked>${t('Notifications')}</vui-checkbox><vui-radio-group label="${t('Plan')}" value="monthly"><vui-radio value="monthly" checked>${t('Monthly')}</vui-radio><vui-radio value="yearly">${t('Yearly')}</vui-radio></vui-radio-group><vui-switch checked>${t('Notifications')}</vui-switch><vui-slider label="${t('Volume')}" value="60" min="0" max="100"></vui-slider>`;
 const nav = () =>

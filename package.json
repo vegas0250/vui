@@ -9,6 +9,8 @@
     "url": "git+ssh://git@github.com/vegas0250/vui.git"
   },
   "files": [
+    "THIRD_PARTY_NOTICES.md",
+    "licenses",
     "dist",
     "themes",
     "src/tokens"

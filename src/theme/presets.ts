@@ -1,6 +1,17 @@
 import { contrast, mix, readable } from './colors';
 import { palettes } from './palettes';
+import { referenceRoles, referenceSoft } from './reference-roles';
+export const tones = ['neutral', 'primary', 'accent', 'success', 'warning', 'danger', 'info'] as const;
+export type VuiTone = (typeof tones)[number];
+export type VuiVariant = 'solid' | 'soft' | 'outline' | 'ghost';
+export const toneSolidTokens = {
+  neutral: 'neutralOnSolid', primary: 'primaryForeground', accent: 'accentForeground',
+  success: 'successOnSolid', warning: 'warningOnSolid', danger: 'dangerOnSolid', info: 'infoOnSolid',
+} as const;
 export const tokenNames = [
+  ...Object.values(toneSolidTokens),
+  'field', 'surfaceHover', 'controlBorder',
+  ...tones.flatMap((tone) => [`${tone}Soft`, `${tone}Text`, `${tone}Border`] as const),
   'background',
   'surface',
   'surfaceElevated',
@@ -16,11 +27,9 @@ export const tokenNames = [
   'primary',
   'primaryHover',
   'primaryActive',
-  'primaryForeground',
   'secondary',
   'secondaryForeground',
   'accent',
-  'accentForeground',
   'success',
   'warning',
   'error',
@@ -57,17 +66,19 @@ const definitions: Array<[string, string, ThemeMode]> = [
 ];
 export const builtInThemes: readonly ThemePreset[] = Object.freeze(
   definitions.map(([id, name, mode]) => {
-    const p = palettes[id],
+    const roles = referenceRoles[id];
+    const p = { ...palettes[id], ...roles,
+      elevated: roles?.surfaceElevated ?? palettes[id].elevated },
       dark = mode === 'dark';
-    const primary = readable(p.primary, p.surface, 3),
-      accent = readable(p.accent, p.surface, 3);
+    const primary = roles ? p.primary : readable(p.primary, p.surface, 3),
+      accent = roles ? p.accent : readable(p.accent, p.surface, 3);
     const on = (color: string) =>
       contrast('#ffffff', color) > contrast('#000000', color)
         ? '#ffffff'
         : '#000000';
     const foreground = on(primary);
     const hoverEnd = foreground === '#ffffff' ? '#000000' : '#ffffff';
-    const baseSurfaces = [p.background, p.surface, p.elevated];
+    const baseSurfaces = [p.background, p.surface, p.elevated, roles?.field ?? p.surface, roles?.surfaceHover ?? p.elevated, roles?.selection ?? p.surface];
     const onBase = (color: string, target = 4.5) =>
       baseSurfaces.reduce(
         (value, background) => readable(value, background, target),
@@ -90,7 +101,7 @@ export const builtInThemes: readonly ThemePreset[] = Object.freeze(
         (value, background) => readable(value, background, target),
         color,
       );
-    const tokens: ThemeTokens = {
+    const base = {
       background: p.background,
       surface: p.surface,
       surfaceElevated: p.elevated,
@@ -101,7 +112,7 @@ export const builtInThemes: readonly ThemePreset[] = Object.freeze(
       textMuted: onSurfaces(p.muted),
       interactiveText: onSurfaces(p.primary),
       textDisabled: mix(p.foreground, p.surface, 0.5),
-      border: onSurfaces(mix(p.surface, p.foreground, 0.3), 3),
+      border: roles ? mix(p.surface, p.foreground, 0.2) : onSurfaces(mix(p.surface, p.foreground, 0.3), 3),
       borderHover: onSurfaces(p.muted, 3),
       primary,
       primaryHover: mix(primary, hoverEnd, 0.08),
@@ -117,10 +128,37 @@ export const builtInThemes: readonly ThemePreset[] = Object.freeze(
       overlay: dark ? '#000000b3' : '#18182580',
       shadow: dark ? '#00000080' : '#4c4f6926',
     };
+    const resolved = { ...base, ...roles };
+    const toneTokens = Object.fromEntries(tones.flatMap((tone) => {
+      const color = tone === 'neutral' ? resolved.foreground : tone === 'danger' ? resolved.error : resolved[tone];
+      const soft = referenceSoft[id]?.[tone] ?? mix(resolved.surface, color, 0.08);
+      return [
+        [`${tone}Soft`, soft],
+        [`${tone}Text`, readable(color, soft, 4.5)],
+        [`${tone}Border`, readable(color, soft, 3)],
+        [toneSolidTokens[tone], on(color)],
+      ];
+    }));
+    const tokens = { ...resolved, field: roles?.field ?? resolved.surface,
+      surfaceHover: roles?.surfaceHover ?? resolved.secondary,
+      controlBorder: readable(resolved.borderHover, roles?.field ?? resolved.surface, 3),
+      ...toneTokens } as ThemeTokens;
+    // Text must also work on selected rows, menus and the new soft surfaces.
+    const actualSurfaces = [tokens.background, tokens.surface, tokens.surfaceElevated,
+      tokens.card, tokens.field, tokens.popover, tokens.modal, tokens.selection,
+      tokens.surfaceHover, tokens.secondary, ...tones.map(tone => tokens[`${tone}Soft`])];
+    if (roles) for (const key of ['foreground', 'textMuted', 'interactiveText'] as const)
+      tokens[key] = actualSurfaces.reduce((color, bg) => readable(color, bg), tokens[key]);
+    if (roles) tokens.focusRing = actualSurfaces.reduce((color, bg) => readable(color, bg, 3), tokens.focusRing);
+    for (const tone of tones) {
+      tokens[`${tone}Border`] = [tokens.surface, tokens.background, tokens.card, tokens[`${tone}Soft`]].reduce((color, bg) => readable(color, bg, 3), tokens[`${tone}Border`]);
+      tokens[`${tone}Text`] = [...actualSurfaces, tokens[`${tone}Soft`]].reduce((color, bg) => readable(color, bg), tokens[`${tone}Text`]);
+    }
+    tokens.controlBorder = [tokens.field, tokens.surface, tokens.card].reduce((color, bg) => readable(color, bg, 3), tokens.controlBorder);
     return Object.freeze({ id, name, mode, tokens: Object.freeze(tokens) });
   }),
 );
 export const defaultThemes = Object.freeze({
-  dark: 'tokyo-night',
+  dark: 'catppuccin-mocha',
   light: 'catppuccin-latte',
 });

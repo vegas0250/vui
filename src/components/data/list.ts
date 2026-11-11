@@ -51,10 +51,10 @@ export class VListItem extends VuiElement {
       :host(:hover) { background: var(--vui-color-surface-hover); }
       :host([selected]) {
         background: var(--vui-color-selected);
-        box-shadow: inset 2px 0 0 var(--vui-color-primary);
+        box-shadow: inset 2px 0 0 var(--vui-color-focus);
       }
       :host([selected]:hover) { background: var(--vui-color-selected); }
-      :host-context([dir="rtl"]):host([selected]) { box-shadow: inset -2px 0 0 var(--vui-color-primary); }
+      :host-context([dir="rtl"]):host([selected]) { box-shadow: inset -2px 0 0 var(--vui-color-focus); }
       :host(:focus-visible) { outline: var(--vui-focus-ring); outline-offset: calc(var(--vui-focus-offset) * -1); }
       :host([disabled]) { opacity: 0.72; cursor: not-allowed; }
     `;

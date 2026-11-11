@@ -1,3 +1,5 @@
+import { toneStyles } from '../../theme/tone-styles';
+import { tones, type VuiTone } from '../../theme/presets';
 import { defineElement } from '../../utils/define';
 import { registerContract } from '../../contract/registry';
 import { VuiElement } from '../../utils/element';
@@ -12,11 +14,12 @@ const closeIcon = `
 
 export class VChip extends VuiElement {
   declare variant: string;
+  declare tone: VuiTone;
   declare closeLabel: string;
   declare removable: boolean;
 
   static get observedAttributes(): string[] {
-    return ['variant', 'removable', 'close-label'];
+    return ['tone', 'variant', 'removable', 'close-label'];
   }
 
   protected template(): string {
@@ -47,10 +50,10 @@ export class VChip extends VuiElement {
         font-size: var(--vui-font-size-sm);
         overflow-wrap: anywhere;
       }
-      :host([variant="info"]) [part="chip"] { border-color: var(--vui-color-info); background: var(--vui-color-info-surface); }
-      :host([variant="success"]) [part="chip"] { border-color: var(--vui-color-success); background: var(--vui-color-success-surface); }
-      :host([variant="warning"]) [part="chip"] { border-color: var(--vui-color-warning); background: var(--vui-color-warning-surface); }
-      :host([variant="danger"]) [part="chip"] { border-color: var(--vui-color-danger); background: var(--vui-color-danger-surface); }
+      :host([variant="info"]) [part="chip"] { border-color: var(--vui-color-info); background: var(--vui-color-info-surface); color: var(--vui-color-info-text, var(--vui-color-text)); }
+      :host([variant="success"]) [part="chip"] { border-color: var(--vui-color-success); background: var(--vui-color-success-surface); color: var(--vui-color-success-text, var(--vui-color-text)); }
+      :host([variant="warning"]) [part="chip"] { border-color: var(--vui-color-warning); background: var(--vui-color-warning-surface); color: var(--vui-color-warning-text, var(--vui-color-text)); }
+      :host([variant="danger"]) [part="chip"] { border-color: var(--vui-color-danger); background: var(--vui-color-danger-surface); color: var(--vui-color-danger-text, var(--vui-color-text)); }
       button {
         appearance: none;
         display: inline-flex;
@@ -68,7 +71,7 @@ export class VChip extends VuiElement {
       button:focus-visible { outline: var(--vui-focus-ring); outline-offset: var(--vui-focus-offset); }
       button[hidden] { display: none; }
       button svg { width: 0.85em; height: 0.85em; }
-    `;
+    ` + toneStyles('[part="chip"]', 'neutral', 'soft');
   }
 
   protected afterRender(): void {
@@ -87,13 +90,14 @@ export class VChip extends VuiElement {
 
 reflectStrings(VChip, { variant: 'variant', closeLabel: 'close-label' });
 reflectBooleans(VChip, ['removable']);
+reflectStrings(VChip, ['tone']);
 defineElement('vui-chip', VChip);
 
 registerContract({
   element: 'vui-chip',
   className: 'VChip',
-  attributes: [
-    { name: 'variant', kind: 'enum', values: ['neutral', 'info', 'success', 'warning', 'danger'], reflected: true },
+  attributes: [{ name: 'tone', kind: 'enum', values: [...tones], reflected: true },
+    { name: 'variant', kind: 'enum', values: ['neutral', 'info', 'success', 'warning', 'danger', 'solid', 'soft', 'outline', 'ghost'], reflected: true },
     { name: 'removable', kind: 'boolean', reflected: true },
     { name: 'close-label', kind: 'string', property: 'closeLabel', reflected: true },
   ],

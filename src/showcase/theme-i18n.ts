@@ -1,6 +1,11 @@
 export const docsLocale =
   new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'ru';
 const ru: Record<string, string> = {
+  'VUI adaptation': 'адаптация VUI',
+  'Semantic tones': 'Семантические тона',
+  field: 'Поле ввода',
+  surfaceHover: 'Поверхность при наведении',
+  controlBorder: 'Граница элемента управления',
   'Theme Studio': 'Студия тем',
   'Visual theme editor for VUI': 'Визуальный редактор тем VUI',
   Customize: 'Настройка',
@@ -49,7 +54,7 @@ const ru: Record<string, string> = {
   'Enter a unique theme name (1–80 characters).':
     'Введите уникальное имя темы (1–80 символов).',
   'Low contrast': 'Недостаточный контраст',
-  'All checked text pairs meet WCAG AA.':
+  'All checked pairs meet WCAG AA.':
     'Проверенные текстовые пары соответствуют WCAG AA.',
   Radius: 'Скругление',
   'Border width': 'Толщина границ',
@@ -158,6 +163,10 @@ const ru: Record<string, string> = {
   overlay: 'Подложка диалога',
   shadow: 'Цвет тени',
 };
+for (const [tone, label] of Object.entries({ neutral: 'Нейтральный', primary: 'Основной', accent: 'Акцент', success: 'Успех', warning: 'Предупреждение', danger: 'Опасность', info: 'Информация' })) {
+  for (const [suffix, role] of Object.entries({ Soft: 'мягкий фон', Text: 'текст', Border: 'граница', OnSolid: 'текст на заливке' }))
+    ru[tone + suffix] = `${label}: ${role}`;
+}
 export const tr = (text: string): string =>
   docsLocale === 'ru' ? (ru[text] ?? text) : text;
 export const escapeHTML = (text: string): string =>

@@ -26,7 +26,7 @@ test('foundation, theme, and density share one token contract', async ({ page })
   await expect(page.locator('html')).toHaveAttribute('data-vui-theme', 'tokyo-night');
   const darkBackground = await read('--vui-color-background');
   expect(darkBackground).not.toBe(lightBackground);
-  expect(darkBackground === '#1a1b26').toBe(true);
+  expect(darkBackground === '#16161e').toBe(true);
 
   const density = page.locator('#density-select');
   await density.locator('button').click();

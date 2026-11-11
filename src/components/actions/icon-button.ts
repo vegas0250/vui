@@ -1,3 +1,5 @@
+import { toneStyles } from '../../theme/tone-styles';
+import { tones, type VuiTone } from '../../theme/presets';
 import '../../components/foundation/icon';
 import { buttonStyles } from './button-styles';
 import { registerContract } from '../../contract/registry';
@@ -10,12 +12,13 @@ export class VIconButton extends VuiElement {
   declare name: string;
   declare label: string;
   declare variant: string;
+  declare tone: VuiTone;
   declare size: string;
   declare disabled: boolean;
   declare loading: boolean;
 
   static get observedAttributes(): string[] {
-    return ['name', 'label', 'variant', 'size', 'disabled', 'loading', 'type'];
+    return ['tone', 'name', 'label', 'variant', 'size', 'disabled', 'loading', 'type'];
   }
 
   protected template(): string {
@@ -69,7 +72,7 @@ export class VIconButton extends VuiElement {
       :host([variant="danger"]) button:hover {
         background: var(--vui-color-danger-surface);
       }
-    `;
+    ` + toneStyles('button', 'primary', 'solid');
   }
 
   protected sync(): void {
@@ -88,7 +91,7 @@ export class VIconButton extends VuiElement {
   }
 }
 
-reflectStrings(VIconButton, ['name', 'label', 'variant', 'size', 'type']);
+reflectStrings(VIconButton, ['tone', 'name', 'label', 'variant', 'size', 'type']);
 reflectBooleans(VIconButton, ['disabled', 'loading']);
 defineElement('vui-icon-button', VIconButton);
 
@@ -96,9 +99,10 @@ registerContract({
   element: 'vui-icon-button',
   className: 'VIconButton',
   attributes: [
+    { name: 'tone', kind: 'enum', values: [...tones], reflected: true },
     { name: 'name', kind: 'string', reflected: true },
     { name: 'label', kind: 'string', reflected: true },
-    { name: 'variant', kind: 'enum', values: ['ghost', 'primary', 'secondary', 'danger'], reflected: true },
+    { name: 'variant', kind: 'enum', values: ['ghost', 'primary', 'secondary', 'danger', 'solid', 'soft', 'outline'], reflected: true },
     { name: 'size', kind: 'enum', values: ['small', 'medium', 'large'], reflected: true },
     { name: 'type', kind: 'enum', values: ['button', 'submit', 'reset'], reflected: true },
     { name: 'disabled', kind: 'boolean', reflected: true },

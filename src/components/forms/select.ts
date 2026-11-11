@@ -138,7 +138,7 @@ export class VSelect extends VuiElement {
         list-style: none;
         max-height: var(--vui-list-block);
         overflow: auto;
-        background: var(--vui-color-surface-raised);
+        background: var(--vui-color-popover, var(--vui-color-surface-raised));
         color: var(--vui-color-text);
         border: var(--vui-border-width) solid var(--vui-color-border);
         border-radius: var(--vui-radius);

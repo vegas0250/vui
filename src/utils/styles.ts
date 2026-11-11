@@ -124,7 +124,7 @@ export const controlStyles = `
   gap: var(--vui-space-xs);
   min-height: var(--vui-size-control);
   padding-inline: var(--vui-space-sm);
-  border: var(--vui-border-width) solid var(--vui-color-border);
+  border: var(--vui-border-width) solid var(--vui-color-control-border, var(--vui-color-border));
   border-radius: var(--vui-radius);
   background: var(--vui-color-field);
   color: var(--vui-color-text);

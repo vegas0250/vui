@@ -1,5 +1,5 @@
-import { normalizeColor } from './colors';
-import { builtInThemes, defaultThemes, tokenNames } from './presets';
+import { normalizeColor, readable, contrast, mix } from './colors';
+import { builtInThemes, defaultThemes, tokenNames, tones, toneSolidTokens } from './presets';
 import type {
   ThemeMode,
   ThemePreset,
@@ -26,6 +26,16 @@ const registry = new Map<string, ThemePreset>(
 export const themeStorageKey = 'vui.theme.preference.v1';
 const customStorageKey = 'vui.theme.custom.v1';
 export const tokenProperties: Record<ThemeToken, string> = {
+  field: 'field', surfaceHover: 'surface-hover', controlBorder: 'control-border',
+  ...Object.fromEntries(tones.flatMap(tone => [
+    [`${tone}Soft`, `${tone}-surface`], [`${tone}Text`, `${tone}-text`],
+    [`${tone}Border`, `${tone}-border`],
+  ])) as Record<`${typeof tones[number]}${'Soft' | 'Text' | 'Border'}`, string>,
+  neutralOnSolid: 'on-neutral-solid',
+  successOnSolid: 'on-success-solid',
+  warningOnSolid: 'on-warning-solid',
+  dangerOnSolid: 'on-danger-solid',
+  infoOnSolid: 'on-info-solid',
   background: 'background',
   surface: 'surface',
   surfaceElevated: 'surface-raised',
@@ -135,7 +145,27 @@ export function validateTheme(input: unknown): ThemeDocument {
 }
 export function resolveTheme(document: ThemeDocument): ThemeTokens {
   const valid = validateTheme(document);
-  return { ...themeById(valid.baseTheme).tokens, ...valid.tokens };
+  const tokens = { ...themeById(valid.baseTheme).tokens, ...valid.tokens };
+  // Schema 1 documents can override old colors without supplying the new roles.
+  // Explicit new tokens always win, including intentionally low-contrast drafts.
+  for (const tone of tones) {
+    const source = tone === 'neutral' ? 'foreground' : tone === 'danger' ? 'error' : tone;
+    const color = tokens[source];
+    if (valid.tokens[source] || valid.tokens.surface) {
+      if (!valid.tokens[`${tone}Soft`]) tokens[`${tone}Soft`] = mix(tokens.surface, color, 0.08);
+    }
+    if (valid.tokens[source] || valid.tokens.surface || valid.tokens[`${tone}Soft`]) {
+      if (!valid.tokens[`${tone}Text`]) tokens[`${tone}Text`] = [tokens[`${tone}Soft`], tokens.surface, tokens.background, tokens.card].reduce((fg, bg) => readable(fg, bg), color);
+      if (!valid.tokens[`${tone}Border`]) tokens[`${tone}Border`] = readable(color, tokens[`${tone}Soft`], 3);
+      if (tone !== 'primary' && tone !== 'accent' && !valid.tokens[toneSolidTokens[tone]]) tokens[toneSolidTokens[tone]] = contrast('#ffffff', color) > contrast('#000000', color) ? '#ffffff' : '#000000';
+    }
+  }
+  if (valid.tokens.surface && !valid.tokens.field) tokens.field = tokens.surface;
+  if (valid.tokens.secondary && !valid.tokens.surfaceHover) tokens.surfaceHover = tokens.secondary;
+  if (valid.tokens.border && !valid.tokens.controlBorder) tokens.controlBorder = tokens.border;
+  if ((valid.tokens.field || valid.tokens.surface || valid.tokens.borderHover) && !valid.tokens.controlBorder && !valid.tokens.border)
+    tokens.controlBorder = readable(tokens.borderHover, tokens.field, 3);
+  return tokens;
 }
 export function themeDocument(id: string): ThemeDocument {
   const preset = themeById(id);
@@ -183,11 +213,9 @@ export function themeVariables(input: ThemeDocument): Record<string, string> {
   for (const key of tokenNames)
     vars[`--vui-color-${tokenProperties[key]}`] = t[key];
   Object.assign(vars, {
-    '--vui-color-field': t.surface,
     '--vui-color-surface-sunken': t.background,
-    '--vui-color-surface-hover': t.secondary,
     '--vui-color-danger-hover': t.error,
-    '--vui-color-on-danger': 'var(--vui-color-surface)',
+    '--vui-color-on-danger': t.dangerOnSolid,
     '--vui-color-tooltip-bg': t.foreground,
     '--vui-color-tooltip-text': t.background,
     '--vui-color-tooltip-border': t.border,
@@ -195,14 +223,6 @@ export function themeVariables(input: ThemeDocument): Record<string, string> {
     '--vui-focus-shadow':
       '0 0 0 3px color-mix(in srgb, var(--vui-color-focus) 28%, transparent)',
   });
-  for (const [variant, color] of Object.entries({
-    danger: t.error,
-    success: t.success,
-    warning: t.warning,
-    info: t.info,
-  }))
-    vars[`--vui-color-${variant}-surface`] =
-      `color-mix(in srgb, ${color} 8%, ${t.surface})`;
   const strength = d.appearance?.shadowIntensity ?? 100;
   for (const [size, offset] of Object.entries({
     sm: '0 1px 3px',
@@ -274,7 +294,7 @@ export function importThemeJSON(json: string): ThemeDocument {
 }
 export function exportThemeCSS(input: ThemeDocument): string {
   const d = validateTheme(input);
-  return `/* VUI theme schema 1 */\n[data-vui-theme="custom"] {\n  color-scheme: ${d.mode};\n${Object.entries(
+  return `/* VUI adaptation: ${d.baseTheme}; schema 1. See VUI THIRD_PARTY_NOTICES.md. */\n[data-vui-theme="custom"] {\n  color-scheme: ${d.mode};\n${Object.entries(
     themeVariables(d),
   )
     .map(([k, v]) => `  ${k}: ${v};`)

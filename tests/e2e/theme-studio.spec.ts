@@ -168,7 +168,7 @@ test('all interface templates use actual VUI and original comparison stays isola
             getComputedStyle(el).getPropertyValue('--vui-color-surface').trim(),
           ),
       )
-      .toBe('#24283b');
+      .toBe('#1a1b26');
   }
   await page.locator('#ts-template').selectOption('components');
   await page.locator('#ts-live-preview [data-preview-modal]').click();
@@ -209,7 +209,7 @@ test('system mode initializes defaults, explicit choice wins, and initial head b
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute(
     'data-vui-theme',
-    'tokyo-night',
+    'catppuccin-mocha',
   );
   await page.emulateMedia({ colorScheme: 'light' });
   await expect(page.locator('html')).toHaveAttribute(
@@ -233,5 +233,5 @@ test('system mode initializes defaults, explicit choice wins, and initial head b
     await page
       .locator('html')
       .evaluate((el) => el.style.getPropertyValue('--vui-color-background')),
-  ).toBe('#282a36');
+  ).toBe('#21222c');
 });

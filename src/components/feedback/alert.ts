@@ -1,3 +1,5 @@
+import { toneStyles } from '../../theme/tone-styles';
+import { tones, type VuiTone } from '../../theme/presets';
 import '../foundation/icon';
 import { registerContract } from '../../contract/registry';
 import { defineElement } from '../../utils/define';
@@ -15,12 +17,13 @@ const icons: Record<string, string> = {
 
 export class VAlert extends VuiElement {
   declare variant: string;
+  declare tone: VuiTone;
   declare closeLabel: string;
   declare closable: boolean;
   declare banner: boolean;
 
   static get observedAttributes(): string[] {
-    return ['variant', 'closable', 'close-label', 'banner'];
+    return ['tone', 'variant', 'closable', 'close-label', 'banner'];
   }
 
   protected template(): string {
@@ -46,20 +49,20 @@ export class VAlert extends VuiElement {
         padding: var(--vui-space-sm) var(--vui-space-md);
         border: var(--vui-border-width) solid var(--vui-color-info);
         border-radius: var(--vui-radius);
-        background: var(--vui-color-info-surface);
+        background: var(--vui-color-info-surface); color: var(--vui-color-info-text, var(--vui-color-text));
       }
       .content { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
       :host([variant="success"]) .alert {
         border-color: var(--vui-color-success);
-        background: var(--vui-color-success-surface);
+        background: var(--vui-color-success-surface); color: var(--vui-color-success-text, var(--vui-color-text));
       }
       :host([variant="warning"]) .alert {
         border-color: var(--vui-color-warning);
-        background: var(--vui-color-warning-surface);
+        background: var(--vui-color-warning-surface); color: var(--vui-color-warning-text, var(--vui-color-text));
       }
       :host([variant="danger"]) .alert {
         border-color: var(--vui-color-danger);
-        background: var(--vui-color-danger-surface);
+        background: var(--vui-color-danger-surface); color: var(--vui-color-danger-text, var(--vui-color-text));
       }
       :host([variant="neutral"]) .alert {
         border-color: var(--vui-color-border);
@@ -88,7 +91,7 @@ export class VAlert extends VuiElement {
         outline-offset: var(--vui-focus-offset);
       }
       .close[hidden] { display: none; }
-    `;
+    ` + toneStyles('.alert', 'info', 'soft');
   }
 
   protected afterRender(): void {
@@ -99,7 +102,7 @@ export class VAlert extends VuiElement {
   }
 
   protected sync(): void {
-    const variant = this.getAttribute('variant') ?? 'info';
+    const variant = this.getAttribute('tone') ?? this.getAttribute('variant') ?? 'info';
     const icon = this.qs<VIcon>('vui-icon');
     icon.setAttribute('name', icons[variant] ?? 'info');
     const assertive = variant === 'warning' || variant === 'danger';
@@ -112,13 +115,14 @@ export class VAlert extends VuiElement {
 
 reflectStrings(VAlert, { variant: 'variant', closeLabel: 'close-label' });
 reflectBooleans(VAlert, ['closable', 'banner']);
+reflectStrings(VAlert, ['tone']);
 defineElement('vui-alert', VAlert);
 
 registerContract({
   element: 'vui-alert',
   className: 'VAlert',
-  attributes: [
-    { name: 'variant', kind: 'enum', values: ['info', 'success', 'warning', 'danger', 'neutral'], reflected: true },
+  attributes: [{ name: 'tone', kind: 'enum', values: [...tones], reflected: true },
+    { name: 'variant', kind: 'enum', values: ['info', 'success', 'warning', 'danger', 'neutral', 'solid', 'soft', 'outline', 'ghost'], reflected: true },
     { name: 'closable', kind: 'boolean', reflected: true },
     { name: 'banner', kind: 'boolean', reflected: true },
     { name: 'close-label', kind: 'string', property: 'closeLabel', reflected: true },

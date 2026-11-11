@@ -72,8 +72,8 @@ export class VMenuItem extends VuiElement {
       :host([disabled]) { opacity: 0.72; cursor: not-allowed; }
       :host([variant="danger"]) { color: var(--vui-color-danger); }
       :host([variant="danger"]) vui-icon { color: var(--vui-color-danger); }
-      :host([checked]) { box-shadow: inset 2px 0 0 var(--vui-color-primary); }
-      :host-context([dir="rtl"]):host([checked]) { box-shadow: inset -2px 0 0 var(--vui-color-primary); }
+      :host([checked]) { box-shadow: inset 2px 0 0 var(--vui-color-focus); }
+      :host-context([dir="rtl"]):host([checked]) { box-shadow: inset -2px 0 0 var(--vui-color-focus); }
       .mark {
         width: 1em;
         flex: 0 0 auto;
@@ -245,7 +245,7 @@ export class VMenu extends VuiElement {
         margin: 0;
         padding: var(--vui-space-2xs);
         overflow: auto;
-        background: var(--vui-color-surface-raised);
+        background: var(--vui-color-popover, var(--vui-color-surface-raised));
         color: var(--vui-color-text);
         border: var(--vui-border-width) solid var(--vui-color-border);
         border-radius: var(--vui-radius);

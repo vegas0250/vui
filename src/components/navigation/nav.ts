@@ -42,9 +42,9 @@ export class VNavItem extends VuiElement {
       :host([selected]) a {
         background: var(--vui-color-selected);
         color: var(--vui-color-text);
-        box-shadow: inset 2px 0 0 var(--vui-color-primary);
+        box-shadow: inset 2px 0 0 var(--vui-color-focus);
       }
-      :host-context([dir="rtl"]):host([selected]) a { box-shadow: inset -2px 0 0 var(--vui-color-primary); }
+      :host-context([dir="rtl"]):host([selected]) a { box-shadow: inset -2px 0 0 var(--vui-color-focus); }
       :host([selected]) a:hover { background: var(--vui-color-selected); }
       a:focus { outline: none; }
       a:focus-visible { outline: var(--vui-focus-ring); outline-offset: calc(var(--vui-focus-offset) * -1); }
