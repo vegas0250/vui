@@ -11,6 +11,7 @@ import * as foundation from '../../src/categories/foundation';
 import * as layout from '../../src/categories/layout';
 import * as navigation from '../../src/categories/navigation';
 import * as overlay from '../../src/categories/overlay';
+import * as widgets from '../../src/categories/widgets';
 import * as root from '../../src/index';
 
 const categories: Record<string, Record<string, unknown>> = {
@@ -24,6 +25,7 @@ const categories: Record<string, Record<string, unknown>> = {
   layout: layout as unknown as Record<string, unknown>,
   navigation: navigation as unknown as Record<string, unknown>,
   overlay: overlay as unknown as Record<string, unknown>,
+  widgets: widgets as unknown as Record<string, unknown>,
 };
 
 const rootExports = root as unknown as Record<string, unknown>;

@@ -39,6 +39,8 @@ import '../components/overlay/dialog';
 import '../components/overlay/drawer';
 import '../components/overlay/menu';
 import '../components/overlay/popover';
+import '../components/widgets/carousel';
+import '../components/widgets/lightbox';
 import type { VDataGrid } from '../components/data/data-grid';
 import type { VDialog } from '../components/overlay/dialog';
 import { componentStyleText } from '../contract/compliance';
@@ -268,13 +270,14 @@ export function checkCompositionHosts(): string[] {
 const familyHosts: Record<FamilyName, string[]> = {
   action: ['vui-button', 'vui-button-group', 'vui-icon-button', 'vui-toggle', 'vui-link', 'vui-menu-item'],
   field: ['vui-input', 'vui-textarea', 'vui-select', 'vui-checkbox', 'vui-checkbox-group', 'vui-radio', 'vui-radio-group', 'vui-switch', 'vui-slider', 'vui-field'],
-  overlay: ['vui-dialog', 'vui-drawer', 'vui-popover', 'vui-tooltip', 'vui-menu', 'vui-toaster'],
+  overlay: ['vui-dialog', 'vui-drawer', 'vui-popover', 'vui-tooltip', 'vui-menu', 'vui-toaster', 'vui-lightbox'],
   navigation: ['vui-tabs', 'vui-tab', 'vui-tab-panel', 'vui-nav', 'vui-stepper', 'vui-file-tree', 'vui-tree-item', 'vui-menu', 'vui-menu-item', 'vui-breadcrumbs', 'vui-pagination', 'vui-path-bar'],
   data: ['vui-data-grid', 'vui-list'],
   feedback: ['vui-alert', 'vui-empty', 'vui-badge'],
   layout: ['vui-stack'],
   content: ['vui-text', 'vui-chip', 'vui-kbd'],
   desktop: ['vui-shell', 'vui-window', 'vui-status-bar'],
+  widget: ['vui-carousel', 'vui-lightbox'],
 };
 
 /** Every family member matches the rules it claims. */

@@ -27,12 +27,16 @@ import {
   Folder,
   FolderOpen,
   FolderPlus,
+  FormInput,
   Globe,
   Hash,
   GripVertical,
   HardDrive,
   House,
+  Images,
   Info,
+  Layers,
+  LayoutTemplate,
   LoaderCircle,
   Menu,
   Minus,
@@ -57,6 +61,7 @@ import {
   Table,
   Terminal,
   Trash2,
+  Type,
   Waypoints,
   TriangleAlert,
   X,
@@ -93,12 +98,16 @@ const builtins: Record<string, IconNode> = {
   folder: Folder as IconNode,
   'folder-open': FolderOpen as IconNode,
   'folder-plus': FolderPlus as IconNode,
+  'form-input': FormInput as IconNode,
   globe: Globe as IconNode,
   'grip-vertical': GripVertical as IconNode,
   hash: Hash as IconNode,
   'hard-drive': HardDrive as IconNode,
   house: House as IconNode,
+  images: Images as IconNode,
   info: Info as IconNode,
+  layers: Layers as IconNode,
+  'layout-template': LayoutTemplate as IconNode,
   loader: LoaderCircle as IconNode,
   menu: Menu as IconNode,
   minus: Minus as IconNode,
@@ -125,8 +134,19 @@ const builtins: Record<string, IconNode> = {
   table: Table as IconNode,
   'trash-2': Trash2 as IconNode,
   'triangle-alert': TriangleAlert as IconNode,
+  type: Type as IconNode,
   x: X as IconNode,
 };
+
+/** Organized gallery groups for documentation. Names must exist in builtins or customIcons. */
+export const iconGroups: ReadonlyArray<{ id: string; label: [string, string]; icons: readonly string[] }> = [
+  { id: 'navigation', label: ['Навигация', 'Navigation'], icons: ['arrow-left', 'arrow-right', 'arrow-up', 'chevron-down', 'chevron-left', 'chevron-right', 'house', 'menu', 'panel-left', 'waypoints'] },
+  { id: 'actions', label: ['Действия', 'Actions'], icons: ['plus', 'minus', 'pencil', 'trash-2', 'copy', 'save', 'download', 'search', 'refresh-cw', 'play', 'pin', 'command', 'more-horizontal'] },
+  { id: 'files', label: ['Файлы', 'Files'], icons: ['file', 'file-text', 'file-code', 'file-image', 'file-audio', 'file-play', 'file-archive', 'folder', 'folder-open', 'folder-plus'] },
+  { id: 'status', label: ['Статус', 'Status'], icons: ['check', 'circle-check', 'circle-alert', 'triangle-alert', 'info', 'bell', 'loader', 'eye', 'eye-off', 'shield'] },
+  { id: 'chrome', label: ['Интерфейс', 'Chrome'], icons: ['settings', 'sun', 'moon', 'contrast', 'monitor', 'palette', 'terminal', 'globe', 'hash', 'grip-vertical', 'columns-2', 'table', 'square', 'x', 'clock'] },
+  { id: 'catalog', label: ['Каталог', 'Catalog'], icons: ['play', 'form-input', 'layers', 'waypoints', 'bell', 'type', 'palette', 'layout-template', 'monitor', 'table', 'images', 'network', 'server', 'hard-drive'] },
+];
 
 const customIcons = new Map<string, string>();
 

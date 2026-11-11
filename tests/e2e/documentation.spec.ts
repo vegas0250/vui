@@ -21,7 +21,8 @@ test('bilingual catalog has a direct, complete page for every visual component',
   await expect(page.locator('.docs-import')).toBeVisible();
   await page.getByRole('searchbox', { name: 'Find a component' }).fill('кнопка');
   expect(await page.locator('#docs-component-menu a').count()).toBeGreaterThan(0);
-  await page.getByRole('link', { name: 'Русский', exact: true }).click();
+  await page.locator('#docs-lang button').click();
+  await page.getByRole('option', { name: 'Русский', exact: true }).click();
   await expect(page.getByRole('searchbox', { name: 'Найти компонент' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Разделы документации' }).getByRole('link')).toHaveCount(4);
   await expect(page).toHaveURL(/lang=ru.*#\/components\//);

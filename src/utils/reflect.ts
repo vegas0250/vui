@@ -52,3 +52,18 @@ export function reflectBooleans(host: ReflectHost, spec: AttrSpec): void {
     });
   }
 }
+
+/** Number properties mirror attributes. Missing or invalid values read as `NaN`. */
+export function reflectNumbers(host: ReflectHost, spec: AttrSpec): void {
+  for (const [prop, attr] of pairs(spec)) {
+    define(host, prop, {
+      get(this: HTMLElement): number {
+        return Number(this.getAttribute(attr));
+      },
+      set(this: HTMLElement, value: number | null) {
+        if (value == null || Number.isNaN(value)) this.removeAttribute(attr);
+        else this.setAttribute(attr, String(value));
+      },
+    });
+  }
+}

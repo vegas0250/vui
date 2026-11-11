@@ -64,6 +64,9 @@ Button, icon button, button group, input, textarea, checkbox, radio, radio group
 | Application shell | `vui-shell` |
 | Command palette | pattern: `vui-dialog` и `vui-input` |
 | Inspector | `vui-properties` и поля |
+| Carousel / slides | `vui-carousel` |
+| Lightbox / media viewer | `vui-lightbox` |
+| Sidebar / nav menu | `vui-menu inline` или `vui-nav` |
 
 ## Не входит в 1.0
 

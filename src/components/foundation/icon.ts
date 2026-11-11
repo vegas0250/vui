@@ -4,7 +4,7 @@ import { VuiElement } from '../../utils/element';
 import { reflectStrings } from '../../utils/reflect';
 import { renderIcon } from '../../icons/registry';
 
-export { iconNames, registerIcon } from '../../icons/registry';
+export { iconGroups, iconNames, registerIcon } from '../../icons/registry';
 
 export class VIcon extends VuiElement {
   declare name: string;

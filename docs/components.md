@@ -113,7 +113,7 @@
 </vui-select>
 ```
 
-| vui-select attributes | `label`, `value`, `placeholder`, `name`, `size`, `disabled`, `invalid` |
+| vui-select attributes | `label`, `value`, `placeholder`, `name`, `size`, `icon`, `disabled`, `invalid`. With `icon`, the trigger is an icon button plus animated chevron; the label stays for accessibility and the selected text is hidden until the list opens. |
 | Properties | те же; `value` — выбранное значение |
 | Events | `change`, когда значение действительно изменилось |
 | Slots | дочерние `vui-option` |
@@ -153,12 +153,21 @@
 
 ## vui-menu
 
-Контекстное и вложенное меню. Слой, фокус, клавиатура и команды берутся из Interaction Layer. Приложение регистрирует команды само.
+Popup-меню команд и inline-навигация. `orientation` — `vertical` (по умолчанию) или `horizontal`. `inline` держит меню в потоке; вложенные группы раскрываются стрелкой. Без `inline` поведение прежнее: `showAt`, overlay, flyout-подменю.
 
 ```html
+<vui-menu inline orientation="vertical" label="Разделы">
+  <vui-menu-item label="Обзор" icon="house" href="#/overview" selected></vui-menu-item>
+  <vui-menu-item label="Компоненты" icon="layout-template" expanded>
+    <vui-menu inline label="Компоненты" slot="submenu">
+      <vui-menu-item label="Button" href="#/components/button"></vui-menu-item>
+    </vui-menu>
+  </vui-menu-item>
+</vui-menu>
+
 <vui-menu id="file-menu" label="Файл">
-  <vui-menu-item label="Сохранить" command="file.save"></vui-menu-item>
-  <vui-menu-item label="Поделиться">
+  <vui-menu-item label="Сохранить" command="file.save" icon="save"></vui-menu-item>
+  <vui-menu-item label="Поделиться" icon="globe">
     <vui-menu slot="submenu" label="Поделиться">
       <vui-menu-item label="Копировать ссылку"></vui-menu-item>
     </vui-menu>
@@ -181,13 +190,46 @@ menu.bindTo(target);
 menu.showAt(x, y);
 ```
 
-| vui-menu | attribute и property `label`. Property `commands` — `CommandRegistry` или `null`. Методы `showAt(x, y)`, `close()`, `bindTo(target)`. Событие `close` не всплывает, чтобы внешний dialog не принял его за своё закрытие. Слот — пункты. Part `menu` |
-| vui-menu-item | attributes `label`, `command`, `shortcut`, `icon`, `disabled`, `checked`, `variant="danger"`. Событие `click`. Вложенный `vui-menu` со `slot="submenu"`. Parts `check`, `icon`, `label`, `shortcut`, `caret` |
-| Keyboard | стрелки, Home, End, PageUp, PageDown, Enter, Space, Escape, Tab. В `dir="rtl"` вложенное меню открывается в сторону inline start. Shift+F10 и правый щелчок через `bindTo` |
-| Accessibility | `role="menu"` / `menuitem`, `aria-disabled`, `aria-checked` у отмеченного пункта, `aria-haspopup` и `aria-expanded` у пункта с подменю |
-| Responsive | меню не шире viewport и прокручивается, если пунктов больше, чем помещается по высоте |
+| vui-menu | `label`, `orientation` vertical\|horizontal, `inline`. Property `commands`. Методы `showAt(x, y)`, `close()`, `bindTo(target)`. Событие `close` (popup). Parts `menu`, `bar` |
+| vui-menu-item | `label`, `command`, `shortcut`, `icon`, `href`, `disabled`, `checked`, `selected`, `expanded`, `variant="danger"`. Вложенный `vui-menu` со `slot="submenu"`. Parts `row`, `check`, `icon`, `label`, `shortcut`, `caret` |
+| Keyboard | стрелки, Home, End, PageUp, PageDown, Enter, Space, Escape, Tab. Стрелка открывает/закрывает вложенную группу; caret переключает `expanded` |
+| Accessibility | `role="menu"` / `menubar` / `menuitem`, `aria-disabled`, `aria-checked`, `aria-current`, `aria-haspopup`, `aria-expanded` |
+| Responsive | popup не шире viewport и прокручивается; inline занимает ширину контейнера |
 
-`command` — id из реестра, который приложение положило в `commands`. VUI не создаёт команды `file.save` сам. Пункт без `command` просто шлёт `click`. Отключённая команда (`enabled: false`) не активируется.
+`command` — id из реестра в `commands`. Пункт с `href` — ссылка. Отключённая команда (`enabled: false`) не активируется.
+
+## vui-carousel
+
+Карусель слайдов без Swiper. Аналог Stimulus Carousel на Custom Elements.
+
+```html
+<vui-carousel label="Слайды" loop>
+  <div>Один</div>
+  <div>Два</div>
+</vui-carousel>
+```
+
+| Attributes | `label`, `index`, `loop`, `autoplay`, `interval` |
+| Methods | `next()`, `previous()`, `goTo(index)` |
+| Events | `change` |
+| Parts | `frame`, `viewport`, `track`, `previous`, `next`, `dots` |
+| Keyboard | Arrow Left/Right, Home, End |
+
+## vui-lightbox
+
+Просмотрщик медиа по клику на превью. Аналог Stimulus Lightbox без lightGallery.
+
+```html
+<vui-lightbox label="Галерея">
+  <a href="full.jpg"><img src="thumb.jpg" alt="Atlas"></a>
+</vui-lightbox>
+```
+
+| Attributes | `label`, `index` |
+| Methods | `open(index?)`, `close()`, `next()`, `previous()` |
+| Events | `close` |
+| Parts | `grid` |
+| Keyboard | Escape, Arrow Left/Right |
 
 ## Interaction
 

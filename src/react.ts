@@ -54,3 +54,5 @@ export { Dialog } from './components/overlay/dialog.react';
 export { Drawer } from './components/overlay/drawer.react';
 export { MenuItem, Menu } from './components/overlay/menu.react';
 export { Popover } from './components/overlay/popover.react';
+export { Carousel } from './components/widgets/carousel.react';
+export { Lightbox } from './components/widgets/lightbox.react';

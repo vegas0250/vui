@@ -8,6 +8,7 @@ import './categories/forms';
 import './categories/layout';
 import './categories/navigation';
 import './categories/overlay';
+import './categories/widgets';
 
 export { VButton } from './components/actions/button';
 export { VButtonGroup } from './components/actions/button-group';
@@ -46,7 +47,9 @@ export { VOption, VSelect } from './components/forms/select';
 export { VSwitch } from './components/forms/switch';
 export { VTextarea } from './components/forms/textarea';
 export { VSlider } from './components/forms/slider';
-export { VIcon, iconNames, registerIcon } from './components/foundation/icon';
+export { VIcon, iconGroups, iconNames, registerIcon } from './components/foundation/icon';
+export { VCarousel } from './components/widgets/carousel';
+export { VLightbox } from './components/widgets/lightbox';
 export { VContainer } from './components/layout/container';
 export { VGrid } from './components/layout/grid';
 export { VPanel } from './components/layout/panel';

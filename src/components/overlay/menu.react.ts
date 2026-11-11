@@ -8,8 +8,11 @@ export const MenuItem = /* @__PURE__ */ createComponent<VMenuItem, {
   'command'?: string;
   'shortcut'?: string;
   'icon'?: string;
+  'href'?: string;
   'disabled'?: boolean;
   'checked'?: boolean;
+  'selected'?: boolean;
+  'expanded'?: boolean;
   'variant'?: string;
   'layout'?: string;
 }>(
@@ -17,6 +20,8 @@ export const MenuItem = /* @__PURE__ */ createComponent<VMenuItem, {
 );
 export const Menu = /* @__PURE__ */ createComponent<VMenu, {
   'label'?: string;
+  'orientation'?: string;
+  'inline'?: boolean;
 }>(
   'vui-menu', () => import('./menu'),
 );

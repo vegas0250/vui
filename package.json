@@ -90,6 +90,8 @@
     "./dist/components/overlay/drawer.js",
     "./dist/components/overlay/menu.js",
     "./dist/components/overlay/popover.js",
+    "./dist/components/widgets/carousel.js",
+    "./dist/components/widgets/lightbox.js",
     "./themes/**/*.css",
     "./src/tokens/**/*.css"
   ],
@@ -384,6 +386,18 @@
     "./desktop": {
       "types": "./dist/categories/desktop.d.ts",
       "import": "./dist/categories/desktop.js"
+    },
+    "./widgets": {
+      "types": "./dist/categories/widgets.d.ts",
+      "import": "./dist/categories/widgets.js"
+    },
+    "./carousel": {
+      "types": "./dist/components/widgets/carousel.d.ts",
+      "import": "./dist/components/widgets/carousel.js"
+    },
+    "./lightbox": {
+      "types": "./dist/components/widgets/lightbox.d.ts",
+      "import": "./dist/components/widgets/lightbox.js"
     },
     "./themes/tokens": "./src/tokens/tokens.css",
     "./themes/ui": "./src/tokens/ui.css",

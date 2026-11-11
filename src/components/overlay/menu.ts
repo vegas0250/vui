@@ -29,22 +29,29 @@ export class VMenuItem extends VuiElement {
   declare command: string;
   declare shortcut: string;
   declare icon: string;
+  declare href: string;
   declare disabled: boolean;
   declare checked: boolean;
+  declare selected: boolean;
+  declare expanded: boolean;
   declare variant: string;
 
   static shadowDelegatesFocus = false;
 
   static get observedAttributes(): string[] {
-    return ['label', 'command', 'shortcut', 'icon', 'disabled', 'checked', 'variant'];
+    return ['label', 'command', 'shortcut', 'icon', 'href', 'disabled', 'checked', 'selected', 'expanded', 'variant'];
   }
 
   protected template(): string {
     return `
-      <span class="mark" part="check" aria-hidden="true"><vui-icon part="icon" hidden></vui-icon></span>
-      <span class="label" part="label"></span>
-      <span class="shortcut" part="shortcut" hidden></span>
-      <span class="caret" part="caret" hidden aria-hidden="true"></span>
+      <div class="row" part="row">
+        <span class="mark" part="check" aria-hidden="true"><vui-icon part="icon" hidden></vui-icon></span>
+        <a class="label" part="label"></a>
+        <span class="shortcut" part="shortcut" hidden></span>
+        <button type="button" class="caret" part="caret" hidden aria-hidden="true" tabindex="-1">
+          <vui-icon name="chevron-right"></vui-icon>
+        </button>
+      </div>
       <slot name="submenu"></slot>
     `;
   }
@@ -53,19 +60,33 @@ export class VMenuItem extends VuiElement {
     return `
       :host {
         display: flex;
-        align-items: center;
-        gap: var(--vui-space-sm);
+        flex-direction: column;
+        align-items: stretch;
         min-width: 0;
         max-width: 100%;
-        min-height: var(--vui-size-control);
-        padding-inline: var(--vui-space-sm);
         border-radius: var(--vui-radius-field, var(--vui-radius-sm));
         cursor: pointer;
         user-select: none;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: var(--vui-space-sm);
+        min-width: 0;
+        min-height: var(--vui-size-control);
+        padding-inline: var(--vui-space-sm);
+        border-radius: inherit;
         transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing);
       }
-      :host(:focus),
-      :host([data-current]) { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
+      :host(:focus) .row,
+      :host([data-current]) .row { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
+      :host([selected]) .row {
+        background: var(--vui-color-selected, var(--vui-color-hover, var(--vui-color-surface-hover)));
+        box-shadow: inset var(--vui-border-width-accent) 0 0 var(--vui-color-focus);
+      }
+      :host-context([dir="rtl"]):host([selected]) .row {
+        box-shadow: inset calc(var(--vui-border-width-accent) * -1) 0 0 var(--vui-color-focus);
+      }
       :host(:focus-visible) {
         outline: var(--vui-focus-ring);
         outline-offset: calc(var(--vui-focus-offset) * -1);
@@ -73,8 +94,8 @@ export class VMenuItem extends VuiElement {
       :host([disabled]) { opacity: var(--vui-opacity-disabled, 0.55); cursor: not-allowed; }
       :host([variant="danger"]) { color: var(--vui-color-danger); }
       :host([variant="danger"]) vui-icon { color: var(--vui-color-danger); }
-      :host([checked]) { box-shadow: inset var(--vui-border-width-accent) 0 0 var(--vui-color-focus); }
-      :host-context([dir="rtl"]):host([checked]) { box-shadow: inset calc(var(--vui-border-width-accent) * -1) 0 0 var(--vui-color-focus); }
+      :host([checked]) .row { box-shadow: inset var(--vui-border-width-accent) 0 0 var(--vui-color-focus); }
+      :host-context([dir="rtl"]):host([checked]) .row { box-shadow: inset calc(var(--vui-border-width-accent) * -1) 0 0 var(--vui-color-focus); }
       .mark {
         width: 1em;
         flex: 0 0 auto;
@@ -86,23 +107,51 @@ export class VMenuItem extends VuiElement {
       :host([checked]) .mark::before { content: "✓"; }
       vui-icon { width: 1em; height: 1em; color: var(--vui-color-interactive-text, var(--vui-color-primary)); }
       :host([disabled]) vui-icon { color: inherit; }
-      :host([checked]) vui-icon { display: none; }
-      .label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      :host([checked]) .mark > vui-icon { display: none; }
+      .label {
+        min-width: 0;
+        flex: 1 1 auto;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: inherit;
+        text-decoration: none;
+        cursor: inherit;
+      }
       .shortcut {
         margin-inline-start: auto;
         color: var(--vui-color-text-muted);
         font-size: var(--vui-font-size-sm);
       }
       .caret {
-        margin-inline-start: var(--vui-space-sm);
-        width: 0.4em;
-        height: 0.4em;
-        border-block-start: var(--vui-stroke-width) solid currentColor;
-        border-inline-end: var(--vui-stroke-width) solid currentColor;
-        transform: rotate(45deg);
+        appearance: none;
+        margin: 0;
+        margin-inline-start: var(--vui-space-2xs);
+        padding: 0;
+        inline-size: 1.25em;
+        block-size: 1.25em;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        border-radius: var(--vui-radius-sm, var(--vui-radius));
+        background: transparent;
+        color: inherit;
+        cursor: pointer;
       }
-      :host(:not(:has(.shortcut:not([hidden])))) .caret { margin-inline-start: auto; }
-      :host([layout="stack"]) {
+      .caret:hover { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
+      .caret:focus { outline: none; }
+      .caret:focus-visible { outline: var(--vui-focus-ring); outline-offset: calc(var(--vui-focus-offset) * -1); }
+      .caret vui-icon {
+        width: 0.85em;
+        height: 0.85em;
+        transition: transform var(--vui-duration) var(--vui-easing);
+      }
+      :host([expanded]) .caret vui-icon { transform: rotate(90deg); }
+      :host-context([dir="rtl"]) .caret vui-icon { transform: scaleX(-1); }
+      :host-context([dir="rtl"]):host([expanded]) .caret vui-icon { transform: scaleX(-1) rotate(90deg); }
+      :host(:not(:has(.shortcut:not([hidden]))) ) .caret { margin-inline-start: auto; }
+      :host([layout="stack"]) .row {
         flex: 1 1 0;
         flex-direction: column;
         justify-content: center;
@@ -121,7 +170,11 @@ export class VMenuItem extends VuiElement {
       }
       :host([layout="stack"]) .shortcut,
       :host([layout="stack"]) .caret { display: none; }
-      :host-context([dir="rtl"]) .caret { transform: rotate(-135deg); }
+      ::slotted(vui-menu[inline]) {
+        margin-inline-start: var(--vui-space-md);
+        padding-inline-start: var(--vui-space-sm);
+        border-inline-start: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
+      }
     `;
   }
 
@@ -130,6 +183,12 @@ export class VMenuItem extends VuiElement {
       if (!this.unavailable) return;
       event.preventDefault();
       event.stopPropagation();
+    });
+    this.qs('.caret').addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (this.unavailable || !this.submenu()) return;
+      this.toggleExpanded();
     });
     const enter = () => {
       if (this.unavailable) return;
@@ -142,9 +201,18 @@ export class VMenuItem extends VuiElement {
 
   protected sync(): void {
     const label = this.getAttribute('label') ?? '';
-    this.qs('.label').textContent = label;
+    const labelEl = this.qs<HTMLAnchorElement>('.label');
+    labelEl.textContent = label;
+    const href = this.getAttribute('href');
+    if (href && !this.unavailable) {
+      labelEl.href = href;
+      labelEl.setAttribute('role', 'none');
+    } else {
+      labelEl.removeAttribute('href');
+      labelEl.removeAttribute('role');
+    }
     const iconName = this.getAttribute('icon') ?? '';
-    const icon = this.qs<HTMLElement>('vui-icon');
+    const icon = this.qs<HTMLElement>('.mark > vui-icon');
     icon.toggleAttribute('hidden', iconName.length === 0 || this.hasAttribute('checked'));
     if (iconName) icon.setAttribute('name', iconName);
     const shortcut = this.shortcutText();
@@ -152,15 +220,32 @@ export class VMenuItem extends VuiElement {
     shortcutEl.textContent = shortcut;
     shortcutEl.hidden = shortcut.length === 0;
     const nested = this.submenu();
-    this.qs<HTMLElement>('.caret').hidden = !nested;
+    const caret = this.qs<HTMLButtonElement>('.caret');
+    caret.hidden = !nested;
+    caret.disabled = this.unavailable;
+    caret.setAttribute('aria-hidden', nested ? 'false' : 'true');
+    caret.setAttribute('aria-label', nested ? 'Toggle submenu' : '');
+    caret.tabIndex = nested && !this.unavailable ? 0 : -1;
     this.setAttribute('role', 'menuitem');
     if (!this.id) this.id = `vui-menu-item-${++menuSeq}`;
     const disabled = this.unavailable;
     this.setAttribute('aria-disabled', disabled ? 'true' : 'false');
     if (this.hasAttribute('checked')) this.setAttribute('aria-checked', 'true');
     else this.removeAttribute('aria-checked');
-    if (nested) this.setAttribute('aria-haspopup', 'menu');
-    else this.removeAttribute('aria-haspopup');
+    if (this.hasAttribute('selected')) this.setAttribute('aria-current', 'page');
+    else this.removeAttribute('aria-current');
+    if (nested) {
+      this.setAttribute('aria-haspopup', 'menu');
+      this.setAttribute('aria-expanded', this.hasAttribute('expanded') ? 'true' : 'false');
+    } else {
+      this.removeAttribute('aria-haspopup');
+      this.removeAttribute('aria-expanded');
+    }
+    if (nested && this.isInlineTree()) {
+      nested.toggleAttribute('inline', true);
+      nested.toggleAttribute('open', this.hasAttribute('expanded'));
+      if (!nested.getAttribute('slot')) nested.setAttribute('slot', 'submenu');
+    }
     if (this.tabIndex !== 0) this.tabIndex = -1;
   }
 
@@ -175,6 +260,23 @@ export class VMenuItem extends VuiElement {
   submenu(): VMenu | null {
     const nested = [...this.querySelectorAll(':scope > vui-menu')].find((node) => node instanceof VMenu);
     return nested instanceof VMenu ? nested : null;
+  }
+
+  toggleExpanded(force?: boolean): void {
+    const nested = this.submenu();
+    if (!nested) return;
+    const next = force ?? !this.hasAttribute('expanded');
+    this.toggleAttribute('expanded', next);
+    if (this.isInlineTree()) {
+      nested.toggleAttribute('inline', true);
+      nested.toggleAttribute('open', next);
+      this.sync();
+      return;
+    }
+    const parent = this.parentMenu();
+    if (!parent) return;
+    if (next) parent.openSubmenu(this, false);
+    else nested.hidePublic();
   }
 
   refresh(): void {
@@ -194,6 +296,10 @@ export class VMenuItem extends VuiElement {
     return parent instanceof VMenu ? parent : null;
   }
 
+  private isInlineTree(): boolean {
+    return this.parentMenu()?.isInline() ?? false;
+  }
+
   private commandMenu(): VMenu | null {
     let node: HTMLElement | null = this.parentElement;
     while (node) {
@@ -206,6 +312,7 @@ export class VMenuItem extends VuiElement {
 
 export class VMenu extends VuiElement {
   declare label: string;
+  declare orientation: string;
 
   private registry: CommandRegistry | null = null;
   private releaseOverlay: (() => void) | null = null;
@@ -214,7 +321,7 @@ export class VMenu extends VuiElement {
   private hovered: VMenuItem | null = null;
 
   static get observedAttributes(): string[] {
-    return ['label'];
+    return ['label', 'orientation', 'inline', 'open'];
   }
 
   get commands(): CommandRegistry | null {
@@ -226,6 +333,14 @@ export class VMenu extends VuiElement {
   set commands(value: CommandRegistry | null) {
     this.registry = value;
     for (const item of this.items()) item.refresh();
+  }
+
+  isInline(): boolean {
+    return this.hasAttribute('inline');
+  }
+
+  orientationValue(): 'vertical' | 'horizontal' {
+    return this.getAttribute('orientation') === 'horizontal' ? 'horizontal' : 'vertical';
   }
 
   protected template(): string {
@@ -253,9 +368,24 @@ export class VMenu extends VuiElement {
         box-shadow: var(--vui-shadow-lg);
       }
       :host([open]) { display: block; }
+      :host([inline]) {
+        position: static;
+        z-index: auto;
+        width: auto;
+        min-width: 0;
+        max-width: 100%;
+        max-height: none;
+        padding: 0;
+        overflow: visible;
+        background: transparent;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
       :host(:focus) { outline: none; }
       :host(:focus-visible) { outline: var(--vui-focus-ring); }
-      .menu { display: flex; flex-direction: column; min-width: 0; }
+      .menu { display: flex; flex-direction: column; min-width: 0; gap: var(--vui-space-2xs); }
+      :host([orientation="horizontal"]) .menu { flex-direction: row; flex-wrap: wrap; align-items: center; }
       .bar { display: none; }
       :host(:has([slot="bar"])) .bar {
         display: flex;
@@ -273,6 +403,14 @@ export class VMenu extends VuiElement {
         border: 0;
         border-block-start: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
       }
+      :host([orientation="horizontal"]) ::slotted(hr) {
+        width: 0;
+        height: auto;
+        align-self: stretch;
+        margin: var(--vui-space-xs) var(--vui-space-2xs);
+        border-block-start: 0;
+        border-inline-start: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
+      }
     `;
   }
 
@@ -283,19 +421,30 @@ export class VMenu extends VuiElement {
     });
     this.addEventListener('click', (event) => {
       if (event.button !== 0) return;
-      const item = event.composedPath().find((node): node is VMenuItem => node instanceof VMenuItem);
+      const path = event.composedPath();
+      if (path.some((node) => node instanceof HTMLElement && node.classList?.contains('caret'))) return;
+      const item = path.find((node): node is VMenuItem => node instanceof VMenuItem);
       if (!item || item.parentElement !== this || item.unavailable) return;
       if (item.submenu()) {
+        if (this.isInline()) {
+          item.toggleExpanded();
+          return;
+        }
         this.hoverItem(item);
+        return;
+      }
+      const href = item.getAttribute('href');
+      if (href) {
+        if (!this.isInline()) this.root().closeTree();
         return;
       }
       const id = item.getAttribute('command');
       if (id && this.commands && !runCommand(this.commands, id)) return;
-      this.root().closeTree();
+      if (!this.isInline()) this.root().closeTree();
     });
     this.qs('slot').addEventListener('slotchange', () => this.refreshItems());
     this.addEventListener('pointermove', (event) => {
-      if (!this.hasAttribute('open')) return;
+      if (this.isInline() || !this.hasAttribute('open')) return;
       const item = itemFromPointer(event);
       if (!item || item.unavailable) return;
       const menu = item.parentElement;
@@ -305,9 +454,12 @@ export class VMenu extends VuiElement {
 
   protected sync(): void {
     const label = this.getAttribute('label') ?? 'Menu';
-    this.setAttribute('role', 'menu');
+    this.setAttribute('role', this.orientationValue() === 'horizontal' ? 'menubar' : 'menu');
     this.setAttribute('aria-label', label);
-    this.toggleAttribute('aria-hidden', !this.hasAttribute('open'));
+    if (this.isInline() && !(this.parentElement instanceof VMenuItem)) this.toggleAttribute('open', true);
+    const visible = this.hasAttribute('open');
+    this.toggleAttribute('aria-hidden', !visible);
+    this.refreshItems();
   }
 
   disconnectedCallback(): void {
@@ -325,6 +477,11 @@ export class VMenu extends VuiElement {
   }
 
   showAt(x: number, y: number, options?: { group?: string; placement?: Placement; moveFocus?: boolean }): void {
+    if (this.isInline()) {
+      this.setAttribute('open', '');
+      this.refreshItems();
+      return;
+    }
     if (!this.groupId) this.groupId = `vui-menu-${++menuSeq}`;
     const group = options?.group ?? this.groupId;
     this.groupId = group;
@@ -354,6 +511,7 @@ export class VMenu extends VuiElement {
   }
 
   close(): void {
+    if (this.isInline()) return;
     this.root().closeTree();
   }
 
@@ -372,7 +530,7 @@ export class VMenu extends VuiElement {
 
   /** Hover opens a nested menu immediately and closes the siblings. */
   hoverItem(item: VMenuItem): void {
-    if (item.parentElement !== this || item.unavailable) return;
+    if (this.isInline() || item.parentElement !== this || item.unavailable) return;
     const nested = item.submenu();
     if (this.hovered === item && (!nested || nested.hasAttribute('open'))) return;
     this.hovered = item;
@@ -387,12 +545,59 @@ export class VMenu extends VuiElement {
     if (nested) this.openSubmenu(item, false);
   }
 
+  /** Used by nested items when collapsing a flyout submenu. */
+  hidePublic(): void {
+    this.hide();
+  }
+
+  openSubmenu(item: VMenuItem, moveFocus: boolean): void {
+    const nested = item.submenu();
+    if (!nested) return;
+    for (const other of this.items()) {
+      if (other === item) continue;
+      const sibling = other.submenu();
+      if (sibling?.hasAttribute('open')) sibling.hide();
+    }
+    item.setAttribute('expanded', '');
+    if (this.isInline()) {
+      nested.toggleAttribute('inline', true);
+      nested.setAttribute('open', '');
+      item.refresh();
+      return;
+    }
+    if (nested.hasAttribute('open')) return;
+    item.setAttribute('aria-expanded', 'true');
+    const rect = item.getBoundingClientRect();
+    const rtl = isRtl(this);
+    const horizontal = this.orientationValue() === 'horizontal';
+    nested.showAt(
+      horizontal ? rect.left : rtl ? rect.left : rect.right,
+      horizontal ? rect.bottom : rect.top,
+      {
+        group: this.groupId,
+        placement: horizontal ? 'bottom-start' : rtl ? 'left-start' : 'right-start',
+        moveFocus,
+      },
+    );
+  }
+
   private hide(): void {
+    if (this.isInline()) {
+      if (this.parentElement instanceof VMenuItem) {
+        this.removeAttribute('open');
+        this.parentElement.removeAttribute('expanded');
+        this.parentElement.setAttribute('aria-expanded', 'false');
+      }
+      return;
+    }
     if (!this.hasAttribute('open') && !this.releaseOverlay) return;
     this.removeAttribute('open');
     this.setAttribute('aria-hidden', 'true');
     this.hovered = null;
-    for (const item of this.items()) item.removeAttribute('data-current');
+    for (const item of this.items()) {
+      item.removeAttribute('data-current');
+      item.removeAttribute('expanded');
+    }
     if (this.parentElement instanceof VMenuItem) this.parentElement.setAttribute('aria-expanded', 'false');
     const release = this.releaseOverlay;
     this.releaseOverlay = null;
@@ -413,6 +618,7 @@ export class VMenu extends VuiElement {
     for (const item of this.items()) {
       const slot = item.getAttribute('slot');
       if (slot && slot !== 'bar') item.removeAttribute('slot');
+      if (this.isInline() && item.submenu()) item.submenu()?.toggleAttribute('inline', true);
       item.refresh();
     }
   }
@@ -427,30 +633,12 @@ export class VMenu extends VuiElement {
     return current;
   }
 
-  private openSubmenu(item: VMenuItem, moveFocus: boolean): void {
-    const nested = item.submenu();
-    if (!nested) return;
-    for (const other of this.items()) {
-      if (other === item) continue;
-      const sibling = other.submenu();
-      if (sibling?.hasAttribute('open')) sibling.hide();
-    }
-    if (nested.hasAttribute('open')) return;
-    item.setAttribute('aria-expanded', 'true');
-    const rect = item.getBoundingClientRect();
-    const rtl = isRtl(this);
-    nested.showAt(rtl ? rect.left : rect.right, rect.top, {
-      group: this.groupId,
-      placement: rtl ? 'left-start' : 'right-start',
-      moveFocus,
-    });
-  }
-
   private onKeydown(event: KeyboardEvent): void {
     const target = event.target;
     if (target instanceof VMenuItem && target.parentElement !== this) return;
     if (target instanceof VMenu && target !== this) return;
     if (event.key === 'Tab') {
+      if (this.isInline()) return;
       event.preventDefault();
       event.stopPropagation();
       this.root().closeTree();
@@ -462,9 +650,16 @@ export class VMenu extends VuiElement {
     if (!current) return;
     const index = enabled.indexOf(current);
     const rtl = isRtl(this);
-    const closeKey = rtl ? 'ArrowRight' : 'ArrowLeft';
-    const openKey = rtl ? 'ArrowLeft' : 'ArrowRight';
+    const horizontal = this.orientationValue() === 'horizontal';
+    const closeKey = horizontal ? 'ArrowUp' : rtl ? 'ArrowRight' : 'ArrowLeft';
+    const openKey = horizontal ? 'ArrowDown' : rtl ? 'ArrowLeft' : 'ArrowRight';
     if (event.key === closeKey) {
+      if (this.isInline() && current.hasAttribute('expanded')) {
+        event.preventDefault();
+        event.stopPropagation();
+        current.toggleExpanded(false);
+        return;
+      }
       if (!(this.parentElement instanceof VMenuItem)) return;
       event.preventDefault();
       event.stopPropagation();
@@ -477,7 +672,8 @@ export class VMenu extends VuiElement {
       if (!current.submenu()) return;
       event.preventDefault();
       event.stopPropagation();
-      this.openSubmenu(current, true);
+      if (this.isInline()) current.toggleExpanded(true);
+      else this.openSubmenu(current, true);
       return;
     }
     if (isActivation(event)) {
@@ -486,7 +682,10 @@ export class VMenu extends VuiElement {
       current.click();
       return;
     }
-    const next = moveInList(index, enabled.length, event.key, { orientation: 'vertical', pageSize: 5 });
+    const next = moveInList(index, enabled.length, event.key, {
+      orientation: horizontal ? 'horizontal' : 'vertical',
+      pageSize: 5,
+    });
     if (next === null) return;
     event.preventDefault();
     event.stopPropagation();
@@ -497,9 +696,10 @@ export class VMenu extends VuiElement {
   }
 }
 
-reflectStrings(VMenuItem, ['label', 'command', 'shortcut', 'icon', 'variant']);
-reflectBooleans(VMenuItem, ['disabled', 'checked']);
-reflectStrings(VMenu, ['label']);
+reflectStrings(VMenuItem, ['label', 'command', 'shortcut', 'icon', 'href', 'variant']);
+reflectBooleans(VMenuItem, ['disabled', 'checked', 'selected', 'expanded']);
+reflectStrings(VMenu, ['label', 'orientation']);
+reflectBooleans(VMenu, ['inline']);
 defineElement('vui-menu-item', VMenuItem);
 defineElement('vui-menu', VMenu);
 
@@ -511,14 +711,17 @@ registerContract({
     { name: 'command', kind: 'string', reflected: true },
     { name: 'shortcut', kind: 'string', reflected: true },
     { name: 'icon', kind: 'string', reflected: true },
+    { name: 'href', kind: 'string', reflected: true },
     { name: 'disabled', kind: 'boolean', reflected: true },
     { name: 'checked', kind: 'boolean', reflected: true },
+    { name: 'selected', kind: 'boolean', reflected: true },
+    { name: 'expanded', kind: 'boolean', reflected: true },
     { name: 'variant', kind: 'enum', values: ['danger'], reflected: true },
     { name: 'layout', kind: 'string', reflected: false },
   ],
   events: ['click'],
   slots: ['submenu'],
-  parts: ['check', 'icon', 'label', 'shortcut', 'caret'],
+  parts: ['row', 'check', 'icon', 'label', 'shortcut', 'caret'],
   methods: [],
   keyboard: ['Enter', 'Space'],
   states: ['disabled'],
@@ -529,7 +732,11 @@ registerContract({
 registerContract({
   element: 'vui-menu',
   className: 'VMenu',
-  attributes: [{ name: 'label', kind: 'string', reflected: true }],
+  attributes: [
+    { name: 'label', kind: 'string', reflected: true },
+    { name: 'orientation', kind: 'enum', values: ['vertical', 'horizontal'], reflected: true },
+    { name: 'inline', kind: 'boolean', reflected: true },
+  ],
   events: ['close'],
   slots: ['', 'bar'],
   parts: ['menu', 'bar'],

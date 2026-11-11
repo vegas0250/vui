@@ -8,6 +8,7 @@ import { isActivation, nextEnabled } from '../../interaction/keyboard';
 import { pushOverlay } from '../../interaction/overlay';
 import { reflectBooleans, reflectStrings } from '../../utils/reflect';
 import { readLength } from '../../foundation/responsive';
+import { renderIcon } from '../../icons/registry';
 import { controlStyles, fieldStyles } from '../../utils/styles';
 
 const chevron = `
@@ -48,13 +49,14 @@ export class VSelect extends VuiElement {
   declare placeholder: string;
   declare name: string;
   declare size: string;
+  declare icon: string;
   declare disabled: boolean;
   declare invalid: boolean;
 
   static formAssociated = true;
 
   static get observedAttributes(): string[] {
-    return ['label', 'value', 'placeholder', 'disabled', 'name', 'size', 'invalid'];
+    return ['label', 'value', 'placeholder', 'disabled', 'name', 'size', 'invalid', 'icon'];
   }
 
   private internals: ElementInternals | null = null;
@@ -88,8 +90,9 @@ export class VSelect extends VuiElement {
         <div class="field">
           <label class="label" part="label"></label>
           <button part="trigger" class="control trigger" type="button" role="combobox" aria-haspopup="listbox" aria-expanded="false">
-            <span class="value"></span>
-            <span class="chevron" aria-hidden="true">${chevron}</span>
+            <span class="leading" part="icon" aria-hidden="true" hidden></span>
+            <span class="value" part="value"></span>
+            <span class="chevron" part="chevron" aria-hidden="true">${chevron}</span>
           </button>
         </div>
       </div>
@@ -129,7 +132,46 @@ export class VSelect extends VuiElement {
         white-space: nowrap;
       }
       .value.placeholder { color: var(--vui-color-text-muted); }
-      .chevron { display: inline-flex; width: 1em; height: 1em; color: var(--vui-color-text-muted); }
+      .leading {
+        display: none;
+        inline-size: var(--vui-icon-size, 1em);
+        block-size: var(--vui-icon-size, 1em);
+        flex: 0 0 auto;
+        color: var(--vui-color-text);
+      }
+      .leading:not([hidden]) { display: inline-flex; align-items: center; justify-content: center; }
+      .leading svg { width: 100%; height: 100%; }
+      .chevron {
+        display: inline-flex;
+        width: 1em;
+        height: 1em;
+        flex: 0 0 auto;
+        color: var(--vui-color-text-muted);
+        transition: transform var(--vui-duration) var(--vui-easing);
+      }
+      .trigger[aria-expanded="true"] .chevron { transform: rotate(180deg); }
+      @media (prefers-reduced-motion: reduce) {
+        .chevron { transition: none; }
+      }
+      :host([icon]) {
+        display: inline-flex;
+        width: auto;
+        max-width: 100%;
+        flex: 0 0 auto;
+        vertical-align: middle;
+      }
+      :host([icon]) .shell,
+      :host([icon]) .field {
+        display: contents;
+      }
+      :host([icon]) .value { display: none; }
+      :host([icon]) .trigger {
+        width: auto;
+        min-inline-size: var(--vui-size-control);
+        justify-content: center;
+        gap: var(--vui-space-xs);
+        padding-inline: var(--vui-space-sm);
+      }
       .listbox {
         position: fixed;
         z-index: var(--vui-overlay-z, var(--vui-z-dropdown));
@@ -200,17 +242,41 @@ export class VSelect extends VuiElement {
     const trigger = this.trigger;
     const label = this.qs<HTMLLabelElement>('label');
     const text = this.getAttribute('label') ?? '';
-    label.textContent = text;
+    const iconName = (this.getAttribute('icon') ?? '').trim();
     if (!label.id) label.id = `${this.listId}-label`;
-    if (text) {
-      trigger.setAttribute('aria-labelledby', label.id);
-      this.listbox.setAttribute('aria-labelledby', label.id);
-    } else {
+    if (iconName) {
+      label.textContent = '';
+      if (text) {
+        trigger.setAttribute('aria-label', text);
+        this.listbox.setAttribute('aria-label', text);
+      } else {
+        trigger.removeAttribute('aria-label');
+        this.listbox.removeAttribute('aria-label');
+      }
       trigger.removeAttribute('aria-labelledby');
       this.listbox.removeAttribute('aria-labelledby');
+    } else {
+      label.textContent = text;
+      trigger.removeAttribute('aria-label');
+      this.listbox.removeAttribute('aria-label');
+      if (text) {
+        trigger.setAttribute('aria-labelledby', label.id);
+        this.listbox.setAttribute('aria-labelledby', label.id);
+      } else {
+        trigger.removeAttribute('aria-labelledby');
+        this.listbox.removeAttribute('aria-labelledby');
+      }
     }
     trigger.disabled = this.isDisabled();
     trigger.setAttribute('aria-invalid', this.hasAttribute('invalid') ? 'true' : 'false');
+    const leading = this.qs<HTMLElement>('.leading');
+    if (iconName) {
+      leading.hidden = false;
+      renderIcon(leading, iconName);
+    } else {
+      leading.hidden = true;
+      leading.replaceChildren();
+    }
     const selected = this.optionElements().find((option) => option.optionValue === this.value);
     const valueEl = this.qs<HTMLElement>('.value');
     if (selected) {
@@ -285,7 +351,10 @@ export class VSelect extends VuiElement {
     const list = this.listbox;
     const margin = readLength(this, '--vui-space-xs', 4);
     const gutter = readLength(this, '--vui-space-sm', 8);
-    const width = Math.max(0, Math.min(rect.width, window.innerWidth - gutter * 2));
+    const minWidth = this.hasAttribute('icon')
+      ? Math.max(rect.width, readLength(this, '--vui-size-control', 32) * 8)
+      : rect.width;
+    const width = Math.max(0, Math.min(minWidth, window.innerWidth - gutter * 2));
     const left = Math.min(Math.max(gutter, rect.left), Math.max(gutter, window.innerWidth - width - gutter));
     list.style.left = `${left}px`;
     list.style.width = `${width}px`;
@@ -395,7 +464,7 @@ export class VSelect extends VuiElement {
 
 reflectStrings(VOption, ['value', 'label']);
 reflectBooleans(VOption, ['disabled']);
-reflectStrings(VSelect, ['label', 'placeholder', 'name', 'size']);
+reflectStrings(VSelect, ['label', 'placeholder', 'name', 'size', 'icon']);
 reflectBooleans(VSelect, ['disabled', 'invalid']);
 defineElement('vui-option', VOption);
 defineElement('vui-select', VSelect);
@@ -409,12 +478,13 @@ registerContract({
     { name: 'placeholder', kind: 'string', reflected: true },
     { name: 'name', kind: 'string', reflected: true },
     { name: 'size', kind: 'string', reflected: true },
+    { name: 'icon', kind: 'string', reflected: true },
     { name: 'disabled', kind: 'boolean', reflected: true },
     { name: 'invalid', kind: 'boolean', reflected: true },
   ],
   events: ['change'],
   slots: [],
-  parts: ['label', 'trigger', 'listbox'],
+  parts: ['label', 'trigger', 'icon', 'value', 'chevron', 'listbox'],
   methods: [],
   keyboard: ['ArrowUp', 'ArrowDown', 'Home', 'End', 'Enter', 'Space', 'Escape'],
   states: ['disabled', 'invalid'],

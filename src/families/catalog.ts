@@ -160,3 +160,21 @@ joinFamily({ element: 'vui-shell', family: 'desktop', rules: ['label', 'regions'
 joinFamily({ element: 'vui-window', family: 'desktop', rules: ['label', 'regions'] });
 joinFamily({ element: 'vui-status-bar', family: 'desktop', rules: ['label'] });
 joinFamily({ element: 'vui-stack', family: 'layout', rules: ['gap', 'padding', 'align', 'justify', 'overflow'] });
+
+registerFamily({
+  name: 'widget',
+  summary: 'Сложные медиа-поверхности: карусель и просмотрщик. Без сторонних обёрток Swiper/lightGallery.',
+  rules: ['keyboard', 'focus', 'label', 'open'],
+});
+joinFamily({ element: 'vui-carousel', family: 'widget', rules: ['keyboard', 'focus', 'label'] });
+joinFamily({
+  element: 'vui-lightbox',
+  family: 'widget',
+  rules: ['keyboard', 'focus', 'label', 'open'],
+});
+joinFamily({
+  element: 'vui-lightbox',
+  family: 'overlay',
+  rules: ['open', 'close', 'escape', 'focus-restore', 'layering'],
+});
+

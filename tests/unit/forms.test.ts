@@ -46,6 +46,22 @@ describe('forms', () => {
     trigger?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
     expect(select.getAttribute('value')).toBe('en');
   });
+
+  it('renders an icon trigger and expands the chevron while open', () => {
+    const select = document.createElement('vui-select');
+    select.setAttribute('label', 'Theme');
+    select.setAttribute('icon', 'palette');
+    select.innerHTML = `<vui-option value="light">Light</vui-option>`;
+    document.body.append(select);
+    const leading = select.shadowRoot?.querySelector('.leading') as HTMLElement | null;
+    const trigger = select.shadowRoot?.querySelector('button');
+    expect(leading?.hidden).toBe(false);
+    expect(leading?.querySelector('svg')).toBeTruthy();
+    trigger?.click();
+    expect(trigger?.getAttribute('aria-expanded')).toBe('true');
+    trigger?.click();
+    expect(trigger?.getAttribute('aria-expanded')).toBe('false');
+  });
 });
 
 describe('theme and UI mode', () => {

@@ -7,7 +7,8 @@ export type FamilyName =
   | 'feedback'
   | 'layout'
   | 'content'
-  | 'desktop';
+  | 'desktop'
+  | 'widget';
 
 export interface FamilyContract {
   name: FamilyName;

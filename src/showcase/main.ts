@@ -14,6 +14,6 @@ if (new URLSearchParams(location.search).get('legacy') === '1') {
   const app = document.querySelector('#app');
   if (!app) throw new Error('Documentation root is missing');
   const uiMode = getUIMode();
-  app.innerHTML = `<div class="page"><vui-toolbar class="topbar" wrap label="VUI"><a class="brand" slot="start" href="#/" aria-label="VUI">${brandMark}<span class="brand-text">VUI</span></a><div class="header-controls" slot="end"><vui-select id="ui-mode-select" label="${text('Режим UI', 'UI mode')}" value="${uiMode}" size="small"><vui-option value="web">${text('Web design', 'Web design')}</vui-option><vui-option value="desktop">${text('Desktop design', 'Desktop design')}</vui-option><vui-option value="terminal">${text('Terminal design', 'Terminal design')}</vui-option></vui-select></div></vui-toolbar><main></main></div>`;
+  app.innerHTML = `<div class="page"><vui-toolbar class="topbar" wrap label="VUI"><a class="brand" slot="start" href="#/" aria-label="VUI">${brandMark}<span class="brand-text">VUI</span></a><div class="header-controls" slot="end"><vui-select id="ui-mode-select" icon="monitor" label="${text('Режим UI', 'UI mode')}" value="${uiMode}"><vui-option value="web">${text('Web design', 'Web design')}</vui-option><vui-option value="desktop">${text('Desktop design', 'Desktop design')}</vui-option><vui-option value="terminal">${text('Terminal design', 'Terminal design')}</vui-option></vui-select></div></vui-toolbar><main></main></div>`;
   mountDocumentation();
 }

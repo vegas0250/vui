@@ -99,6 +99,28 @@ describe('vui-menu', () => {
     expect(document.activeElement).toBe(opener);
   });
 
+  it('expands nested groups inline with the caret', () => {
+    const menu = document.createElement('vui-menu') as VMenu;
+    menu.setAttribute('inline', '');
+    menu.label = 'Nav';
+    menu.innerHTML = `
+      <vui-menu-item label="Components" icon="layout-template">
+        <vui-menu inline label="Components" slot="submenu">
+          <vui-menu-item label="Button" href="#/components/button"></vui-menu-item>
+        </vui-menu>
+      </vui-menu-item>
+    `;
+    document.body.append(menu);
+    expect(menu.hasAttribute('open')).toBe(true);
+    expect(menu.getAttribute('role')).toBe('menu');
+    const item = menu.querySelector('vui-menu-item');
+    const nested = item?.querySelector('vui-menu');
+    expect(nested?.hasAttribute('open')).toBe(false);
+    item?.shadowRoot?.querySelector('.caret')?.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+    expect(item?.hasAttribute('expanded')).toBe(true);
+    expect(nested?.hasAttribute('open')).toBe(true);
+  });
+
   it('opens a submenu as soon as the pointer enters its item', () => {
     const menu = document.createElement('vui-menu') as VMenu;
     menu.label = 'File';

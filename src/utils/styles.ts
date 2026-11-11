@@ -71,9 +71,9 @@ export function mountStyles(root: ShadowRoot, css: string, id: string): void {
     let sheet = sheets.get(id);
     if (!sheet) {
       sheet = new CSSStyleSheet();
-      sheet.replaceSync(source);
       sheets.set(id, sheet);
     }
+    sheet.replaceSync(source);
     root.adoptedStyleSheets = [sheet];
     return;
   }

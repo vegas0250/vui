@@ -2,6 +2,7 @@ import { componentCatalog, componentGroup, componentImport, description, extraPr
 import { buttonSections, exampleCode, exampleFor, interfaceExample, renderExample, exampleJsx, prettyMarkup, text, wireExample } from './examples';
 import type { Example } from './examples';
 import type { ComponentContract } from '../contract';
+import { iconGroups, iconNames } from '../icons/registry';
 import { setUIMode } from '../theme';
 import type { VuiUIMode } from '../theme';
 import { docsLocale, escapeHTML } from './theme-i18n';
@@ -12,6 +13,7 @@ import './examples.css';
 const sections = () => [
   ['getting-started', text('Начало работы', 'Getting Started')],
   ['components', text('Компоненты', 'Components')],
+  ['icons', text('Иконки', 'Icons')],
   ['examples', text('Примеры интерфейсов', 'Interface Examples')],
   ['themes', text('Темы', 'Themes')],
 ];
@@ -24,7 +26,12 @@ const interfaces = () => [
 const groups: Record<string, [string, string]> = {
   actions: ['Действия', 'Actions'], forms: ['Формы', 'Forms'], overlay: ['Всплывающие элементы', 'Overlays'],
   navigation: ['Навигация', 'Navigation'], feedback: ['Обратная связь', 'Feedback'], content: ['Содержимое', 'Content'],
-  foundation: ['Иконки', 'Icons'], layout: ['Раскладка', 'Layout'], desktop: ['Приложение', 'Application'], data: ['Данные', 'Data'],
+  foundation: ['Основа', 'Foundation'], layout: ['Раскладка', 'Layout'], desktop: ['Приложение', 'Application'], data: ['Данные', 'Data'],
+  widgets: ['Виджеты', 'Widgets'],
+};
+const groupIcons: Record<string, string> = {
+  actions: 'play', forms: 'form-input', overlay: 'layers', navigation: 'waypoints', feedback: 'bell',
+  content: 'type', foundation: 'palette', layout: 'layout-template', desktop: 'monitor', data: 'table', widgets: 'images',
 };
 const groupName = (name: string) => groups[name]?.[docsLocale === 'ru' ? 0 : 1] ?? name;
 const title = (tag: string) => tag.replace('vui-', '').split('-').map((s) => s[0]!.toUpperCase() + s.slice(1)).join(' ');
@@ -84,7 +91,7 @@ export function mountDocumentationSite(): void {
   const layout = document.createElement('div');
   layout.className = 'documentation-layout';
   const catalog = componentCatalog();
-  layout.innerHTML = `<aside class="docs-sidebar"><a class="docs-wordmark" href="#/getting-started">VUI <span>${text('Документация', 'Documentation')} · ${libraryVersion}</span></a><nav aria-label="${text('Разделы документации', 'Documentation sections')}">${sections().map(([id, label]) => link(id!, label!)).join('')}</nav><vui-input class="docs-search" id="component-search" type="search" size="small" label="${text('Найти компонент', 'Find a component')}" autocomplete="off"></vui-input><details class="docs-menu-disclosure" open><summary>${text('Каталог компонентов', 'Component catalog')}</summary><nav id="docs-component-menu" aria-label="${text('Каталог компонентов', 'Component catalog')}"></nav></details></aside><article id="docs-page" class="docs-page"></article>`;
+  layout.innerHTML = `<aside class="docs-sidebar"><a class="docs-wordmark" href="#/getting-started">VUI <span>${text('Документация', 'Documentation')} · ${libraryVersion}</span></a><vui-menu class="docs-section-menu" inline orientation="vertical" label="${text('Разделы документации', 'Documentation sections')}">${sections().map(([id, label]) => `<vui-menu-item label="${escapeHTML(label!)}" href="#/${id}"></vui-menu-item>`).join('')}</vui-menu><vui-input class="docs-search" id="component-search" type="search" size="small" label="${text('Найти компонент', 'Find a component')}" autocomplete="off"></vui-input><details class="docs-menu-disclosure" open><summary>${text('Каталог компонентов', 'Component catalog')}</summary><div id="docs-component-menu"></div></details></aside><article id="docs-page" class="docs-page"></article>`;
   const content = document.createElement('div');
   content.className = 'docs-content';
   content.append(layout.querySelector('#docs-page')!, studio);
@@ -141,11 +148,23 @@ export function mountDocumentationSite(): void {
   const paintMenu = () => {
     const query = search.value.trim().toLowerCase();
     const found = catalog.filter((c) => `${c.element} ${description(c.element, 'ru')} ${description(c.element, 'en')}`.toLowerCase().includes(query));
-    menu.innerHTML = Object.keys(groups).map((group) => {
+    const hash = location.hash || '#/getting-started';
+    const groupsMarkup = Object.keys(groups).map((group) => {
       const items = found.filter((c) => componentGroup(c.element) === group);
-      return items.length ? `<details open><summary>${groupName(group)}</summary>${items.map((c) => link(`components/${c.element.slice(4)}`, title(c.element), `data-component-link="${c.element}"`)).join('')}</details>` : '';
-    }).join('') || `<p role="status">${text('Компоненты не найдены', 'No components found')}</p>`;
-    for (const a of menu.querySelectorAll('a')) if (a.getAttribute('href') === location.hash) a.setAttribute('aria-current', 'page');
+      if (!items.length) return '';
+      const open = !query && items.some((c) => hash === `#/components/${c.element.slice(4)}`);
+      return `<vui-menu-item label="${escapeHTML(groupName(group))}" icon="${groupIcons[group] ?? 'menu'}" ${open || query ? 'expanded' : ''}><vui-menu inline label="${escapeHTML(groupName(group))}" slot="submenu">${items.map((c) => {
+        const href = `#/components/${c.element.slice(4)}`;
+        return `<vui-menu-item label="${escapeHTML(title(c.element))}" href="${href}" ${hash === href ? 'selected' : ''}></vui-menu-item>`;
+      }).join('')}</vui-menu></vui-menu-item>`;
+    }).join('');
+    menu.innerHTML = groupsMarkup
+      ? `<vui-menu class="docs-catalog-menu" inline orientation="vertical" label="${text('Каталог компонентов', 'Component catalog')}">${groupsMarkup}</vui-menu>`
+      : `<p role="status">${text('Компоненты не найдены', 'No components found')}</p>`;
+    for (const item of layout.querySelectorAll('vui-menu-item[href]')) {
+      const href = item.getAttribute('href');
+      item.toggleAttribute('selected', href === hash || (hash.startsWith('#/components/') && href === hash));
+    }
   };
   const disclosure = layout.querySelector<HTMLDetailsElement>('.docs-menu-disclosure')!;
   const desktop = matchMedia('(min-width: 641px)');
@@ -177,6 +196,9 @@ export function mountDocumentationSite(): void {
         name = example[1]!;
         page.innerHTML = `<p>${link('examples', text('Примеры интерфейсов', 'Interface Examples'))}</p><h1 tabindex="-1">${name}</h1><p class="docs-lead">${example[2]}</p>${showExample(interfaceExample(example[0]!))}`;
       } else page.innerHTML = `<h1 tabindex="-1">${name}</h1><p class="docs-lead">${text('Рабочие сценарии из настоящих компонентов VUI, без копирования их реализации.', 'Working scenarios composed from real VUI components.')}</p><div class="docs-cards">${interfaces().map(([id, label, description]) => `<a class="docs-card" href="#/examples/${id}"><strong>${label}</strong><p>${description}</p></a>`).join('')}</div>`;
+    } else if (section === 'icons') {
+      name = text('Иконки', 'Icons');
+      page.innerHTML = `<h1 tabindex="-1">${name}</h1><p class="docs-lead">${text('Встроенный набор для vui-icon. Группы ниже — рабочий каталог; новые иконки будем добавлять сюда постепенно.', 'Built-in set for vui-icon. Groups below are the working catalog; new icons will be added here over time.')}</p><pre class="docs-import"><code>import { iconNames, iconGroups, registerIcon } from 'vui/icon';</code></pre><p>${text('Всего', 'Total')}: <strong>${iconNames.length}</strong></p>${iconGroups.map((group) => heading(group.label[docsLocale === 'ru' ? 0 : 1], `<div class="docs-icon-grid">${group.icons.map((icon) => `<div class="docs-icon-card"><vui-icon name="${icon}" label="${icon}"></vui-icon><code>${icon}</code></div>`).join('')}</div>`)).join('')}${heading(text('Все имена', 'All names'), `<div class="docs-icon-grid">${iconNames.map((icon) => `<div class="docs-icon-card"><vui-icon name="${icon}" label="${icon}"></vui-icon><code>${icon}</code></div>`).join('')}</div>`)}`;
     } else if (section === 'themes') {
       page.innerHTML = `<h1 tabindex="-1">${name}</h1><p class="docs-lead">${text('Тема документации меняется на верхней панели. Черновик редактора применяется только к просмотру, пока вы явно не примените его к документации.', 'Change the documentation theme in the top bar. Editor drafts affect only the preview until explicitly applied to documentation.')}</p>${heading(text('Подключение темы', 'Theme integration'), `<pre><code>import { initializeTheme, setUIMode } from 'vui/theme';\ninitializeTheme();\nsetUIMode('desktop');</code></pre><p>${text('Используйте JSON для импорта, CSS — для подключения экспортированных токенов. Импорт исполняемого CSS не поддерживается.', 'Import JSON or use exported CSS tokens in your application. Importing executable CSS is not supported.')}</p>`)}`;
     } else {
@@ -207,12 +229,11 @@ export function mountDocumentationSite(): void {
         copy.textContent = text('Выделите код для копирования', 'Select the code to copy');
       }
     });
-    for (const a of layout.querySelectorAll('nav > a')) {
-      const active = a.getAttribute('href') === `#/${section}`;
-      if (active) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    for (const item of layout.querySelectorAll('.docs-section-menu > vui-menu-item')) {
+      item.toggleAttribute('selected', item.getAttribute('href') === `#/${section}`);
     }
-    const language = document.querySelector<HTMLAnchorElement>('.header-controls > a[lang]');
-    if (language) language.href = `?lang=${docsLocale === 'ru' ? 'en' : 'ru'}${location.hash}`;
+    const language = document.querySelector<HTMLElement & { value: string }>('#docs-lang');
+    if (language) language.value = docsLocale;
     paintMenu();
     page.querySelector<HTMLElement>('h1')?.focus({ preventScroll: true });
   };

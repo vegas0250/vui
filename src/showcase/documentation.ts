@@ -38,7 +38,7 @@ export function mountDocumentation(): void {
   select.id = 'docs-theme';
   select.className = 'docs-theme-control';
   select.setAttribute('label', tr('Theme'));
-  select.setAttribute('size', 'small');
+  select.setAttribute('icon', 'palette');
   const system = document.createElement('vui-option') as HTMLElement & { value: string };
   system.value = 'system';
   system.textContent = tr('Follow system');
@@ -90,10 +90,21 @@ export function mountDocumentation(): void {
     }
     sync();
   });
-  const language = document.createElement('a');
-  language.href = docsLocale === 'ru' ? '?lang=en' : '?lang=ru';
-  language.lang = docsLocale === 'ru' ? 'en' : 'ru';
-  language.textContent = docsLocale === 'ru' ? 'English' : 'Русский';
+  const language = document.createElement('vui-select') as HTMLElement & { value: string };
+  language.id = 'docs-lang';
+  language.setAttribute('label', tr('Language'));
+  language.setAttribute('icon', 'globe');
+  for (const [value, label] of [['ru', 'Русский'], ['en', 'English']] as const) {
+    const option = document.createElement('vui-option') as HTMLElement & { value: string };
+    option.value = value;
+    option.textContent = label;
+    language.append(option);
+  }
+  language.value = docsLocale;
+  language.addEventListener('change', () => {
+    if (language.value === docsLocale) return;
+    location.assign(`?lang=${language.value}${location.hash}`);
+  });
   controls?.append(language);
   const studio = document.createElement('section');
   const intro = document.querySelector('main > .intro');

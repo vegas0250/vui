@@ -389,3 +389,23 @@ registerInteraction({
   command: false,
   primitives: ['native'],
 });
+
+registerInteraction({
+  element: 'vui-carousel',
+  focus: ['native'],
+  keyboard: ['ArrowLeft', 'ArrowRight', 'Home', 'End'],
+  selectionOwner: 'none',
+  active: 'none',
+  command: false,
+  primitives: ['native'],
+});
+
+registerInteraction({
+  element: 'vui-lightbox',
+  focus: ['native', 'trap', 'restore'],
+  keyboard: ['Escape', 'ArrowLeft', 'ArrowRight'],
+  selectionOwner: 'none',
+  active: 'none',
+  command: false,
+  primitives: ['native', 'pushOverlay'],
+});
