@@ -217,6 +217,11 @@
   position: sticky;
   top: 6rem;
   min-inline-size: 0;
+  max-block-size: calc(100dvh - 7rem);
+  overflow: auto;
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+  scrollbar-color: var(--vui-color-border-strong) var(--vui-color-surface);
 }
 .ts-preview-heading {
   display: flex;
