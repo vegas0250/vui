@@ -27,3 +27,31 @@ test('optimized website registers every component and runs the real examples', a
   expect(html).not.toMatch(/<script(?![^>]*\bsrc=)[^>]*>/);
   expect((await request.get('/theme-boot.js')).ok()).toBe(true);
 });
+
+test('documentation uses VUI metrics and keeps content within responsive columns', async ({ page }) => {
+  await page.goto('/?lang=en#/getting-started');
+  for (const density of ['comfortable', 'compact', 'dense']) {
+    await page.locator('#density-select').evaluate((element, value) => {
+      (element as HTMLElement & { value: string }).value = value;
+      element.dispatchEvent(new Event('change'));
+    }, density);
+    await expect.poll(() => page.locator('h1').evaluate((heading) => {
+      const styles = getComputedStyle(heading);
+      return styles.fontSize === styles.getPropertyValue('--vui-heading-1').trim();
+    })).toBe(true);
+  }
+  for (const width of [1440, 900, 734, 640, 356]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const route of ['getting-started', 'components/button', 'components/input', 'examples/shell', 'themes']) {
+      await page.evaluate((route) => { location.hash = `#/${route}`; }, route);
+      await expect(page.locator('#docs-page h1')).toBeVisible();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${route} at ${width}`).toBe(true);
+      if (route === 'themes') {
+        const article = await page.locator('#docs-page').boundingBox();
+        const studio = await page.locator('#theme-studio').boundingBox();
+        expect(Math.abs(article!.x - studio!.x)).toBeLessThan(1);
+        expect(studio!.y).toBeGreaterThanOrEqual(article!.y + article!.height);
+      }
+    }
+  }
+});

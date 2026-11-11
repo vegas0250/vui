@@ -74,8 +74,16 @@ export function mountDocumentationSite(): void {
   layout.className = 'documentation-layout';
   const catalog = componentCatalog();
   layout.innerHTML = `<aside class="docs-sidebar"><a class="docs-wordmark" href="#/getting-started">VUI <span>${text('Документация', 'Documentation')} · ${libraryVersion}</span></a><nav aria-label="${text('Разделы документации', 'Documentation sections')}">${sections().map(([id, label]) => link(id!, label!)).join('')}</nav><label class="docs-search">${text('Найти компонент', 'Find a component')}<input type="search" id="component-search" autocomplete="off" /></label><details class="docs-menu-disclosure" open><summary>${text('Каталог компонентов', 'Component catalog')}</summary><nav id="docs-component-menu" aria-label="${text('Каталог компонентов', 'Component catalog')}"></nav></details></aside><article id="docs-page" class="docs-page"></article>`;
+  const content = document.createElement('div');
+  content.className = 'docs-content';
+  content.append(layout.querySelector('#docs-page')!, studio);
+  layout.append(content);
   main.prepend(layout);
   document.body.classList.add('documentation-site');
+  const header = document.querySelector<HTMLElement>('.topbar');
+  if (header) new ResizeObserver(() => {
+    document.body.style.setProperty('--docs-header-height', `${header.getBoundingClientRect().height}px`);
+  }).observe(header);
   document.querySelector('#dir-select')?.setAttribute('hidden', '');
   const renderedExamples = new Map<string, Example>();
   const showExample = (example: Example) => {
