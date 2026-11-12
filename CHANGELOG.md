@@ -1,5 +1,8 @@
-# Unreleased
+﻿# Unreleased
 
+# 1.3.2
+
+- Pack portal consumer release: web UI mode focus/elevation recipes, widgets/gallery, menu extensions, and docs.tokens contract fix for vui-field.
 - Extend `vui-menu` with `orientation`, `inline`, expandable nested groups (caret), and `href`/`selected` items; docs sidebar uses inline menus. Add Icons docs section with grouped `iconNames`. Add widgets category: `vui-carousel` and `vui-gallery` (renamed from lightbox). Docs catalog groups widgets separately.
 - Theme Studio chrome uses `vui-*` (toolbar, select, input, slider, checkbox, button, icon-button, panel). Dense color token rows keep native color/text inputs. Docs theme control and catalog search use `vui-select` / `vui-input`.
 - Structural focus recipes (`--vui-focus-ring` / `--vui-focus-shadow`) belong only to UI mode (`src/tokens/ui.css`). Static themes keep elevation ink only (`--vui-shadow-ink`, `--vui-shadow-strength-*`, optional neon `--vui-shadow-glow`); `--vui-shadow-sm|md|lg` are composed in `ui.css` per UI mode (terminal: none); high-contrast thickens focus and clears shadows after the mode scale. Custom themes export `--vui-shadow-ink`.
@@ -24,9 +27,7 @@
 
 # Changelog
 
-## Unreleased
-
-- Add optional React 19 adapters through `vui/react`, with browser-only element registration, native events, typed refs and post-upgrade object properties. Existing Custom Element and theme exports remain available.
+## Unreleased`n`n# 1.3.2`n`n- Pack portal consumer release: web UI mode focus/elevation recipes, widgets/gallery, menu extensions, and docs.tokens contract fix for vui-field.`n`n# Was Unreleased`n`n- Add optional React 19 adapters through `vui/react`, with browser-only element registration, native events, typed refs and post-upgrade object properties. Existing Custom Element and theme exports remain available.
 - Add a Next.js App Router example and packed-package checks for prerendering, request-time SSR, hydration and interaction. SSR emits light DOM; shadow controls initialize in the browser.
 - Consolidate private helpers in `src/utils`, remove focus/overlay re-export wrappers, colocate component tests, derive build entries from package exports, and enable tree shaking for unused React adapters.
 

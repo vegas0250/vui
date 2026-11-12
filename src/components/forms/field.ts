@@ -155,7 +155,9 @@ registerContract({
   states: ['disabled', 'invalid'],
   responsive: 'container',
   focus: 'native',
-  tokens: ['--vui-size-control', '--vui-radius-field', '--vui-color-danger', '--vui-field-inline'],
+  docs: {
+    tokens: ['--vui-size-control', '--vui-radius-field', '--vui-color-danger', '--vui-field-inline'],
+  },
 });
 
 export class VFieldGroup extends VuiElement {
