@@ -1,5 +1,5 @@
 import type { AttributeContract, ComponentContract } from './types';
-import { standardEvents } from './types';
+import { eventName, standardEvents } from './types';
 
 const colorLiteral = /#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b|\brgba?\(|\bhsla?\(/g;
 
@@ -100,9 +100,10 @@ export function checkCompliance(element: HTMLElement, contract: ComponentContrac
   const responsive = checkResponsive(contract, css);
   if (responsive) failures.push(responsive);
 
-  for (const eventName of contract.events) {
-    if (!standardEvents.includes(eventName as (typeof standardEvents)[number])) {
-      failures.push(`${eventName} is outside the standard event set`);
+  for (const event of contract.events) {
+    const name = eventName(event);
+    if (!standardEvents.includes(name as (typeof standardEvents)[number])) {
+      failures.push(`${name} is outside the standard event set`);
     }
   }
 

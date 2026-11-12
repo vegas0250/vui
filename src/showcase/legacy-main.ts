@@ -374,7 +374,7 @@ if (complianceBody) {
       contract.className,
       contract.states.length ? contract.states.join(', ') : '—',
       contract.responsive,
-      contract.events.join(', '),
+      contract.events.map((event) => (typeof event === 'string' ? event : event.name)).join(', '),
     ]) {
       const cell = document.createElement('td');
       cell.textContent = value;

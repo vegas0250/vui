@@ -736,11 +736,11 @@ registerContract({
   element: 'vui-menu',
   className: 'VMenu',
   attributes: [
-    { name: 'label', kind: 'string', reflected: true },
-    { name: 'orientation', kind: 'enum', values: ['vertical', 'horizontal'], reflected: true },
-    { name: 'inline', kind: 'boolean', reflected: true },
+    { name: 'label', kind: 'string', reflected: true, description: ['Доступное имя меню.', 'Accessible menu name.'] },
+    { name: 'orientation', kind: 'enum', values: ['vertical', 'horizontal'], reflected: true, default: 'vertical' },
+    { name: 'inline', kind: 'boolean', reflected: true, default: false, description: ['Меню в потоке, не popup.', 'In-flow menu instead of a popup.'] },
   ],
-  events: ['close'],
+  events: [{ name: 'close', description: ['Popup-меню закрыто.', 'Popup menu closed.'], bubbles: false, detail: 'void' }],
   slots: ['', 'bar'],
   parts: ['menu', 'bar'],
   methods: ['showAt', 'close', 'bindTo'],
@@ -749,4 +749,23 @@ registerContract({
   responsive: 'viewport',
   focus: 'roving',
   role: 'presentation',
+  docs: {
+    guidance: [
+      'Базовый пример — плоский список пунктов. Вложенные меню показывайте отдельно. Пункты — vui-menu-item.',
+      'Start with a flat item list. Document nested menus separately. Items are vui-menu-item.',
+    ],
+    properties: [
+      { name: 'commands', type: 'CommandRegistry', description: ['Реестр команд приложения.', 'Application command registry.'] },
+    ],
+    methods: [
+      { name: 'showAt', signature: 'showAt(x: number, y: number): void', description: ['Открыть popup у точки.', 'Open the popup at a point.'] },
+      { name: 'close', signature: 'close(): void', description: ['Закрыть popup.', 'Close the popup.'] },
+      { name: 'bindTo', signature: 'bindTo(target: EventTarget): void', description: ['Привязать открытие к цели.', 'Bind open behavior to a target.'] },
+    ],
+    slots: [
+      { name: '', description: ['Пункты меню.', 'Menu items.'] },
+      { name: 'bar', description: ['Нижняя полоса.', 'Bottom bar.'] },
+    ],
+    tokens: ['--vui-z-overlay', '--vui-radius-box', '--vui-row-height'],
+  },
 });

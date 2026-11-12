@@ -132,24 +132,29 @@ registerContract({
   element: 'vui-input',
   className: 'VInput',
   attributes: [
-    { name: 'label', kind: 'string', reflected: true },
-    { name: 'value', kind: 'string', reflected: true },
+    { name: 'label', kind: 'string', reflected: true, description: ['Подпись поля.', 'Field label.'] },
+    { name: 'value', kind: 'string', reflected: true, default: '', description: ['Текущее значение.', 'Current value.'] },
     {
       name: 'type',
       kind: 'enum',
       values: ['text', 'password', 'email', 'search', 'number', 'url', 'tel', 'date', 'time', 'datetime-local', 'color', 'file'],
       reflected: true,
+      default: 'text',
+      description: ['Тип нативного input.', 'Native input type.'],
     },
     { name: 'placeholder', kind: 'string', reflected: true },
-    { name: 'hint', kind: 'string', reflected: true },
+    { name: 'hint', kind: 'string', reflected: true, description: ['Подсказка или текст ошибки при invalid.', 'Hint or error text when invalid.'] },
     { name: 'name', kind: 'string', reflected: true },
     { name: 'size', kind: 'string', reflected: true },
-    { name: 'disabled', kind: 'boolean', reflected: true },
-    { name: 'invalid', kind: 'boolean', reflected: true },
-    { name: 'required', kind: 'boolean', reflected: true },
-    { name: 'readonly', kind: 'boolean', reflected: true },
+    { name: 'disabled', kind: 'boolean', reflected: true, default: false },
+    { name: 'invalid', kind: 'boolean', reflected: true, default: false },
+    { name: 'required', kind: 'boolean', reflected: true, default: false },
+    { name: 'readonly', kind: 'boolean', reflected: true, default: false },
   ],
-  events: ['input', 'change'],
+  events: [
+    { name: 'input', description: ['Значение изменилось при вводе.', 'Value changed while typing.'], detail: '{ value: string }' },
+    { name: 'change', description: ['Значение зафиксировано.', 'Value committed.'], detail: '{ value: string }' },
+  ],
   slots: ['prefix', 'suffix'],
   parts: ['label', 'control', 'input', 'hint'],
   methods: [],
@@ -157,6 +162,23 @@ registerContract({
   states: ['disabled', 'invalid'],
   responsive: 'container',
   focus: 'native',
+  docs: {
+    guidance: [
+      'Подпись, контрол и hint задаются атрибутами; не собирайте разметку поля вручную. Слоты prefix/suffix — только для дополнительной композиции.',
+      'Label, control, and hint come from attributes; do not rebuild the field markup by hand. Use prefix/suffix only for extra composition.',
+    ],
+    slots: [
+      { name: 'prefix', description: ['Содержимое слева от поля.', 'Content before the control.'] },
+      { name: 'suffix', description: ['Содержимое справа от поля.', 'Content after the control.'] },
+    ],
+    parts: [
+      { name: 'label', description: ['Подпись.', 'Label.'] },
+      { name: 'control', description: ['Оболочка контрола.', 'Control chrome.'] },
+      { name: 'input', description: ['Нативный input.', 'Native input.'] },
+      { name: 'hint', description: ['Подсказка.', 'Hint.'] },
+    ],
+    tokens: ['--vui-size-control', '--vui-radius-field', '--vui-color-danger', '--vui-field-inline'],
+  },
 });
 
 export interface VInput {

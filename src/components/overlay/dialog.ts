@@ -259,14 +259,14 @@ registerContract({
   element: 'vui-dialog',
   className: 'VDialog',
   attributes: [
-    { name: 'open', kind: 'boolean', reflected: true },
-    { name: 'label', kind: 'string', reflected: true },
-    { name: 'size', kind: 'enum', values: ['small', 'medium', 'large'], reflected: true },
-    { name: 'close-label', kind: 'string', reflected: true },
-    { name: 'dismissable', kind: 'boolean', reflected: true, inverted: true },
-    { name: 'alert', kind: 'boolean', reflected: true },
+    { name: 'open', kind: 'boolean', reflected: true, default: false, description: ['Открыт ли диалог.', 'Whether the dialog is open.'] },
+    { name: 'label', kind: 'string', reflected: true, description: ['Доступное имя окна.', 'Accessible dialog name.'] },
+    { name: 'size', kind: 'enum', values: ['small', 'medium', 'large'], reflected: true, default: 'medium' },
+    { name: 'close-label', kind: 'string', reflected: true, description: ['Подпись кнопки закрытия.', 'Close button label.'] },
+    { name: 'dismissable', kind: 'boolean', reflected: true, inverted: true, default: true, description: ['false запрещает Escape и backdrop.', 'false blocks Escape and backdrop dismiss.'] },
+    { name: 'alert', kind: 'boolean', reflected: true, default: false, description: ['role=alertdialog.', 'Uses role=alertdialog.'] },
   ],
-  events: ['close'],
+  events: [{ name: 'close', description: ['Диалог закрыт.', 'Dialog closed.'], detail: 'void' }],
   slots: ['', 'footer'],
   parts: ['dialog', 'surface', 'header', 'title', 'close', 'body', 'footer'],
   methods: ['show', 'close'],
@@ -274,4 +274,19 @@ registerContract({
   states: [],
   responsive: 'viewport',
   focus: 'native',
+  docs: {
+    guidance: [
+      'Открывайте через show() или атрибут open. Не дублируйте собственный менеджер Escape поверх overlay-стека VUI.',
+      'Open with show() or the open attribute. Do not add a second Escape manager on top of the VUI overlay stack.',
+    ],
+    methods: [
+      { name: 'show', signature: 'show(): void', description: ['Открыть диалог.', 'Open the dialog.'] },
+      { name: 'close', signature: 'close(): void', description: ['Закрыть диалог.', 'Close the dialog.'] },
+    ],
+    slots: [
+      { name: '', description: ['Тело диалога.', 'Dialog body.'] },
+      { name: 'footer', description: ['Действия внизу.', 'Footer actions.'] },
+    ],
+    tokens: ['--vui-dialog-inline', '--vui-overlay-full', '--vui-z-overlay', '--vui-radius-box'],
+  },
 });

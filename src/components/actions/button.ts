@@ -62,17 +62,18 @@ defineElement('vui-button', VButton);
 registerContract({
   element: 'vui-button',
   className: 'VButton',
-  attributes: [{ name: 'tone', kind: 'enum', values: [...tones], reflected: true },
-    { name: 'variant', kind: 'enum', values: ['primary', 'secondary', 'ghost', 'danger', 'solid', 'soft', 'outline'], reflected: true },
-    { name: 'size', kind: 'enum', values: ['small', 'medium', 'large'], reflected: true },
-    { name: 'type', kind: 'enum', values: ['button', 'submit', 'reset'], reflected: true },
-    { name: 'disabled', kind: 'boolean', reflected: true },
-    { name: 'loading', kind: 'boolean', reflected: true },
-    { name: 'name', kind: 'string', reflected: true },
-    { name: 'value', kind: 'string', reflected: true },
-    { name: 'form', kind: 'string', reflected: true },
+  attributes: [
+    { name: 'tone', kind: 'enum', values: [...tones], reflected: true, description: ['Семантический цвет.', 'Semantic color.'] },
+    { name: 'variant', kind: 'enum', values: ['primary', 'secondary', 'ghost', 'danger', 'solid', 'soft', 'outline'], reflected: true, default: 'primary', description: ['Внешний вид кнопки.', 'Visual style.'] },
+    { name: 'size', kind: 'enum', values: ['small', 'medium', 'large'], reflected: true, default: 'medium', description: ['Размер контрола.', 'Control size.'] },
+    { name: 'type', kind: 'enum', values: ['button', 'submit', 'reset'], reflected: true, default: 'button', description: ['Тип нативной кнопки.', 'Native button type.'] },
+    { name: 'disabled', kind: 'boolean', reflected: true, default: false, description: ['Отключает активацию и Tab.', 'Disables activation and Tab.'] },
+    { name: 'loading', kind: 'boolean', reflected: true, default: false, description: ['Показывает busy и блокирует клик.', 'Shows busy state and blocks click.'] },
+    { name: 'name', kind: 'string', reflected: true, description: ['Имя для отправки формы.', 'Name when submitted with a form.'] },
+    { name: 'value', kind: 'string', reflected: true, description: ['Значение для отправки формы.', 'Value when submitted with a form.'] },
+    { name: 'form', kind: 'string', reflected: true, description: ['id связанной формы.', 'Associated form id.'] },
   ],
-  events: ['click'],
+  events: [{ name: 'click', description: ['Активация кнопки.', 'Button activation.'], detail: 'void' }],
   slots: ['', 'icon'],
   parts: ['base', 'busy'],
   methods: [],
@@ -80,6 +81,21 @@ registerContract({
   states: ['disabled', 'loading'],
   responsive: 'flow',
   focus: 'native',
+  docs: {
+    guidance: [
+      'Используйте для явных действий. Для одной иконки без текста берите vui-icon-button.',
+      'Use for explicit actions. Prefer vui-icon-button for an icon-only control.',
+    ],
+    slots: [
+      { name: '', description: ['Подпись кнопки.', 'Button label.'] },
+      { name: 'icon', description: ['Необязательная иконка перед текстом.', 'Optional leading icon.'] },
+    ],
+    parts: [
+      { name: 'base', description: ['Поверхность кнопки.', 'Button surface.'] },
+      { name: 'busy', description: ['Индикатор загрузки.', 'Loading indicator.'] },
+    ],
+    tokens: ['--vui-size-control', '--vui-radius-field', '--vui-color-primary', '--vui-focus-ring'],
+  },
 });
 
 export interface VButton {
