@@ -401,7 +401,7 @@ registerInteraction({
 });
 
 registerInteraction({
-  element: 'vui-lightbox',
+  element: 'vui-gallery',
   focus: ['native', 'trap', 'restore'],
   keyboard: ['Escape', 'ArrowLeft', 'ArrowRight'],
   selectionOwner: 'none',

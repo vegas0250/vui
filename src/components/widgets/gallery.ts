@@ -11,8 +11,8 @@ interface MediaItem {
   thumb: string;
 }
 
-/** Media viewer — Stimulus Lightbox analog without lightGallery. */
-export class VLightbox extends VuiElement {
+/** Media viewer — Stimulus Gallery analog without lightGallery. */
+export class VGallery extends VuiElement {
   declare label: string;
   declare index: number;
 
@@ -146,13 +146,13 @@ export class VLightbox extends VuiElement {
 
   private mountStage(): void {
     const stage = document.createElement('div');
-    stage.className = 'vui-lightbox-stage';
+    stage.className = 'vui-gallery-stage';
     stage.setAttribute('role', 'dialog');
     stage.setAttribute('aria-modal', 'true');
     stage.setAttribute('aria-label', this.getAttribute('label') ?? 'Media viewer');
     stage.innerHTML = `
       <style>
-        .vui-lightbox-stage {
+        .vui-gallery-stage {
           position: fixed;
           inset: 0;
           z-index: var(--vui-overlay-z, var(--vui-z-modal, 1300));
@@ -163,26 +163,26 @@ export class VLightbox extends VuiElement {
           background: color-mix(in srgb, var(--vui-color-text) 72%, transparent);
           color: var(--vui-color-surface, #fff);
         }
-        .vui-lightbox-stage .toolbar,
-        .vui-lightbox-stage .footer {
+        .vui-gallery-stage .toolbar,
+        .vui-gallery-stage .footer {
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: var(--vui-space-sm);
         }
-        .vui-lightbox-stage .body {
+        .vui-gallery-stage .body {
           display: grid;
           place-items: center;
           min-height: 0;
         }
-        .vui-lightbox-stage img {
+        .vui-gallery-stage img {
           max-width: min(100%, 72rem);
           max-height: calc(100dvh - 8rem);
           object-fit: contain;
           border-radius: var(--vui-radius-box, var(--vui-radius));
           background: var(--vui-color-surface);
         }
-        .vui-lightbox-stage .nav { display: flex; gap: var(--vui-space-xs); }
+        .vui-gallery-stage .nav { display: flex; gap: var(--vui-space-xs); }
       </style>
       <div class="toolbar">
         <span class="caption"></span>
@@ -229,13 +229,13 @@ export class VLightbox extends VuiElement {
   }
 }
 
-reflectStrings(VLightbox, ['label']);
-reflectNumbers(VLightbox, ['index']);
-defineElement('vui-lightbox', VLightbox);
+reflectStrings(VGallery, ['label']);
+reflectNumbers(VGallery, ['index']);
+defineElement('vui-gallery', VGallery);
 
 registerContract({
-  element: 'vui-lightbox',
-  className: 'VLightbox',
+  element: 'vui-gallery',
+  className: 'VGallery',
   attributes: [
     { name: 'label', kind: 'string', reflected: true },
     { name: 'index', kind: 'number', reflected: true },

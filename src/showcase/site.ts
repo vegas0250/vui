@@ -220,7 +220,7 @@ export function mountDocumentationSite(): void {
   const catalog = docsComponentCatalog();
   layout.innerHTML = `<aside class="docs-sidebar"><a class="docs-wordmark" href="#/getting-started">VUI <span>${text('Документация', 'Documentation')} · ${libraryVersion}</span></a><vui-menu class="docs-section-menu" inline orientation="vertical" label="${text('Разделы документации', 'Documentation sections')}">${sections()
     .map(([id, label]) => `<vui-menu-item label="${escapeHTML(label!)}" href="#/${id}"></vui-menu-item>`)
-    .join('')}</vui-menu><vui-input class="docs-search" id="component-search" type="search" label="${text('Найти компонент', 'Find a component')}" autocomplete="off"></vui-input><details class="docs-menu-disclosure" open><summary>${text('Каталог компонентов', 'Component catalog')}</summary><div id="docs-component-menu"></div></details></aside><article id="docs-page" class="docs-page"></article>`;
+    .join('')}</vui-menu><vui-input class="docs-search" id="component-search" type="search" label="${text('Найти компонент', 'Find a component')}" placeholder="${text('Найти компонент…', 'Find a component…')}" autocomplete="off"><vui-icon slot="prefix" name="search"></vui-icon></vui-input><details class="docs-menu-disclosure" open><summary><vui-icon class="docs-disclosure-caret" name="chevron-right"></vui-icon><span>${text('Каталог компонентов', 'Component catalog')}</span></summary><div id="docs-component-menu"></div></details></aside><article id="docs-page" class="docs-page"></article>`;
   const content = document.createElement('div');
   content.className = 'docs-content';
   content.append(layout.querySelector('#docs-page')!, studio);

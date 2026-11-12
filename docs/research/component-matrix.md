@@ -52,7 +52,7 @@ Internal research only. Not rendered in the public docs catalog.
 | separator | ✓ | ✓ | ✓ | ✓ | ✓ | |
 | icon | ✓ | ✓ | ✓ | ✓ | ✓ | |
 | carousel | ✓ | ✓ | ~ | ✓ | ✓ | |
-| lightbox | ~ | ✓ | ~ | ~ | ✗ | Media viewer |
+| gallery | ~ | ✓ | ~ | ~ | ✗ | Media viewer |
 | alert | ✓ | ✓ | ✓ | ✓ | ✓ | |
 | toast | ✓ | ✓ | ✓ | ✓ | ~ | |
 | progress | ✓ | ✓ | ✓ | ✓ | ✓ | |

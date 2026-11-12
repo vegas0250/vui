@@ -163,17 +163,17 @@ joinFamily({ element: 'vui-stack', family: 'layout', rules: ['gap', 'padding', '
 
 registerFamily({
   name: 'widget',
-  summary: 'Сложные медиа-поверхности: карусель и просмотрщик. Без сторонних обёрток Swiper/lightGallery.',
+  summary: 'Сложные медиа-поверхности: карусель и галерея. Без сторонних обёрток Swiper/lightGallery.',
   rules: ['keyboard', 'focus', 'label', 'open'],
 });
 joinFamily({ element: 'vui-carousel', family: 'widget', rules: ['keyboard', 'focus', 'label'] });
 joinFamily({
-  element: 'vui-lightbox',
+  element: 'vui-gallery',
   family: 'widget',
   rules: ['keyboard', 'focus', 'label', 'open'],
 });
 joinFamily({
-  element: 'vui-lightbox',
+  element: 'vui-gallery',
   family: 'overlay',
   rules: ['open', 'close', 'escape', 'focus-restore', 'layering'],
 });

@@ -325,10 +325,10 @@ export function exampleFor(tag: string): Example {
   if (slug === 'carousel') {
     html[slug] = `<vui-carousel label="${text('Слайды', 'Slides')}" loop style="max-width:28rem"><div><strong>Atlas</strong><p>${text('Первый слайд', 'First slide')}</p></div><div><strong>Nova</strong><p>${text('Второй слайд', 'Second slide')}</p></div><div><strong>Orbit</strong><p>${text('Третий слайд', 'Third slide')}</p></div></vui-carousel>`;
   }
-  if (slug === 'lightbox') {
+  if (slug === 'gallery') {
     const svg = (label: string, fill: string) =>
       `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400" viewBox="0 0 640 400"><rect width="640" height="400" fill="${fill}"/><text x="50%" y="50%" fill="#fff" font-size="32" font-family="sans-serif" text-anchor="middle" dominant-baseline="middle">${label}</text></svg>`)}`;
-    html[slug] = `<vui-lightbox label="${text('Галерея', 'Gallery')}"><a href="${svg('A', '#4c6ef5')}"><img src="${svg('A', '#4c6ef5')}" alt="Atlas"></a><a href="${svg('B', '#0ca678')}"><img src="${svg('B', '#0ca678')}" alt="Nova"></a><a href="${svg('C', '#f08c00')}"><img src="${svg('C', '#f08c00')}" alt="Orbit"></a></vui-lightbox>`;
+    html[slug] = `<vui-gallery label="${text('Галерея', 'Gallery')}"><a href="${svg('A', '#4c6ef5')}"><img src="${svg('A', '#4c6ef5')}" alt="Atlas"></a><a href="${svg('B', '#0ca678')}"><img src="${svg('B', '#0ca678')}" alt="Nova"></a><a href="${svg('C', '#f08c00')}"><img src="${svg('C', '#f08c00')}" alt="Orbit"></a></vui-gallery>`;
   }
   if (slug === 'shell') return interfaceExample('shell');
   if (!html[slug]) throw new Error(`Missing documentation example: ${tag}`);

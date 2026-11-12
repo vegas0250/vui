@@ -94,7 +94,7 @@
     "./dist/components/overlay/menu.js",
     "./dist/components/overlay/popover.js",
     "./dist/components/widgets/carousel.js",
-    "./dist/components/widgets/lightbox.js",
+    "./dist/components/widgets/gallery.js",
     "./themes/**/*.css",
     "./src/tokens/**/*.css"
   ],
@@ -410,9 +410,9 @@
       "types": "./dist/components/widgets/carousel.d.ts",
       "import": "./dist/components/widgets/carousel.js"
     },
-    "./lightbox": {
-      "types": "./dist/components/widgets/lightbox.d.ts",
-      "import": "./dist/components/widgets/lightbox.js"
+    "./gallery": {
+      "types": "./dist/components/widgets/gallery.d.ts",
+      "import": "./dist/components/widgets/gallery.js"
     },
     "./themes/tokens": "./src/tokens/tokens.css",
     "./themes/ui": "./src/tokens/ui.css",

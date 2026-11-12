@@ -1,7 +1,7 @@
 .vui-example { display: grid; gap: var(--vui-space-md); min-width: 0; padding: var(--vui-space-lg); background: var(--vui-color-background); color: var(--vui-color-text); font-family: var(--vui-font-sans); }
 .vui-example > * { min-width: 0; }
 .vui-example > vui-button, .vui-example > vui-checkbox, .vui-example > vui-switch, .vui-example > vui-toggle { justify-self: start; }
-.vui-example vui-input, .vui-example vui-textarea, .vui-example vui-select, .vui-example vui-field-group, .vui-example vui-data-grid { display: block; }
+.vui-example vui-input, .vui-example vui-textarea, .vui-example vui-select, .vui-example vui-field, .vui-example vui-field-group, .vui-example vui-data-grid { display: block; }
 .vui-example vui-field-group { display: grid; gap: var(--vui-space-md); }
 .vui-example output:empty { display: none; }
 .vui-example output { color: var(--vui-color-text-muted); }

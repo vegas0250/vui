@@ -6,7 +6,7 @@
 .docs-sidebar .docs-section-menu,
 .docs-sidebar .docs-catalog-menu { width: 100%; margin-block: var(--vui-space-lg); }
 .docs-sidebar .docs-catalog-menu { margin-block: 0; }
-.docs-sidebar details { display: grid; padding-block: var(--vui-space-xs); }
+.docs-sidebar details { display: grid; gap: var(--vui-space-xs); padding-block: var(--vui-space-sm) 0; }
 .docs-sidebar summary { cursor: pointer; font-weight: 600; padding: var(--vui-space-xs); }
 .docs-icon-grid {
   display: grid;
@@ -25,7 +25,30 @@
 }
 .docs-icon-card vui-icon { width: 1.5rem; height: 1.5rem; }
 .docs-icon-card code { font-size: var(--vui-font-size-sm); color: var(--vui-color-text-muted); overflow-wrap: anywhere; }
-.docs-search { width: 100%; min-width: 0; }
+.docs-search { position: relative; width: 100%; min-width: 0; margin-block-start: var(--vui-space-sm); }
+.docs-search::part(label) {
+  position: absolute;
+  inset-inline-start: 0;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.docs-search::part(control) {
+  min-height: calc(var(--vui-size-control) - 0.125rem);
+  background: var(--vui-color-surface-sunken, var(--vui-color-surface));
+  border-color: var(--vui-color-border);
+}
+.docs-search vui-icon[slot='prefix'] {
+  color: var(--vui-color-text-muted);
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+}
 .docs-page { min-width: 0; max-width: 70rem; padding-bottom: var(--vui-space-2xl); }
 .docs-page h1 { font-size: var(--vui-heading-1); line-height: 1.2; font-weight: var(--vui-font-weight-strong); max-width: 22ch; margin: var(--vui-space-sm) 0 var(--vui-space-lg); }
 .docs-page h1:focus { outline: none; }
@@ -79,7 +102,39 @@
 .documentation-site .header-controls [hidden] { display: none !important; }
 
 
-.docs-sidebar .docs-menu-disclosure { display: block; }
+.docs-sidebar .docs-menu-disclosure { display: block; margin-block-start: var(--vui-space-sm); }
+.docs-sidebar .docs-menu-disclosure > summary {
+  display: none;
+  align-items: center;
+  gap: var(--vui-space-xs);
+  list-style: none;
+  padding: var(--vui-space-xs) 0;
+  color: var(--vui-color-text-muted);
+  font-size: var(--vui-font-size-sm);
+  font-weight: var(--vui-font-weight-strong);
+  line-height: 1.2;
+  user-select: none;
+}
+.docs-sidebar .docs-menu-disclosure > summary::-webkit-details-marker,
+.docs-sidebar .docs-menu-disclosure > summary::marker { display: none; content: ''; }
+.docs-sidebar .docs-menu-disclosure > summary .docs-disclosure-caret {
+  width: 0.875rem;
+  height: 0.875rem;
+  flex: 0 0 auto;
+  color: currentColor;
+  transition: transform var(--vui-duration) var(--vui-easing);
+}
+.docs-sidebar .docs-menu-disclosure[open] > summary .docs-disclosure-caret {
+  transform: rotate(90deg);
+}
+.docs-sidebar .docs-menu-disclosure > summary:hover { color: var(--vui-color-text); }
+.docs-sidebar #docs-component-menu { min-width: 0; }
+@media (max-width: 640px) {
+  .docs-sidebar .docs-menu-disclosure > summary { display: flex; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .docs-sidebar .docs-menu-disclosure > summary .docs-disclosure-caret { transition: none; }
+}
 
 
 /* Documentation chrome follows the same metrics as the library controls. */

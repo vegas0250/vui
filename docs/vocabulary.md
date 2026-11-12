@@ -67,7 +67,7 @@ Button, icon button, button group, input, textarea, checkbox, radio, radio group
 | Command palette | pattern: `vui-dialog` и `vui-input` |
 | Inspector | `vui-properties` и поля |
 | Carousel / slides | `vui-carousel` |
-| Lightbox / media viewer | `vui-lightbox` |
+| Gallery / media viewer | `vui-gallery` |
 | Sidebar / nav menu | `vui-menu inline` или `vui-nav` |
 
 ## Группы публичного каталога
@@ -77,7 +77,8 @@ Button, icon button, button group, input, textarea, checkbox, radio, radio group
 | Действия | `vui-button`, `vui-icon-button`, `vui-button-group`, `vui-toggle` |
 | Формы | `vui-input`, `vui-textarea`, `vui-checkbox`, `vui-radio`, `vui-switch`, `vui-select`, `vui-slider`, `vui-rating`, `vui-spin-button`, `vui-field` |
 | Навигация | `vui-breadcrumbs`, `vui-toolbar`, `vui-nav`, `vui-tabs`, `vui-pagination`, `vui-path-bar`, `vui-stepper` |
-| Данные и содержимое | `vui-list`, `vui-data-grid`, `vui-file-tree`, `vui-properties`, `vui-avatar`, `vui-avatar-group`, `vui-persona`, `vui-badge`, `vui-chip`, `vui-kbd`, `vui-text`, `vui-link`, `vui-separator`, `vui-icon`, `vui-carousel`, `vui-lightbox` |
+| Данные и содержимое | `vui-list`, `vui-data-grid`, `vui-file-tree`, `vui-properties`, `vui-avatar`, `vui-avatar-group`, `vui-persona`, `vui-badge`, `vui-chip`, `vui-kbd`, `vui-text`, `vui-link`, `vui-separator`, `vui-icon` |
+| Виджеты | `vui-carousel`, `vui-gallery` |
 | Обратная связь | `vui-alert`, `vui-toast`, `vui-progress`, `vui-spinner`, `vui-skeleton`, `vui-empty`, `vui-tooltip` |
 | Всплывающие элементы | `vui-dialog`, `vui-drawer`, `vui-popover`, `vui-menu` |
 | Раскладка | `vui-container`, `vui-scroll-area`, `vui-stack`, `vui-hstack`, `vui-vstack`, `vui-grid`, `vui-split-panel`, `vui-panel`, `vui-shell`, `vui-window`, `vui-titlebar`, `vui-status-bar` |

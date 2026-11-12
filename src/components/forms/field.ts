@@ -2,7 +2,7 @@ import { defineElement } from '../../utils/define';
 import { registerContract } from '../../contract/registry';
 import { VuiElement } from '../../utils/element';
 import { reflectBooleans, reflectStrings } from '../../utils/reflect';
-import { fieldStyles } from '../../utils/styles';
+import { controlStyles, fieldStyles } from '../../utils/styles';
 
 export class VField extends VuiElement {
   declare label: string;
@@ -28,6 +28,7 @@ export class VField extends VuiElement {
   protected componentStyles(): string {
     return `
       ${fieldStyles}
+      ${controlStyles}
       :host {
         display: block;
         width: 100%;
@@ -40,6 +41,47 @@ export class VField extends VuiElement {
       :host([invalid]) .hint { color: var(--vui-color-danger); }
       :host([disabled]) { opacity: 0.55; }
       :host(:focus-visible) { outline: var(--vui-focus-ring); }
+      /* Native text controls share vui-input chrome; custom children keep their own surface. */
+      .control:not([data-native]) {
+        min-height: 0;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+      }
+      :host(:not([disabled]):not([readonly])) .control:not([data-native]):hover {
+        border-color: transparent;
+        background: transparent;
+      }
+      :host(:focus-within:not([disabled])) .control[data-native] {
+        border-color: var(--vui-color-focus);
+        box-shadow: var(--vui-focus-shadow);
+      }
+      :host([invalid]:focus-within:not([disabled])) .control[data-native] {
+        border-color: var(--vui-color-danger);
+      }
+      ::slotted(input),
+      ::slotted(textarea),
+      ::slotted(select) {
+        flex: 1 1 auto;
+        align-self: stretch;
+        width: 100%;
+        min-width: 0;
+        min-height: 0;
+        height: auto;
+        margin: 0;
+        border: 0;
+        outline: none;
+        background: transparent;
+        padding: 0;
+        font: inherit;
+        color: inherit;
+      }
+      ::slotted(textarea) {
+        resize: vertical;
+        field-sizing: content;
+        min-height: var(--vui-size-control);
+      }
     `;
   }
 
@@ -68,6 +110,14 @@ export class VField extends VuiElement {
   }
 
   private paintChildren(): void {
+    const control = this.qs('[part="control"]');
+    const native = [...this.children].some(
+      (child) =>
+        child instanceof HTMLInputElement ||
+        child instanceof HTMLTextAreaElement ||
+        child instanceof HTMLSelectElement,
+    );
+    control.toggleAttribute('data-native', native);
     const disabled = this.hasAttribute('disabled');
     for (const child of this.children) {
       if (disabled) {
@@ -105,6 +155,7 @@ registerContract({
   states: ['disabled', 'invalid'],
   responsive: 'container',
   focus: 'native',
+  tokens: ['--vui-size-control', '--vui-radius-field', '--vui-color-danger', '--vui-field-inline'],
 });
 
 export class VFieldGroup extends VuiElement {

@@ -1,5 +1,5 @@
 import '../components/widgets/carousel';
-import '../components/widgets/lightbox';
+import '../components/widgets/gallery';
 
 export { VCarousel } from '../components/widgets/carousel';
-export { VLightbox } from '../components/widgets/lightbox';
+export { VGallery } from '../components/widgets/gallery';

@@ -85,7 +85,7 @@ const publicExports = [
   './desktop',
   './widgets',
   './carousel',
-  './lightbox',
+  './gallery',
   './themes/tokens',
   './themes/ui',
   './themes/density',

@@ -215,14 +215,14 @@ menu.showAt(x, y);
 | Parts | `frame`, `viewport`, `track`, `previous`, `next`, `dots` |
 | Keyboard | Arrow Left/Right, Home, End |
 
-## vui-lightbox
+## vui-gallery
 
-Просмотрщик медиа по клику на превью. Аналог Stimulus Lightbox без lightGallery.
+Галерея превью с полноэкранным просмотром. Аналог Stimulus Lightbox без lightGallery.
 
 ```html
-<vui-lightbox label="Галерея">
+<vui-gallery label="Галерея">
   <a href="full.jpg"><img src="thumb.jpg" alt="Atlas"></a>
-</vui-lightbox>
+</vui-gallery>
 ```
 
 | Attributes | `label`, `index` |
@@ -563,7 +563,7 @@ grid.selectedId = '1';
 
 ## vui-field
 
-Подпись, слот контрола и hint. `label`, `hint`, `disabled`, `invalid`, `required`. `invalid` красит hint и ставит `aria-invalid`. Отдельного `error` нет. Parts `field`, `label`, `control`, `hint`. На ширине от 36rem подпись встаёт рядом, как у `vui-input`.
+Подпись, слот контрола и hint. `label`, `hint`, `disabled`, `invalid`, `required`. `invalid` красит hint и ставит `aria-invalid`. Отдельного `error` нет. Parts `field`, `label`, `control`, `hint`. На ширине от 36rem подпись встаёт рядом, как у `vui-input`. Прямой ребёнок `input` / `textarea` / `select` получает ту же оболочку контрола, что и `vui-input`; собственные VUI-элементы в слоте остаются без второй рамки.
 
 ## vui-field-group
 

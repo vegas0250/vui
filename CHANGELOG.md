@@ -1,6 +1,6 @@
 # Unreleased
 
-- Extend `vui-menu` with `orientation`, `inline`, expandable nested groups (caret), and `href`/`selected` items; docs sidebar uses inline menus. Add Icons docs section with grouped `iconNames`. Add widgets category: `vui-carousel` and `vui-lightbox`.
+- Extend `vui-menu` with `orientation`, `inline`, expandable nested groups (caret), and `href`/`selected` items; docs sidebar uses inline menus. Add Icons docs section with grouped `iconNames`. Add widgets category: `vui-carousel` and `vui-gallery` (renamed from lightbox). Docs catalog groups widgets separately.
 - Theme Studio chrome uses `vui-*` (toolbar, select, input, slider, checkbox, button, icon-button, panel). Dense color token rows keep native color/text inputs. Docs theme control and catalog search use `vui-select` / `vui-input`.
 - Structural focus recipes (`--vui-focus-ring` / `--vui-focus-shadow`) belong only to UI mode (`src/tokens/ui.css`). Static themes keep elevation ink only (`--vui-shadow-ink`, `--vui-shadow-strength-*`, optional neon `--vui-shadow-glow`); `--vui-shadow-sm|md|lg` are composed in `ui.css` per UI mode (terminal: none); high-contrast thickens focus and clears shadows after the mode scale. Custom themes export `--vui-shadow-ink`.
 - `system` theme is complete for light OS preference and no longer uses a higher-specificity `:root` selector that overrode terminal/desktop focus.

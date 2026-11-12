@@ -52,7 +52,7 @@ export { VSlider } from './components/forms/slider';
 export { VSpinButton } from './components/forms/spin-button';
 export { VIcon, iconGroups, iconNames, registerIcon } from './components/foundation/icon';
 export { VCarousel } from './components/widgets/carousel';
-export { VLightbox } from './components/widgets/lightbox';
+export { VGallery } from './components/widgets/gallery';
 export { VContainer } from './components/layout/container';
 export { VGrid } from './components/layout/grid';
 export { VPanel } from './components/layout/panel';
