@@ -36,6 +36,7 @@
 .docs-section { margin-block: var(--vui-space-2xl); }
 .docs-demo { border: var(--vui-border-width) solid var(--vui-color-border); border-radius: var(--vui-radius); overflow: hidden; margin-block: var(--vui-space-md) var(--vui-space-xl); background: var(--vui-color-surface); }
 .docs-demo-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--vui-space-sm); padding: var(--vui-space-xs) var(--vui-space-sm); border-bottom: var(--vui-border-width) solid var(--vui-color-border); background: var(--vui-color-surface-sunken, var(--vui-color-surface)); }
+.docs-demo-actions { display: flex; flex-wrap: wrap; gap: var(--vui-space-xs); }
 .docs-demo-tabs { display: inline-flex; flex-wrap: wrap; gap: var(--vui-space-2xs); }
 .docs-demo-tabs [role=tab] {
   appearance: none; border: 0; background: transparent; color: var(--vui-color-text-muted);

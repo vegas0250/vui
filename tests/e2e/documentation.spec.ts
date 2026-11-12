@@ -13,23 +13,24 @@ test('bilingual catalog has a direct, complete page for every visual component',
     await page.evaluate((tag) => { location.hash = '#/components/' + tag.slice(4); }, tag);
     await expect(page.locator('.docs-import')).toContainText('import');
     await expect(page.locator('.docs-live').first().locator(tag).first()).toBeAttached();
-    await expect(page.getByRole('heading', { name: 'Accessibility', exact: true })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Events', exact: true })).toBeAttached();
+    await expect(page.getByRole('heading', { name: 'Keyboard and accessibility', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Purpose and guidance', exact: true })).toBeVisible();
   }
   expect(errors).toEqual([]);
   await page.reload();
   await expect(page.locator('.docs-import')).toBeVisible();
   await page.getByRole('searchbox', { name: 'Find a component' }).fill('кнопка');
-  expect(await page.locator('#docs-component-menu a').count()).toBeGreaterThan(0);
+  expect(await page.locator('#docs-component-menu vui-menu-item[href]').count()).toBeGreaterThan(0);
   await page.locator('#docs-lang button').click();
   await page.getByRole('option', { name: 'Русский', exact: true }).click();
   await expect(page.getByRole('searchbox', { name: 'Найти компонент' })).toBeVisible();
-  await expect(page.getByRole('navigation', { name: 'Разделы документации' }).getByRole('link')).toHaveCount(4);
+  await expect(page.locator('.docs-section-menu > vui-menu-item')).toHaveCount(5);
   await expect(page).toHaveURL(/lang=ru.*#\/components\//);
 });
 
 test('settings, filters, dialog and shell are working compositions', async ({ page }) => {
   await page.goto('/?lang=en#/examples/settings');
+  await expect(page).toHaveURL(/#\/compositions\/settings/);
   await page.getByRole('textbox', { name: 'Name', exact: true }).fill('Grace');
   await page.getByRole('button', { name: 'Save', exact: true }).click();
   await expect(page.locator('[data-result]')).toHaveText('Saved: Grace');
@@ -37,6 +38,7 @@ test('settings, filters, dialog and shell are working compositions', async ({ pa
   await page.getByRole('button', { name: 'Save', exact: true }).click();
   await expect(page.locator('#docs-page vui-input')).toHaveAttribute('invalid', '');
   await page.evaluate(() => { location.hash = '#/examples/table'; });
+  await expect(page).toHaveURL(/#\/compositions\/table/);
   await page.getByRole('textbox', { name: 'Find projects' }).fill('Nova');
   await expect(page.getByRole('gridcell', { name: 'Nova', exact: true })).toBeVisible();
   await expect(page.getByRole('gridcell', { name: 'Atlas', exact: true })).toHaveCount(0);
@@ -51,21 +53,22 @@ test('settings, filters, dialog and shell are working compositions', async ({ pa
   await expect(page.locator('#docs-page vui-shell')).toHaveAttribute('collapsed', '');
 });
 
-test('copied example runs independently with its declared imports', async ({ page, context, baseURL }) => {
+test('full standalone example runs independently with its declared imports', async ({ page, context, baseURL }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
-  await page.goto('/?lang=en#/examples/settings');
-  const code = (await page.locator('[data-example-code]').textContent())?.replace(/\r\n/g, '\n');
-  await page.getByRole('button', { name: 'Copy example', exact: true }).click();
-  expect(
-    (await page.evaluate(() => navigator.clipboard.readText())).replace(/\r\n/g, '\n'),
-  ).toBe(code);
+  await page.goto('/?lang=en#/compositions/settings');
+  await page.getByRole('button', { name: 'Full example', exact: true }).click();
+  const code = (await page.evaluate(() => navigator.clipboard.readText())).replace(/\r\n/g, '\n');
+  expect(code).toContain("import '");
+  expect(code).toContain('<script type="module">');
+  expect(code).not.toContain('applyTheme');
+  expect(code).not.toContain('wireExample');
   const imports = Object.fromEntries(Object.entries(pkg.exports).flatMap(([name, entry]) =>
     typeof entry === 'object' ? [[`vui${name.slice(1)}`, `${baseURL}/${entry.import.replace('./dist/', 'src/').replace(/\.js$/, '.ts')}`]] : [],
   ));
   await page.evaluate(({ code, imports }) => {
     const frame = document.createElement('iframe');
     frame.title = 'Copied example';
-    frame.srcdoc = `<script type="importmap">${JSON.stringify({ imports })}</script>${code}`;
+    frame.srcdoc = `<script type="importmap">${JSON.stringify({ imports })}</script>${code.replace(/^<!--[\s\S]*?-->\n?/, '')}`;
     document.querySelector('#docs-page')!.replaceChildren(frame);
   }, { code, imports });
   const frame = page.frameLocator('iframe[title="Copied example"]');
@@ -80,11 +83,13 @@ test('standalone documentation persists preferences and fits a narrow viewport',
     (el as HTMLElement & { value: string }).value = 'nord';
     el.dispatchEvent(new Event('change', { bubbles: true }));
   });
-  await expect(page.locator('[data-example-code]').first()).toContainText('applyTheme("nord")');
+  await expect(page.locator('html')).toHaveAttribute('data-vui-theme', 'nord');
+  await expect(page.locator('[data-example-code]').first()).not.toContainText('applyTheme');
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem('vui.theme.preference.v1')!))).toBe('nord');
   await page.locator('#ui-mode-select button').click();
-  await page.getByRole('option', { name: 'Desktop design', exact: true }).click();
-  await expect(page.locator('[data-example-code]').first()).toContainText("setUIMode('desktop')");
+  await page.getByRole('option', { name: 'Desktop', exact: true }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-vui-ui', 'desktop');
+  await expect(page.locator('[data-example-code]').first()).not.toContainText('setUIMode');
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-vui-theme', 'nord');
   await expect(page.locator('html')).toHaveAttribute('data-vui-ui', 'desktop');

@@ -236,7 +236,7 @@ describe('palette-independent theme engine', () => {
       }),
     ).toMatchObject({ '--vui-radius': '12px', '--vui-border-width': '2px' });
   });
-  it('aligns Fluent 2 presets to desktop and Radix color deltas to soft radii on Fluent UI web chrome', () => {
+  it('aligns desktop-preferred presets and Radix color deltas to soft radii on web chrome', () => {
     expect(themeAppearance(themeDocument('fluent-light'))).toMatchObject({
       uiMode: 'desktop',
       radius: 4,
