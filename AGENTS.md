@@ -9,3 +9,4 @@
 - Treat imported themes as untrusted data: allowlist tokens, validate all types and colors, bound file sizes, and never evaluate imported CSS or code.
 - Run `pnpm typecheck`, `pnpm lint`, `pnpm test`, both builds and relevant Playwright checks. Keep generated artifacts, dependency stores and browser output out of Git.
 - For the Theme Studio task, create logical local commits only. Git push and production deployment require separate user authorization.
+- Treat UI mode, theme, and the component catalog as three independent axes. Docs catalog groups live in `src/showcase/docs-catalog.ts`; expansion research stays in `docs/research/component-matrix.md`. Keep legacy theme ids such as `fluent-light` / `fluent-dark` working while hiding Fluent branding from the primary UI.

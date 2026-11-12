@@ -4,7 +4,7 @@
 
 Граница: компонент — primitive. Composition — как части связаны. Pattern — пример страницы в Studio, без своего элемента. Shell — раскладка приложения, без смысла команд.
 
-Каталог документации Web mode выстроен по [Fluent UI Web Controls](https://developer.microsoft.com/en-us/fluentui#/controls/web), не по Fluent 2. Дочерние части (`menu-item`, `nav-item`, `tab`, `option`…) не являются отдельными страницами каталога.
+Каталог документации группирует хосты по назначению VUI (действия, формы, навигация, данные и содержимое, обратная связь, всплывающие элементы, раскладка). Режим UI и тема независимы и не меняют состав каталога. Дочерние части (`menu-item`, `nav-item`, `tab`, `option`…) не являются отдельными страницами каталога. Правила расширения — во внутреннем `docs/research/component-matrix.md`.
 
 ## Уже было
 
@@ -70,20 +70,19 @@ Button, icon button, button group, input, textarea, checkbox, radio, radio group
 | Lightbox / media viewer | `vui-lightbox` |
 | Sidebar / nav menu | `vui-menu inline` или `vui-nav` |
 
-## Fluent UI Web: закрыто / ещё нет
+## Группы публичного каталога
 
-| Fluent UI Web | VUI |
+| Группа | Хосты |
 | --- | --- |
-| Button, Checkbox, ChoiceGroup, ComboBox/Dropdown, Link, TextField/SearchBox, Slider, SpinButton, Rating, Toggle | `vui-button`, `vui-checkbox`, `vui-radio`, `vui-select`, `vui-link`, `vui-input`, `vui-slider`, `vui-spin-button`, `vui-rating`, `vui-switch` |
-| List, DetailsList, Facepile, Persona, DocumentCard | `vui-list`, `vui-data-grid`, `vui-avatar-group`, `vui-persona`, `vui-panel` |
-| Breadcrumb, CommandBar, ContextualMenu, Nav, Pivot | `vui-breadcrumbs`, `vui-toolbar`, `vui-menu`, `vui-nav`, `vui-tabs` |
-| MessageBar, ProgressIndicator, Shimmer, Spinner | `vui-alert` / `vui-toast`, `vui-progress`, `vui-skeleton`, `vui-spinner` |
-| Callout, Dialog/Modal, Panel, ScrollablePane, Tooltip | `vui-popover`, `vui-dialog`, `vui-drawer`, `vui-scroll-area`, `vui-tooltip` |
-| Icon, Separator, Stack, Text/Label | `vui-icon`, `vui-separator`, `vui-stack`, `vui-text` / `vui-field` |
+| Действия | `vui-button`, `vui-icon-button`, `vui-button-group`, `vui-toggle` |
+| Формы | `vui-input`, `vui-textarea`, `vui-checkbox`, `vui-radio`, `vui-switch`, `vui-select`, `vui-slider`, `vui-rating`, `vui-spin-button`, `vui-field` |
+| Навигация | `vui-breadcrumbs`, `vui-toolbar`, `vui-nav`, `vui-tabs`, `vui-pagination`, `vui-path-bar`, `vui-stepper` |
+| Данные и содержимое | `vui-list`, `vui-data-grid`, `vui-file-tree`, `vui-properties`, `vui-avatar`, `vui-avatar-group`, `vui-persona`, `vui-badge`, `vui-chip`, `vui-kbd`, `vui-text`, `vui-link`, `vui-separator`, `vui-icon`, `vui-carousel`, `vui-lightbox` |
+| Обратная связь | `vui-alert`, `vui-toast`, `vui-progress`, `vui-spinner`, `vui-skeleton`, `vui-empty`, `vui-tooltip` |
+| Всплывающие элементы | `vui-dialog`, `vui-drawer`, `vui-popover`, `vui-menu` |
+| Раскладка | `vui-container`, `vui-scroll-area`, `vui-stack`, `vui-hstack`, `vui-vstack`, `vui-grid`, `vui-split-panel`, `vui-panel`, `vui-shell`, `vui-window`, `vui-titlebar`, `vui-status-bar` |
 
-Дочерние части (`vui-menu-item`, `vui-nav-item`, …) — не отдельные страницы каталога.
-
-Ещё нет как отдельных хостов (часть закрыта нативным `input` или deferred): ActivityItem, OverflowSet, Coachmark, TeachingBubble, PeoplePicker, ColorPicker, Calendar, DatePicker, TimePicker, Image, Charts, FocusZone.
+Дочерние части (`vui-menu-item`, `vui-nav-item`, …) — не отдельные страницы каталога. Композиции приложения живут в разделе «Композиции», а не как dump неизвестных хостов.
 
 ## Не входит в 1.0
 
