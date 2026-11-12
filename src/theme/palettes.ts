@@ -180,7 +180,7 @@ export const palettes: Readonly<Record<string, Readonly<Palette>>> =
           error: '#b4637a',
           info: '#56949f',
         },
-        /* Fluent 2 alias colors (VUI adaptation; not an official port). */
+        /* Desktop Light/Dark alias colors (legacy ids fluent-light / fluent-dark). */
         'fluent-light': {
           background: '#f5f5f5',
           surface: '#ffffff',

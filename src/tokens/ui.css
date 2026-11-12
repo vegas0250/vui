@@ -1,7 +1,7 @@
 /*
   UI mode is the structural scale of the interface.
-  web — Fluent UI Web (Fabric) structure: developer.microsoft.com/fluentui — not Fluent 2
-  desktop — Fluent 2 / WinUI structure
+  web — browser-oriented spacing, tight radii, soft multi-layer elevation
+  desktop — denser chrome, larger radii, key+ambient elevation
   terminal — monospace TUI-inspired structure (dense, square, no elevation)
   Themes own semantic colors and elevation ink (--vui-shadow-ink, --vui-shadow-strength-*, optional --vui-shadow-glow);
   this file owns spacing, radius, type, chrome, focus and elevation geometry (--vui-shadow-sm|md|lg).
@@ -10,7 +10,7 @@
 
 :root,
 [data-vui-ui="web"] {
-  /* Fluent UI Web / Fabric 4px spacing ramp */
+  /* Web mode 4px spacing ramp */
   --vui-space-2xs: 2px;
   --vui-space-xs: 4px;
   --vui-space-sm: 8px;
@@ -21,7 +21,7 @@
   --vui-size-control: 32px;
   --vui-size-control-sm: 24px;
   --vui-size-control-lg: 40px;
-  /* Segoe-like type ramp used by Fluent UI Web */
+  /* Web mode type ramp */
   --vui-font-size: 14px;
   --vui-font-size-sm: 12px;
   --vui-font-size-lg: 16px;
@@ -29,14 +29,14 @@
   --vui-heading-1: 28px;
   --vui-heading-2: 20px;
   --vui-heading-3: 16px;
-  /* Fabric corners stay tight; Fluent 2 radii live under desktop */
+  /* Web mode keeps tight radii; desktop uses larger ones */
   --vui-radius: 2px;
   --vui-radius-sm: 0px;
   --vui-radius-lg: 4px;
   --vui-radius-box: 4px;
   --vui-radius-field: 2px;
   --vui-radius-selector: 0px;
-  /* Fabric Depth-style key + ambient pair */
+  /* Soft multi-layer key + ambient pair */
   --vui-shadow-offset-sm: 0 0.3px 0.9px;
   --vui-shadow-offset-md: 0 1.6px 3.6px;
   --vui-shadow-offset-lg: 0 6.4px 14.4px;
@@ -64,7 +64,7 @@
 }
 
 [data-vui-ui="desktop"] {
-  /* Fluent 2 global spacing ramp (4px base + icon aligners 2/6) */
+  /* Desktop spacing ramp (4px base + icon aligners 2/6) */
   --vui-space-2xs: 2px;
   --vui-space-xs: 4px;
   --vui-space-sm: 6px;
@@ -82,14 +82,14 @@
   --vui-heading-1: 24px;
   --vui-heading-2: 18px;
   --vui-heading-3: 14px;
-  /* Fluent shape: small / medium / large (+ x-large for layers) */
+  /* Desktop shape: small / medium / large */
   --vui-radius: 4px;
   --vui-radius-sm: 2px;
   --vui-radius-lg: 8px;
   --vui-radius-box: 8px;
   --vui-radius-field: 4px;
   --vui-radius-selector: 2px;
-  /* Fluent key + ambient stack; ambient layer is the key ink softened to 35%. */
+  /* Key + ambient stack; ambient layer is the key ink softened to 35%. */
   --vui-shadow-offset-sm: 0 0.5px 1px;
   --vui-shadow-offset-md: 0 2px 4px;
   --vui-shadow-offset-lg: 0 8px 16px;

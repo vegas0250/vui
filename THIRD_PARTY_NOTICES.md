@@ -6,7 +6,7 @@ VUI adaptations use reference color values and UI conventions from the following
 - Nord: Copyright (c) 2016-present Sven Greb <development@svengreb.de> (https://www.svengreb.de). MIT.
 - Dracula: Copyright (c) 2023 Dracula Theme. MIT; https://github.com/dracula/dracula-theme/blob/master/LICENSE.
 - Tokyo Night: folke and contributors. Apache License 2.0; https://github.com/folke/tokyonight.nvim/blob/main/LICENSE. A copy is in licenses/Apache-2.0.txt.
-- Fluent 2 color aliases: © Microsoft Corporation. Used as a VUI adaptation reference for Fluent Light/Dark presets; not an official Fluent product. See https://fluent2.microsoft.design/.
+- Fluent 2 color aliases: © Microsoft Corporation. Used as a VUI adaptation reference for the legacy theme ids `fluent-light` / `fluent-dark` (UI labels: Desktop Light / Desktop Dark); not an official Fluent product. See https://fluent2.microsoft.design/.
 - Radix Colors / Themes: © WorkOS. MIT; https://github.com/radix-ui/colors. Used as a VUI adaptation reference for Radix Light/Dark presets.
 
 ## MIT permission notice (Catppuccin, Nord and Dracula)

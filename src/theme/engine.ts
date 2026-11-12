@@ -315,7 +315,7 @@ function hoverColor(background: string, foreground: string): string {
 
 /**
  * Studio appearance override. Geometry mirrors --vui-shadow-* in src/tokens/ui.css.
- * web = Fluent UI Fabric Depth; desktop = Fluent 2 key+ambient; terminal = none.
+ * web = soft multi-layer depth; desktop = key+ambient; terminal = none.
  * Keep both in sync (tests compare them). `strength` stands in for per-size ink steps.
  */
 function elevationShadows(
@@ -335,7 +335,7 @@ function elevationShadows(
       lg: `0 8px 16px ${ink}, 0 0 2px ${soft}`,
     };
   }
-  /* Fluent UI Web / Fabric Depth key + ambient */
+  /* Web mode soft depth: key + ambient pair */
   return {
     sm: `0 0.3px 0.9px ${ink}, 0 1.6px 3.6px ${ink}`,
     md: `0 1.6px 3.6px ${ink}, 0 3.2px 7.2px ${ink}`,

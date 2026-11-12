@@ -77,8 +77,8 @@ const definitions: Array<[string, string, ThemeMode]> = [
   ['rose-pine-dawn', 'Rosé Pine Dawn', 'light'],
   ['modern-light', 'Modern Light', 'light'],
   ['retro', 'Retro', 'light'],
-  ['fluent-light', 'Fluent Light', 'light'],
-  ['fluent-dark', 'Fluent Dark', 'dark'],
+  ['fluent-light', 'Desktop Light', 'light'],
+  ['fluent-dark', 'Desktop Dark', 'dark'],
   ['radix-light', 'Radix Light', 'light'],
   ['radix-dark', 'Radix Dark', 'dark'],
 ];
@@ -91,9 +91,10 @@ const structuralAppearance: Record<string, Readonly<ThemeAppearance>> = {
     borderWidth: 1,
     shadowIntensity: 0,
   }),
+  /* Legacy ids fluent-light / fluent-dark keep preferred desktop chrome. */
   'fluent-light': Object.freeze({ uiMode: 'desktop' }),
   'fluent-dark': Object.freeze({ uiMode: 'desktop', shadowIntensity: 120 }),
-  /* Radix color packs keep soft radii as appearance deltas; web chrome is Fluent UI Fabric. */
+  /* Radix color packs keep soft radii as appearance deltas on the current UI mode. */
   'radix-light': Object.freeze({
     radius: 8,
     radiusBox: 12,

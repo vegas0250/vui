@@ -11,7 +11,7 @@ function readNumber(element: HTMLElement, name: string, fallback: number): numbe
   return Number.isFinite(raw) ? raw : fallback;
 }
 
-/** Fluent UI Web Controls: Rating */
+/** Star rating field. */
 export class VRating extends VuiElement {
   declare label: string;
   declare max: string;
@@ -134,7 +134,7 @@ registerContract({
   attributes: [
     { name: 'label', kind: 'string', reflected: true },
     { name: 'max', kind: 'string', reflected: true },
-    { name: 'value', kind: 'string', reflected: true },
+    { name: 'value', kind: 'number', reflected: true },
     { name: 'disabled', kind: 'boolean', reflected: true },
     { name: 'readonly', kind: 'boolean', reflected: true },
   ],

@@ -4,7 +4,7 @@ import { VuiElement } from '../../utils/element';
 import { reflectStrings } from '../../utils/reflect';
 import './avatar';
 
-/** Fluent UI Web Controls: Persona (avatar + text). */
+/** Avatar with primary and secondary text. */
 export class VPersona extends VuiElement {
   declare label: string;
   declare secondary: string;
@@ -35,6 +35,7 @@ export class VPersona extends VuiElement {
         min-width: 0;
         vertical-align: middle;
       }
+      :host(:focus-visible) { outline: var(--vui-focus-ring); }
       .persona {
         display: inline-flex;
         align-items: center;

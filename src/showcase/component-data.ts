@@ -110,7 +110,6 @@ export function componentGroup(tag: string): string {
 export const extraProperties: Record<string, Array<[string, string]>> = {
   'vui-data-grid': [['columns', '{ key, title, width?, align? }[]'], ['rows', '{ id, ...values }[]'], ['selectedId', 'string'], ['selectedIds', 'string[]']],
   'vui-split-panel': [['position', 'number'], ['min', 'number'], ['max', 'number']],
-  'vui-menu': [['commands', 'CommandRegistry | null']],
   'vui-carousel': [['index', 'number'], ['goTo(index)', 'void'], ['next()', 'void'], ['previous()', 'void']],
   'vui-lightbox': [['index', 'number'], ['open(index?)', 'void'], ['close()', 'void']],
   'vui-path-bar': [['crumbs', '{ label: string, path: string }[]']],

@@ -14,7 +14,7 @@ export type VuiTheme =
   | 'neon-magenta'
   | 'neon-cyan'
   | (string & {});
-/** Structural interface scale: web, desktop (Fluent 2), or terminal (TUI). */
+/** Structural interface scale: web, desktop, or terminal (TUI). */
 export type VuiUIMode = 'web' | 'desktop' | 'terminal';
 /** @deprecated Use VuiUIMode. */
 export type VuiDensity = VuiUIMode;

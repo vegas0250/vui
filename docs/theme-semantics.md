@@ -18,8 +18,8 @@ Reuse those roles. Only add `field`, `surfaceHover`, `controlBorder` and tone fo
 | Tokyo Night Day | darker chrome / bg / lighter field | lighter surface / lighter surface / bg | Blue / Purple | Green, Yellow, Red, Cyan |
 | Dracula | Background Dark / Background / Background Dark | Selection / Floating / Floating | Purple / Pink | Green, Yellow, Red, Cyan |
 | Nord | nord0 / nord1 / nord0 | nord2 / nord1 / nord1 | nord8 / nord15 | nord14, nord13, nord11, nord9 |
-| Fluent Light | NeutralBackground3 / 1 / 1 | NeutralBackground2 / 1 / 1 | Brand / Lavender | status green, brown, red, blue |
-| Fluent Dark | Grey12 / Grey16 / Grey12 | Grey24 / Grey20 / Grey16 | Brand / Lavender | status green, yellow, red, blue |
+| Desktop Light (`fluent-light`) | NeutralBackground3 / 1 / 1 | NeutralBackground2 / 1 / 1 | Brand / Lavender | status green, brown, red, blue |
+| Desktop Dark (`fluent-dark`) | Grey12 / Grey16 / Grey12 | Grey24 / Grey20 / Grey16 | Brand / Lavender | status green, yellow, red, blue |
 | Radix Light | slate-1 / slate-2 / white | slate-3 / white / white | indigo-9 / purple-9 | green, amber, red, cyan text |
 | Radix Dark | slate-1 / slate-2 / slate-1 | slate-3 / slate-3 / slate-2 | indigo-11 / purple soft | green, amber, red, cyan text |
 

@@ -11,7 +11,7 @@ function readNumber(element: HTMLElement, name: string, fallback: number): numbe
   return Number.isFinite(raw) ? raw : fallback;
 }
 
-/** Fluent UI Web Controls: SpinButton */
+/** Numeric stepper field. */
 export class VSpinButton extends VuiElement {
   declare label: string;
   declare hint: string;
