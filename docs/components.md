@@ -577,6 +577,18 @@ grid.selectedId = '1';
 
 `label`, `value`, `min`, `max`, `step`, `hint`, `disabled`, `invalid`. `value-end` показывает второй ползунок. События `input` и `change`. Parts `label`, `control`, `input`, `end`, `hint`.
 
+## vui-rating
+
+Fluent UI Web Rating. `label`, `value`, `max` (по умолчанию 5), `disabled`, `readonly`. События `input` и `change`. Parts `label`, `control`, `stars`.
+
+## vui-spin-button
+
+Fluent UI Web SpinButton. `label`, `value`, `min`, `max`, `step`, `hint`, `disabled`, `invalid`. События `input` и `change`. Parts `label`, `control`, `input`, `decrement`, `increment`, `hint`.
+
+## vui-persona
+
+Fluent UI Web Persona. `label`, `secondary`, `size` small|medium|large. Слот по умолчанию для содержимого рядом с текстом. Parts `persona`, `avatar`, `text`, `primary`, `secondary`.
+
 ## vui-nav
 
 `label`, `orientation` vertical или horizontal. Дети `vui-nav-item`: `href`, `selected`, `disabled`. Стрелки меняют текущий пункт (`aria-current="page"`). Событие `change`. Уже 22rem ряд становится столбцом.

@@ -8,7 +8,7 @@ test('optimized website registers every component and runs the real examples', a
   await page.goto('/?lang=en#/components');
   await expect(page.locator('.portal-menu, iframe')).toHaveCount(0);
   expect(foreign).toEqual([]);
-  await expect(page.locator('.docs-cards > a')).toHaveCount(69);
+  await expect(page.locator('.docs-cards > a')).toHaveCount(60);
   const tags = await page.locator('.docs-cards code').allTextContents();
   expect(await page.evaluate((tags) => tags.filter((tag) => !customElements.get(tag)), tags)).toEqual([]);
   await page.evaluate(() => { location.hash = '#/examples/settings'; });

@@ -21,6 +21,8 @@ const descriptions: Record<string, [string, string]> = {
   select: ['Выбор значения из списка с клавиатуры или мышью.', 'Choose a value from a list using keyboard or pointer.'],
   option: ['Вариант внутри списка выбора; используется вместе с Select.', 'An option inside Select; always used with its parent.'],
   slider: ['Выбор числа в заданном диапазоне.', 'Choose a number within a range.'],
+  rating: ['Оценка по шкале звёзд.', 'A star rating control.'],
+  'spin-button': ['Числовое поле со шагом вверх и вниз.', 'A numeric field with increment and decrement.'],
   field: ['Подпись и пояснение для вложенного элемента формы.', 'A label and hint for a nested form control.'],
   'field-group': ['Связанные поля с общим заголовком.', 'Related fields under a shared heading.'],
   dialog: ['Модальный диалог с управлением фокусом.', 'A modal dialog with focus management.'],
@@ -56,6 +58,7 @@ const descriptions: Record<string, [string, string]> = {
   kbd: ['Обозначение клавиши или сочетания клавиш.', 'A key or keyboard shortcut label.'],
   icon: ['Иконка: декоративная или с доступным именем.', 'An icon, decorative or with an accessible name.'],
   avatar: ['Представление пользователя с запасными инициалами.', 'A user representation with fallback initials.'],
+  persona: ['Аватар с именем и вторичной подписью.', 'An avatar with a name and secondary text.'],
   'avatar-group': ['Компактная группа участников.', 'A compact group of people.'],
   separator: ['Визуальное разделение связанных областей.', 'A visual division between related regions.'],
   panel: ['Поверхность для связанных элементов интерфейса.', 'A surface for related interface content.'],
@@ -78,7 +81,7 @@ const descriptions: Record<string, [string, string]> = {
   properties: ['Список пар «свойство — значение».', 'A list of property and value pairs.'],
   property: ['Одна пара «свойство — значение».', 'One property and value pair.'],
 };
-const parents: Record<string, string> = {
+export const parents: Record<string, string> = {
   option: 'select', 'radio-group': 'radio', 'checkbox-group': 'checkbox', 'field-group': 'field',
   'toggle-group': 'toggle', 'menu-item': 'menu', tab: 'tabs', 'tab-panel': 'tabs', 'nav-item': 'nav',
   step: 'stepper', toaster: 'toast', 'tree-item': 'file-tree', 'list-item': 'list', property: 'properties',

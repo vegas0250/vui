@@ -65,6 +65,11 @@ export abstract class VuiElement extends HTMLElement {
 
   protected sync(): void {}
 
+  /** True after the shadow template has been mounted at least once. */
+  protected isReady(): boolean {
+    return this.rendered;
+  }
+
   protected qs<T extends Element>(selector: string): T {
     const node = this.shadow.querySelector(selector);
     if (!node) {

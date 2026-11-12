@@ -1,6 +1,6 @@
 /*
   UI mode is the structural scale of the interface.
-  web — Radix Themes structure (space, shape, type, control chrome, elevation)
+  web — Fluent UI Web (Fabric) structure: developer.microsoft.com/fluentui — not Fluent 2
   desktop — Fluent 2 / WinUI structure
   terminal — monospace TUI-inspired structure (dense, square, no elevation)
   Themes own semantic colors and elevation ink (--vui-shadow-ink, --vui-shadow-strength-*, optional --vui-shadow-glow);
@@ -10,55 +10,57 @@
 
 :root,
 [data-vui-ui="web"] {
-  /* Radix Themes space scale: 1=4 … 7=40 (2xs is a micro step below 1) */
+  /* Fluent UI Web / Fabric 4px spacing ramp */
   --vui-space-2xs: 2px;
-  --vui-space-xs: 4px;   /* space-1 */
-  --vui-space-sm: 8px;   /* space-2 */
-  --vui-space-md: 12px;  /* space-3 */
-  --vui-space-lg: 16px;  /* space-4 */
-  --vui-space-xl: 24px;  /* space-5 */
-  --vui-space-2xl: 40px; /* space-7 */
-  /* Control sizes 1 / 2 / 3 ≈ space-5 / space-6 / space-7 */
+  --vui-space-xs: 4px;
+  --vui-space-sm: 8px;
+  --vui-space-md: 12px;
+  --vui-space-lg: 16px;
+  --vui-space-xl: 20px;
+  --vui-space-2xl: 32px;
   --vui-size-control: 32px;
   --vui-size-control-sm: 24px;
   --vui-size-control-lg: 40px;
-  /* Type sizes 1 / 2 / 3; headings 3 / 5 / 7 */
+  /* Segoe-like type ramp used by Fluent UI Web */
   --vui-font-size: 14px;
   --vui-font-size-sm: 12px;
   --vui-font-size-lg: 16px;
-  --vui-line-height: 1.43; /* 20px / 14px */
+  --vui-line-height: 1.43;
   --vui-heading-1: 28px;
   --vui-heading-2: 20px;
   --vui-heading-3: 16px;
-  /* Radius scale around medium factor: 2 / 4 / 5 → sm / md / lg */
-  --vui-radius: 8px;
-  --vui-radius-sm: 4px;
-  --vui-radius-lg: 12px;
-  --vui-radius-box: 12px;
-  --vui-radius-field: 8px;
-  --vui-radius-selector: 4px;
-  /* Elevation recipe: geometry here, ink color (+ optional neon glow) from the theme. */
-  --vui-shadow-offset-sm: 0 1px 2px;
-  --vui-shadow-offset-md: 0 4px 16px;
-  --vui-shadow-offset-lg: 0 12px 40px;
-  --vui-shadow-sm: var(--vui-shadow-offset-sm) color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-sm, 6%), transparent);
-  --vui-shadow-md: var(--vui-shadow-offset-md) color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-md, 10%), transparent), 0 0 0 1px var(--vui-shadow-glow, transparent);
-  --vui-shadow-lg: var(--vui-shadow-offset-lg) color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-lg, 16%), transparent), 0 0 0 1px var(--vui-shadow-glow, transparent);
-  --vui-focus-offset: 2px;
-  --vui-focus-ring: 2px solid var(--vui-color-focus);
-  --vui-focus-shadow: 0 0 0 3px color-mix(in srgb, var(--vui-color-focus) 28%, transparent);
-  --vui-toolbar-height: 48px; /* space-8 */
+  /* Fabric corners stay tight; Fluent 2 radii live under desktop */
+  --vui-radius: 2px;
+  --vui-radius-sm: 0px;
+  --vui-radius-lg: 4px;
+  --vui-radius-box: 4px;
+  --vui-radius-field: 2px;
+  --vui-radius-selector: 0px;
+  /* Fabric Depth-style key + ambient pair */
+  --vui-shadow-offset-sm: 0 0.3px 0.9px;
+  --vui-shadow-offset-md: 0 1.6px 3.6px;
+  --vui-shadow-offset-lg: 0 6.4px 14.4px;
+  --vui-shadow-ambient-sm: 0 1.6px 3.6px;
+  --vui-shadow-ambient-md: 0 3.2px 7.2px;
+  --vui-shadow-ambient-lg: 0 12.8px 28.8px;
+  --vui-shadow-sm: var(--vui-shadow-offset-sm) color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-sm, 11%), transparent), var(--vui-shadow-ambient-sm) color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-sm, 13%), transparent);
+  --vui-shadow-md: var(--vui-shadow-offset-md) color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-md, 11%), transparent), var(--vui-shadow-ambient-md) color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-md, 13%), transparent), 0 0 0 1px var(--vui-shadow-glow, transparent);
+  --vui-shadow-lg: var(--vui-shadow-offset-lg) color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-lg, 13%), transparent), var(--vui-shadow-ambient-lg) color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-lg, 22%), transparent), 0 0 0 1px var(--vui-shadow-glow, transparent);
+  --vui-focus-offset: 1px;
+  --vui-focus-ring: 1px solid var(--vui-color-focus);
+  --vui-focus-shadow: 0 0 0 1px var(--vui-color-background), 0 0 0 3px var(--vui-color-focus);
+  --vui-toolbar-height: 44px;
   --vui-statusbar-height: 32px;
-  --vui-row-height: 40px; /* space-7 */
+  --vui-row-height: 42px;
   --vui-icon-size: 16px;
   --vui-panel-padding: var(--vui-space-lg);
-  --vui-duration: 120ms;
-  --vui-opacity-disabled: 0.55;
-  --vui-scrollbar-size: 10px;
+  --vui-duration: 100ms;
+  --vui-opacity-disabled: 0.5;
+  --vui-scrollbar-size: 12px;
   --vui-scrollbar-gutter: 3px;
-  --vui-drawer-inline: 24rem;
-  --vui-resizer-hit-size: 10px;
-  --vui-resizer-stroke: 2px;
+  --vui-drawer-inline: 21.25rem;
+  --vui-resizer-hit-size: 8px;
+  --vui-resizer-stroke: 1px;
 }
 
 [data-vui-ui="desktop"] {

@@ -25,8 +25,7 @@
 }
 .docs-icon-card vui-icon { width: 1.5rem; height: 1.5rem; }
 .docs-icon-card code { font-size: var(--vui-font-size-sm); color: var(--vui-color-text-muted); overflow-wrap: anywhere; }
-.docs-search { display: grid; gap: var(--vui-space-xs); font-size: var(--vui-font-size-sm); }
-.docs-search input { min-width: 0; box-sizing: border-box; width: 100%; padding: var(--vui-space-sm); background: var(--vui-color-field); color: var(--vui-color-text); border: var(--vui-border-width) solid var(--vui-color-border); border-radius: var(--vui-radius); font: inherit; }
+.docs-search { width: 100%; min-width: 0; }
 .docs-page { min-width: 0; max-width: 70rem; padding-bottom: var(--vui-space-2xl); }
 .docs-page h1 { font-size: var(--vui-heading-1); line-height: 1.2; font-weight: var(--vui-font-weight-strong); max-width: 22ch; margin: var(--vui-space-sm) 0 var(--vui-space-lg); }
 .docs-page h1:focus { outline: none; }

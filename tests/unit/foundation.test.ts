@@ -70,6 +70,7 @@ describe('token contract', () => {
       }
       expect(terminal).toContain(`--vui-shadow-${size}: none`);
     }
+    expect(web).toContain('var(--vui-shadow-ambient-sm)');
     expect(web).toContain('var(--vui-shadow-glow, transparent)');
     expect(desktop).toContain('var(--vui-shadow-ambient-sm)');
     expect(terminal).not.toContain('--vui-shadow-glow');
@@ -86,7 +87,9 @@ describe('token contract', () => {
     const nord = themeDocument('nord');
     for (const size of ['sm', 'md', 'lg'] as const) {
       const webVars = themeVariables(nord, { uiMode: 'web' });
-      expect(strip(webVars[`--vui-shadow-${size}`])).toBe(`${offsets(web, 'offset', size)} C`);
+      expect(strip(webVars[`--vui-shadow-${size}`])).toBe(
+        `${offsets(web, 'offset', size)} C, ${offsets(web, 'ambient', size)} C`,
+      );
       const deskVars = themeVariables(nord, { uiMode: 'desktop' });
       expect(strip(deskVars[`--vui-shadow-${size}`])).toBe(
         `${offsets(desktop, 'offset', size)} C, ${offsets(desktop, 'ambient', size)} C`,

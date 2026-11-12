@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import './dialog';
 import './menu';
 import type { VDialog } from './dialog';
-import type { VMenu } from './menu';
+import type { VMenu, VMenuItem } from './menu';
 import { CommandRegistry } from '../../interaction/commands';
 import { ShortcutRegistry } from '../../interaction/shortcuts';
 import { clearOverlays } from '../../interaction/overlay';
@@ -119,6 +119,26 @@ describe('vui-menu', () => {
     item?.shadowRoot?.querySelector('.caret')?.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
     expect(item?.hasAttribute('expanded')).toBe(true);
     expect(nested?.hasAttribute('open')).toBe(true);
+  });
+
+  it('does not throw when the parent menu refreshes before item shadows exist', () => {
+    const menu = document.createElement('vui-menu') as VMenu;
+    menu.setAttribute('inline', '');
+    menu.innerHTML = `
+      <vui-menu-item label="Components" icon="layout-template" expanded>
+        <vui-menu inline label="Components" slot="submenu">
+          <vui-menu-item label="Button" href="#/components/button"></vui-menu-item>
+          <vui-menu-item label="Menu" href="#/components/menu"></vui-menu-item>
+        </vui-menu>
+      </vui-menu-item>
+    `;
+    expect(() => document.body.append(menu)).not.toThrow();
+    const items = [...menu.querySelectorAll('vui-menu-item')];
+    expect(items[0]?.shadowRoot?.querySelector('.label')?.textContent).toBe('Components');
+    expect(items[1]?.shadowRoot?.querySelector('.label')?.textContent).toBe('Button');
+    const orphan = document.createElement('vui-menu-item') as VMenuItem;
+    orphan.setAttribute('label', 'Pending');
+    expect(() => orphan.refresh()).not.toThrow();
   });
 
   it('opens a submenu as soon as the pointer enters its item', () => {

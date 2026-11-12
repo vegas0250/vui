@@ -7,7 +7,7 @@ test('bilingual catalog has a direct, complete page for every visual component',
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/?lang=en#/components');
-  await expect(page.locator('.docs-cards > a')).toHaveCount(69);
+  await expect(page.locator('.docs-cards > a')).toHaveCount(60);
   const tags = await page.locator('.docs-cards code').allTextContents();
   for (const tag of tags) {
     await page.evaluate((tag) => { location.hash = '#/components/' + tag.slice(4); }, tag);

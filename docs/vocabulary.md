@@ -4,6 +4,8 @@
 
 Граница: компонент — primitive. Composition — как части связаны. Pattern — пример страницы в Studio, без своего элемента. Shell — раскладка приложения, без смысла команд.
 
+Каталог документации Web mode выстроен по [Fluent UI Web Controls](https://developer.microsoft.com/en-us/fluentui#/controls/web), не по Fluent 2. Дочерние части (`menu-item`, `nav-item`, `tab`, `option`…) не являются отдельными страницами каталога.
+
 ## Уже было
 
 Button, icon button, button group, input, textarea, checkbox, radio, radio group, switch, select, dialog, menu, menu item, popover, tooltip, tabs, breadcrumbs, pagination, toolbar, alert, progress, spinner, skeleton, toast, toaster, panel, container, scroll area, stack, grid, split panel, data grid, file tree, shell, status bar, icon, avatar, badge, separator.
@@ -67,6 +69,21 @@ Button, icon button, button group, input, textarea, checkbox, radio, radio group
 | Carousel / slides | `vui-carousel` |
 | Lightbox / media viewer | `vui-lightbox` |
 | Sidebar / nav menu | `vui-menu inline` или `vui-nav` |
+
+## Fluent UI Web: закрыто / ещё нет
+
+| Fluent UI Web | VUI |
+| --- | --- |
+| Button, Checkbox, ChoiceGroup, ComboBox/Dropdown, Link, TextField/SearchBox, Slider, SpinButton, Rating, Toggle | `vui-button`, `vui-checkbox`, `vui-radio`, `vui-select`, `vui-link`, `vui-input`, `vui-slider`, `vui-spin-button`, `vui-rating`, `vui-switch` |
+| List, DetailsList, Facepile, Persona, DocumentCard | `vui-list`, `vui-data-grid`, `vui-avatar-group`, `vui-persona`, `vui-panel` |
+| Breadcrumb, CommandBar, ContextualMenu, Nav, Pivot | `vui-breadcrumbs`, `vui-toolbar`, `vui-menu`, `vui-nav`, `vui-tabs` |
+| MessageBar, ProgressIndicator, Shimmer, Spinner | `vui-alert` / `vui-toast`, `vui-progress`, `vui-skeleton`, `vui-spinner` |
+| Callout, Dialog/Modal, Panel, ScrollablePane, Tooltip | `vui-popover`, `vui-dialog`, `vui-drawer`, `vui-scroll-area`, `vui-tooltip` |
+| Icon, Separator, Stack, Text/Label | `vui-icon`, `vui-separator`, `vui-stack`, `vui-text` / `vui-field` |
+
+Дочерние части (`vui-menu-item`, `vui-nav-item`, …) — не отдельные страницы каталога.
+
+Ещё нет как отдельных хостов (часть закрыта нативным `input` или deferred): ActivityItem, OverflowSet, Coachmark, TeachingBubble, PeoplePicker, ColorPicker, Calendar, DatePicker, TimePicker, Image, Charts, FocusZone.
 
 ## Не входит в 1.0
 

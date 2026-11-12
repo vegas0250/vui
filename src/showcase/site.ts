@@ -1,4 +1,15 @@
-import { componentCatalog, componentGroup, componentImport, description, extraProperties, libraryVersion } from './component-data';
+import { componentImport, description, extraProperties, libraryVersion } from './component-data';
+import { parents } from './component-data';
+import {
+  docsComponentCatalog,
+  fluentAlias,
+  fluentWebGroup,
+  fluentWebGroupIcons,
+  fluentWebGroupLabels,
+  fluentWebGroups,
+  fluentWebMissing,
+  isCatalogChild,
+} from './fluent-web-catalog';
 import { buttonSections, exampleCode, exampleFor, interfaceExample, renderExample, exampleJsx, prettyMarkup, text, wireExample } from './examples';
 import type { Example } from './examples';
 import type { ComponentContract } from '../contract';
@@ -23,17 +34,7 @@ const interfaces = () => [
   ['dialog', text('Диалог подтверждения', 'Confirmation dialog'), text('Открытие, Escape и возврат фокуса.', 'Opening, Escape, and focus restoration.')],
   ['shell', text('Каркас приложения', 'Application shell'), text('Навигация, панель действий, форма и строка состояния.', 'Navigation, toolbar, form, and status bar.')],
 ];
-const groups: Record<string, [string, string]> = {
-  actions: ['Действия', 'Actions'], forms: ['Формы', 'Forms'], overlay: ['Всплывающие элементы', 'Overlays'],
-  navigation: ['Навигация', 'Navigation'], feedback: ['Обратная связь', 'Feedback'], content: ['Содержимое', 'Content'],
-  foundation: ['Основа', 'Foundation'], layout: ['Раскладка', 'Layout'], desktop: ['Приложение', 'Application'], data: ['Данные', 'Data'],
-  widgets: ['Виджеты', 'Widgets'],
-};
-const groupIcons: Record<string, string> = {
-  actions: 'play', forms: 'form-input', overlay: 'layers', navigation: 'waypoints', feedback: 'bell',
-  content: 'type', foundation: 'palette', layout: 'layout-template', desktop: 'monitor', data: 'table', widgets: 'images',
-};
-const groupName = (name: string) => groups[name]?.[docsLocale === 'ru' ? 0 : 1] ?? name;
+const groupName = (name: string) => fluentWebGroupLabels[name as keyof typeof fluentWebGroupLabels]?.[docsLocale === 'ru' ? 0 : 1] ?? name;
 const title = (tag: string) => tag.replace('vui-', '').split('-').map((s) => s[0]!.toUpperCase() + s.slice(1)).join(' ');
 const link = (path: string, label: string, extra = '') => `<a href="#/${path}" ${extra}>${escapeHTML(label)}</a>`;
 const labels = (values: readonly string[]) => values.length ? values.map((value) => `<code>${escapeHTML(value || text('по умолчанию', 'default'))}</code>`).join(' · ') : text('Нет', 'None');
@@ -90,8 +91,8 @@ export function mountDocumentationSite(): void {
   main.append(legacy);
   const layout = document.createElement('div');
   layout.className = 'documentation-layout';
-  const catalog = componentCatalog();
-  layout.innerHTML = `<aside class="docs-sidebar"><a class="docs-wordmark" href="#/getting-started">VUI <span>${text('Документация', 'Documentation')} · ${libraryVersion}</span></a><vui-menu class="docs-section-menu" inline orientation="vertical" label="${text('Разделы документации', 'Documentation sections')}">${sections().map(([id, label]) => `<vui-menu-item label="${escapeHTML(label!)}" href="#/${id}"></vui-menu-item>`).join('')}</vui-menu><vui-input class="docs-search" id="component-search" type="search" size="small" label="${text('Найти компонент', 'Find a component')}" autocomplete="off"></vui-input><details class="docs-menu-disclosure" open><summary>${text('Каталог компонентов', 'Component catalog')}</summary><div id="docs-component-menu"></div></details></aside><article id="docs-page" class="docs-page"></article>`;
+  const catalog = docsComponentCatalog();
+  layout.innerHTML = `<aside class="docs-sidebar"><a class="docs-wordmark" href="#/getting-started">VUI <span>${text('Документация', 'Documentation')} · ${libraryVersion}</span></a><vui-menu class="docs-section-menu" inline orientation="vertical" label="${text('Разделы документации', 'Documentation sections')}">${sections().map(([id, label]) => `<vui-menu-item label="${escapeHTML(label!)}" href="#/${id}"></vui-menu-item>`).join('')}</vui-menu><vui-input class="docs-search" id="component-search" type="search" label="${text('Найти компонент', 'Find a component')}" autocomplete="off"></vui-input><details class="docs-menu-disclosure" open><summary>${text('Каталог Fluent UI Web', 'Fluent UI Web catalog')}</summary><div id="docs-component-menu"></div></details></aside><article id="docs-page" class="docs-page"></article>`;
   const content = document.createElement('div');
   content.className = 'docs-content';
   content.append(layout.querySelector('#docs-page')!, studio);
@@ -147,19 +148,24 @@ export function mountDocumentationSite(): void {
   const search = layout.querySelector<HTMLElement & { value: string }>('#component-search')!;
   const paintMenu = () => {
     const query = search.value.trim().toLowerCase();
-    const found = catalog.filter((c) => `${c.element} ${description(c.element, 'ru')} ${description(c.element, 'en')}`.toLowerCase().includes(query));
+    const found = catalog.filter((c) =>
+      `${c.element} ${title(c.element)} ${fluentAlias(c.element)} ${description(c.element, 'ru')} ${description(c.element, 'en')}`
+        .toLowerCase()
+        .includes(query),
+    );
     const hash = location.hash || '#/getting-started';
-    const groupsMarkup = Object.keys(groups).map((group) => {
-      const items = found.filter((c) => componentGroup(c.element) === group);
+    const groupsMarkup = fluentWebGroups.map((group) => {
+      const items = found.filter((c) => fluentWebGroup(c.element) === group);
       if (!items.length) return '';
       const open = !query && items.some((c) => hash === `#/components/${c.element.slice(4)}`);
-      return `<vui-menu-item label="${escapeHTML(groupName(group))}" icon="${groupIcons[group] ?? 'menu'}" ${open || query ? 'expanded' : ''}><vui-menu inline label="${escapeHTML(groupName(group))}" slot="submenu">${items.map((c) => {
+      return `<vui-menu-item label="${escapeHTML(groupName(group))}" icon="${fluentWebGroupIcons[group]}" ${open || query ? 'expanded' : ''}><vui-menu inline label="${escapeHTML(groupName(group))}" slot="submenu">${items.map((c) => {
         const href = `#/components/${c.element.slice(4)}`;
-        return `<vui-menu-item label="${escapeHTML(title(c.element))}" href="${href}" ${hash === href ? 'selected' : ''}></vui-menu-item>`;
+        const alias = fluentAlias(c.element);
+        return `<vui-menu-item label="${escapeHTML(alias ? `${title(c.element)} · ${alias}` : title(c.element))}" href="${href}" ${hash === href ? 'selected' : ''}></vui-menu-item>`;
       }).join('')}</vui-menu></vui-menu-item>`;
     }).join('');
     menu.innerHTML = groupsMarkup
-      ? `<vui-menu class="docs-catalog-menu" inline orientation="vertical" label="${text('Каталог компонентов', 'Component catalog')}">${groupsMarkup}</vui-menu>`
+      ? `<vui-menu class="docs-catalog-menu" inline orientation="vertical" label="${text('Каталог Fluent UI Web', 'Fluent UI Web catalog')}">${groupsMarkup}</vui-menu>`
       : `<p role="status">${text('Компоненты не найдены', 'No components found')}</p>`;
     for (const item of layout.querySelectorAll('vui-menu-item[href]')) {
       const href = item.getAttribute('href');
@@ -183,13 +189,19 @@ export function mountDocumentationSite(): void {
     studio.hidden = section !== 'themes';
     let name = sections().find(([id]) => id === section)?.[1] ?? text('Страница не найдена', 'Page not found');
     if (section === 'components' && path[1]) {
+      if (isCatalogChild(`vui-${path[1]}`)) {
+        const parent = parents[path[1]] ?? path[1];
+        history.replaceState(null, '', `${location.pathname}${location.search}#/components/${parent}`);
+        return render();
+      }
       const contract = catalog.find((c) => c.element === `vui-${path[1]}`);
       if (contract) {
         name = title(contract.element);
-        page.innerHTML = `<p class="docs-eyebrow">${link('components', text('Компоненты', 'Components'))} / ${groupName(componentGroup(contract.element))}</p><h1 tabindex="-1">${name}</h1><p class="docs-lead">${description(contract.element, docsLocale)}</p><pre class="docs-import"><code>import '${componentImport(contract.element)}';</code></pre>${demoSections(contract, showExample)}${api(contract)}`;
+        const alias = fluentAlias(contract.element);
+        page.innerHTML = `<p class="docs-eyebrow">${link('components', text('Компоненты', 'Components'))} / ${groupName(fluentWebGroup(contract.element))}${alias ? ` · ${escapeHTML(alias)}` : ''}</p><h1 tabindex="-1">${name}</h1><p class="docs-lead">${description(contract.element, docsLocale)}</p><pre class="docs-import"><code>import '${componentImport(contract.element)}';</code></pre>${demoSections(contract, showExample)}${api(contract)}`;
       } else page.innerHTML = `<h1>${name}</h1>${link('components', text('Открыть каталог', 'Open catalog'))}`;
     } else if (section === 'components') {
-      page.innerHTML = `<h1 tabindex="-1">${name}</h1><p class="docs-lead">${catalog.length} ${text('компонентов. Выберите элемент, изучите состояния и скопируйте рабочий пример.', 'components. Choose an element, explore its states, and copy a working example.')}</p><div class="docs-cards">${catalog.map((c) => `<a class="docs-card" href="#/components/${c.element.slice(4)}"><strong>${title(c.element)}</strong><code>${c.element}</code><p>${description(c.element, docsLocale)}</p></a>`).join('')}</div>`;
+      page.innerHTML = `<h1 tabindex="-1">${name}</h1><p class="docs-lead">${text('Каталог выстроен как Fluent UI Web Controls, не Fluent 2. Дочерние части (MenuItem, NavItem, Tab…) остаются в API родителя и не дублируются в списке.', 'Catalog follows Fluent UI Web Controls, not Fluent 2. Child parts (MenuItem, NavItem, Tab…) stay on the parent API and are not listed twice.')}</p><p class="docs-lead">${catalog.length} ${text('хостов в каталоге.', 'hosts in the catalog.')} ${text('Ещё нет как отдельных элементов', 'Still missing as dedicated hosts')}: ${fluentWebMissing.slice(0, 8).map((name) => `<code>${escapeHTML(name)}</code>`).join(' · ')}.</p><div class="docs-cards">${catalog.map((c) => `<a class="docs-card" href="#/components/${c.element.slice(4)}"><strong>${title(c.element)}</strong><code>${c.element}</code><p>${fluentAlias(c.element) ? `<span class="docs-fluent-alias">${escapeHTML(fluentAlias(c.element))}</span> · ` : ''}${description(c.element, docsLocale)}</p></a>`).join('')}</div>`;
     } else if (section === 'examples') {
       const example = interfaces().find(([id]) => id === path[1]);
       if (example) {
@@ -202,7 +214,7 @@ export function mountDocumentationSite(): void {
     } else if (section === 'themes') {
       page.innerHTML = `<h1 tabindex="-1">${name}</h1><p class="docs-lead">${text('Тема документации меняется на верхней панели. Черновик редактора применяется только к просмотру, пока вы явно не примените его к документации.', 'Change the documentation theme in the top bar. Editor drafts affect only the preview until explicitly applied to documentation.')}</p>${heading(text('Подключение темы', 'Theme integration'), `<pre><code>import { initializeTheme, setUIMode } from 'vui/theme';\ninitializeTheme();\nsetUIMode('desktop');</code></pre><p>${text('Используйте JSON для импорта, CSS — для подключения экспортированных токенов. Импорт исполняемого CSS не поддерживается.', 'Import JSON or use exported CSS tokens in your application. Importing executable CSS is not supported.')}</p>`)}`;
     } else {
-      page.innerHTML = `<p class="docs-eyebrow">WEB COMPONENTS · REACT · NEXT.JS · ELECTRON</p><h1 tabindex="-1">${text('Интерфейсы из понятных компонентов', 'Build interfaces from clear components')}</h1><p class="docs-lead">${text('Найдите компонент, проверьте его поведение и перенесите готовый пример в свой проект. Одна библиотека и общие токены для всех тем.', 'Find a component, explore its behavior, and take a working example into your project. One library and shared tokens for every theme.')}</p><div class="docs-actions">${link('components', text('Открыть каталог', 'Browse components'))}${link('examples', text('Собрать интерфейс', 'Build an interface'))}</div>${heading(text('Установка', 'Installation'), '<pre><code>pnpm add vui</code></pre>')}${heading(text('Первый компонент', 'Your first component'), showExample(exampleFor('vui-button')))}${heading(text('Три UI mode', 'Three UI modes'), `<p class="docs-lead">${text('Цветовая тема и структурный режим независимы. Переключатель сверху меняет Web, Desktop или Terminal для всей документации.', 'Color theme and structural mode are independent. The top switch applies Web, Desktop, or Terminal to the whole documentation site.')}</p><div class="docs-cards docs-ui-modes"><div class="docs-card"><strong>Web</strong><p>Radix-like spacing, soft radii, web control chrome.</p><code>data-vui-ui="web"</code></div><div class="docs-card"><strong>Desktop</strong><p>Fluent 2 density, tighter geometry, dual-shadow elevation.</p><code>data-vui-ui="desktop"</code></div><div class="docs-card"><strong>Terminal</strong><p>Monospace TUI scale, square corners, no elevation.</p><code>data-vui-ui="terminal"</code></div></div>${showExample(exampleFor('vui-button'))}`)}${heading('React / Next.js', `<pre><code>import { Button } from 'vui/react';\n\nexport default function Page() {\n  return &lt;Button variant="primary"&gt;${text('Сохранить', 'Save')}&lt;/Button&gt;;\n}</code></pre><p>${text('Обработчики событий размещайте в Client Component. SSR выводит теги и содержимое; Shadow DOM и интерактивность появляются после загрузки JavaScript.', 'Place event handlers in a Client Component. SSR emits tags and light DOM; shadow controls and interaction initialize after JavaScript loads.')}</p>`)}<p>${text('HTML-примеры рассчитаны на Vite или другой сборщик ESM, разрешающий импорты npm. В Electron используйте их в renderer.', 'HTML examples assume Vite or another ESM bundler that resolves npm imports. In Electron, use them in the renderer.')}</p>`;
+      page.innerHTML = `<p class="docs-eyebrow">WEB COMPONENTS · REACT · NEXT.JS · ELECTRON</p><h1 tabindex="-1">${text('Интерфейсы из понятных компонентов', 'Build interfaces from clear components')}</h1><p class="docs-lead">${text('Каталог Web mode следует Fluent UI Web Controls. Desktop mode остаётся на Fluent 2. Одна библиотека и общие токены для всех тем.', 'Web mode catalog follows Fluent UI Web Controls. Desktop mode stays on Fluent 2. One library and shared tokens for every theme.')}</p><div class="docs-actions">${link('components', text('Открыть каталог', 'Browse components'))}${link('examples', text('Собрать интерфейс', 'Build an interface'))}</div>${heading(text('Установка', 'Installation'), '<pre><code>pnpm add vui</code></pre>')}${heading(text('Первый компонент', 'Your first component'), showExample(exampleFor('vui-button')))}${heading(text('Три UI mode', 'Three UI modes'), `<p class="docs-lead">${text('Цветовая тема и структурный режим независимы. Переключатель сверху меняет Web, Desktop или Terminal для всей документации.', 'Color theme and structural mode are independent. The top switch applies Web, Desktop, or Terminal to the whole documentation site.')}</p><div class="docs-cards docs-ui-modes"><div class="docs-card"><strong>Web</strong><p>Fluent UI Web (Fabric) spacing, tight radii, Depth elevation — not Fluent 2.</p><code>data-vui-ui="web"</code></div><div class="docs-card"><strong>Desktop</strong><p>Fluent 2 density, tighter chrome, dual-shadow elevation.</p><code>data-vui-ui="desktop"</code></div><div class="docs-card"><strong>Terminal</strong><p>Monospace TUI scale, square corners, no elevation.</p><code>data-vui-ui="terminal"</code></div></div>${showExample(exampleFor('vui-button'))}`)}${heading('React / Next.js', `<pre><code>import { Button } from 'vui/react';\n\nexport default function Page() {\n  return &lt;Button variant="primary"&gt;${text('Сохранить', 'Save')}&lt;/Button&gt;;\n}</code></pre><p>${text('Обработчики событий размещайте в Client Component. SSR выводит теги и содержимое; Shadow DOM и интерактивность появляются после загрузки JavaScript.', 'Place event handlers in a Client Component. SSR emits tags and light DOM; shadow controls and interaction initialize after JavaScript loads.')}</p>`)}<p>${text('HTML-примеры рассчитаны на Vite или другой сборщик ESM, разрешающий импорты npm. В Electron используйте их в renderer.', 'HTML examples assume Vite or another ESM bundler that resolves npm imports. In Electron, use them in the renderer.')}</p>`;
     }
     document.title = `${name} · VUI`;
     for (const root of page.querySelectorAll<HTMLElement>('[data-example]')) wireExample(root);

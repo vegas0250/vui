@@ -4,6 +4,7 @@ import '../components/content/badge';
 import '../components/content/chip';
 import '../components/content/kbd';
 import '../components/content/link';
+import '../components/content/persona';
 import '../components/content/separator';
 import '../components/content/text';
 
@@ -13,5 +14,6 @@ export { VBadge } from '../components/content/badge';
 export { VChip } from '../components/content/chip';
 export { VKbd } from '../components/content/kbd';
 export { VLink } from '../components/content/link';
+export { VPersona } from '../components/content/persona';
 export { VSeparator } from '../components/content/separator';
 export { VText } from '../components/content/text';

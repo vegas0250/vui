@@ -47,6 +47,7 @@
     "./dist/components/content/chip.js",
     "./dist/components/content/kbd.js",
     "./dist/components/content/link.js",
+    "./dist/components/content/persona.js",
     "./dist/components/content/separator.js",
     "./dist/components/content/text.js",
     "./dist/components/data/data-grid.js",
@@ -68,8 +69,10 @@
     "./dist/components/forms/field.js",
     "./dist/components/forms/input.js",
     "./dist/components/forms/radio.js",
+    "./dist/components/forms/rating.js",
     "./dist/components/forms/select.js",
     "./dist/components/forms/slider.js",
+    "./dist/components/forms/spin-button.js",
     "./dist/components/forms/switch.js",
     "./dist/components/forms/textarea.js",
     "./dist/components/foundation/icon.js",
@@ -139,6 +142,10 @@
       "types": "./dist/components/content/avatar.d.ts",
       "import": "./dist/components/content/avatar.js"
     },
+    "./persona": {
+      "types": "./dist/components/content/persona.d.ts",
+      "import": "./dist/components/content/persona.js"
+    },
     "./badge": {
       "types": "./dist/components/content/badge.d.ts",
       "import": "./dist/components/content/badge.js"
@@ -202,6 +209,14 @@
     "./slider": {
       "types": "./dist/components/forms/slider.d.ts",
       "import": "./dist/components/forms/slider.js"
+    },
+    "./rating": {
+      "types": "./dist/components/forms/rating.d.ts",
+      "import": "./dist/components/forms/rating.js"
+    },
+    "./spin-button": {
+      "types": "./dist/components/forms/spin-button.d.ts",
+      "import": "./dist/components/forms/spin-button.js"
     },
     "./field": {
       "types": "./dist/components/forms/field.d.ts",

@@ -224,10 +224,10 @@ const modeDefaults: Record<
   }
 > = {
   web: {
-    radius: 8,
-    radiusBox: 12,
-    radiusField: 8,
-    radiusSelector: 4,
+    radius: 2,
+    radiusBox: 4,
+    radiusField: 2,
+    radiusSelector: 0,
     borderWidth: 1,
     shadowIntensity: 80,
   },
@@ -314,9 +314,9 @@ function hoverColor(background: string, foreground: string): string {
 }
 
 /**
- * Studio appearance override. Geometry and the 35% ambient softening mirror the
- * --vui-shadow-* recipes in src/tokens/ui.css; keep both in sync (tests compare them).
- * Here the single `strength` replaces the per-size `--vui-shadow-strength-*` ink steps.
+ * Studio appearance override. Geometry mirrors --vui-shadow-* in src/tokens/ui.css.
+ * web = Fluent UI Fabric Depth; desktop = Fluent 2 key+ambient; terminal = none.
+ * Keep both in sync (tests compare them). `strength` stands in for per-size ink steps.
  */
 function elevationShadows(
   uiMode: AppearanceUIMode,
@@ -335,10 +335,11 @@ function elevationShadows(
       lg: `0 8px 16px ${ink}, 0 0 2px ${soft}`,
     };
   }
+  /* Fluent UI Web / Fabric Depth key + ambient */
   return {
-    sm: `0 1px 2px ${ink}`,
-    md: `0 4px 16px ${ink}`,
-    lg: `0 12px 40px ${ink}`,
+    sm: `0 0.3px 0.9px ${ink}, 0 1.6px 3.6px ${ink}`,
+    md: `0 1.6px 3.6px ${ink}, 0 3.2px 7.2px ${ink}`,
+    lg: `0 6.4px 14.4px ${ink}, 0 12.8px 28.8px ${ink}`,
   };
 }
 

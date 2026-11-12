@@ -123,7 +123,7 @@ export function mountDocumentation(): void {
   }
   const tools = document.createElement('div');
   tools.className = 'docs-tools';
-  tools.innerHTML = `<vui-input id="docs-component-search" type="search" size="small" label="${escapeHTML(tr('Search components'))}"></vui-input><a href="#theme-studio">${escapeHTML(tr('Theme Studio'))} ↗</a>`;
+  tools.innerHTML = `<vui-input id="docs-component-search" type="search" label="${escapeHTML(tr('Search components'))}"></vui-input><a href="#theme-studio">${escapeHTML(tr('Theme Studio'))} ↗</a>`;
   document.querySelector('#components')?.prepend(tools);
   const panels = [
     ...document.querySelectorAll<HTMLElement>('vui-panel'),

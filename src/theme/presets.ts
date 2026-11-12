@@ -93,8 +93,20 @@ const structuralAppearance: Record<string, Readonly<ThemeAppearance>> = {
   }),
   'fluent-light': Object.freeze({ uiMode: 'desktop' }),
   'fluent-dark': Object.freeze({ uiMode: 'desktop', shadowIntensity: 120 }),
-  'radix-light': Object.freeze({ uiMode: 'web' }),
-  'radix-dark': Object.freeze({ uiMode: 'web', shadowIntensity: 90 }),
+  /* Radix color packs keep soft radii as appearance deltas; web chrome is Fluent UI Fabric. */
+  'radix-light': Object.freeze({
+    radius: 8,
+    radiusBox: 12,
+    radiusField: 8,
+    radiusSelector: 4,
+  }),
+  'radix-dark': Object.freeze({
+    radius: 8,
+    radiusBox: 12,
+    radiusField: 8,
+    radiusSelector: 4,
+    shadowIntensity: 90,
+  }),
 };
 export const builtInThemes: readonly ThemePreset[] = Object.freeze(
   definitions.map(([id, name, mode]) => {

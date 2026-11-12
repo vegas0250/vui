@@ -280,6 +280,9 @@ export class VMenuItem extends VuiElement {
   }
 
   refresh(): void {
+    // Parent menus refresh children during their own connect; the child shadow
+    // may not exist yet (custom element connect order is parent-first).
+    if (!this.isReady()) return;
     this.sync();
   }
 

@@ -236,7 +236,7 @@ describe('palette-independent theme engine', () => {
       }),
     ).toMatchObject({ '--vui-radius': '12px', '--vui-border-width': '2px' });
   });
-  it('aligns Fluent and Radix presets to desktop/web structural chrome', () => {
+  it('aligns Fluent 2 presets to desktop and Radix color deltas to soft radii on Fluent UI web chrome', () => {
     expect(themeAppearance(themeDocument('fluent-light'))).toMatchObject({
       uiMode: 'desktop',
       radius: 4,
@@ -251,10 +251,11 @@ describe('palette-independent theme engine', () => {
       radiusField: 8,
       radiusSelector: 4,
     });
+    expect(themeById('radix-dark').appearance?.uiMode).toBeUndefined();
     expect(themeVariables(themeDocument('fluent-dark'))['--vui-shadow-sm']).toMatch(/^0 0\.5px/);
-    expect(themeVariables(themeDocument('radix-light'))['--vui-shadow-sm']).toMatch(/^0 1px 2px/);
+    expect(themeVariables(themeDocument('radix-light'), { uiMode: 'web' })['--vui-radius']).toBe('8px');
     expect(themeAppearance(themeDocument('nord'), 'desktop').radiusField).toBe(4);
-    expect(themeAppearance(themeDocument('nord'), 'web').radiusField).toBe(8);
+    expect(themeAppearance(themeDocument('nord'), 'web').radiusField).toBe(2);
   });
   it('resolves terminal mode independently from semantic colors', () => {
     const nord = themeDocument('nord');
