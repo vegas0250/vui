@@ -1,8 +1,9 @@
 import { readdirSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const root = new URL('..', import.meta.url);
-const dist = join(root.pathname, 'dist');
+const root = join(dirname(fileURLToPath(import.meta.url)), '..');
+const dist = join(root, 'dist');
 const fileLimit = 96 * 1024;
 const totalLimit = 2 * 1024 * 1024;
 

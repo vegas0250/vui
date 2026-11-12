@@ -42,6 +42,8 @@ export default defineConfig(({ mode }) => {
   }
 
   return {
+    // Docs assets in public/ must not enter the library package.
+    publicDir: false,
     build: {
       outDir: 'dist',
       lib: { entry: entries, formats: ['es'] },
