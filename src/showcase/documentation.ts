@@ -49,7 +49,9 @@ export function mountDocumentation(): void {
     option.textContent = preset.name;
     select.append(option);
   }
-  controls?.prepend(select);
+  const uiMode = document.querySelector('#ui-mode-select');
+  if (uiMode?.parentElement === controls) controls?.insertBefore(select, uiMode);
+  else controls?.append(select);
   const sync = () => {
     let pref: ReturnType<typeof getThemePreference> = null;
     try {
@@ -94,7 +96,7 @@ export function mountDocumentation(): void {
   language.id = 'docs-lang';
   language.setAttribute('label', tr('Language'));
   language.setAttribute('icon', 'globe');
-  for (const [value, label] of [['ru', 'Русский'], ['en', 'English']] as const) {
+  for (const [value, label] of [['ru', 'RU'], ['en', 'EN']] as const) {
     const option = document.createElement('vui-option') as HTMLElement & { value: string };
     option.value = value;
     option.textContent = label;

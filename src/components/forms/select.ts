@@ -195,10 +195,16 @@ export class VSelect extends VuiElement {
         cursor: pointer;
       }
       .listbox [role="option"]:hover:not([aria-disabled="true"]) { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
-      .listbox [role="option"][aria-selected="true"],
-      .listbox [role="option"].active {
+      .listbox [role="option"][aria-selected="true"] {
         background: var(--vui-color-selected);
-        box-shadow: inset 2px 0 0 var(--vui-color-primary);
+        color: var(--vui-color-interactive-text, var(--vui-color-primary));
+        font-weight: var(--vui-font-weight-strong);
+      }
+      .listbox [role="option"].active {
+        background: var(--vui-color-hover, var(--vui-color-surface-hover));
+      }
+      .listbox [role="option"][aria-selected="true"].active {
+        background: color-mix(in srgb, var(--vui-color-primary) 22%, var(--vui-color-surface));
       }
       .listbox [role="option"][aria-disabled="true"] {
         opacity: 0.72;
@@ -311,6 +317,7 @@ export class VSelect extends VuiElement {
     this.listOpen = true;
     this.listbox.hidden = false;
     this.trigger.setAttribute('aria-expanded', 'true');
+    this.toggleAttribute('data-open', true);
     this.releaseOverlay = pushOverlay({
       owner: this,
       kind: 'popup',
@@ -331,6 +338,7 @@ export class VSelect extends VuiElement {
     this.listOpen = false;
     this.releaseOverlay?.();
     this.releaseOverlay = null;
+    this.removeAttribute('data-open');
     const list = this.shadow.querySelector<HTMLElement>('.listbox');
     const trigger = this.shadow.querySelector<HTMLButtonElement>('.trigger');
     if (list) list.hidden = true;

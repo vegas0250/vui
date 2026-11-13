@@ -22,7 +22,7 @@ test('bilingual catalog has a direct, complete page for every visual component',
   await page.getByRole('searchbox', { name: 'Find a component' }).fill('кнопка');
   expect(await page.locator('#docs-component-menu vui-menu-item[href]').count()).toBeGreaterThan(0);
   await page.locator('#docs-lang button').click();
-  await page.getByRole('option', { name: 'Русский', exact: true }).click();
+  await page.getByRole('option', { name: 'RU', exact: true }).click();
   await expect(page.getByRole('searchbox', { name: 'Найти компонент' })).toBeVisible();
   await expect(page.locator('.docs-section-menu > vui-menu-item')).toHaveCount(5);
   await expect(page).toHaveURL(/lang=ru.*#\/components\//);

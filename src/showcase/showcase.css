@@ -27,49 +27,60 @@ body {
   gap: var(--vui-space-sm);
   color: var(--vui-color-text);
   text-decoration: none;
-  min-height: var(--vui-size-control);
+  min-height: 2rem;
+  flex: none;
 }
 
 .brand-mark {
   flex: none;
   display: block;
+  width: 1.75rem;
+  height: 1.75rem;
   border-radius: var(--vui-radius-sm);
 }
 
 .brand-text {
-  font-size: var(--vui-heading-3);
+  font-size: 0.9375rem;
   font-weight: var(--vui-font-weight-strong);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   line-height: 1;
 }
 
 .header-controls {
   display: flex;
-  flex-wrap: wrap;
-  align-items: end;
+  flex-wrap: nowrap;
+  align-items: center;
   justify-content: flex-end;
-  gap: var(--vui-space-sm);
+  gap: var(--vui-space-xs);
+  min-width: 0;
 }
 
-.documentation-site .topbar {
+.documentation-site .docs-header {
+  height: 3.75rem;
+  min-height: 3.75rem;
+  max-height: 3.75rem;
+  box-sizing: border-box;
+  overflow: visible;
   border-bottom: var(--vui-border-width) solid var(--vui-color-border);
-  background: color-mix(in srgb, var(--vui-color-surface) 92%, transparent);
+  background: color-mix(in srgb, var(--vui-color-surface) 94%, transparent);
   /* No backdrop-filter: it makes position:fixed listboxes expand page overflow. */
 }
 
-.docs-theme-control,
-#ui-mode-select,
-#docs-lang {
-  flex: 0 1 auto;
+.documentation-site .docs-theme-control,
+.documentation-site #ui-mode-select,
+.documentation-site #docs-lang {
+  flex: 0 0 auto;
+  align-self: center;
+  width: auto;
+  max-width: none;
   min-width: 0;
-  max-width: 100%;
 }
 
 main {
-  width: min(1120px, calc(100% - var(--vui-space-xl)));
+  width: min(100%, calc(100% - 2 * var(--vui-space-lg)));
   min-width: 0;
   margin: 0 auto;
-  padding: var(--vui-space-xl) 0 var(--vui-space-2xl);
+  padding: var(--vui-space-lg) 0 var(--vui-space-2xl);
   flex: 1 0 auto;
 }
 
@@ -85,7 +96,7 @@ main {
 }
 
 .site-footer-inner {
-  width: min(1520px, calc(100% - 2 * var(--vui-space-lg)));
+  width: min(90rem, calc(100% - 2 * var(--vui-space-lg)));
   margin-inline: auto;
   padding-block: var(--vui-space-xl) var(--vui-space-lg);
   display: grid;

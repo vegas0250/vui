@@ -83,10 +83,6 @@ export class VMenuItem extends VuiElement {
       :host([data-current]) .row { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       :host([selected]) .row {
         background: var(--vui-color-selected, var(--vui-color-hover, var(--vui-color-surface-hover)));
-        box-shadow: inset var(--vui-border-width-accent) 0 0 var(--vui-color-focus);
-      }
-      :host-context([dir="rtl"]):host([selected]) .row {
-        box-shadow: inset calc(var(--vui-border-width-accent) * -1) 0 0 var(--vui-color-focus);
       }
       :host(:focus-visible) {
         outline: var(--vui-focus-ring);
@@ -95,8 +91,9 @@ export class VMenuItem extends VuiElement {
       :host([disabled]) { opacity: var(--vui-opacity-disabled, 0.55); cursor: not-allowed; }
       :host([variant="danger"]) { color: var(--vui-color-danger); }
       :host([variant="danger"]) vui-icon { color: var(--vui-color-danger); }
-      :host([checked]) .row { box-shadow: inset var(--vui-border-width-accent) 0 0 var(--vui-color-focus); }
-      :host-context([dir="rtl"]):host([checked]) .row { box-shadow: inset calc(var(--vui-border-width-accent) * -1) 0 0 var(--vui-color-focus); }
+      :host([checked]) .row {
+        background: var(--vui-color-selected, var(--vui-color-hover, var(--vui-color-surface-hover)));
+      }
       .mark {
         width: 1em;
         flex: 0 0 auto;
@@ -187,9 +184,12 @@ export class VMenuItem extends VuiElement {
       :host([layout="stack"]) .shortcut,
       :host([layout="stack"]) .caret { display: none; }
       ::slotted(vui-menu[inline]) {
-        margin-inline-start: var(--vui-space-sm);
-        padding-inline-start: var(--vui-space-xs);
-        border-inline-start: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
+        margin-inline-start: var(--vui-space-md);
+        margin-block: var(--vui-space-2xs) 0;
+        padding-inline-start: 0;
+        border-inline-start: 0;
+        display: grid;
+        gap: var(--vui-space-2xs);
       }
     `;
   }

@@ -1,4 +1,14 @@
-﻿# 1.3.3
+﻿# 1.3.4
+
+- Docs catalog sidebar: file-tree navigation (folder/file icons, tree
+  connectors outside the active row, final-child guide stop).
+- Soften selected/checked menu item chrome (background + accent text, no
+  inset accent bar); nested inline menus no longer draw a border guide by
+  default so hosts can own tree geometry.
+- Keep select/menu overlays inside the viewport; docs shell polish (favicons,
+  header/search chrome).
+
+# 1.3.3
 
 - Publish opt-in Templates (`vui/templates`, `vui/template-dashboard`,
   `vui/template-settings`, `vui/template-workspace`) and React adapters

@@ -8,7 +8,7 @@ test('optimized website registers every component and runs the real examples', a
   await page.goto('/?lang=en#/components');
   await expect(page.locator('.portal-menu, iframe')).toHaveCount(0);
   expect(foreign).toEqual([]);
-  await expect(page.locator('.docs-cards > a')).toHaveCount(60);
+  await expect(page.locator('.docs-cards > a')).toHaveCount(63);
   const tags = await page.locator('.docs-cards code').allTextContents();
   expect(await page.evaluate((tags) => tags.filter((tag) => !customElements.get(tag)), tags)).toEqual([]);
   await page.evaluate(() => { location.hash = '#/examples/settings'; });
@@ -45,7 +45,7 @@ test('documentation uses VUI metrics and keeps content within responsive columns
   }
   for (const width of [1440, 900, 734, 640, 356]) {
     await page.setViewportSize({ width, height: 900 });
-    for (const route of ['getting-started', 'components/button', 'components/input', 'examples/shell', 'themes']) {
+    for (const route of ['getting-started', 'components/button', 'components/input', 'patterns/shell', 'themes']) {
       await page.evaluate((route) => { location.hash = `#/${route}`; }, route);
       await expect(page.locator('#docs-page h1')).toBeVisible();
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${route} at ${width}`).toBe(true);

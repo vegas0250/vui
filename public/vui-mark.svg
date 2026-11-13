@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" fill="none">
+  <rect x="1.5" y="1.5" width="25" height="25" rx="7" fill="var(--vui-color-surface, #fff)" stroke="var(--vui-color-border, #cdd6f4)" stroke-width="1"/>
+  <path d="M7.2 8.2h3.1l3.7 9.2 3.7-9.2h3.1L15.2 20.2h-2.4L7.2 8.2Z" fill="var(--vui-color-primary, #89b4fa)"/>
+  <circle cx="21.2" cy="7.4" r="1.35" fill="var(--vui-color-primary, #89b4fa)"/>
+</svg>

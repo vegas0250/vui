@@ -14,11 +14,12 @@ are covered by export tests. No Storybook or additional workspace is required.
 
 ## Source and routes
 
-`src/showcase/main.ts` starts the website. The four sections are Getting Started,
-Components, Interface Examples, and Themes. Hash routes provide direct component
-links, for example `?lang=en#/components/button`. Russian is the default. Changing
-language retains the selected page. The searchable menu groups all 69 visual
-elements, including child elements shown with their required parents.
+`src/showcase/main.ts` starts the website. Primary sections are Getting Started,
+Components, Layouts, Patterns, Templates, Theme Studio, and Icons. Hash routes
+provide direct component links, for example `?lang=en#/components/button`.
+Legacy `#/examples/*` and `#/compositions/*` redirect into Layouts or Patterns.
+Russian is the default. Changing language retains the selected page. The searchable
+menu groups catalog hosts; child elements remain searchable with their parents.
 
 `component-data.ts` combines the actual registered contracts with bilingual
 explanations and additional property documentation. `examples.ts` owns sample
