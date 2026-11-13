@@ -7,7 +7,7 @@ test('bilingual catalog has a direct, complete page for every visual component',
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/?lang=en#/components');
-  await expect(page.locator('.docs-cards > a')).toHaveCount(60);
+  await expect(page.locator('.docs-cards > a')).toHaveCount(63);
   const tags = await page.locator('.docs-cards code').allTextContents();
   for (const tag of tags) {
     await page.evaluate((tag) => { location.hash = '#/components/' + tag.slice(4); }, tag);
@@ -30,7 +30,7 @@ test('bilingual catalog has a direct, complete page for every visual component',
 
 test('settings, filters, dialog and shell are working compositions', async ({ page }) => {
   await page.goto('/?lang=en#/examples/settings');
-  await expect(page).toHaveURL(/#\/compositions\/settings/);
+  await expect(page).toHaveURL(/#\/(compositions|layouts)\/settings/);
   await page.getByRole('textbox', { name: 'Name', exact: true }).fill('Grace');
   await page.locator('#docs-page').getByRole('button', { name: 'Save', exact: true }).click({ force: true });
   await expect(page.locator('[data-result]')).toHaveText('Saved: Grace');
@@ -38,7 +38,7 @@ test('settings, filters, dialog and shell are working compositions', async ({ pa
   await page.locator('#docs-page').getByRole('button', { name: 'Save', exact: true }).click({ force: true });
   await expect(page.locator('#docs-page vui-input')).toHaveAttribute('invalid', '');
   await page.evaluate(() => { location.hash = '#/examples/table'; });
-  await expect(page).toHaveURL(/#\/compositions\/table/);
+  await expect(page).toHaveURL(/#\/(compositions|patterns)\/table/);
   await page.getByRole('textbox', { name: 'Find projects' }).fill('Nova');
   await expect(page.getByRole('gridcell', { name: 'Nova', exact: true })).toBeVisible();
   await expect(page.getByRole('gridcell', { name: 'Atlas', exact: true })).toHaveCount(0);
@@ -55,7 +55,7 @@ test('settings, filters, dialog and shell are working compositions', async ({ pa
 
 test('full standalone example runs independently with its declared imports', async ({ page, context, baseURL }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
-  await page.goto('/?lang=en#/compositions/settings');
+  await page.goto('/?lang=en#/layouts/settings');
   await page.getByRole('button', { name: 'Full example', exact: true }).click();
   const code = (await page.evaluate(() => navigator.clipboard.readText())).replace(/\r\n/g, '\n');
   expect(code).toContain("import '");
