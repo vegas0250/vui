@@ -19,11 +19,11 @@ test('bilingual catalog has a direct, complete page for every visual component',
   expect(errors).toEqual([]);
   await page.reload();
   await expect(page.locator('.docs-import')).toBeVisible();
-  await page.getByRole('searchbox', { name: 'Find a component' }).fill('кнопка');
+  await page.locator('#component-search').getByRole('searchbox').fill('кнопка');
   expect(await page.locator('#docs-component-menu vui-menu-item[href]').count()).toBeGreaterThan(0);
   await page.locator('#docs-lang button').click();
   await page.getByRole('option', { name: 'RU', exact: true }).click();
-  await expect(page.getByRole('searchbox', { name: 'Найти компонент' })).toBeVisible();
+  await expect(page.locator('#component-search').getByRole('searchbox')).toBeVisible();
   await expect(page.locator('.docs-section-menu > vui-menu-item')).toHaveCount(7);
   await expect(page).toHaveURL(/lang=ru.*#\/components\//);
 });
@@ -36,7 +36,7 @@ test('settings, filters, dialog and shell are working compositions', async ({ pa
   await expect(page.locator('[data-result]')).toHaveText('Saved: Grace');
   await page.getByRole('textbox', { name: 'Name', exact: true }).fill('');
   await page.locator('#docs-page').getByRole('button', { name: 'Save', exact: true }).click({ force: true });
-  await expect(page.locator('#docs-page vui-input')).toHaveAttribute('invalid', '');
+  await expect(page.locator('#docs-page vui-input[label="Name"]')).toHaveAttribute('invalid', '');
   await page.evaluate(() => { location.hash = '#/examples/table'; });
   await expect(page).toHaveURL(/#\/(compositions|patterns)\/table/);
   await page.getByRole('textbox', { name: 'Find projects' }).fill('Nova');
