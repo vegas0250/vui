@@ -3,8 +3,9 @@ import { execFileSync } from 'node:child_process';
 import { cpSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const root = new URL('..', import.meta.url).pathname;
+const root = fileURLToPath(new URL('..', import.meta.url));
 assert.equal(execFileSync('git', ['status', '--porcelain'], { cwd: root, encoding: 'utf8' }).trim(), '', 'Commit reviewed source before packaging the website');
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
 const work = mkdtempSync(join(tmpdir(), 'vui-site-package-'));
