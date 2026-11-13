@@ -27,7 +27,11 @@ jobs:
       - run: pnpm exec playwright test tests/e2e/theme-studio.spec.ts
       - run: pnpm package:website
       - uses: actions/upload-artifact@v4
-        with: {name: vui-website, path: '.artifacts/vui-website-*.tar.gz'}
+        with:
+          name: vui-website
+          path: .artifacts/vui-website-*.tar.gz
+          include-hidden-files: true
+          if-no-files-found: error
       - run: pnpm exec playwright test tests/e2e/documentation.spec.ts
         continue-on-error: true
   deploy:
