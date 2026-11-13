@@ -1,0 +1,114 @@
+import '../components/desktop/shell';
+import '../components/layout/scroll-area';
+import '../components/layout/container';
+import { defineElement } from '../utils/define';
+import { registerContract } from '../contract/registry';
+import { registerComposition } from '../composition/registry';
+import { VuiElement } from '../utils/element';
+import { reflectBooleans, reflectStrings } from '../utils/reflect';
+import type { VShell } from '../components/desktop/shell';
+import type { VScrollArea } from '../components/layout/scroll-area';
+import {
+  syncTemplateShell,
+  templateHostStyles,
+  templateShellAttributes,
+  templateShellContractAttributes,
+} from './base';
+
+/**
+ * Narrow settings form chrome: shell + scroll + small container for the main slot.
+ */
+export class VTemplateSettings extends VuiElement {
+  declare label: string;
+  declare navLabel: string;
+  declare asideLabel: string;
+  declare skipLabel: string;
+  declare resizeLabel: string;
+  declare asideExpandLabel: string;
+  declare asideCollapseLabel: string;
+  declare asideResizeLabel: string;
+  declare contentLabel: string;
+  declare collapsed: boolean;
+  declare asideCollapsed: boolean;
+
+  static get observedAttributes(): string[] {
+    return [...templateShellAttributes, 'content-label'];
+  }
+
+  protected template(): string {
+    return `
+      <vui-shell part="shell">
+        <slot name="header" slot="header"></slot>
+        <slot name="toolbar" slot="toolbar"></slot>
+        <slot name="nav" slot="nav"></slot>
+        <vui-scroll-area part="main">
+          <vui-container part="body" size="small" padding="lg">
+            <slot></slot>
+          </vui-container>
+        </vui-scroll-area>
+        <slot name="aside" slot="aside"></slot>
+        <slot name="footer" slot="footer"></slot>
+      </vui-shell>
+    `;
+  }
+
+  protected componentStyles(): string {
+    return `
+      ${templateHostStyles}
+      vui-container {
+        display: block;
+        width: 100%;
+      }
+    `;
+  }
+
+  protected sync(): void {
+    const shell = this.qs<VShell>('vui-shell');
+    syncTemplateShell(this, shell);
+    const main = this.qs<VScrollArea>('vui-scroll-area');
+    main.setAttribute('label', this.getAttribute('content-label') || 'Settings');
+  }
+}
+
+reflectStrings(VTemplateSettings, {
+  label: 'label',
+  navLabel: 'nav-label',
+  asideLabel: 'aside-label',
+  skipLabel: 'skip-label',
+  resizeLabel: 'resize-label',
+  asideExpandLabel: 'aside-expand-label',
+  asideCollapseLabel: 'aside-collapse-label',
+  asideResizeLabel: 'aside-resize-label',
+  contentLabel: 'content-label',
+});
+reflectBooleans(VTemplateSettings, { collapsed: 'collapsed', asideCollapsed: 'aside-collapsed' });
+defineElement('vui-template-settings', VTemplateSettings);
+
+registerContract({
+  element: 'vui-template-settings',
+  className: 'VTemplateSettings',
+  attributes: templateShellContractAttributes,
+  events: [],
+  slots: ['header', 'toolbar', 'nav', '', 'aside', 'footer'],
+  parts: ['shell', 'main', 'body'],
+  methods: [],
+  keyboard: ['Tab'],
+  states: [],
+  responsive: 'container',
+  focus: 'native',
+});
+
+registerComposition({
+  id: 'template-settings',
+  host: 'vui-template-settings',
+  summary: 'Settings template: shell regions with a narrow scrollable form column.',
+  links: [
+    { from: 'vui-template-settings', to: 'header', direction: 'parent-child', channel: 'slot', slot: 'header' },
+    { from: 'vui-template-settings', to: 'toolbar', direction: 'parent-child', channel: 'slot', slot: 'toolbar' },
+    { from: 'vui-template-settings', to: 'nav', direction: 'parent-child', channel: 'slot', slot: 'nav' },
+    { from: 'vui-template-settings', to: 'main', direction: 'parent-child', channel: 'slot', slot: '' },
+    { from: 'vui-template-settings', to: 'aside', direction: 'parent-child', channel: 'slot', slot: 'aside' },
+    { from: 'vui-template-settings', to: 'footer', direction: 'parent-child', channel: 'slot', slot: 'footer' },
+  ],
+  emits: [],
+});

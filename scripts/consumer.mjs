@@ -5,12 +5,13 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from '@playwright/test';
 import { build, preview } from 'vite';
+import { execPnpm } from './pnpm.mjs';
 
 const root = join(fileURLToPath(new URL('.', import.meta.url)), '..');
 const work = mkdtempSync(join(tmpdir(), 'vui-consumer-'));
 
 try {
-  execFileSync('pnpm', ['pack', '--pack-destination', work], { cwd: root, stdio: 'inherit' });
+  execPnpm(['pack', '--pack-destination', work], { cwd: root, stdio: 'inherit' });
   const tarballName = readdirSync(work).find((name) => name.endsWith('.tgz'));
   if (!tarballName) throw new Error('pnpm pack did not produce a tarball');
   const tarball = join(work, tarballName);
@@ -31,7 +32,7 @@ try {
       dependencies: { vui: `file:${tarball}` },
     }),
   );
-  execFileSync('pnpm', ['install', '--prefer-offline', '--prod', '--no-frozen-lockfile', '--store-dir', join(tmpdir(), 'vui-pnpm-store')], { cwd: work, stdio: 'inherit' });
+  execPnpm(['install', '--prefer-offline', '--prod', '--no-frozen-lockfile', '--store-dir', join(tmpdir(), 'vui-pnpm-store')], { cwd: work, stdio: 'inherit' });
 
   writeFileSync(
     join(work, 'index.html'),
@@ -71,10 +72,10 @@ import 'vui/overlay';
 import 'vui/desktop';
 import { VButton } from 'vui/button';
 import { VDataGrid } from 'vui/data-grid';
-import { setDensity, setTheme } from 'vui/theme';
+import { setTheme, setUIMode } from 'vui/theme';
 
 setTheme('dark');
-setDensity('compact');
+setUIMode('desktop');
 document.documentElement.dir = 'rtl';
 
 const button = document.querySelector('#save');
@@ -116,7 +117,7 @@ document.body.dataset.ready = 'yes';
       const input = document.querySelector('#name');
       return {
         theme: document.documentElement.getAttribute('data-vui-theme'),
-        density: document.documentElement.getAttribute('data-vui-density'),
+        ui: document.documentElement.getAttribute('data-vui-ui'),
         dir: document.documentElement.dir,
         shadow: Boolean(button?.shadowRoot?.querySelector('button')),
         input: Boolean(input?.shadowRoot?.querySelector('input')),
@@ -134,7 +135,7 @@ document.body.dataset.ready = 'yes';
 
     const problems = [];
     if (state.theme !== 'dark') problems.push(`theme ${state.theme}`);
-    if (state.density !== 'compact') problems.push(`density ${state.density}`);
+    if (state.ui !== 'desktop') problems.push(`ui ${state.ui}`);
     if (state.dir !== 'rtl') problems.push(`dir ${state.dir}`);
     if (!state.styles) problems.push('theme styles missing');
     if (!state.shadow) problems.push('button shadow missing');

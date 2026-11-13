@@ -1,11 +1,13 @@
 import assert from 'node:assert/strict';
-import { execFileSync, spawn } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import { cpSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:net';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import { chromium } from '@playwright/test';
+import { execPnpm, spawnPnpm } from './pnpm.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const work = mkdtempSync(join(tmpdir(), 'vui-next-'));
@@ -22,19 +24,19 @@ assert(/^['"]use client['"];/.test(readFileSync(join(root, 'dist/react.js'), 'ut
 let server;
 let browser;
 try {
-  execFileSync('pnpm', ['pack', '--pack-destination', work], { cwd: root, stdio: 'pipe' });
+  execPnpm(['pack', '--pack-destination', work], { cwd: root, stdio: 'pipe' });
   const tarball = join(work, readdirSync(work).find((name) => name.endsWith('.tgz')));
   const app = join(work, 'app');
   cpSync(join(root, 'examples/next'), app, {
-    recursive: true, filter: (path) => !path.split('/').some((part) => part === 'node_modules' || part === '.next'),
+    recursive: true, filter: (path) => !path.split(/[/\\]/).some((part) => part === 'node_modules' || part === '.next'),
   });
   const pkg = JSON.parse(readFileSync(join(app, 'package.json'), 'utf8'));
   pkg.dependencies.vui = `file:${tarball}`;
   writeFileSync(join(app, 'package.json'), JSON.stringify(pkg, null, 2));
-  execFileSync('pnpm', ['install', '--prefer-offline', '--no-frozen-lockfile', '--store-dir', join(tmpdir(), 'vui-pnpm-store')], {
+  execPnpm(['install', '--prefer-offline', '--no-frozen-lockfile', '--store-dir', join(tmpdir(), 'vui-pnpm-store')], {
     cwd: app, stdio: 'inherit', env: { ...process.env, CI: 'true' },
   });
-  execFileSync('pnpm', ['build'], {
+  execPnpm(['build'], {
     cwd: app, stdio: 'inherit', env: { ...process.env, NEXT_TELEMETRY_DISABLED: '1' },
   });
   const port = await new Promise((resolve, reject) => {
@@ -46,7 +48,7 @@ try {
     });
   });
   let output = '';
-  server = spawn('pnpm', ['exec', 'next', 'start', '--hostname', '127.0.0.1', '--port', String(port)], {
+  server = spawnPnpm(['exec', 'next', 'start', '--hostname', '127.0.0.1', '--port', String(port)], {
     cwd: app, detached: true, stdio: ['ignore', 'pipe', 'pipe'],
     env: { ...process.env, NEXT_TELEMETRY_DISABLED: '1' },
   });
@@ -95,11 +97,27 @@ try {
   await page.getByRole('dialog', { name: 'Welcome' }).waitFor({ state: 'hidden' });
   await page.getByRole('gridcell', { name: 'VUI', exact: true }).waitFor();
   assert.deepEqual(errors, [], 'Hydration or browser errors');
-  console.log('next: packed install, TypeScript, production SSR, hydration, events, object props and dialog passed');
+
+  errors.length = 0;
+  await page.goto(`${url}/templates`);
+  await page.waitForFunction(() => Boolean(customElements.get('vui-template-dashboard')));
+  await page.locator('vui-template-dashboard').waitFor();
+  await page.getByRole('button', { name: 'Switch template' }).click();
+  await page.locator('vui-template-settings').waitFor();
+  await page.getByRole('button', { name: 'Switch template' }).click();
+  await page.locator('vui-template-workspace').waitFor();
+  assert.deepEqual(errors, [], 'Templates route hydration or browser errors');
+  console.log('next: packed install, TypeScript, production SSR, hydration, events, object props, dialog and templates passed');
 } finally {
   await browser?.close();
   if (server?.pid) {
-    try { process.kill(-server.pid, 'SIGTERM'); } catch { /* Already exited. */ }
+    try {
+      if (process.platform === 'win32') {
+        execFileSync('taskkill', ['/pid', String(server.pid), '/T', '/F'], { stdio: 'ignore' });
+      } else {
+        process.kill(-server.pid, 'SIGTERM');
+      }
+    } catch { /* Already exited. */ }
     if (server.exitCode === null) await new Promise((resolve) => server.once('exit', resolve));
   }
   rmSync(work, { recursive: true, force: true });

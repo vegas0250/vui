@@ -86,6 +86,10 @@ const publicExports = [
   './widgets',
   './carousel',
   './gallery',
+  './templates',
+  './template-dashboard',
+  './template-settings',
+  './template-workspace',
   './themes/tokens',
   './themes/ui',
   './themes/density',
@@ -114,13 +118,15 @@ describe('public package surface', () => {
     expect(pkg.sideEffects).not.toContain('./dist/**/*.js');
     expect(pkg.sideEffects).toContain('./src/index.ts');
     expect(pkg.sideEffects).toContain('./src/components/**/*.ts');
-    for (const file of walk(join(root, 'src/components'))) {
-      if (file.endsWith('.test.ts') || !readFileSync(file, 'utf8').includes('defineElement(')) continue;
-      const entry = file
-        .replace(join(root, 'src'), './dist')
-        .replace(/\\/g, '/')
-        .replace(/\.ts$/, '.js');
-      expect(pkg.sideEffects, file).toContain(entry);
+    for (const folder of ['components', 'templates']) {
+      for (const file of walk(join(root, 'src', folder))) {
+        if (file.endsWith('.test.ts') || !readFileSync(file, 'utf8').includes('defineElement(')) continue;
+        const entry = file
+          .replace(join(root, 'src'), './dist')
+          .replace(/\\/g, '/')
+          .replace(/\.ts$/, '.js');
+        expect(pkg.sideEffects, file).toContain(entry);
+      }
     }
     for (const folder of ['foundation', 'contract', 'composition', 'families', 'interaction']) {
       expect(pkg.sideEffects).toContain(`./dist/${folder}/index.js`);
@@ -131,6 +137,17 @@ describe('public package surface', () => {
   it('does not publish core, showcase, or patterns', () => {
     const keys = Object.keys(pkg.exports);
     expect(keys.some((key) => key.includes('core') || key.includes('showcase') || key.includes('pattern'))).toBe(false);
+  });
+
+  it('keeps templates opt-in and declared', () => {
+    expect(Object.keys(pkg.exports)).toEqual(expect.arrayContaining([
+      './templates',
+      './template-dashboard',
+      './template-settings',
+      './template-workspace',
+    ]));
+    const index = readFileSync(join(root, 'src/index.ts'), 'utf8');
+    expect(index).not.toMatch(/templates|template-dashboard/);
   });
 
   it('keeps component modules off the package root', () => {

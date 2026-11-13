@@ -1,8 +1,10 @@
 # VUI
 
-Lightweight UI components for React 19, Next.js, plain HTML and Electron.
+Lightweight UI components for plain HTML, Electron, React 19 and Next.js.
 One package, shared CSS tokens, accessible keyboard interactions, and customizable
-themes. The existing `vui-*` Web Components power every integration.
+themes. The existing `vui-*` Web Components power every integration. Preferred
+full-stack web stack: Next.js App Router + React 19 + native Turbopack. See
+[docs/integration.md](docs/integration.md).
 
 ## Install
 
@@ -38,9 +40,10 @@ export function Name() {
 ```
 
 Import `vui/themes/tokens`, `vui/themes/ui`, and `vui/themes/system` in
-`app/layout.tsx` for initial token styles. Set `data-vui-theme="system"` on
-`<html>` to follow OS appearance. Components install the complete theme stylesheet
-when they mount. No provider, `transpilePackages`, or `ssr: false` is required.
+`app/layout.tsx` for initial token styles. Set `data-vui-theme="system"` and
+`data-vui-ui="web"` (or `desktop` / `terminal`) on `<html>`. Components install
+the complete theme stylesheet when they mount. No provider, `transpilePackages`,
+webpack flag, or `ssr: false` is required.
 
 The server renders element tags, attributes and children. Shadow DOM controls
 and interaction initialize in the browser after hydration. Use `vui/react` in

@@ -1,6 +1,6 @@
 {
   "name": "vui",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Универсальная модульная UI-система готовых визуальных компонентов для Web, SPA и Desktop/Electron с поддержкой тем и различной плотности интерфейса.",
   "type": "module",
   "license": "UNLICENSED",
@@ -19,6 +19,7 @@
     "./src/index.ts",
     "./src/categories/*.ts",
     "./src/components/**/*.ts",
+    "./src/templates/**/*.ts",
     "./src/theme/index.ts",
     "./src/foundation/index.ts",
     "./src/contract/index.ts",
@@ -95,6 +96,10 @@
     "./dist/components/overlay/popover.js",
     "./dist/components/widgets/carousel.js",
     "./dist/components/widgets/gallery.js",
+    "./dist/templates/dashboard.js",
+    "./dist/templates/settings.js",
+    "./dist/templates/workspace.js",
+    "./dist/templates/index.js",
     "./themes/**/*.css",
     "./src/tokens/**/*.css"
   ],
@@ -413,6 +418,22 @@
     "./gallery": {
       "types": "./dist/components/widgets/gallery.d.ts",
       "import": "./dist/components/widgets/gallery.js"
+    },
+    "./templates": {
+      "types": "./dist/templates/index.d.ts",
+      "import": "./dist/templates/index.js"
+    },
+    "./template-dashboard": {
+      "types": "./dist/templates/dashboard.d.ts",
+      "import": "./dist/templates/dashboard.js"
+    },
+    "./template-settings": {
+      "types": "./dist/templates/settings.d.ts",
+      "import": "./dist/templates/settings.js"
+    },
+    "./template-workspace": {
+      "types": "./dist/templates/workspace.d.ts",
+      "import": "./dist/templates/workspace.js"
     },
     "./themes/tokens": "./src/tokens/tokens.css",
     "./themes/ui": "./src/tokens/ui.css",

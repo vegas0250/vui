@@ -59,3 +59,6 @@ export { MenuItem, Menu } from './components/overlay/menu.react';
 export { Popover } from './components/overlay/popover.react';
 export { Carousel } from './components/widgets/carousel.react';
 export { Gallery } from './components/widgets/gallery.react';
+export { TemplateDashboard } from './templates/dashboard.react';
+export { TemplateSettings } from './templates/settings.react';
+export { TemplateWorkspace } from './templates/workspace.react';

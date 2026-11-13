@@ -14,6 +14,7 @@ export const catalogGroups = [
   'feedback',
   'overlay',
   'layout',
+  'templates',
 ] as const;
 
 export type CatalogGroup = (typeof catalogGroups)[number];
@@ -27,6 +28,7 @@ export const catalogGroupLabels: Record<CatalogGroup, [string, string]> = {
   feedback: ['Обратная связь', 'Feedback'],
   overlay: ['Всплывающие элементы', 'Overlays'],
   layout: ['Раскладка', 'Layout'],
+  templates: ['Шаблоны', 'Templates'],
 };
 
 export const catalogGroupIcons: Record<CatalogGroup, string> = {
@@ -38,6 +40,7 @@ export const catalogGroupIcons: Record<CatalogGroup, string> = {
   feedback: 'bell',
   overlay: 'layers',
   layout: 'layout-template',
+  templates: 'monitor',
 };
 
 /** Explicit host → group. Unknown non-child hosts are omitted from the catalog. */
@@ -102,6 +105,9 @@ const hostGroups: Record<string, CatalogGroup> = {
   window: 'layout',
   titlebar: 'layout',
   'status-bar': 'layout',
+  'template-dashboard': 'templates',
+  'template-settings': 'templates',
+  'template-workspace': 'templates',
 };
 
 /** Child / compound parts — not top-level catalog pages. */

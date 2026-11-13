@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en" data-vui-theme="catppuccin-latte" data-vui-ui="web">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VUI Templates — realistic hosts</title>
+    <style>
+      html, body { height: 100%; margin: 0; }
+      body { display: flex; flex-direction: column; min-height: 0; background: var(--vui-color-background, #fff); }
+      #chrome { flex: 0 0 auto; display: flex; gap: 0.5rem; flex-wrap: wrap; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--vui-color-border, #ccc); }
+      #stage { flex: 1 1 auto; min-height: 0; }
+      #stage > * { height: 100%; }
+    </style>
+  </head>
+  <body>
+    <div id="chrome">
+      <label>Template <select id="app">
+        <option value="dashboard">Dashboard</option>
+        <option value="settings">Settings</option>
+        <option value="workspace">Workspace</option>
+      </select></label>
+      <label>UI mode <select id="ui">
+        <option value="web">web</option>
+        <option value="desktop">desktop</option>
+        <option value="terminal">terminal</option>
+      </select></label>
+      <label>Theme <select id="theme">
+        <option value="catppuccin-latte">latte</option>
+        <option value="catppuccin-mocha">mocha</option>
+        <option value="high-contrast">high-contrast</option>
+      </select></label>
+    </div>
+    <div id="stage"></div>
+    <script type="module">
+      import 'vui';
+      import 'vui/templates';
+      import { setTheme, setUIMode } from 'vui/theme';
+
+      const stage = document.querySelector('#stage');
+      const app = document.querySelector('#app');
+      const ui = document.querySelector('#ui');
+      const theme = document.querySelector('#theme');
+
+      const rows = [
+        { id: '1', name: 'Atlas', owner: 'Ada', status: 'active' },
+        { id: '2', name: 'Orion', owner: 'Grace', status: 'draft' },
+        { id: '3', name: 'Nova', owner: 'Lin', status: 'active' },
+      ];
+
+      function render(id) {
+        if (id === 'settings') {
+          stage.innerHTML = `
+            <vui-template-settings label="Application" content-label="Settings">
+              <vui-toolbar slot="toolbar" label="Commands">
+                <strong slot="start">Settings</strong>
+                <vui-button slot="start" data-collapse variant="ghost">Navigation</vui-button>
+              </vui-toolbar>
+              <vui-nav slot="nav" label="Sections">
+                <vui-nav-item selected>Profile</vui-nav-item>
+                <vui-nav-item>Notifications</vui-nav-item>
+                <vui-nav-item>Access</vui-nav-item>
+              </vui-nav>
+              <vui-vstack gap="lg">
+                <vui-panel heading="Profile">
+                  <vui-vstack gap="md">
+                    <vui-input label="Name" value="Ada" required></vui-input>
+                    <vui-input label="Email" type="email" value="ada@example.com"></vui-input>
+                    <vui-textarea label="Signature" rows="3">Northwind</vui-textarea>
+                  </vui-vstack>
+                </vui-panel>
+                <vui-panel heading="Notifications">
+                  <vui-switch checked>Email</vui-switch>
+                  <vui-switch>Push</vui-switch>
+                </vui-panel>
+                <vui-alert tone="warning">This workspace is over its seat limit.</vui-alert>
+                <vui-button data-save variant="primary">Save</vui-button>
+              </vui-vstack>
+              <vui-status-bar slot="footer"><span>Draft</span><span slot="end">Unsaved</span></vui-status-bar>
+            </vui-template-settings>`;
+        } else if (id === 'workspace') {
+          stage.innerHTML = `
+            <vui-template-workspace label="Workspace" content-label="Editor and inspector">
+              <vui-titlebar slot="header" label="Atlas"></vui-titlebar>
+              <vui-toolbar slot="toolbar" label="Commands">
+                <vui-button slot="start" data-collapse variant="ghost">Navigation</vui-button>
+                <vui-text slot="start">src/app.ts</vui-text>
+                <vui-button slot="end" variant="primary">Run</vui-button>
+              </vui-toolbar>
+              <vui-file-tree slot="nav" label="Files">
+                <vui-tree-item label="src" kind="folder" expanded>
+                  <vui-tree-item label="app.ts" kind="file" selected></vui-tree-item>
+                  <vui-tree-item label="theme.ts" kind="file"></vui-tree-item>
+                </vui-tree-item>
+                <vui-tree-item label="README.md" kind="file"></vui-tree-item>
+              </vui-file-tree>
+              <vui-scroll-area slot="editor" label="Editor">
+                <vui-vstack gap="xs" padding="md">${Array.from({ length: 40 }, (_, i) => `<vui-text variant="code">const value${i} = ${i};</vui-text>`).join('')}</vui-vstack>
+              </vui-scroll-area>
+              <vui-scroll-area slot="inspector" label="Inspector">
+                <vui-vstack gap="md" padding="md">
+                  <vui-properties label="File">
+                    <vui-property label="Path">src/app.ts</vui-property>
+                    <vui-property label="Owner">Ada</vui-property>
+                  </vui-properties>
+                  <vui-empty heading="No problems">This file has no diagnostics.</vui-empty>
+                </vui-vstack>
+              </vui-scroll-area>
+              <vui-status-bar slot="footer"><span>Ln 12</span><span slot="end">UTF-8</span></vui-status-bar>
+            </vui-template-workspace>`;
+        } else {
+          stage.innerHTML = `
+            <vui-template-dashboard label="Application" content-label="Overview">
+              <vui-toolbar slot="toolbar" label="Commands">
+                <strong slot="start">Northwind</strong>
+                <vui-button slot="start" data-collapse variant="ghost">Navigation</vui-button>
+                <vui-button slot="end" variant="primary">New</vui-button>
+              </vui-toolbar>
+              <vui-nav slot="nav" label="Sections">
+                <vui-nav-item selected>Overview</vui-nav-item>
+                <vui-nav-item>Orders</vui-nav-item>
+                <vui-nav-item>Customers</vui-nav-item>
+              </vui-nav>
+              <vui-vstack gap="lg" padding="lg">
+                <vui-alert tone="danger" closable>Invoice export failed</vui-alert>
+                <vui-grid columns="4" min="12rem" gap="md">
+                  <vui-panel heading="Open"><vui-text variant="heading" level="2">12</vui-text></vui-panel>
+                  <vui-panel heading="Overdue"><vui-text variant="heading" level="2">3</vui-text></vui-panel>
+                  <vui-panel heading="Drafts"><vui-text variant="heading" level="2">4</vui-text></vui-panel>
+                  <vui-panel heading="Done"><vui-text variant="heading" level="2">18</vui-text></vui-panel>
+                </vui-grid>
+                <vui-panel heading="Orders">
+                  <vui-input data-filter label="Filter"></vui-input>
+                  <vui-data-grid label="Orders" empty-label="No matching orders"></vui-data-grid>
+                </vui-panel>
+                <vui-empty heading="Inbox">When a customer writes, the thread shows up here.</vui-empty>
+              </vui-vstack>
+              <vui-status-bar slot="footer"><span>12 open</span><span slot="end">Ready</span></vui-status-bar>
+            </vui-template-dashboard>`;
+        }
+
+        const host = stage.firstElementChild;
+        host?.querySelector('[data-collapse]')?.addEventListener('click', () => {
+          host.toggleAttribute('collapsed');
+        });
+        const grid = host?.querySelector('vui-data-grid');
+        if (grid) {
+          grid.columns = [
+            { key: 'name', title: 'Project' },
+            { key: 'owner', title: 'Owner' },
+            { key: 'status', title: 'Status' },
+          ];
+          const apply = () => {
+            const query = (host.querySelector('[data-filter]')?.value ?? '').toLowerCase();
+            grid.rows = rows.filter((row) => row.name.toLowerCase().includes(query));
+          };
+          host.querySelector('[data-filter]')?.addEventListener('input', apply);
+          apply();
+        }
+        host?.querySelector('[data-save]')?.addEventListener('click', () => {
+          const input = host.querySelector('vui-input');
+          if (!input) return;
+          input.invalid = !input.value.trim();
+          if (input.invalid) input.focus();
+        });
+      }
+
+      function applyChrome() {
+        setTheme(theme.value);
+        setUIMode(ui.value);
+      }
+
+      app.addEventListener('change', () => render(app.value));
+      ui.addEventListener('change', applyChrome);
+      theme.addEventListener('change', applyChrome);
+      applyChrome();
+      render('dashboard');
+    </script>
+  </body>
+</html>

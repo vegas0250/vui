@@ -336,6 +336,9 @@ export function exampleFor(tag: string): Example {
     html[slug] = `<vui-gallery label="${text('Галерея', 'Gallery')}"><a href="${svg('A', '#4c6ef5')}"><img src="${svg('A', '#4c6ef5')}" alt="Atlas"></a><a href="${svg('B', '#0ca678')}"><img src="${svg('B', '#0ca678')}" alt="Nova"></a><a href="${svg('C', '#f08c00')}"><img src="${svg('C', '#f08c00')}" alt="Orbit"></a></vui-gallery>`;
   }
   if (slug === 'shell') return interfaceExample('shell');
+  if (slug === 'template-dashboard' || slug === 'template-settings' || slug === 'template-workspace') {
+    return templateExample(slug);
+  }
   if (!html[slug]) throw new Error(`Missing documentation example: ${tag}`);
 
   const example: Example = { id: slug, html: html[slug]! };
@@ -439,6 +442,27 @@ save?.addEventListener('click', () => {
   if (name.invalid) { name.focus(); result.textContent = ${JSON.stringify(text('Введите имя', 'Enter a name'))}; return; }
   result.textContent = ${JSON.stringify(text('Сохранено', 'Saved'))} + ': ' + name.value;
 });`;
+}
+
+function templateExample(slug: 'template-dashboard' | 'template-settings' | 'template-workspace'): Example {
+  const tag = `vui-${slug}`;
+  const nav = `<vui-nav slot="nav" label="${text('Разделы', 'Sections')}"><vui-nav-item selected>${text('Обзор', 'Overview')}</vui-nav-item><vui-nav-item>${text('Ещё', 'More')}</vui-nav-item></vui-nav>`;
+  const toolbar = `<vui-toolbar slot="toolbar" label="${text('Команды', 'Commands')}"><strong slot="start">App</strong></vui-toolbar>`;
+  const footer = `<vui-status-bar slot="footer">${text('Готово', 'Ready')}</vui-status-bar>`;
+  if (slug === 'template-workspace') {
+    return {
+      id: slug,
+      html: `<${tag} label="${text('Рабочая область', 'Workspace')}" style="min-height:20rem">${toolbar}${nav}<vui-scroll-area slot="editor" label="${text('Редактор', 'Editor')}"><vui-text variant="code">const ready = true;</vui-text></vui-scroll-area><vui-panel slot="inspector" heading="${text('Инспектор', 'Inspector')}"><vui-text>${text('Свойства', 'Properties')}</vui-text></vui-panel>${footer}</${tag}>`,
+    };
+  }
+  const main =
+    slug === 'template-settings'
+      ? `<vui-panel heading="${text('Профиль', 'Profile')}"><vui-input label="${text('Имя', 'Name')}" value="Ada"></vui-input></vui-panel>`
+      : `<vui-panel heading="${text('Обзор', 'Overview')}"><vui-text>${text('Сводка', 'Summary')}</vui-text></vui-panel>`;
+  return {
+    id: slug,
+    html: `<${tag} label="${text('Приложение', 'Application')}" style="min-height:20rem">${toolbar}${nav}${main}${footer}</${tag}>`,
+  };
 }
 
 export function interfaceExample(id: string): Example {

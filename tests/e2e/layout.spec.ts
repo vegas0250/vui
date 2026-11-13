@@ -9,8 +9,20 @@ test.describe.configure({ timeout: 60_000 });
 
 async function open(page: Page, app: string, ui: string, theme: string, width: number): Promise<void> {
   await page.setViewportSize({ width, height: 900 });
-  await page.goto(`/layout.html?app=${app}&ui=${ui}&theme=${theme}&width=${width}`);
+  // Domcontentloaded alone races the gallery module; wait until the template host mounts.
+  await page.goto(`/layout.html?app=${app}&ui=${ui}&theme=${theme}&width=${width}`, {
+    waitUntil: 'domcontentloaded',
+  });
+  await page.waitForFunction(
+    (id) => {
+      const frame = document.querySelector('#frame');
+      return Boolean(frame?.querySelector(`[data-layout="${id}"]`) && frame.querySelector(`vui-template-${id}`));
+    },
+    app,
+    { timeout: 20_000 },
+  );
   await expect(page.locator(`#frame [data-layout="${app}"]`)).toBeVisible();
+  await expect(page.locator(`#frame vui-template-${app}`)).toBeVisible();
 }
 
 async function assertStable(page: Page): Promise<void> {
@@ -57,9 +69,13 @@ async function assertStable(page: Page): Promise<void> {
 
 async function geometry(page: Page): Promise<{ radius: string; bar: string; nav: string; font: string; bg: string }> {
   return page.evaluate(() => {
-    const section = document.querySelector('#frame vui-panel')?.shadowRoot?.querySelector('section');
-    const bar = document.querySelector('#frame vui-toolbar')?.shadowRoot?.querySelector('.bar');
-    const nav = document.querySelector('#frame vui-shell')?.shadowRoot?.querySelector('.rail');
+    const frame = document.querySelector('#frame');
+    const template =
+      frame?.querySelector('vui-template-dashboard, vui-template-settings, vui-template-workspace') ?? null;
+    const shell = template?.shadowRoot?.querySelector('vui-shell') ?? frame?.querySelector('vui-shell');
+    const section = frame?.querySelector('vui-panel')?.shadowRoot?.querySelector('section');
+    const bar = frame?.querySelector('vui-toolbar')?.shadowRoot?.querySelector('.bar');
+    const nav = shell?.shadowRoot?.querySelector('.rail');
     return {
       radius: section ? getComputedStyle(section).borderRadius : '',
       bar: bar ? getComputedStyle(bar).minHeight : '',
@@ -125,6 +141,24 @@ test('dashboard filter, nested scroll, and keyboard', async ({ page }) => {
   await page.locator('#frame vui-nav-item').first().locator('a').click();
   await page.keyboard.press('ArrowDown');
   await expect(page.locator('#frame vui-nav-item').nth(1)).toHaveAttribute('selected', '');
+});
+
+test('template forwards collapse and exposes shell skip link', async ({ page }) => {
+  await open(page, 'dashboard', 'desktop', 'catppuccin-latte', 1280);
+  const host = page.locator('#frame vui-template-dashboard');
+  await expect(host).not.toHaveAttribute('collapsed');
+  await page.locator('#frame [data-collapse]').click();
+  await expect(host).toHaveAttribute('collapsed', '');
+  const skip = await host.evaluate((node) => {
+    const shell = node.shadowRoot?.querySelector('vui-shell');
+    const link = shell?.shadowRoot?.querySelector<HTMLAnchorElement>('a.skip');
+    return {
+      text: link?.textContent ?? '',
+      href: link?.getAttribute('href') ?? '',
+    };
+  });
+  expect(skip.text.toLowerCase()).toContain('skip');
+  expect(skip.href).toContain('#');
 });
 
 test('workspace split resizes and scrolls', async ({ page }) => {

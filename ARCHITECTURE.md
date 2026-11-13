@@ -1,8 +1,14 @@
 # VUI architecture
 
+Product vision: [VISION.md](VISION.md). Platform boundary: [PLATFORM.md](PLATFORM.md).
+
 VUI is one ESM package. Its existing Web Components remain the implementation;
 React 19 applications use typed adapters from `vui/react`. There is no second set
 of styles, accessibility behavior, or themes to maintain.
+
+Color theme, UI mode, and application template are three independent axes. Themes
+set semantic colors; UI modes set structural scale; templates (planned) set region
+composition only.
 
 ## Start with a component
 
@@ -24,7 +30,8 @@ not need an application provider, state manager, router, or dependency injection
 | `src/utils/` | Element lifecycle, property reflection, styles, events, React adapter |
 | `src/tokens/` | Shared CSS custom properties and UI mode scales |
 | `src/interaction/` | Shared keyboard, focus, selection, overlay and pointer behavior |
-| `src/showcase/` | Documentation, Theme Studio drafts, documentation navigation and preview templates; never published |
+| `src/templates/` | Published Templates layer (Dashboard, Settings, Workspace); opt-in exports only |
+| `src/showcase/` | Documentation, Theme Studio drafts, documentation navigation and reference layout assemblies; never published |
 
 There is no `hooks/` directory yet: the small adapter keeps its effects together.
 Add one when a genuinely reusable public React hook is needed, rather than
@@ -53,6 +60,11 @@ category imports and legacy theme CSS paths remain supported. See
 
 ## React and Next.js
 
+Preferred application stack for new full-stack web apps: Next.js App Router,
+React 19, and native Turbopack. VUI itself remains Custom Elements + CSS tokens
+and does not require Vite, Next.js, or React. Integration patterns:
+[docs/integration.md](docs/integration.md).
+
 `src/react.ts` re-exports adjacent `*.react.ts` adapters. Each calls the same
 small factory in `utils/react.ts`. It renders the real `vui-*` tag, forwards a
 ref to that element, attaches native DOM event listeners, and dynamically imports
@@ -76,7 +88,7 @@ imports remain browser entry points and must not be evaluated by a server.
 The [working example](examples/next) includes a Server Component, client state,
 forms, a modal and grid object props.
 
-## Themes
+## Themes and UI mode
 
 CSS custom properties are the rendering source of truth. Components consume the
 same `--vui-*` tokens for every palette. Presets provide validated values for
@@ -88,8 +100,29 @@ for light. Theme Studio draft state is separate from the documentation theme.
 The theme engine allowlists tokens, validates types and colors, bounds imported
 JSON, and never evaluates imported CSS or code. Built-in presets are immutable.
 Live preview, color editing, JSON import/export and CSS export use this same
-engine. Reference templates, editor history, preview UI and documentation data stay in
-`src/showcase`, outside the package export map and declaration build.
+engine. Reference layout assemblies (Dashboard, Settings, Workspace), editor
+history, preview UI and documentation data stay in `src/showcase`, outside the
+package export map and declaration build.
+
+## Templates
+
+Templates are Custom Element hosts that compose `vui-shell` and layout primitives
+with stable named slots and no domain content. Showcase Layout Gallery
+(`layout.html`, `src/showcase/layouts.ts`) fills those slots with demo content.
+Patterns remain copyable Studio recipes and stay out of exports; see
+[docs/patterns.md](docs/patterns.md) and [docs/templates.md](docs/templates.md).
+
+**Opt-in** entries (not pulled by `import 'vui'`):
+
+- `vui/templates`
+- `vui/template-dashboard` → `VTemplateDashboard` / `<vui-template-dashboard>`
+- `vui/template-settings` → `VTemplateSettings` / `<vui-template-settings>`
+- `vui/template-workspace` → `VTemplateWorkspace` / `<vui-template-workspace>`
+
+Core region slots align with shell (`header`, `toolbar`, `nav`, default, `aside`,
+`footer`). Workspace adds `editor` and `inspector` for the split main area.
+Template hosts do not branch on theme or UI mode names. Stability expectations and
+intentional limits: [docs/templates.md](docs/templates.md#public-api-stability).
 
 ## Build and verification
 

@@ -5,9 +5,12 @@ VUI — UI-платформа на Web Components для обычного HTML, 
 Карта документов:
 
 - этот файл — как подключить и чем пользоваться;
+- [integration.md](integration.md) — паттерны интеграции (HTML, React, Next, Electron, UI modes);
+- [react.md](react.md) — React 19 и Next.js App Router;
 - [ARCHITECTURE.md](../ARCHITECTURE.md) — контракты;
 - [PLATFORM.md](../PLATFORM.md) — граница платформы;
 - [components.md](components.md) — API элементов;
+- [templates.md](templates.md) — opt-in Templates;
 - [vocabulary.md](vocabulary.md) — какое имя из карты каким элементом закрыто;
 - [patterns.md](patterns.md) — когда собирать самому, а когда брать pattern;
 - [CONTRIBUTING.md](../CONTRIBUTING.md) — новый компонент.
@@ -17,6 +20,10 @@ VUI — UI-платформа на Web Components для обычного HTML, 
 ```bash
 npm install vui
 ```
+
+Для новых full-stack web-приложений предпочтителен стек **Next.js + React 19 +
+native Turbopack** (`vui/react`). VUI не зависит от Vite, Next или React: ядро —
+Custom Elements. Подробно: [integration.md](integration.md).
 
 ```html
 <script type="module">
@@ -28,7 +35,7 @@ npm install vui
 <vui-button variant="primary">Save</vui-button>
 ```
 
-Импорт компонента регистрирует элемент и ставит стили. Отдельный CSS нужен только если тема подключается файлом: `vui/themes/light`, `dark`, `high-contrast`, `system`.
+Импорт компонента регистрирует элемент и ставит стили. Отдельный CSS нужен только если тема подключается файлом: `vui/themes/tokens`, `vui/themes/ui`, плюс `light` / `dark` / `high-contrast` / `system`.
 
 Направление текста — атрибут документа, не тема:
 

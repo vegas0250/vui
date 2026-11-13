@@ -13,11 +13,13 @@ alwaysApply: true
 
 ## Статус
 
-`1.0.0`. Публичная граница: компоненты, patterns в Studio, `vui-shell`. Не добавляйте пустые заглушки. Pattern не является компонентом и не входит в exports. После 1.0 новый компонент появляется из требования реального приложения, а не из расширения списка. Карта имён — `docs/vocabulary.md`.
+`1.0.0`. Продуктовое видение — [VISION.md](VISION.md). Публичная граница: компоненты, patterns в Studio, `vui-shell`, opt-in Templates. Не добавляйте пустые заглушки. Pattern не является компонентом и не входит в exports. **Templates** — опубликованный слой (`vui/templates`, `vui/template-dashboard`, `vui/template-settings`, `vui/template-workspace`); не входят в `import 'vui'`. Демо-наполнение галереи — `src/showcase/layouts.ts`. API — [docs/templates.md](docs/templates.md). После 1.0 новый компонент или шаблон появляется из требования реального приложения, а не из расширения списка. Карта имён — `docs/vocabulary.md`.
+
+Путь интеграции: установить VUI → выбрать UI mode → выбрать тему → импортировать template → наполнить слоты данными и поведением. Паттерны интеграции (HTML, React, Next, Electron, Web/Desktop/Terminal) — [docs/integration.md](docs/integration.md).
 
 ## Стек
 
-TypeScript, Custom Elements, DOM, CSS custom properties, Vite, Vitest, Playwright, pnpm. В ядре нет Vue, React, Angular и Svelte. Нет AI, схемы, визуального конструктора, роутера, менеджера состояния, бэкенда и слоя main process Electron.
+TypeScript, Custom Elements, DOM, CSS custom properties, Vite (сборка библиотеки и Studio), Vitest, Playwright, pnpm. В ядре нет Vue, React, Angular и Svelte; `vui/react` — опциональный peer. Предпочтительный стек **новых** full-stack web-приложений: Next.js App Router + React 19 + native Turbopack. Ядро не зависит от Vite, Next.js и React. Нет AI, схемы, визуального конструктора, роутера, менеджера состояния, бэкенда и слоя main process Electron.
 
 ## Каталоги
 
@@ -33,16 +35,21 @@ src/interaction/    focus, keyboard, selection, commands, shortcuts, overlay, co
 src/icons/          реестр иконок
 src/theme/          setTheme, setUIMode, установка стилей
 src/tokens/         primitive tokens, пороги контейнера, плотность
-src/showcase/       разметка и поведение showcase
+src/templates/      Templates: dashboard, settings, workspace (opt-in exports)
+src/showcase/       разметка и поведение showcase; демо-наполнение templates
 themes/             light, dark, high-contrast, system
 tests/unit          vitest
-tests/e2e           playwright: showcase, foundation, responsive, a11y, visual
+tests/e2e           playwright: showcase, foundation, responsive, a11y, visual, layout
 index.html          оболочка showcase
 visual.html         стенд visual regression и accessibility
+VISION.md           продуктовое видение и принципы
 ARCHITECTURE.md     публичный архитектурный контракт
 PLATFORM.md         граница платформы и карта слоёв
 CONTRIBUTING.md     процесс нового компонента
 docs/components.md  каталог публичного API
+docs/patterns.md    patterns (showcase)
+docs/templates.md   Templates API
+docs/integration.md паттерны интеграции (HTML / React / Next / Electron / UI modes)
 ```
 
 Модуль компонента регистрирует свои элементы побочным эффектом. Модуль категории импортирует только существующие компоненты. `src/index.ts` загружает все категории.
@@ -58,6 +65,8 @@ docs/components.md  каталог публичного API
 `vui/interaction` — primitives без регистрации элементов: focus, keyboard, selection, commands, shortcuts, overlay, context menu, drag & drop, clipboard, pointer. `vui/menu` включает `vui-menu-item`.
 
 `vui/runtime` — Foundation runtime: `readFoundation`, `readToken`, `containerBand`, `setTheme`, `setUIMode`, `prefersReducedMotion`, `prefersForcedColors`. `vui/contract` — `registerContract`, `listContracts`, `checkCompliance`. `vui/composition` — `registerComposition`, `checkComposition`, `ownedChildren`. `vui/families` — правила Action, Field, Overlay, Navigation, Data, Feedback, Layout, Content, Desktop и Widget. `componentStates` — общие имена состояний. `vui/foundation` по-прежнему регистрирует иконку, а не runtime.
+
+Templates (opt-in, не в `import 'vui'`): `vui/templates`, `vui/template-dashboard`, `vui/template-settings`, `vui/template-workspace`. Классы `VTemplateDashboard` / `VTemplateSettings` / `VTemplateWorkspace`. React: `TemplateDashboard` / `TemplateSettings` / `TemplateWorkspace` из `vui/react` (ленивая регистрация CE). Слоты как у shell; у workspace дополнительно `editor` и `inspector`. Эталоны: `templates.html`, `layout.html`, `examples/next/app/templates`.
 
 `vui/stack`, `vui/hstack` и `vui/vstack` — один модуль. `vui/checkbox` включает `vui-checkbox-group`. `vui/radio` включает `vui-radio-group`. `vui/toggle` включает `vui-toggle-group`. `vui/field` включает `vui-field-group`. `vui/nav` включает `vui-nav-item`. `vui/stepper` включает `vui-step`. `vui/list` включает `vui-list-item`. `vui/properties` включает `vui-property`. `vui/select` включает `vui-option`. `vui/tabs` включает `vui-tab` и `vui-tab-panel`. `vui/file-tree` включает `vui-tree-item`. `vui/toast` включает `vui-toaster` и `toast()`. `vui/desktop` реэкспортирует toolbar, split panel, shell и window; исходники toolbar и split остаются в navigation и layout.
 
@@ -84,6 +93,9 @@ VToolbar        → <vui-toolbar>
 VStack          → <vui-stack>
 VHStack         → <vui-hstack>
 VVStack         → <vui-vstack>
+VTemplateDashboard → <vui-template-dashboard>
+VTemplateSettings  → <vui-template-settings>
+VTemplateWorkspace → <vui-template-workspace>
 ```
 
 `VuiElement` — внутренний базовый класс, не custom element. Он держит открытый shadow, один шаблон на первое подключение, `sync()` и `hold(name, dispose)` для снятия слушателей в `disconnectedCallback`. `VuiTheme` и `VuiUIMode` — типы API темы, не компоненты. Части, которые не являются самостоятельными элементами, остаются в модуле родителя: `VOption` → `vui-option`, `VTab` → `vui-tab`, `VTabPanel` → `vui-tab-panel`, `VTreeItem` → `vui-tree-item`, `VToaster` → `vui-toaster`.
@@ -157,7 +169,7 @@ Responsive — часть компонента, отдельно от темы �
 
 `system` использует `prefers-color-scheme`. Тёмная ветка `themes/system.css` ссылается на те же primitive palette names, что и `themes/dark.css`.
 
-Компоненты берут semantic и component tokens (`--vui-color-*`, `--vui-space-*`, `--vui-size-control`, `--vui-font-*`, `--vui-radius*`, `--vui-shadow-*`, `--vui-border-width`, `--vui-z-*`, `--vui-toolbar-height`, `--vui-statusbar-height`, `--vui-row-height`). Не зашивайте цвета, отступы и радиусы в CSS компонента, если token уже есть. Своя тема переопределяет только semantic colors. UI mode — ортогональная структурная шкала в `src/tokens/ui.css`: `web` (браузерная плотность, плотные радиусы, мягкая многослойная тень), `desktop` (плотнее chrome, крупнее радиусы, key+ambient elevation), `terminal` (моноширинный TUI: плотная сетка, нулевой радиус, без теней и лишнего motion). Компоненты не ветвятся по имени темы или UI mode. Семейства радиусов (`--vui-radius-box/field/selector`) и focus/elevation recipes задаёт UI mode; `appearance` в ThemeDocument — малые дельты плюс опциональный `uiMode`. Legacy-пресеты `fluent-light`/`fluent-dark` сохраняют id и preferred `appearance.uiMode` = `desktop` (в UI показываются как Desktop Light/Dark); `radix-light`/`radix-dark` держат мягкие радиусы как appearance-дельты без смены UI mode. Цветовые пресеты без `uiMode` сохраняют текущий `data-vui-ui` хоста. CSS export пишет `[data-vui-theme="custom"]` (цвета + дельты) и опирается на `[data-vui-ui]` для structural scale. Публичный каталог документации группирует хосты по назначению VUI (включая группу widgets для `vui-carousel` и `vui-gallery`) и одинаков для всех UI mode; дочерние части (`vui-menu-item`, `vui-nav-item`, `vui-tab`…) остаются в API родителя и не дублируются в каталоге. Правила расширения — `docs/research/component-matrix.md`.
+Компоненты берут semantic и component tokens (`--vui-color-*`, `--vui-space-*`, `--vui-size-control`, `--vui-font-*`, `--vui-radius*`, `--vui-shadow-*`, `--vui-border-width`, `--vui-z-*`, `--vui-toolbar-height`, `--vui-statusbar-height`, `--vui-row-height`). Не зашивайте цвета, отступы и радиусы в CSS компонента, если token уже есть. Своя тема переопределяет только semantic colors. UI mode — ортогональная структурная шкала в `src/tokens/ui.css`: `web` (браузерная плотность, плотные радиусы, мягкая многослойная тень), `desktop` (плотнее chrome, крупнее радиусы, key+ambient elevation), `terminal` (моноширинный TUI: плотная сетка, нулевой радиус, без теней и лишнего motion). Тема, UI mode и template — три независимые оси; компоненты и будущие templates не ветвятся по имени темы или UI mode. Семейства радиусов (`--vui-radius-box/field/selector`) и focus/elevation recipes задаёт UI mode; `appearance` в ThemeDocument — малые дельты плюс опциональный `uiMode`. Legacy-пресеты `fluent-light`/`fluent-dark` сохраняют id и preferred `appearance.uiMode` = `desktop` (в UI показываются как Desktop Light/Dark); `radix-light`/`radix-dark` держат мягкие радиусы как appearance-дельты без смены UI mode. Цветовые пресеты без `uiMode` сохраняют текущий `data-vui-ui` хоста. CSS export пишет `[data-vui-theme="custom"]` (цвета + дельты) и опирается на `[data-vui-ui]` для structural scale. Публичный каталог документации группирует хосты по назначению VUI (включая группу widgets для `vui-carousel` и `vui-gallery`) и одинаков для всех UI mode; дочерние части (`vui-menu-item`, `vui-nav-item`, `vui-tab`…) остаются в API родителя и не дублируются в каталоге. Правила расширения — `docs/research/component-matrix.md`.
 
 Импорт любого компонента вызывает `installVuiStyles()`, который добавляет один тег `#vui-styles`. Исходные CSS-файлы остаются пригодными сами по себе.
 
@@ -258,11 +270,11 @@ Interaction contract объявляет клавиши из общего наб�
 
 ## Showcase
 
-`pnpm dev` отдаёт VUI Studio (`index.html`) и галерею раскладок (`layout.html`): Dashboard, Settings и Workspace в режимах web, desktop и terminal. Страница Studio собрана из элементов VUI и показывает Foundation, темы, UI mode, направление `dir`, Layout, компоненты, patterns, shell, Platform Validation, контракт и Responsive Design. У каждого реализованного компонента там есть рабочий пример. Без примера компонент не считается готовым. Переключатели темы и UI mode вызывают `setTheme` и `setUIMode`. В разделе Responsive Design есть пресеты wide, medium и narrow и ручка изменения ширины. Табло показывает текущие тему, UI mode и ширину контейнера. Раздел Contract показывает lifecycle, состояния, клавиатуру, фокус, две ширины поля и таблицу зарегистрированных контрактов. Раздел Composition показывает форму, вкладки, таблицу и диалог, собранные из тех же контрактов. Снимок Foundation читает `readFoundation()`. Pattern остаётся примером в `src/showcase` и не входит в exports.
+`pnpm dev` отдаёт VUI Studio (`index.html`) и галерею раскладок (`layout.html`): Dashboard, Settings и Workspace в режимах web, desktop и terminal. Страница Studio собрана из элементов VUI и показывает Foundation, темы, UI mode, направление `dir`, Layout, компоненты, patterns, shell, Platform Validation, контракт и Responsive Design. У каждого реализованного компонента там есть рабочий пример. Без примера компонент не считается готовым. Переключатели темы и UI mode вызывают `setTheme` и `setUIMode`. В разделе Responsive Design есть пресеты wide, medium и narrow и ручка изменения ширины. Табло показывает текущие тему, UI mode и ширину контейнера. Раздел Contract показывает lifecycle, состояния, клавиатуру, фокус, две ширины поля и таблицу зарегистрированных контрактов. Раздел Composition показывает форму, вкладки, таблицу и диалог, собранные из тех же контрактов. Снимок Foundation читает `readFoundation()`. Pattern остаётся примером в `src/showcase` и не входит в exports. Галерея раскладок наполняет опубликованные `vui-template-*` демо-данными из showcase.
 
 ## Тесты
 
-Vitest + happy-dom: `tests/unit`. Покрывайте границы регистрации, карту `V*` ↔ `vui-*`, матрицу component → category → full import, повторный mount, отражённые properties, tokens, layout, стек overlay, возврат фокуса dialog, клавиатуру, interaction primitives, установку темы, регистрацию иконок, предупреждения о неверном API и responsive-правила, которым не нужна реальная раскладка. Стресс: 1000 строк `vui-data-grid` и 1000 пунктов `vui-list`. Playwright: `tests/e2e/showcase.spec.ts`, `tests/e2e/responsive.spec.ts`, `tests/e2e/foundation.spec.ts`, `tests/e2e/composition.spec.ts`, `tests/e2e/a11y.spec.ts`, `tests/e2e/interaction.spec.ts`, `tests/e2e/visual.spec.ts` и `tests/e2e/layout.spec.ts`. `layout.spec.ts` проверяет Dashboard, Settings и Workspace в web, desktop и terminal, в светлой и тёмной теме, на ширине 375, 768, 1280 и 1920, плюс несколько визуальных снимков. Визуальные baseline Studio — четыре сочетания темы, плотности и viewport, кадры hover, focus, dialog и меню, плюс полоса семейств в light и в dark/compact/rtl. Не умножайте снимки на все комбинации. `pnpm check:consumer` ставит tarball во временный Vite-проект и в production build рендерит button, input, select, dialog, tabs, data grid, list, file tree и тему. Большой набор тестов не заменяет showcase. Архитектура — в `ARCHITECTURE.md`, граница платформы — в `PLATFORM.md`, процесс компонента — в `CONTRIBUTING.md`.
+Vitest + happy-dom: `tests/unit`. Покрывайте границы регистрации, карту `V*` ↔ `vui-*`, матрицу component → category → full import, повторный mount, отражённые properties, tokens, layout, стек overlay, возврат фокуса dialog, клавиатуру, interaction primitives, установку темы, регистрацию иконок, предупреждения о неверном API и responsive-правила, которым не нужна реальная раскладка. Стресс: 1000 строк `vui-data-grid` и 1000 пунктов `vui-list`. Playwright: `tests/e2e/showcase.spec.ts`, `tests/e2e/responsive.spec.ts`, `tests/e2e/foundation.spec.ts`, `tests/e2e/composition.spec.ts`, `tests/e2e/a11y.spec.ts`, `tests/e2e/interaction.spec.ts`, `tests/e2e/visual.spec.ts` и `tests/e2e/layout.spec.ts`. `layout.spec.ts` проверяет Dashboard, Settings и Workspace в web, desktop и terminal, в светлой и тёмной теме, на ширине 375, 768, 1280 и 1920, плюс несколько визуальных снимков. Визуальные baseline Studio — четыре сочетания темы, плотности и viewport, кадры hover, focus, dialog и меню, плюс полоса семейств в light и в dark/compact/rtl. Не умножайте снимки на все комбинации. `pnpm check:consumer` ставит tarball во временный Vite-проект и в production build рендерит button, input, select, dialog, tabs, data grid, list, file tree и тему. Большой набор тестов не заменяет showcase. Видение — в `VISION.md`, архитектура — в `ARCHITECTURE.md`, граница платформы — в `PLATFORM.md`, процесс компонента — в `CONTRIBUTING.md`.
 
 Неизвестное значение темы, плотности или enum не подменяется: один раз пишется предупреждение `vui:`, разметка остаётся как есть. Повторный `defineElement` другим классом не затирает регистрацию.
 
@@ -279,6 +291,8 @@ Vitest + happy-dom: `tests/unit`. Покрывайте границы регис
 ## Ещё не реализовано
 
 Виртуальный список, tree grid, собственный календарь и отдельный цветовой popup. Их не добавлять, пока реальное приложение не измерит нужду. Остальные имена карты закрыты существующим API: см. `docs/vocabulary.md`.
+
+Authentication / Administration / CMS templates — только по реальному спросу приложения. Не добавляйте template в `import 'vui'` без явной задачи.
 
 Уже закрыто существующими primitive: dropdown — `vui-select`, `vui-menu` или `vui-popover`; card — `vui-panel`; field — `vui-field` или само поле; toolbar item — слоты toolbar; context menu — `vui-menu`; command bar — `vui-toolbar`; resizable region — `vui-split-panel`; application layout — `vui-shell`; command palette и file browser — patterns в Studio, без файловой системы и без своего элемента. Сортировка и фильтр остаются данными страницы: таблица получает уже отфильтрованные `rows`.
 

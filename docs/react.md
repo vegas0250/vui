@@ -1,10 +1,15 @@
 # React and Next.js
 
+Preferred full-stack web stack: **Next.js App Router + React 19 + native Turbopack**.
+Broader patterns (plain HTML, Electron, UI modes): [integration.md](integration.md).
+
 Use React 19 or newer in the 19.x line. All existing custom elements have named
 adapters in `vui/react`: `VButton` becomes `Button`, `VDataGrid` becomes `DataGrid`,
 and child elements such as `Option`, `Tab`, `TabPanel`, and `MenuItem` have their
-own adapters. They render the real elements and retain slots, parts, CSS variables,
-keyboard behavior and focus handling. No provider is required.
+own adapters. Application templates are `TemplateDashboard`, `TemplateSettings`,
+and `TemplateWorkspace` (they dynamically import `vui/template-*` and stay out of
+`import 'vui'`). They render the real elements and retain slots, parts, CSS
+variables, keyboard behavior and focus handling. No provider is required.
 
 ## Attributes, properties and events
 
@@ -68,9 +73,11 @@ built from these elements require JavaScript. For content that must work before
 JavaScript, use native HTML in your application. The adapter preserves server
 markup during hydration and does not disable SSR.
 
-CSS entry points may be imported in a Next.js root layout. Theme functions should
-be called after mount or in event callbacks; explicit theme preferences take
-precedence over OS appearance. Theme Studio's editor state is never required.
+CSS entry points may be imported in a Next.js root layout (`vui/themes/tokens`,
+`vui/themes/ui`, palette/system). Prefer `vui/themes/ui` over the deprecated
+`vui/themes/density` alias. Theme functions should be called after mount or in
+event callbacks; explicit theme preferences take precedence over OS appearance.
+Theme Studio's editor state is never required.
 
 ## Working example
 
@@ -82,10 +89,13 @@ pnpm --dir examples/next install
 pnpm --dir examples/next dev
 ```
 
+`next dev` and `next build` use native Turbopack. No webpack flag or
+`transpilePackages` workaround is required.
+
 For repeatable production verification, run `pnpm check:next`. It tests the packed
-package rather than source aliases. The `/ssr` route reads a request header to demonstrate request-time rendering.
-The example stays outside a workspace and is
-not published as a second package.
+package rather than source aliases, including `/templates`. The `/ssr` route reads
+a request header to demonstrate request-time rendering. The example stays outside
+a workspace and is not published as a second package.
 
 For the framework rules behind this integration, see React's
 [custom HTML elements](https://react.dev/reference/react-dom/components#custom-html-elements)

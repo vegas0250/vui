@@ -1,4 +1,13 @@
-﻿# Unreleased
+﻿# 1.3.3
+
+- Publish opt-in Templates (`vui/templates`, `vui/template-dashboard`,
+  `vui/template-settings`, `vui/template-workspace`) and React adapters
+  (`TemplateDashboard` / `TemplateSettings` / `TemplateWorkspace`).
+- Document supported integration patterns (`docs/integration.md`): plain CE, React,
+  Next.js, Electron; Web / Desktop / Terminal UI modes; preferred app stack
+  Next.js + React 19 + native Turbopack. Next example builds with Turbopack
+  (removed `--webpack`); `check:next` covers `/templates`.
+- Layout Gallery and e2e cover Dashboard / Settings / Workspace across UI modes.
 
 # 1.3.2
 

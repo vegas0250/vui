@@ -8,7 +8,16 @@ Pattern — не компонент. Это пример, как собрать 
 | Как поле, вкладка и диалог связаны | composition |
 | Форма, настройки, логин, list/detail, поиск, палитра команд, экран данных | pattern: скопировать сборку из Studio |
 | Шапка, навигация, основная область, статус | `vui-shell` |
+| Готовая структура приложения со стабильными слотами | Templates (плановый слой; см. ниже) |
 | Смысл команды, маршрут, файлы, учётная запись | приложение, не VUI |
+
+## Patterns и Templates
+
+**Pattern** остаётся копируемым эталоном в Studio: без своего custom element, без регистрации и без package export.
+
+**Template** — опубликованный слой (см. [docs/templates.md](templates.md), [VISION.md](../VISION.md)): `<vui-template-dashboard>`, `<vui-template-settings>`, `<vui-template-workspace>` со стабильными слотами поверх `vui-shell`. Opt-in: `vui/templates`, `vui/template-*` — не входят в `import 'vui'`.
+
+Тема, UI mode и template — три независимые оси. Patterns не подменяют Templates и не входят в каталог компонентов.
 
 У pattern нет своего custom element, нет регистрации и нет отдельного export. Studio (`pnpm dev`) содержит рабочие сборки:
 
@@ -29,7 +38,7 @@ Pattern — не компонент. Это пример, как собрать 
 
 Родителю нужен ограниченный размер: высота окна или flex-ребёнок с `min-height: 0`. Дальше `vui-shell`, `vui-split-panel`, `vui-panel` и `vui-scroll-area` прокручивают своё тело сами.
 
-Галерея: `pnpm dev`, затем [layout.html](../layout.html). Переключатели темы, режима и ширины 375 / 768 / 1280 / 1920. Эталоны: Dashboard, Settings, Workspace. Исходник сборки — `src/showcase/layouts.ts` (не входит в exports).
+Галерея: `pnpm dev`, затем [layout.html](../layout.html). Переключатели темы, режима и ширины 375 / 768 / 1280 / 1920. Эталоны: Dashboard, Settings, Workspace на опубликованных templates; демо-данные и `bindLayout` — в `src/showcase/layouts.ts`.
 
 ### Plain JavaScript
 
