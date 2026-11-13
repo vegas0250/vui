@@ -20,7 +20,7 @@ Button, icon button, button group, input, textarea, checkbox, radio, radio group
 | `vui-field`, `vui-field-group` | Общая подпись, hint и invalid вокруг слота. У input, textarea и select поле уже внутри |
 | `vui-checkbox-group` | Несколько флажков, `value` через запятую. Живёт в `vui/checkbox` |
 | `vui-slider` | Одно значение. `value-end` включает второй ползунок |
-| `vui-nav`, `vui-nav-item` | Боковая и горизонтальная навигация, roving tabindex |
+| `vui-nav`, `vui-nav-item`, `vui-nav-group` | Компактная боковая/горизонтальная навигация, дерево, категории, roving tabindex |
 | `vui-stepper`, `vui-step` | Шаги |
 | `vui-list`, `vui-list-item` | Список в светлом DOM. Выбор через `SelectionModel`, не через доменную модель |
 | `vui-properties`, `vui-property` | Описание и инспектор: подпись и значение |
@@ -53,7 +53,7 @@ Button, icon button, button group, input, textarea, checkbox, radio, radio group
 | Alert dialog | `vui-dialog alert` |
 | Dropdown | `vui-select`, `vui-menu` или `vui-popover` |
 | Tab bar | `vui-tabs` |
-| Sidebar | слот `nav` у `vui-shell` и `vui-nav` |
+| Sidebar | слот `nav` у `vui-shell` и иерархический `vui-nav` (`vui-nav-group`, вложенные `vui-nav-item`) |
 | Tree | `vui-file-tree`. Имя историческое: файловую систему элемент не читает |
 | Table, grid row, grid cell | `vui-data-grid`. Строки задаёт страница |
 | Card | `vui-panel` |

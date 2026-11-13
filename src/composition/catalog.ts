@@ -32,6 +32,20 @@ registerComposition({
 });
 
 registerComposition({
+  id: 'nav',
+  host: 'vui-nav',
+  summary: 'Боковая навигация: категории vui-nav-group и вложенные vui-nav-item. Выбор и клавиатура — у родителя.',
+  links: [
+    { from: 'vui-nav', to: 'vui-nav-item', direction: 'parent-child', channel: 'light-dom' },
+    { from: 'vui-nav', to: 'vui-nav-group', direction: 'parent-child', channel: 'light-dom' },
+    { from: 'vui-nav-group', to: 'vui-nav-item', direction: 'parent-child', channel: 'light-dom' },
+    { from: 'vui-nav-item', to: 'vui-nav-item', direction: 'parent-child', channel: 'light-dom' },
+    { from: 'vui-nav-item', to: 'vui-nav-group', direction: 'parent-child', channel: 'light-dom' },
+  ],
+  emits: ['change'],
+});
+
+registerComposition({
   id: 'toast',
   host: 'vui-toaster',
   summary: 'Toaster складывает vui-toast в слот. Toast сообщает о закрытии событием close и не вызывает методы хозяина.',

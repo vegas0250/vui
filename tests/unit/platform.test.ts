@@ -24,6 +24,7 @@ const added = [
   'vui-field-group',
   'vui-checkbox-group',
   'vui-nav',
+  'vui-nav-group',
   'vui-nav-item',
   'vui-stepper',
   'vui-step',

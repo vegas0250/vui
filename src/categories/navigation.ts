@@ -7,7 +7,7 @@ import '../components/navigation/tabs';
 import '../components/navigation/toolbar';
 
 export { VBreadcrumbs } from '../components/navigation/breadcrumbs';
-export { VNav, VNavItem } from '../components/navigation/nav';
+export { VNav, VNavGroup, VNavItem } from '../components/navigation/nav';
 export { VPathBar } from '../components/navigation/path-bar';
 export type { PathCrumb } from '../components/navigation/path-bar';
 export { VPagination } from '../components/navigation/pagination';

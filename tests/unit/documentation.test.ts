@@ -16,7 +16,7 @@ describe('documentation completeness', () => {
   it('documents every registered public visual element, including contextual children', () => {
     const catalog = componentCatalog();
     expect(new Set(catalog.map((c) => c.element)).size).toBe(catalog.length);
-    expect(catalog.length).toBe(77);
+    expect(catalog.length).toBe(78);
     for (const contract of catalog) {
       expect(description(contract.element, 'ru'), contract.element).not.toBe('');
       expect(description(contract.element, 'en'), contract.element).not.toBe('');

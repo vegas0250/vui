@@ -264,9 +264,17 @@ families.innerHTML = `
     <vui-step value="two">Two</vui-step>
   </vui-stepper>
   <vui-toolbar label="Family bar"><span slot="start">Tools</span><vui-button size="small">Run</vui-button></vui-toolbar>
-  <vui-nav label="Sections">
-    <vui-nav-item href="#a" selected>Overview</vui-nav-item>
-    <vui-nav-item href="#b">Data</vui-nav-item>
+  <vui-nav label="Sections" style="width:var(--vui-layout-nav)">
+    <vui-nav-group label="Generators" expanded>
+      <vui-nav-item href="#a" icon="shield" selected>Password Generator</vui-nav-item>
+      <vui-nav-item href="#b" icon="globe">Link Generator</vui-nav-item>
+    </vui-nav-group>
+    <vui-nav-group label="Libraries" expanded>
+      <vui-nav-item label="JSON Tools" icon="file-text" expanded>
+        <vui-nav-item href="#c">Format</vui-nav-item>
+      </vui-nav-item>
+      <vui-nav-item href="#d" icon="waypoints">VUI</vui-nav-item>
+    </vui-nav-group>
   </vui-nav>
   <vui-list label="Items" value="a">
     <vui-list-item value="a" selected>Alpha</vui-list-item>

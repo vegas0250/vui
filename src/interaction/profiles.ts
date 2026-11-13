@@ -351,6 +351,16 @@ registerInteraction({
 });
 
 registerInteraction({
+  element: 'vui-nav-group',
+  focus: ['native'],
+  keyboard: ['Enter', 'Space'],
+  selectionOwner: 'none',
+  active: 'none',
+  command: false,
+  primitives: ['native'],
+});
+
+registerInteraction({
   element: 'vui-stepper',
   focus: ['native'],
   keyboard: ['ArrowLeft', 'ArrowRight', 'Home', 'End'],

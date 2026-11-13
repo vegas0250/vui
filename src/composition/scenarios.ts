@@ -271,7 +271,7 @@ const familyHosts: Record<FamilyName, string[]> = {
   action: ['vui-button', 'vui-button-group', 'vui-icon-button', 'vui-toggle', 'vui-link', 'vui-menu-item'],
   field: ['vui-input', 'vui-textarea', 'vui-select', 'vui-checkbox', 'vui-checkbox-group', 'vui-radio', 'vui-radio-group', 'vui-switch', 'vui-slider', 'vui-field'],
   overlay: ['vui-dialog', 'vui-drawer', 'vui-popover', 'vui-tooltip', 'vui-menu', 'vui-toaster', 'vui-gallery'],
-  navigation: ['vui-tabs', 'vui-tab', 'vui-tab-panel', 'vui-nav', 'vui-stepper', 'vui-file-tree', 'vui-tree-item', 'vui-menu', 'vui-menu-item', 'vui-breadcrumbs', 'vui-pagination', 'vui-path-bar'],
+  navigation: ['vui-tabs', 'vui-tab', 'vui-tab-panel', 'vui-nav', 'vui-nav-group', 'vui-nav-item', 'vui-stepper', 'vui-file-tree', 'vui-tree-item', 'vui-menu', 'vui-menu-item', 'vui-breadcrumbs', 'vui-pagination', 'vui-path-bar'],
   data: ['vui-data-grid', 'vui-list'],
   feedback: ['vui-alert', 'vui-empty', 'vui-badge'],
   layout: ['vui-stack'],

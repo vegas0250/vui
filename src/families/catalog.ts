@@ -139,6 +139,7 @@ joinFamily({
 
 joinFamily({ element: 'vui-nav', family: 'navigation', rules: ['keyboard', 'selection', 'focus', 'label'] });
 joinFamily({ element: 'vui-nav-item', family: 'navigation', rules: ['keyboard', 'selection', 'focus', 'disabled', 'label'] });
+joinFamily({ element: 'vui-nav-group', family: 'navigation', rules: ['keyboard', 'label'] });
 joinFamily({ element: 'vui-stepper', family: 'navigation', rules: ['keyboard', 'selection', 'focus', 'label'] });
 joinFamily({ element: 'vui-step', family: 'navigation', rules: ['keyboard', 'selection', 'focus', 'disabled'] });
 

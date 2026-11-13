@@ -233,7 +233,29 @@ export function exampleFor(tag: string): Example {
   const checkboxes = `<vui-checkbox value="email">Email</vui-checkbox><vui-checkbox value="browser">${text('Браузер', 'Browser')}</vui-checkbox>`;
   const radios = `<vui-radio name="plan" value="free" checked>${personal}</vui-radio><vui-radio name="plan" value="team">${team}</vui-radio>`;
   const select = `<vui-select label="${plan}" value="free"><vui-option value="free">${personal}</vui-option><vui-option value="team">${team}</vui-option></vui-select>`;
-  const nav = `<vui-nav label="${text('Навигация', 'Navigation')}"><vui-nav-item selected>${text('Обзор', 'Overview')}</vui-nav-item><vui-nav-item>${text('Настройки', 'Settings')}</vui-nav-item></vui-nav>`;
+  const nav = `<vui-nav label="${text('Инструменты', 'Tools')}" style="width:var(--vui-layout-nav);max-width:100%">
+  <vui-nav-group label="${text('Генераторы', 'Generators')}" icon="hash" expanded>
+    <vui-nav-item href="#password" icon="shield" selected>${text('Генератор паролей', 'Password Generator')}</vui-nav-item>
+    <vui-nav-item href="#link" icon="globe">${text('Генератор ссылок', 'Link Generator')}</vui-nav-item>
+    <vui-nav-item href="#qr" icon="square">${text('QR-коды', 'QR Codes')}</vui-nav-item>
+    <vui-nav-item href="#random" icon="refresh-cw">${text('Случайные числа', 'Random Numbers')}</vui-nav-item>
+  </vui-nav-group>
+  <vui-nav-group label="${text('Инструменты разработчика', 'Developer Tools')}" icon="terminal" expanded>
+    <vui-nav-item href="#html" icon="file-code">${text('HTML-редактор', 'HTML Editor')}</vui-nav-item>
+    <vui-nav-item label="${text('JSON-инструменты', 'JSON Tools')}" icon="file-text" expanded>
+      <vui-nav-item href="#json-format">${text('Форматирование', 'Format')}</vui-nav-item>
+      <vui-nav-item href="#json-validate">${text('Проверка', 'Validate')}</vui-nav-item>
+    </vui-nav-item>
+    <vui-nav-item href="#text" icon="type">${text('Текстовые инструменты', 'Text Tools')}</vui-nav-item>
+    <vui-nav-item href="#encoding" icon="command">${text('Кодирование', 'Encoding')}</vui-nav-item>
+  </vui-nav-group>
+  <vui-nav-group label="${text('Изображения и файлы', 'Images & Files')}" icon="images" expanded>
+    <vui-nav-item href="#image" icon="file-image">${text('Инструменты изображений', 'Image Tools')}</vui-nav-item>
+  </vui-nav-group>
+  <vui-nav-group label="${text('Библиотеки', 'Libraries')}" icon="layers" expanded>
+    <vui-nav-item href="#vui" icon="waypoints">VUI</vui-nav-item>
+  </vui-nav-group>
+</vui-nav>`;
   const tree = `<vui-file-tree label="${text('Файлы', 'Files')}"><vui-tree-item label="src" expanded><vui-tree-item label="index.ts" kind="file"></vui-tree-item></vui-tree-item><vui-tree-item label="README.md" kind="file"></vui-tree-item></vui-file-tree>`;
   const list = `<vui-list label="${text('Проекты', 'Projects')}"><vui-list-item value="atlas">Atlas</vui-list-item><vui-list-item value="nova">Nova</vui-list-item></vui-list>`;
   const properties = `<vui-properties label="${text('Свойства', 'Properties')}"><vui-property label="${name}">Atlas</vui-property><vui-property label="${text('Статус', 'Status')}">${ready}</vui-property></vui-properties>`;
@@ -263,6 +285,7 @@ export function exampleFor(tag: string): Example {
     'tab-panel': tabs,
     nav,
     'nav-item': nav,
+    'nav-group': nav,
     stepper: steps,
     step: steps,
     breadcrumbs: `<vui-breadcrumbs label="${text('Путь', 'Path')}"><a href="#/getting-started">VUI</a><span>${text('Компоненты', 'Components')}</span></vui-breadcrumbs>`,
@@ -556,7 +579,7 @@ export function exampleJsx(example: Example): string {
 export function prettyMarkup(html: string): string {
   return html
     .replace(/></g, '>\n<')
-    .replace(/\n<(vui-(?:option|tab|tab-panel|menu-item|tree-item|list-item|nav-item|step|property|radio|checkbox|avatar)\b)/g, '\n  <$1');
+    .replace(/\n<(vui-(?:option|tab|tab-panel|menu-item|tree-item|list-item|nav-item|nav-group|step|property|radio|checkbox|avatar)\b)/g, '\n  <$1');
 }
 
 export function buttonSections(): DemoSection[] {

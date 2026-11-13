@@ -115,6 +115,7 @@ export const catalogChildren = new Set([
   'option',
   'menu-item',
   'nav-item',
+  'nav-group',
   'tab',
   'tab-panel',
   'step',

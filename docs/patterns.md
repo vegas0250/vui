@@ -49,7 +49,10 @@ Pattern — не компонент. Это пример, как собрать 
       <strong slot="start">Settings</strong>
     </vui-toolbar>
     <vui-nav slot="nav" label="Sections">
-      <vui-nav-item selected>Profile</vui-nav-item>
+      <vui-nav-group label="Account" expanded>
+        <vui-nav-item href="#profile" selected>Profile</vui-nav-item>
+        <vui-nav-item href="#access">Access</vui-nav-item>
+      </vui-nav-group>
     </vui-nav>
     <vui-scroll-area label="Settings">
       <vui-container size="small" padding="lg">

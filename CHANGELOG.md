@@ -1,4 +1,13 @@
-﻿# 1.3.4
+﻿# 1.3.5
+
+- Compact hierarchical sidebar navigation on `vui-nav`: `vui-nav-group`
+  categories, nestable `vui-nav-item` branches, tree guides, chevrons, and
+  optional icons. UI-mode tokens (`--vui-nav-*`, `--vui-layout-nav`).
+- Keyboard expand/collapse, soft selected state, docs/visual examples for the
+  Generators → Libraries sidebar pattern. Flat `vui-nav-item` text leaves stay
+  compatible.
+
+# 1.3.4
 
 - Docs catalog sidebar: file-tree navigation (folder/file icons, tree
   connectors outside the active row, final-child guide stop).

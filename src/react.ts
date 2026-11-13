@@ -47,7 +47,7 @@ export { ScrollArea } from './components/layout/scroll-area.react';
 export { SplitPanel } from './components/layout/split-panel.react';
 export { Stack, HStack, VStack } from './components/layout/stack.react';
 export { Breadcrumbs } from './components/navigation/breadcrumbs.react';
-export { NavItem, Nav } from './components/navigation/nav.react';
+export { NavItem, NavGroup, Nav } from './components/navigation/nav.react';
 export { Pagination } from './components/navigation/pagination.react';
 export { PathBar } from './components/navigation/path-bar.react';
 export { Step, Stepper } from './components/navigation/stepper.react';

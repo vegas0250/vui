@@ -591,7 +591,16 @@ grid.selectedId = '1';
 
 ## vui-nav
 
-`label`, `orientation` vertical или horizontal. Дети `vui-nav-item`: `href`, `selected`, `disabled`. Стрелки меняют текущий пункт (`aria-current="page"`). Событие `change`. Уже 22rem ряд становится столбцом.
+Компактная боковая и горизонтальная навигация. `label`, `orientation` vertical или horizontal. Ширина сайдбара задаётся контейнером (`--vui-layout-nav`, обычно 14–15rem).
+
+Дети:
+
+| Элемент | Назначение |
+| --- | --- |
+| `vui-nav-group` | Категория: `label`, необязательный `icon`, `expanded`. Подпись — мелкий muted uppercase. |
+| `vui-nav-item` | Лист или ветка: `href`, `label`, `icon`, `selected`, `disabled`, `expanded`. Текст листа можно задать содержимым; у ветки предпочитайте `label`. Вложенные `vui-nav-item` / `vui-nav-group` дают дерево с направляющими. |
+
+Стрелки двигают видимые пункты; Left/Right раскрывают и сворачивают ветки (`aria-expanded`). Выбранный лист — `aria-current="page"`. Событие `change`. Приложение само ставит `href` / роутинг. Уже 22rem горизонтальный ряд становится столбцом. Parts: `nav`; у пункта — `row`, `guide`, `twist`, `icon`, `link`, `label`, `children`; у группы — `header`, `twist`, `icon`, `label`, `items`.
 
 ## vui-stepper
 

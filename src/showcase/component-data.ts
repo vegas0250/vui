@@ -36,7 +36,8 @@ const descriptions: Record<string, [string, string]> = {
   tab: ['Заголовок вкладки внутри Tabs.', 'A tab trigger inside Tabs.'],
   'tab-panel': ['Содержимое вкладки, связанное с её заголовком.', 'Tab content associated with a tab trigger.'],
   nav: ['Навигация по разделам с управлением выбором.', 'Section navigation with selection management.'],
-  'nav-item': ['Ссылка внутри навигации VUI.', 'A link inside VUI navigation.'],
+  'nav-item': ['Ссылка или вложенная ветка внутри навигации VUI.', 'A link or nested branch inside VUI navigation.'],
+  'nav-group': ['Категория боковой навигации с подписью и сворачиванием.', 'Sidebar navigation category with a label and collapse.'],
   breadcrumbs: ['Путь до текущего раздела.', 'The path to the current section.'],
   'path-bar': ['Интерактивная строка пути.', 'An interactive path bar.'],
   pagination: ['Переключение страниц набора данных.', 'Navigate through pages of data.'],
@@ -86,7 +87,7 @@ const descriptions: Record<string, [string, string]> = {
 };
 export const parents: Record<string, string> = {
   option: 'select', 'radio-group': 'radio', 'checkbox-group': 'checkbox', 'field-group': 'field',
-  'toggle-group': 'toggle', 'menu-item': 'menu', tab: 'tabs', 'tab-panel': 'tabs', 'nav-item': 'nav',
+  'toggle-group': 'toggle', 'menu-item': 'menu', tab: 'tabs', 'tab-panel': 'tabs', 'nav-item': 'nav', 'nav-group': 'nav',
   step: 'stepper', toaster: 'toast', 'tree-item': 'file-tree', 'list-item': 'list', property: 'properties',
 };
 export function componentImport(tag: string): string {
