@@ -69,6 +69,7 @@ export class VMenuItem extends VuiElement {
         user-select: none;
       }
       .row {
+        position: relative;
         display: flex;
         align-items: center;
         gap: var(--vui-space-sm);
@@ -104,6 +105,7 @@ export class VMenuItem extends VuiElement {
         justify-content: center;
         text-align: center;
       }
+      :host(:not([icon]):not([checked])) .mark { display: none; }
       :host([checked]) .mark::before { content: "✓"; }
       vui-icon { width: 1em; height: 1em; color: var(--vui-color-interactive-text, var(--vui-color-primary)); }
       :host([disabled]) vui-icon { color: inherit; }
@@ -118,6 +120,18 @@ export class VMenuItem extends VuiElement {
         text-decoration: none;
         cursor: inherit;
       }
+      /* Whole row activates href items (icon / padding), not only the text. */
+      .label[href]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+      }
+      .mark,
+      .shortcut {
+        position: relative;
+        z-index: 1;
+        pointer-events: none;
+      }
       .shortcut {
         margin-inline-start: auto;
         color: var(--vui-color-text-muted);
@@ -125,6 +139,8 @@ export class VMenuItem extends VuiElement {
       }
       .caret {
         appearance: none;
+        position: relative;
+        z-index: 1;
         margin: 0;
         margin-inline-start: var(--vui-space-2xs);
         padding: 0;
@@ -171,8 +187,8 @@ export class VMenuItem extends VuiElement {
       :host([layout="stack"]) .shortcut,
       :host([layout="stack"]) .caret { display: none; }
       ::slotted(vui-menu[inline]) {
-        margin-inline-start: var(--vui-space-md);
-        padding-inline-start: var(--vui-space-sm);
+        margin-inline-start: var(--vui-space-sm);
+        padding-inline-start: var(--vui-space-xs);
         border-inline-start: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
       }
     `;
@@ -439,6 +455,13 @@ export class VMenu extends VuiElement {
       const href = item.getAttribute('href');
       if (href) {
         if (!this.isInline()) this.root().closeTree();
+        const viaLabel = path.some(
+          (node) => node instanceof HTMLAnchorElement && node.classList.contains('label'),
+        );
+        if (!viaLabel) {
+          const link = item.shadowRoot?.querySelector<HTMLAnchorElement>('a.label[href]');
+          link?.click();
+        }
         return;
       }
       const id = item.getAttribute('command');

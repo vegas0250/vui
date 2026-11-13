@@ -112,6 +112,7 @@ function onPointerDown(event: Event): void {
     return;
   }
   if (path.includes(target.owner)) return;
+  if (target.layer && path.includes(target.layer)) return;
   target.onDismiss?.('outside');
 }
 

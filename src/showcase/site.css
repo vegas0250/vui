@@ -1,11 +1,18 @@
 .documentation-site main { width: min(1520px, calc(100% - 2 * var(--vui-space-lg))); }
 .documentation-layout { display: grid; grid-template-columns: 15rem minmax(0, 1fr); gap: var(--vui-space-2xl); align-items: start; }
-.docs-sidebar { position: sticky; top: calc(var(--docs-header-height, 6rem) + var(--vui-space-lg)); max-height: calc(100dvh - var(--docs-header-height, 6rem) - var(--vui-space-2xl)); overflow: auto; padding-inline-end: var(--vui-space-md); }
-.docs-wordmark { display: flex; gap: var(--vui-space-sm); align-items: baseline; font-size: var(--vui-heading-3); font-weight: 700; color: var(--vui-color-text); text-decoration: none; }
+.docs-sidebar { position: sticky; top: calc(var(--docs-header-height, 6rem) + var(--vui-space-lg)); max-height: calc(100dvh - var(--docs-header-height, 6rem) - var(--vui-space-2xl)); overflow: auto; padding-inline-end: var(--vui-space-xs); min-width: 0; }
+.docs-wordmark { display: flex; gap: var(--vui-space-xs); align-items: baseline; font-size: var(--vui-heading-3); font-weight: 700; color: var(--vui-color-text); text-decoration: none; line-height: 1.2; }
 .docs-wordmark span { font-size: var(--vui-font-size-sm); color: var(--vui-color-text-muted); font-weight: 400; }
 .docs-sidebar .docs-section-menu,
-.docs-sidebar .docs-catalog-menu { width: 100%; margin-block: var(--vui-space-lg); }
+.docs-sidebar .docs-catalog-menu { width: 100%; margin-block: var(--vui-space-sm); }
 .docs-sidebar .docs-catalog-menu { margin-block: 0; }
+.docs-sidebar vui-menu-item::part(row) {
+  min-height: calc(var(--vui-size-control) - 0.375rem);
+  padding-inline: var(--vui-space-sm);
+  gap: var(--vui-space-xs);
+}
+.docs-sidebar vui-menu-item::part(label) { font-size: var(--vui-font-size-sm); }
+.docs-sidebar vui-menu-item::part(icon) { width: 0.95em; height: 0.95em; }
 .docs-sidebar details { display: grid; gap: var(--vui-space-xs); padding-block: var(--vui-space-sm) 0; }
 .docs-sidebar summary { cursor: pointer; font-weight: 600; padding: var(--vui-space-xs); }
 .docs-icon-grid {
@@ -25,7 +32,7 @@
 }
 .docs-icon-card vui-icon { width: 1.5rem; height: 1.5rem; }
 .docs-icon-card code { font-size: var(--vui-font-size-sm); color: var(--vui-color-text-muted); overflow-wrap: anywhere; }
-.docs-search { position: relative; width: 100%; min-width: 0; margin-block-start: var(--vui-space-sm); }
+.docs-search { position: relative; width: 100%; min-width: 0; margin-block: var(--vui-space-xs) var(--vui-space-sm); }
 .docs-search::part(label) {
   position: absolute;
   inset-inline-start: 0;
@@ -145,11 +152,15 @@
 .documentation-site .docs-sidebar .docs-wordmark { padding-inline: 0; flex-wrap: wrap; }
 .documentation-site .docs-sidebar a[aria-current=page] { font-weight: var(--vui-font-weight-strong); }
 .documentation-site .docs-search { width: 100%; }
+.documentation-site .page { overflow-x: clip; max-width: 100%; }
 .documentation-site .topbar .header-controls {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  box-sizing: border-box; max-inline-size: 100%; inline-size: auto;
+  box-sizing: border-box;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  inline-size: 100%;
   gap: var(--vui-space-xs);
   padding-block: var(--vui-space-sm);
   align-items: center;
@@ -157,7 +168,9 @@
 .documentation-site .docs-theme-control,
 .documentation-site #ui-mode-select,
 .documentation-site #docs-lang {
-  flex: 0 0 auto;
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
 }
 @media (max-width: 760px) {
   .documentation-site .topbar .header-controls { inline-size: auto; }

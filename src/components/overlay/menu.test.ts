@@ -99,6 +99,23 @@ describe('vui-menu', () => {
     expect(document.activeElement).toBe(opener);
   });
 
+  it('activates an href item when the row is clicked, not only the label text', () => {
+    const menu = document.createElement('vui-menu') as VMenu;
+    menu.setAttribute('inline', '');
+    menu.label = 'Nav';
+    menu.innerHTML = `<vui-menu-item label="Button" href="#/components/button"></vui-menu-item>`;
+    document.body.append(menu);
+    const item = menu.querySelector('vui-menu-item') as VMenuItem;
+    const link = item.shadowRoot?.querySelector<HTMLAnchorElement>('a.label');
+    let navigated = 0;
+    link?.addEventListener('click', (event) => {
+      event.preventDefault();
+      navigated += 1;
+    });
+    item.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+    expect(navigated).toBe(1);
+  });
+
   it('expands nested groups inline with the caret', () => {
     const menu = document.createElement('vui-menu') as VMenu;
     menu.setAttribute('inline', '');

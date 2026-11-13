@@ -53,14 +53,16 @@ body {
 
 .documentation-site .topbar {
   border-bottom: var(--vui-border-width) solid var(--vui-color-border);
-  background: color-mix(in srgb, var(--vui-color-surface) 88%, transparent);
-  backdrop-filter: blur(10px);
+  background: color-mix(in srgb, var(--vui-color-surface) 92%, transparent);
+  /* No backdrop-filter: it makes position:fixed listboxes expand page overflow. */
 }
 
 .docs-theme-control,
 #ui-mode-select,
 #docs-lang {
-  flex: 0 0 auto;
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
 }
 
 main {

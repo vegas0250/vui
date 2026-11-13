@@ -351,21 +351,30 @@ export class VSelect extends VuiElement {
     const list = this.listbox;
     const margin = readLength(this, '--vui-space-xs', 4);
     const gutter = readLength(this, '--vui-space-sm', 8);
+    const viewW = window.innerWidth || document.documentElement.clientWidth || 0;
+    const viewH = window.innerHeight || document.documentElement.clientHeight || 0;
     const minWidth = this.hasAttribute('icon')
       ? Math.max(rect.width, readLength(this, '--vui-size-control', 32) * 8)
       : rect.width;
-    const width = Math.max(0, Math.min(minWidth, window.innerWidth - gutter * 2));
-    const left = Math.min(Math.max(gutter, rect.left), Math.max(gutter, window.innerWidth - width - gutter));
+    const width = Math.max(0, Math.min(minWidth, viewW - gutter * 2));
+    // Prefer aligning to the trigger end when the field sits near the viewport edge
+    // so a wide icon-mode listbox never spills past 100vw.
+    const preferStart = rect.left + width <= viewW - gutter;
+    const left = preferStart
+      ? Math.min(Math.max(gutter, rect.left), Math.max(gutter, viewW - width - gutter))
+      : Math.max(gutter, Math.min(rect.right - width, viewW - width - gutter));
     list.style.left = `${left}px`;
+    list.style.right = 'auto';
     list.style.width = `${width}px`;
-    const below = window.innerHeight - rect.bottom;
+    list.style.maxWidth = `${Math.max(0, viewW - gutter * 2)}px`;
+    const below = viewH - rect.bottom;
     const needed = Math.min(
       Math.max(list.offsetHeight, list.scrollHeight, readLength(this, '--vui-size-control', 32) * 4),
-      window.innerHeight - gutter * 2,
+      viewH - gutter * 2,
     );
     if (below < needed && rect.top > below) {
       list.style.top = 'auto';
-      list.style.bottom = `${window.innerHeight - rect.top + margin}px`;
+      list.style.bottom = `${viewH - rect.top + margin}px`;
     } else {
       list.style.bottom = 'auto';
       list.style.top = `${rect.bottom + margin}px`;
