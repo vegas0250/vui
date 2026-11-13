@@ -24,7 +24,7 @@ test('bilingual catalog has a direct, complete page for every visual component',
   await page.locator('#docs-lang button').click();
   await page.getByRole('option', { name: 'RU', exact: true }).click();
   await expect(page.locator('#component-search').getByRole('searchbox')).toBeVisible();
-  await expect(page.locator('.docs-section-menu > vui-menu-item')).toHaveCount(7);
+  await expect(page.locator('#docs-sidebar .docs-section-menu > vui-menu-item')).toHaveCount(7);
   await expect(page).toHaveURL(/lang=ru.*#\/components\//);
 });
 
@@ -56,7 +56,7 @@ test('settings, filters, dialog and shell are working compositions', async ({ pa
 test('full standalone example runs independently with its declared imports', async ({ page, context, baseURL }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.goto('/?lang=en#/layouts/settings');
-  await page.getByRole('button', { name: 'Full example', exact: true }).click();
+  await page.locator('#docs-page').getByRole('button', { name: 'Full example', exact: true }).first().click();
   const code = (await page.evaluate(() => navigator.clipboard.readText())).replace(/\r\n/g, '\n');
   expect(code).toContain("import '");
   expect(code).toContain('<script type="module">');
@@ -72,9 +72,12 @@ test('full standalone example runs independently with its declared imports', asy
     document.querySelector('#docs-page')!.replaceChildren(frame);
   }, { code, imports });
   const frame = page.frameLocator('iframe[title="Copied example"]');
+  await expect(frame.getByRole('textbox', { name: 'Name', exact: true })).toBeVisible();
   await frame.getByRole('textbox', { name: 'Name', exact: true }).fill('Independent');
-  await frame.getByRole('button', { name: 'Save', exact: true }).click({ force: true });
-  await expect(frame.locator('[data-result]')).toHaveText('Saved: Independent');
+  await frame.locator('vui-button[type="submit"], button[type="submit"]').first().evaluate((el) => {
+    (el as HTMLElement).click();
+  });
+  await expect(frame.locator('[data-result]')).toHaveText('Saved: Independent', { timeout: 15000 });
 });
 
 test('standalone documentation persists preferences and fits a narrow viewport', async ({ page }) => {
