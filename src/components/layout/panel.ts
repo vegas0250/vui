@@ -28,22 +28,33 @@ export class VPanel extends VuiElement {
 
   protected componentStyles(): string {
     return `
-      :host { display: block; min-width: 0; max-width: 100%; }
+      :host {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        min-height: 0;
+        max-width: 100%;
+      }
       :host(:focus-visible) { outline: var(--vui-focus-ring); }
       section {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
         background: var(--vui-color-card, var(--vui-color-surface));
         color: var(--vui-color-text);
         border: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
         border-radius: var(--vui-radius-box, var(--vui-radius));
         box-shadow: var(--vui-shadow-sm);
         min-width: 0;
+        min-height: 0;
         max-width: 100%;
       }
       header, .body, footer {
         padding: var(--vui-layout-padding, var(--vui-panel-padding));
         min-width: 0;
       }
-      .body { overflow: var(--vui-layout-overflow, auto); }
+      header, footer { flex: 0 0 auto; }
+      .body { flex: 1 1 auto; min-height: 0; overflow: var(--vui-layout-overflow, auto); }
       header {
         display: flex;
         align-items: center;

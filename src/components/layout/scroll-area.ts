@@ -18,11 +18,19 @@ export class VScrollArea extends VuiElement {
 
   protected componentStyles(): string {
     return `
-      :host { display: block; min-width: 0; max-width: 100%; min-height: 0; max-height: 100%; }
+      :host {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        min-width: 0;
+        min-height: 0;
+        max-width: 100%;
+        overflow: hidden;
+      }
       [part="viewport"] {
+        flex: 1 1 auto;
         overflow: auto;
         max-width: 100%;
-        max-height: 100%;
         min-width: 0;
         min-height: 0;
         overscroll-behavior: contain;

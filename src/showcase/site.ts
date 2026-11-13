@@ -39,7 +39,9 @@ const sections = () => [
 ];
 
 const interfaces = () => [
-  ['settings', text('Форма настроек', 'Settings form'), text('Валидация, поля, выбор и сохранение.', 'Validation, fields, selection, and saving.')],
+  ['dashboard', text('Панель', 'Dashboard'), text('Сводка, таблица, пустое состояние, ошибка и вложенная прокрутка.', 'Summary, table, empty state, error, and nested scrolling.')],
+  ['settings', text('Настройки', 'Settings'), text('Форма, проверка и сохранение внутри каркаса.', 'Form, validation, and save inside the shell.')],
+  ['workspace', text('Рабочая область', 'Workspace'), text('Дерево, разделяемая область, редактор и инспектор.', 'Tree, split pane, editor, and inspector.')],
   ['table', text('Таблица с фильтрами', 'Table with filters'), text('Поиск, статус и выбор строки.', 'Search, status filters, and row selection.')],
   ['dialog', text('Диалог подтверждения', 'Confirmation dialog'), text('Открытие, Escape и возврат фокуса.', 'Opening, Escape, and focus restoration.')],
   ['shell', text('Каркас приложения', 'Application shell'), text('Навигация, панель действий, форма и строка состояния.', 'Navigation, toolbar, form, and status bar.')],
@@ -360,9 +362,9 @@ export function mountDocumentationSite(): void {
         page.innerHTML = `<p>${link('compositions', text('Композиции', 'Compositions'))}</p><h1 tabindex="-1">${name}</h1><p class="docs-lead">${example[2]}</p>${showExample(interfaceExample(example[0]!))}`;
       } else {
         page.innerHTML = `<h1 tabindex="-1">${name}</h1><p class="docs-lead">${text(
-          'Прикладные сборки из тех же компонентов каталога: формы, таблицы, диалоги и каркасы приложения.',
-          'Application assemblies from the same catalog components: forms, tables, dialogs, and shells.',
-        )}</p><div class="docs-cards">${interfaces()
+          'Прикладные сборки из тех же компонентов каталога: формы, таблицы, диалоги и каркасы приложения. Режим UI меняет шкалу, тема — только цвета.',
+          'Application assemblies from the same catalog components: forms, tables, dialogs, and shells. UI mode changes the structural scale; theme changes colors only.',
+        )}</p><p><a href="layout.html">${text('Галерея раскладок', 'Layout gallery')}</a></p><div class="docs-cards">${interfaces()
           .map(([id, label, description]) => `<a class="docs-card" href="#/compositions/${id}"><strong>${label}</strong><p>${description}</p></a>`)
           .join('')}</div>`;
       }
@@ -424,7 +426,7 @@ export function mountDocumentationSite(): void {
         )}</p><code>data-vui-ui="desktop"</code></div><div class="docs-card"><strong>Terminal</strong><p>${text(
           'Моноширинный TUI: плотная сетка, нулевой радиус, без теней.',
           'Monospace TUI: dense grid, square corners, no elevation.',
-        )}</p><code>data-vui-ui="terminal"</code></div></div>`,
+        )}</p><code>data-vui-ui="terminal"</code></div></div><p><a href="layout.html">${text('Галерея раскладок', 'Layout gallery')}</a> — ${text('панель, настройки и рабочая область в трёх режимах.', 'dashboard, settings, and workspace in all three modes.')}</p>`,
       )}${heading(
         'React / Next.js',
         `<pre><code>'use client';\n\nimport { Button } from 'vui/react';\n\nexport default function Page() {\n  return &lt;Button variant="primary"&gt;${text('Сохранить', 'Save')}&lt;/Button&gt;;\n}</code></pre><p>${text(

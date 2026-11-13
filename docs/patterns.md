@@ -23,6 +23,85 @@ Pattern — не компонент. Это пример, как собрать 
 
 Дерево — `vui-file-tree`. Оно показывает переданные пункты и не читает файловую систему. Заголовок рабочей поверхности — `vui-window`. Инспектор — `vui-properties`. Пустой результат — `vui-empty`. Полная карта «имя из словаря → элемент» — в [vocabulary.md](vocabulary.md).
 
+## Раскладки
+
+Одна и та же разметка работает в Web, Desktop и Terminal. Режим задаёт структурные токены в `src/tokens/ui.css` (`--vui-layout-nav`, отступы, радиус, шрифт, тень, движение). Тема задаёт только цвета. Ветки `if (mode)` в приложении не нужны.
+
+Родителю нужен ограниченный размер: высота окна или flex-ребёнок с `min-height: 0`. Дальше `vui-shell`, `vui-split-panel`, `vui-panel` и `vui-scroll-area` прокручивают своё тело сами.
+
+Галерея: `pnpm dev`, затем [layout.html](../layout.html). Переключатели темы, режима и ширины 375 / 768 / 1280 / 1920. Эталоны: Dashboard, Settings, Workspace. Исходник сборки — `src/showcase/layouts.ts` (не входит в exports).
+
+### Plain JavaScript
+
+```html
+<div class="vui-layout" data-layout="settings">
+  <vui-shell label="Application">
+    <vui-toolbar slot="toolbar" label="Commands">
+      <strong slot="start">Settings</strong>
+    </vui-toolbar>
+    <vui-nav slot="nav" label="Sections">
+      <vui-nav-item selected>Profile</vui-nav-item>
+    </vui-nav>
+    <vui-scroll-area label="Settings">
+      <vui-container size="small" padding="lg">
+        <vui-panel heading="Profile">
+          <vui-input label="Name" value="Ada" required></vui-input>
+          <vui-button data-save variant="primary">Save</vui-button>
+        </vui-panel>
+      </vui-container>
+    </vui-scroll-area>
+    <vui-status-bar slot="footer">Ready</vui-status-bar>
+  </vui-shell>
+</div>
+```
+
+```ts
+import 'vui';
+import { setTheme, setUIMode } from 'vui/theme';
+
+setTheme('catppuccin-latte');
+setUIMode('web'); // 'desktop' | 'terminal'
+
+const save = document.querySelector('[data-save]');
+const name = document.querySelector('vui-input');
+save?.addEventListener('click', () => {
+  if (!name) return;
+  name.invalid = !name.value.trim();
+});
+```
+
+Основная область shell — слот по умолчанию, не `slot="main"`.
+
+### Next.js
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { Button, Input, Panel, Shell, Stack } from 'vui/react';
+
+export function SettingsForm() {
+  const [value, setValue] = useState('Ada');
+  const [invalid, setInvalid] = useState(false);
+  return (
+    <div style={{ height: '24rem' }}>
+      <Shell label="Application">
+        <Panel heading="Profile">
+          <Stack gap="md">
+            <Input label="Name" value={value} invalid={invalid}
+              onInput={(event) => setValue(event.currentTarget.value)} />
+            <Button variant="primary" onClick={() => setInvalid(!value.trim())}>Save</Button>
+          </Stack>
+        </Panel>
+      </Shell>
+    </div>
+  );
+}
+```
+
+Импортируйте `vui/themes/tokens`, `vui/themes/ui` и `vui/themes/system` в корневом layout и поставьте на `<html>` атрибуты `data-vui-theme` и `data-vui-ui`.
+
+
 Сборки, которые Studio показывает целиком:
 
 - Form: поле, подпись, hint, invalid;

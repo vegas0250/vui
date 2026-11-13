@@ -54,6 +54,8 @@
   --vui-row-height: 42px;
   --vui-icon-size: 16px;
   --vui-panel-padding: var(--vui-space-lg);
+  --vui-layout-nav: 16rem;
+  --vui-layout-gap: var(--vui-space-lg);
   --vui-duration: 100ms;
   --vui-opacity-disabled: 0.5;
   --vui-scrollbar-size: 12px;
@@ -107,6 +109,8 @@
   --vui-row-height: 32px;
   --vui-icon-size: 16px;
   --vui-panel-padding: var(--vui-space-lg);
+  --vui-layout-nav: 15rem;
+  --vui-layout-gap: var(--vui-space-md);
   --vui-duration: 120ms;
   --vui-opacity-disabled: 0.55;
   --vui-scrollbar-size: 10px;
@@ -161,6 +165,8 @@
   --vui-row-height: 24px;
   --vui-icon-size: 14px;
   --vui-panel-padding: var(--vui-space-lg);
+  --vui-layout-nav: 14rem;
+  --vui-layout-gap: var(--vui-space-sm);
   --vui-duration: 0ms;
   --vui-opacity-disabled: 0.5;
   --vui-scrollbar-size: 8px;
@@ -173,6 +179,14 @@
   --vui-terminal-bullet: "•";
   --vui-terminal-sep: "─";
   --vui-terminal-corner: "+";
+}
+
+/* Light DOM. Shadow trees get the same rule from base styles via :host-context. */
+[data-vui-ui="terminal"],
+[data-vui-ui="terminal"] :where(*) {
+  animation: none;
+  transition: none;
+  scroll-behavior: auto;
 }
 
 /*

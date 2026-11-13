@@ -8,6 +8,7 @@ import neonMagentaCss from '../../themes/neon-magenta.css?raw';
 import systemCss from '../../themes/system.css?raw';
 import tokensCss from '../../src/tokens/tokens.css?raw';
 import uiCss from '../../src/tokens/ui.css?raw';
+import { baseStyles } from '../../src/utils/styles';
 import { themeDocument, themeVariables } from '../../src/theme';
 import '../../src/components/layout/grid';
 import '../../src/components/layout/panel';
@@ -32,6 +33,9 @@ describe('token contract', () => {
     }
     expect(uiCss.match(/--vui-panel-padding: var\(--vui-space-lg\)/g)).toHaveLength(3);
     expect(uiCss).toContain('[data-vui-ui="terminal"]');
+    expect(uiCss.match(/--vui-layout-nav:/g)).toHaveLength(3);
+    expect(uiCss).toContain('animation: none');
+    expect(baseStyles).toContain(':host-context([data-vui-ui="terminal"])');
     expect(uiCss).toContain('--vui-font-sans: var(--vui-font-mono)');
     expect(uiCss).toContain('--vui-shadow-sm: none');
     expect(uiCss).toContain('--vui-opacity-disabled:');

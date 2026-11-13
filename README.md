@@ -78,6 +78,18 @@ dark, system, high-contrast and palette themes remain available. Theme Studio
 supports live preview, color editing and validated JSON import/export; it is
 documentation tooling and is not included in the runtime.
 
+## Layouts
+
+Dashboard, Settings, and Workspace are compositions of `vui-shell`, `vui-grid`,
+`vui-panel`, `vui-scroll-area`, and `vui-split-panel`. They follow the active UI
+mode without a mode-specific component branch. Give the shell a height, or place
+it in a flex column with `min-height: 0`, and the panes scroll on their own.
+
+Open `layout.html` from `pnpm dev` to switch theme, UI mode, and viewport width.
+Copy the markup from [docs/patterns.md](docs/patterns.md). Patterns are not
+package exports.
+
+
 ## Development
 
 ```sh

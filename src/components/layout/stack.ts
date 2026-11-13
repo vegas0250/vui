@@ -36,11 +36,12 @@ class VStackBase extends VuiElement {
         padding: var(--vui-layout-padding, 0);
         overflow: var(--vui-layout-overflow, visible);
         min-width: 0;
+        min-height: 0;
         max-width: 100%;
       }
       :host(:focus-visible) { outline: var(--vui-focus-ring); }
       :host([data-axis="row"][data-narrow]) { flex-wrap: wrap; }
-      ::slotted(*) { max-width: 100%; }
+      ::slotted(*) { min-width: 0; max-width: 100%; }
     `;
   }
 

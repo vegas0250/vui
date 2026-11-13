@@ -54,6 +54,14 @@ export const baseStyles = `
     scroll-behavior: auto !important;
   }
 }
+:host-context([data-vui-ui="terminal"]),
+:host-context([data-vui-ui="terminal"]) *,
+:host-context([data-vui-ui="terminal"]) *::before,
+:host-context([data-vui-ui="terminal"]) *::after {
+  transition: none !important;
+  animation: none !important;
+  scroll-behavior: auto !important;
+}
 `;
 
 function canAdopt(): boolean {

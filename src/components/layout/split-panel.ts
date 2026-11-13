@@ -29,7 +29,9 @@ export class VSplitPanel extends VuiElement {
   protected componentStyles(): string {
     return `
       :host {
-        display: block;
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
         min-width: 0;
         max-width: 100%;
         min-height: var(--vui-split-min-block);
@@ -43,15 +45,26 @@ export class VSplitPanel extends VuiElement {
       }
       .split {
         display: flex;
+        flex: 1 1 auto;
         width: 100%;
+        min-width: 0;
+        min-height: var(--vui-split-min-block);
         height: 100%;
-        min-height: inherit;
       }
       :host([orientation="vertical"]) .split { flex-direction: column; }
       .pane {
+        display: flex;
+        flex-direction: column;
         min-width: 0;
         min-height: 0;
         overflow: var(--vui-layout-overflow, auto);
+      }
+      .pane > slot {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        min-width: 0;
+        min-height: 0;
       }
       .start { flex: 0 0 var(--vui-split, 50%); }
       .end { flex: 1 1 auto; }

@@ -1,3 +1,4 @@
+import { bindLayout, layoutExample } from './layouts';
 import { componentImport } from './component-data';
 import { docsLocale, escapeHTML } from './theme-i18n';
 import { tones } from '../theme/presets';
@@ -21,6 +22,10 @@ export interface DemoSection {
 
 /** Preview-only wiring. Never serialized into copyable HTML. */
 export function wireExample(root: HTMLElement): void {
+  if (root.querySelector('[data-layout]')) {
+    bindLayout(root);
+    return;
+  }
   const result = root.querySelector<HTMLElement>('[data-result]');
   const output = (value: string) => {
     if (result) result.textContent = value;
@@ -437,6 +442,7 @@ save?.addEventListener('click', () => {
 }
 
 export function interfaceExample(id: string): Example {
+  if (id === 'dashboard' || id === 'settings' || id === 'workspace') return layoutExample(id);
   const name = text('Имя', 'Name');
   const save = text('Сохранить', 'Save');
   const settings = `<vui-field-group label="${text('Профиль', 'Profile')}"><vui-vstack gap="md"><vui-input label="${name}" value="Ada" required></vui-input><vui-select label="${text('Язык', 'Language')}" value="ru"><vui-option value="ru">Русский</vui-option><vui-option value="en">English</vui-option></vui-select><vui-switch>${text('Уведомления', 'Notifications')}</vui-switch><vui-button data-save>${save}</vui-button></vui-vstack></vui-field-group>`;
@@ -451,7 +457,7 @@ export function interfaceExample(id: string): Example {
   if (id === 'shell') {
     return {
       id,
-      html: `<vui-shell style="min-height:24rem"><vui-titlebar slot="header" label="Atlas"></vui-titlebar><vui-toolbar slot="toolbar"><vui-button data-collapse>${text('Навигация', 'Navigation')}</vui-button></vui-toolbar><vui-nav slot="nav" label="${text('Разделы', 'Sections')}"><vui-nav-item selected>${text('Настройки', 'Settings')}</vui-nav-item><vui-nav-item>${text('Команда', 'Team')}</vui-nav-item></vui-nav><vui-panel slot="main" heading="${text('Настройки', 'Settings')}">${settings}</vui-panel><vui-status-bar slot="footer">${text('Готово', 'Ready')}</vui-status-bar></vui-shell>`,
+      html: `<vui-shell style="min-height:24rem"><vui-titlebar slot="header" label="Atlas"></vui-titlebar><vui-toolbar slot="toolbar"><vui-button data-collapse>${text('Навигация', 'Navigation')}</vui-button></vui-toolbar><vui-nav slot="nav" label="${text('Разделы', 'Sections')}"><vui-nav-item selected>${text('Настройки', 'Settings')}</vui-nav-item><vui-nav-item>${text('Команда', 'Team')}</vui-nav-item></vui-nav><vui-panel heading="${text('Настройки', 'Settings')}">${settings}</vui-panel><vui-status-bar slot="footer">${text('Готово', 'Ready')}</vui-status-bar></vui-shell>`,
       script: `document.querySelector('[data-collapse]')?.addEventListener('click', () => {
   document.querySelector('vui-shell')?.toggleAttribute('collapsed');
 });

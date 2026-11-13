@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en" data-vui-theme="catppuccin-latte" data-vui-ui="web">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VUI Layout Gallery</title>
+  </head>
+  <body>
+    <script>
+      const params = new URLSearchParams(location.search);
+      if (!params.has('lang')) {
+        params.set('lang', 'en');
+        history.replaceState(null, '', `${location.pathname}?${params}`);
+      }
+    </script>
+    <div id="app"></div>
+    <script type="module" src="/src/showcase/layout-gallery.ts"></script>
+  </body>
+</html>

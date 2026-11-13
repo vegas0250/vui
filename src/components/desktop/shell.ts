@@ -106,7 +106,7 @@ export class VShell extends VuiElement {
       .rail {
         display: flex;
         flex: 0 0 auto;
-        width: var(--vui-shell-nav, 16rem);
+        width: var(--vui-shell-nav, var(--vui-layout-nav, 16rem));
         max-width: min(32rem, 50%);
         background: var(--vui-color-surface);
         border-inline-end: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
@@ -228,17 +228,18 @@ export class VShell extends VuiElement {
       .hidden { display: none; }
       :host([collapsed]) .rail { display: none; }
       @container vui-shell (max-width: 40rem) {
-        .body { flex-direction: column; }
+        .body { flex-direction: column; min-width: 0; }
         .rail, .aside-rail {
           width: auto;
+          min-width: 0;
           max-width: 100%;
-          flex-basis: auto;
+          max-height: 40%;
+          flex: 0 1 auto;
+          overflow: auto;
           border-inline: 0;
           border-block-end: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
         }
-        .aside-sep { display: none; }
-        .sep { cursor: default; }
-        .sep::before { width: 2.75rem; height: 2px; }
+        .aside-sep, .sep { display: none; }
       }
       main:focus-visible { outline: none; }
     `;

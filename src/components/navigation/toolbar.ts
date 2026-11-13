@@ -67,7 +67,8 @@ export class VToolbar extends VuiElement {
         width: 100%;
         min-width: 0;
       }
-      .end { margin-inline-start: auto; flex: 0 0 auto; }
+      ::slotted(*) { min-width: 0; max-width: 100%; }
+      .end { margin-inline-start: auto; flex: 0 1 auto; min-width: 0; }
       @container vui-toolbar (max-width: 40rem) {
         .bar { flex-wrap: wrap; }
         .group { flex: 1 1 100%; }
