@@ -47,7 +47,7 @@ export class VLink extends VuiElement {
         text-decoration: none;
       }
       :host([variant="button"]) a:hover { background: var(--vui-color-primary-hover); color: var(--vui-color-on-primary); }
-      :host([disabled]) a { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+      :host([disabled]) a { opacity: var(--vui-opacity-disabled); cursor: not-allowed; pointer-events: none; }
       @media (forced-colors: active) {
         a { color: LinkText; }
         :host([variant="button"]) a { background: ButtonFace; color: ButtonText; border: var(--vui-border-width) solid ButtonText; }

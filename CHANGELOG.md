@@ -1,4 +1,31 @@
-﻿# 1.3.5
+﻿# Unreleased (proposed 1.4.0)
+
+Design system modernization. Specification: `docs/design-system.md`.
+
+- Tokens: typography (`--vui-font-size-xs`, `--vui-line-height-sm|heading`,
+  `--vui-tracking-heading|caps`, `--vui-font-weight-medium|control`, `--vui-measure`),
+  icon geometry (`--vui-icon-size-sm|lg|xl`, `--vui-icon-stroke`, `--vui-icon-gap`),
+  chrome/overlay geometry (`--vui-header-height`, `--vui-field-gap`,
+  `--vui-dialog-padding`, `--vui-popover-padding`, `--vui-menu-padding`,
+  `--vui-menu-item-height`), `--vui-space-3xl`, breakpoints (`--vui-breakpoint-*`),
+  containers (`--vui-container-*`), `--vui-size-touch`, semantic gaps
+  (`--vui-gap-related|group|section`, `--vui-form-gap`, `--vui-container-gutter`).
+- Web mode follows Radix/shadcn conventions: radii 6/8 (was 2/4), 2px focus ring,
+  fluid h1/h2, 40px rows, 24px dialog padding. Desktop aligns to the Fluent 2
+  type ramp (body 14/20, subtitle 16, title 20/24) and icon grid (12/16/20/24,
+  1.75 stroke). Terminal stays monospace, square, motionless.
+- Touch pointers (`pointer: coarse`) grow web/desktop controls, rows, menu and
+  nav items to 40–48px targets; carousel dots get a 24px hit area.
+- `vui-icon`: `size` attribute, mode-driven stroke weight, `focusable="false"`;
+  54 new built-in icons (67 → 121) (chevron-up, external-link, filter, upload, user, calendar,
+  lock/unlock, circle-x/help, more-vertical, undo/redo, zoom, …).
+- `vui-container`: `size="xlarge"` and `size="full"`; widths from tokens.
+- `vui-text`: heading line height/tracking/balance, levels 4–6, label uses primary text.
+- Field labels use primary text color + medium weight; buttons use
+  `--vui-font-weight-control`; all disabled states use `--vui-opacity-disabled`.
+- Menu, dialog, drawer, popover, tabs and icon-button geometry read the new tokens.
+
+# 1.3.5
 
 - Compact hierarchical sidebar navigation on `vui-nav`: `vui-nav-group`
   categories, nestable `vui-nav-item` branches, tree guides, chevrons, and

@@ -91,7 +91,8 @@ forms, a modal and grid object props.
 ## Themes and UI mode
 
 CSS custom properties are the rendering source of truth. Components consume the
-same `--vui-*` tokens for every palette. Presets provide validated values for
+same `--vui-*` tokens for every palette. The full spacing, geometry, typography,
+icon, responsive and state specification is [docs/design-system.md](docs/design-system.md). Presets provide validated values for
 those tokens; UI mode changes scale and spacing without changing theme state.
 Legacy theme entry points remain available. Explicit preferences win over OS
 preferences; documentation defaults to Tokyo Night for dark and Catppuccin Latte

@@ -39,7 +39,7 @@ export class VField extends VuiElement {
       }
       .label:empty, .hint:empty { display: none; }
       :host([invalid]) .hint { color: var(--vui-color-danger); }
-      :host([disabled]) { opacity: 0.55; }
+      :host([disabled]) { opacity: var(--vui-opacity-disabled); }
       :host(:focus-visible) { outline: var(--vui-focus-ring); }
       /* Native text controls share vui-input chrome; custom children keep their own surface. */
       .control:not([data-native]) {
@@ -194,7 +194,7 @@ export class VFieldGroup extends VuiElement {
       legend { padding: 0; font-weight: var(--vui-font-weight-strong); }
       .hint { color: var(--vui-color-text-muted); font-size: var(--vui-font-size-sm); }
       legend:empty, .hint:empty { display: none; }
-      :host([disabled]) { opacity: 0.55; }
+      :host([disabled]) { opacity: var(--vui-opacity-disabled); }
       :host(:focus-visible) { outline: var(--vui-focus-ring); }
     `;
   }

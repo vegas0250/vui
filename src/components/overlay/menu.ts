@@ -72,9 +72,9 @@ export class VMenuItem extends VuiElement {
         position: relative;
         display: flex;
         align-items: center;
-        gap: var(--vui-space-sm);
+        gap: var(--vui-icon-gap, var(--vui-space-sm));
         min-width: 0;
-        min-height: var(--vui-size-control);
+        min-height: var(--vui-menu-item-height, var(--vui-size-control));
         padding-inline: var(--vui-space-sm);
         border-radius: inherit;
         transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing);
@@ -95,7 +95,7 @@ export class VMenuItem extends VuiElement {
         background: var(--vui-color-selected, var(--vui-color-hover, var(--vui-color-surface-hover)));
       }
       .mark {
-        width: 1em;
+        width: var(--vui-icon-size);
         flex: 0 0 auto;
         display: inline-flex;
         align-items: center;
@@ -104,7 +104,7 @@ export class VMenuItem extends VuiElement {
       }
       :host(:not([icon]):not([checked])) .mark { display: none; }
       :host([checked]) .mark::before { content: "✓"; }
-      vui-icon { width: 1em; height: 1em; color: var(--vui-color-interactive-text, var(--vui-color-primary)); }
+      vui-icon { width: var(--vui-icon-size); height: var(--vui-icon-size); color: var(--vui-color-interactive-text, var(--vui-color-primary)); }
       :host([disabled]) vui-icon { color: inherit; }
       :host([checked]) .mark > vui-icon { display: none; }
       .label {
@@ -156,8 +156,8 @@ export class VMenuItem extends VuiElement {
       .caret:focus { outline: none; }
       .caret:focus-visible { outline: var(--vui-focus-ring); outline-offset: calc(var(--vui-focus-offset) * -1); }
       .caret vui-icon {
-        width: 0.85em;
-        height: 0.85em;
+        width: var(--vui-icon-size-sm);
+        height: var(--vui-icon-size-sm);
         transition: transform var(--vui-duration) var(--vui-easing);
       }
       :host([expanded]) .caret vui-icon { transform: rotate(90deg); }
@@ -378,7 +378,7 @@ export class VMenu extends VuiElement {
         max-width: calc(100vw - var(--vui-overlay-gutter) * 2);
         max-height: min(var(--vui-overlay-max-block), var(--vui-menu-block));
         margin: 0;
-        padding: var(--vui-space-2xs);
+        padding: var(--vui-menu-padding, var(--vui-space-2xs));
         overflow: auto;
         background: var(--vui-color-popover, var(--vui-color-surface-raised));
         color: var(--vui-color-text);

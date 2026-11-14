@@ -124,7 +124,7 @@ export class VPathBar extends VuiElement {
         border-color: var(--vui-color-focus);
         box-shadow: var(--vui-focus-shadow);
       }
-      :host([disabled]) { opacity: 0.55; }
+      :host([disabled]) { opacity: var(--vui-opacity-disabled); }
       :host([disabled]) .bar { cursor: default; }
       :host(:focus-visible) { outline: var(--vui-focus-ring); }
     `;

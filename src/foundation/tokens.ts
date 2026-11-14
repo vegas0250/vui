@@ -10,6 +10,12 @@ export const primitiveTokens = [
   '--vui-layout-medium',
   '--vui-field-inline',
   '--vui-overlay-full',
+  '--vui-breakpoint-sm',
+  '--vui-breakpoint-md',
+  '--vui-breakpoint-lg',
+  '--vui-breakpoint-xl',
+  '--vui-container-md',
+  '--vui-size-touch',
 ] as const;
 
 export const semanticTokens = [
@@ -38,6 +44,14 @@ export const componentTokens = [
   '--vui-statusbar-height',
   '--vui-panel-padding',
   '--vui-icon-size',
+  '--vui-icon-size-sm',
+  '--vui-icon-size-lg',
+  '--vui-icon-stroke',
+  '--vui-icon-gap',
+  '--vui-field-gap',
+  '--vui-header-height',
+  '--vui-dialog-padding',
+  '--vui-menu-item-height',
 ] as const;
 
 export const foundationTokens = [...primitiveTokens, ...semanticTokens, ...componentTokens] as const;

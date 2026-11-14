@@ -113,11 +113,15 @@
   --vui-palette-shadow-glow-neon-magenta: #ff2bd6;
   --vui-palette-shadow-glow-neon-cyan: #2de2e6;
 
-  /* Typography */
-  --vui-font-sans: "Segoe UI", "Segoe UI Variable", system-ui, sans-serif;
-  --vui-font-mono: "Cascadia Mono", "Cascadia Code", ui-monospace, Consolas, monospace;
+  /* Typography. Sizes, line heights and control weight follow UI mode (ui.css). */
+  --vui-font-sans: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --vui-font-mono: "Cascadia Mono", "Cascadia Code", ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   --vui-font-weight: 400;
+  --vui-font-weight-medium: 500;
   --vui-font-weight-strong: 600;
+  --vui-tracking-caps: 0.06em;
+  /* Comfortable reading measure for prose blocks. */
+  --vui-measure: 68ch;
   --vui-color-selected: color-mix(in srgb, var(--vui-color-primary) 16%, var(--vui-color-surface));
 
   /* Motion (duration scale is owned by ui.css / UI mode) */
@@ -139,6 +143,28 @@
   --vui-stroke-width: 1.5px;
   --vui-border-width-strong: 2px;
   --vui-border-width-accent: 3px;
+
+  /*
+    Viewport breakpoints (min-width, mobile first). @media cannot read var(), so
+    component and template CSS repeats these lengths literally:
+    xs 30rem (480) phone landscape / full-screen overlays, sm 40rem (640),
+    md 48rem (768) tablet, lg 64rem (1024) desktop, xl 80rem (1280), 2xl 96rem (1536).
+  */
+  --vui-breakpoint-xs: 30rem;
+  --vui-breakpoint-sm: 40rem;
+  --vui-breakpoint-md: 48rem;
+  --vui-breakpoint-lg: 64rem;
+  --vui-breakpoint-xl: 80rem;
+  --vui-breakpoint-2xl: 96rem;
+
+  /* Constrained content widths used by vui-container and templates. */
+  --vui-container-sm: 40rem;
+  --vui-container-md: 64rem;
+  --vui-container-lg: 80rem;
+  --vui-container-xl: 96rem;
+
+  /* Minimum hit area for touch pointers (WCAG 2.5.5 / platform guidance). */
+  --vui-size-touch: 44px;
 
   /* Container thresholds. Component CSS repeats 22rem, 36rem, 40rem, and 30rem. */
   --vui-layout-narrow: 22rem;

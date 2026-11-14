@@ -142,7 +142,7 @@ main {
   color: var(--vui-color-text);
   text-decoration: none;
   font-size: var(--vui-font-size-sm);
-  font-weight: 600;
+  font-weight: var(--vui-font-weight-strong);
 }
 
 .site-footer-nav a:hover {

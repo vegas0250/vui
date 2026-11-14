@@ -43,7 +43,7 @@ export class VStep extends VuiElement {
       :host([selected]) button { color: var(--vui-color-text); border-bottom-color: var(--vui-color-primary); }
       button:focus { outline: none; }
       button:focus-visible { outline: var(--vui-focus-ring); outline-offset: var(--vui-focus-offset); }
-      button:disabled { opacity: 0.5; cursor: not-allowed; }
+      button:disabled { opacity: var(--vui-opacity-disabled); cursor: not-allowed; }
     `;
   }
 

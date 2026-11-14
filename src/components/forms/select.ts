@@ -207,7 +207,7 @@ export class VSelect extends VuiElement {
         background: color-mix(in srgb, var(--vui-color-primary) 22%, var(--vui-color-surface));
       }
       .listbox [role="option"][aria-disabled="true"] {
-        opacity: 0.72;
+        opacity: var(--vui-opacity-disabled);
         cursor: not-allowed;
       }
       .label:empty { display: none; }

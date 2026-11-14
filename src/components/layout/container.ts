@@ -22,13 +22,15 @@ export class VContainer extends VuiElement {
         display: block;
         width: 100%;
         min-width: 0;
-        max-width: min(100%, 64rem);
+        max-width: min(100%, var(--vui-container-md, 64rem));
         margin-inline: auto;
         box-sizing: border-box;
         padding: var(--vui-layout-padding, 0);
       }
-      :host([size="small"]) { max-width: min(100%, 40rem); }
-      :host([size="large"]) { max-width: min(100%, 80rem); }
+      :host([size="small"]) { max-width: min(100%, var(--vui-container-sm, 40rem)); }
+      :host([size="large"]) { max-width: min(100%, var(--vui-container-lg, 80rem)); }
+      :host([size="xlarge"]) { max-width: min(100%, var(--vui-container-xl, 96rem)); }
+      :host([size="full"]) { max-width: 100%; }
       [part="body"] { min-width: 0; max-width: 100%; }
       :host(:focus-visible) { outline: var(--vui-focus-ring); }
     `;
@@ -48,7 +50,7 @@ registerContract({
   element: 'vui-container',
   className: 'VContainer',
   attributes: [
-    { name: 'size', kind: 'enum', values: ['small', 'medium', 'large'], reflected: true },
+    { name: 'size', kind: 'enum', values: ['small', 'medium', 'large', 'xlarge', 'full'], reflected: true },
     { name: 'padding', kind: 'string', reflected: true },
   ],
   events: [],

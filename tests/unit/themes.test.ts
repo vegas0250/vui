@@ -255,7 +255,8 @@ describe('palette-independent theme engine', () => {
     expect(themeVariables(themeDocument('fluent-dark'))['--vui-shadow-sm']).toMatch(/^0 0\.5px/);
     expect(themeVariables(themeDocument('radix-light'), { uiMode: 'web' })['--vui-radius']).toBe('8px');
     expect(themeAppearance(themeDocument('nord'), 'desktop').radiusField).toBe(4);
-    expect(themeAppearance(themeDocument('nord'), 'web').radiusField).toBe(2);
+    expect(themeAppearance(themeDocument('nord'), 'web').radiusField).toBe(6);
+    expect(themeAppearance(themeDocument('nord'), 'web').radiusBox).toBe(8);
   });
   it('resolves terminal mode independently from semantic colors', () => {
     const nord = themeDocument('nord');

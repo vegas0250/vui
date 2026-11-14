@@ -1,8 +1,9 @@
 /*
   UI mode is the structural scale of the interface.
-  web — browser-oriented spacing, tight radii, soft multi-layer elevation
-  desktop — denser chrome, larger radii, key+ambient elevation
-  terminal — monospace TUI-inspired structure (dense, square, no elevation)
+  web — Radix/shadcn conventions: roomy spacing, soft radii, fluid headings, multi-layer elevation
+  desktop — Fluent 2 conventions: denser chrome, Fluent type/icon grid, key+ambient elevation
+  terminal — monospace TUI-inspired structure (dense, square, no elevation, no motion)
+  Full specification: docs/design-system.md.
   Themes own semantic colors and elevation ink (--vui-shadow-ink, --vui-shadow-strength-*, optional --vui-shadow-glow);
   this file owns spacing, radius, type, chrome, focus and elevation geometry (--vui-shadow-sm|md|lg).
   Components read these tokens and do not branch on mode names.
@@ -18,24 +19,38 @@
   --vui-space-lg: 16px;
   --vui-space-xl: 20px;
   --vui-space-2xl: 32px;
+  --vui-space-3xl: 48px;
+  /* Radix/shadcn-aligned control scale: 24 / 32 / 40 */
   --vui-size-control: 32px;
   --vui-size-control-sm: 24px;
   --vui-size-control-lg: 40px;
-  /* Web mode type ramp */
+  /* Web mode type ramp. Headings scale fluidly between phone and desktop. */
   --vui-font-size: 14px;
+  --vui-font-size-xs: 11px;
   --vui-font-size-sm: 12px;
   --vui-font-size-lg: 16px;
   --vui-line-height: 1.43;
-  --vui-heading-1: 28px;
-  --vui-heading-2: 20px;
+  --vui-line-height-sm: 1.34;
+  --vui-line-height-heading: 1.25;
+  --vui-tracking-heading: -0.011em;
+  --vui-font-weight-control: 500;
+  --vui-heading-1: clamp(24px, 1.25rem + 1vw, 28px);
+  --vui-heading-2: clamp(18px, 1rem + 0.5vw, 20px);
   --vui-heading-3: 16px;
-  /* Web mode keeps tight radii; desktop uses larger ones */
-  --vui-radius: 2px;
-  --vui-radius-sm: 0px;
-  --vui-radius-lg: 4px;
-  --vui-radius-box: 4px;
-  --vui-radius-field: 2px;
-  --vui-radius-selector: 0px;
+  /* Web shape: soft, shadcn-style radii (field 6, container 8) */
+  --vui-radius: 6px;
+  --vui-radius-sm: 4px;
+  --vui-radius-lg: 8px;
+  --vui-radius-box: 8px;
+  --vui-radius-field: 6px;
+  --vui-radius-selector: 4px;
+  /* Icon geometry (24px grid source art, lucide-compatible strokes) */
+  --vui-icon-size-sm: 14px;
+  --vui-icon-size: 16px;
+  --vui-icon-size-lg: 20px;
+  --vui-icon-size-xl: 24px;
+  --vui-icon-stroke: 2;
+  --vui-icon-gap: 8px;
   /* Soft multi-layer key + ambient pair */
   --vui-shadow-offset-sm: 0 0.3px 0.9px;
   --vui-shadow-offset-md: 0 1.6px 3.6px;
@@ -46,14 +61,19 @@
   --vui-shadow-sm: var(--vui-shadow-offset-sm) color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-sm, 11%), transparent), var(--vui-shadow-ambient-sm) color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-sm, 13%), transparent);
   --vui-shadow-md: var(--vui-shadow-offset-md) color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-md, 11%), transparent), var(--vui-shadow-ambient-md) color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-md, 13%), transparent), 0 0 0 1px var(--vui-shadow-glow, transparent);
   --vui-shadow-lg: var(--vui-shadow-offset-lg) color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-lg, 13%), transparent), var(--vui-shadow-ambient-lg) color-mix(in srgb, var(--vui-shadow-ink, var(--vui-palette-shadow-ink-light)) var(--vui-shadow-strength-lg, 22%), transparent), 0 0 0 1px var(--vui-shadow-glow, transparent);
-  --vui-focus-offset: 1px;
-  --vui-focus-ring: 1px solid var(--vui-color-focus);
+  --vui-focus-offset: 2px;
+  --vui-focus-ring: 2px solid var(--vui-color-focus);
   --vui-focus-shadow: 0 0 0 1px var(--vui-color-background), 0 0 0 3px var(--vui-color-focus);
+  --vui-header-height: 56px;
   --vui-toolbar-height: 44px;
   --vui-statusbar-height: 32px;
-  --vui-row-height: 42px;
-  --vui-icon-size: 16px;
+  --vui-row-height: 40px;
   --vui-panel-padding: var(--vui-space-lg);
+  --vui-field-gap: 6px;
+  --vui-dialog-padding: 24px;
+  --vui-popover-padding: var(--vui-space-md);
+  --vui-menu-padding: 4px;
+  --vui-menu-item-height: 32px;
   --vui-layout-nav: 15rem;
   --vui-nav-item-height: 36px;
   --vui-nav-item-padding-inline: 12px;
@@ -80,16 +100,31 @@
   --vui-space-lg: 12px;
   --vui-space-xl: 16px;
   --vui-space-2xl: 24px;
+  --vui-space-3xl: 32px;
+  /* Fluent 2 control scale: 24 / 32 / 40 */
   --vui-size-control: 32px;
   --vui-size-control-sm: 24px;
   --vui-size-control-lg: 40px;
+  /* Fluent 2 type ramp (Caption 1 / Body 1 / Subtitle / Title). Fixed: desktop apps do not scale with viewport. */
   --vui-font-size: 14px;
+  --vui-font-size-xs: 10px;
   --vui-font-size-sm: 12px;
   --vui-font-size-lg: 16px;
-  --vui-line-height: 1.4;
+  --vui-line-height: 1.43;
+  --vui-line-height-sm: 1.34;
+  --vui-line-height-heading: 1.3;
+  --vui-tracking-heading: 0em;
+  --vui-font-weight-control: 600;
   --vui-heading-1: 24px;
-  --vui-heading-2: 18px;
-  --vui-heading-3: 14px;
+  --vui-heading-2: 20px;
+  --vui-heading-3: 16px;
+  /* Fluent icon grid: 12 / 16 / 20 / 24 with lighter strokes */
+  --vui-icon-size-sm: 12px;
+  --vui-icon-size: 16px;
+  --vui-icon-size-lg: 20px;
+  --vui-icon-size-xl: 24px;
+  --vui-icon-stroke: 1.75;
+  --vui-icon-gap: 6px;
   /* Desktop shape: small / medium / large */
   --vui-radius: 4px;
   --vui-radius-sm: 2px;
@@ -110,11 +145,16 @@
   --vui-focus-offset: 1px;
   --vui-focus-ring: 2px solid var(--vui-color-focus);
   --vui-focus-shadow: 0 0 0 1px var(--vui-color-background), 0 0 0 3px var(--vui-color-focus);
+  --vui-header-height: 48px;
   --vui-toolbar-height: 40px;
   --vui-statusbar-height: 24px;
   --vui-row-height: 32px;
-  --vui-icon-size: 16px;
   --vui-panel-padding: var(--vui-space-lg);
+  --vui-field-gap: 4px;
+  --vui-dialog-padding: 24px;
+  --vui-popover-padding: var(--vui-space-lg);
+  --vui-menu-padding: 4px;
+  --vui-menu-item-height: 32px;
   --vui-layout-nav: 14.5rem;
   --vui-nav-item-height: 36px;
   --vui-nav-item-padding-inline: 10px;
@@ -142,16 +182,29 @@
   --vui-space-lg: 8px;
   --vui-space-xl: 12px;
   --vui-space-2xl: 16px;
+  --vui-space-3xl: 24px;
   --vui-size-control: 24px;
   --vui-size-control-sm: 20px;
   --vui-size-control-lg: 28px;
+  /* One monospace size family; hierarchy comes from weight, not scale. */
   --vui-font-size: 13px;
+  --vui-font-size-xs: 12px;
   --vui-font-size-sm: 12px;
   --vui-font-size-lg: 14px;
   --vui-line-height: 1.35;
+  --vui-line-height-sm: 1.35;
+  --vui-line-height-heading: 1.35;
+  --vui-tracking-heading: 0em;
+  --vui-font-weight-control: 400;
   --vui-heading-1: 16px;
   --vui-heading-2: 14px;
   --vui-heading-3: 13px;
+  --vui-icon-size-sm: 12px;
+  --vui-icon-size: 14px;
+  --vui-icon-size-lg: 16px;
+  --vui-icon-size-xl: 20px;
+  --vui-icon-stroke: 2;
+  --vui-icon-gap: 4px;
   --vui-radius: 0px;
   --vui-radius-sm: 0px;
   --vui-radius-lg: 0px;
@@ -172,11 +225,16 @@
   --vui-focus-offset: 0px;
   --vui-focus-ring: 1px solid var(--vui-color-focus);
   --vui-focus-shadow: inset 0 0 0 1px var(--vui-color-focus);
+  --vui-header-height: 28px;
   --vui-toolbar-height: 28px;
   --vui-statusbar-height: 22px;
   --vui-row-height: 24px;
-  --vui-icon-size: 14px;
   --vui-panel-padding: var(--vui-space-lg);
+  --vui-field-gap: 2px;
+  --vui-dialog-padding: var(--vui-space-md);
+  --vui-popover-padding: var(--vui-space-md);
+  --vui-menu-padding: 0px;
+  --vui-menu-item-height: 24px;
   --vui-layout-nav: 14rem;
   --vui-nav-item-height: 24px;
   --vui-nav-item-padding-inline: 8px;
@@ -197,6 +255,37 @@
   --vui-terminal-bullet: "•";
   --vui-terminal-sep: "─";
   --vui-terminal-corner: "+";
+}
+
+/*
+  Semantic spacing aliases. Declared on every mode scope (not only :root) so
+  var() resolves against the nearest [data-vui-ui] when modes are nested.
+*/
+:root,
+[data-vui-ui] {
+  --vui-gap-related: var(--vui-space-sm);   /* label + control, icon + text clusters */
+  --vui-gap-group: var(--vui-space-lg);     /* fields in a form, cards in a row */
+  --vui-gap-section: var(--vui-space-2xl);  /* page sections */
+  --vui-form-gap: var(--vui-space-lg);
+  --vui-container-gutter: clamp(var(--vui-space-lg), 4vw, var(--vui-space-2xl));
+}
+
+/*
+  Touch pointers: grow interactive targets to the platform minimum without
+  changing typography. Terminal stays character-dense by design.
+*/
+@media (pointer: coarse) {
+  :root:not([data-vui-ui="terminal"]),
+  [data-vui-ui="web"],
+  [data-vui-ui="desktop"] {
+    --vui-size-control: 40px;
+    --vui-size-control-sm: 32px;
+    --vui-size-control-lg: 48px;
+    --vui-row-height: var(--vui-size-touch);
+    --vui-nav-item-height: var(--vui-size-touch);
+    --vui-menu-item-height: var(--vui-size-touch);
+    --vui-resizer-hit-size: 16px;
+  }
 }
 
 /* Light DOM. Shadow trees get the same rule from base styles via :host-context. */

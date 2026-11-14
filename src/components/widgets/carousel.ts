@@ -80,15 +80,19 @@ export class VCarousel extends VuiElement {
       }
       .dot {
         appearance: none;
-        width: 0.55rem;
-        height: 0.55rem;
-        padding: 0;
+        /* 8px visual dot inside a 24px hit area (WCAG 2.5.8). */
+        box-sizing: content-box;
+        width: var(--vui-space-sm);
+        height: var(--vui-space-sm);
+        padding: var(--vui-space-sm);
         border: 0;
-        border-radius: 999px;
+        border-radius: var(--vui-radius-full);
         background: var(--vui-color-border);
+        background-clip: content-box;
         cursor: pointer;
       }
-      .dot[aria-selected="true"] { background: var(--vui-color-interactive-text, var(--vui-color-primary)); }
+      .dot:hover { background-color: var(--vui-color-border-strong, var(--vui-color-border)); }
+      .dot[aria-selected="true"] { background-color: var(--vui-color-interactive-text, var(--vui-color-primary)); }
       .dot:focus-visible { outline: var(--vui-focus-ring); outline-offset: var(--vui-focus-offset); }
       @media (prefers-reduced-motion: reduce) {
         .track { transition: none; }

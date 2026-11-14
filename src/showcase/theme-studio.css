@@ -126,7 +126,7 @@
   border-radius: var(--vui-radius-sm);
 }
 .is-modified .ts-token-title label {
-  font-weight: 600;
+  font-weight: var(--vui-font-weight-strong);
 }
 .ts-token-controls {
   display: grid;

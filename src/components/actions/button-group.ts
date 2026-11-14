@@ -19,7 +19,7 @@ export class VButtonGroup extends VuiElement {
   protected componentStyles(): string {
     return `
       :host { display: inline-flex; max-width: 100%; min-width: 0; vertical-align: middle; }
-      :host([disabled]) { opacity: 0.55; }
+      :host([disabled]) { opacity: var(--vui-opacity-disabled); }
       [part="group"] {
         display: inline-flex;
         flex-wrap: wrap;

@@ -27,16 +27,26 @@ export class VText extends VuiElement {
         line-height: var(--vui-line-height);
         overflow-wrap: anywhere;
       }
-      :host([variant="heading"]) { font-weight: var(--vui-font-weight-strong); }
+      :host([variant="heading"]) {
+        font-weight: var(--vui-font-weight-strong);
+        font-size: var(--vui-heading-2);
+        line-height: var(--vui-line-height-heading, 1.25);
+        letter-spacing: var(--vui-tracking-heading, 0);
+        text-wrap: balance;
+      }
       :host([variant="heading"][level="1"]) { font-size: var(--vui-heading-1); }
       :host([variant="heading"][level="2"]) { font-size: var(--vui-heading-2); }
       :host([variant="heading"][level="3"]) { font-size: var(--vui-heading-3); }
+      :host([variant="heading"][level="4"]) { font-size: var(--vui-font-size-lg); }
+      :host([variant="heading"][level="5"]),
+      :host([variant="heading"][level="6"]) { font-size: var(--vui-font-size); }
       :host([variant="caption"]),
       :host([variant="label"]) {
         font-size: var(--vui-font-size-sm);
-        color: var(--vui-color-text-muted);
+        line-height: var(--vui-line-height-sm, var(--vui-line-height));
       }
-      :host([variant="label"]) { font-weight: var(--vui-font-weight-strong); }
+      :host([variant="caption"]) { color: var(--vui-color-text-muted); }
+      :host([variant="label"]) { font-weight: var(--vui-font-weight-medium, 500); }
       :host([variant="code"]) {
         display: inline;
         font-family: var(--vui-font-mono);

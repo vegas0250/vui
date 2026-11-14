@@ -617,11 +617,11 @@ export function mountDocumentationSite(): void {
           'Цветовая тема и структурный режим независимы. Переключатель сверху меняет Web, Desktop или Terminal для всей документации.',
           'Color theme and structural mode are independent. The top switch applies Web, Desktop, or Terminal to the whole documentation site.',
         )}</p><div class="docs-cards docs-ui-modes"><div class="docs-card"><strong>Web</strong><p>${text(
-          'Браузерная шкала: привычные отступы, плотные радиусы, мягкая многослойная тень.',
-          'Browser scale: familiar spacing, tight radii, soft multi-layer elevation.',
+          'Браузерная шкала: свободные отступы, мягкие радиусы, плавные заголовки, многослойная тень.',
+          'Browser scale: roomy spacing, soft radii, fluid headings, multi-layer elevation.',
         )}</p><code>data-vui-ui="web"</code></div><div class="docs-card"><strong>Desktop</strong><p>${text(
-          'Плотнее chrome, крупнее радиусы, key+ambient elevation.',
-          'Denser chrome, larger radii, key+ambient elevation.',
+          'Сетка Fluent 2: плотный chrome, фиксированная типографика, key+ambient elevation.',
+          'Fluent 2 grid: denser chrome, fixed type ramp, key+ambient elevation.',
         )}</p><code>data-vui-ui="desktop"</code></div><div class="docs-card"><strong>Terminal</strong><p>${text(
           'Моноширинный TUI: плотная сетка, нулевой радиус, без теней.',
           'Monospace TUI: dense grid, square corners, no elevation.',

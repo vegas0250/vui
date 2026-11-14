@@ -354,8 +354,8 @@ export class VNavGroup extends VuiElement {
         text-overflow: ellipsis;
         white-space: nowrap;
         font-size: var(--vui-font-size-sm);
-        font-weight: 600;
-        letter-spacing: 0.06em;
+        font-weight: var(--vui-font-weight-strong);
+        letter-spacing: var(--vui-tracking-caps, 0.06em);
         text-transform: uppercase;
       }
       .items {

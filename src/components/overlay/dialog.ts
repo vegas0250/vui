@@ -76,7 +76,7 @@ export class VDialog extends VuiElement {
       }
       :host([size="small"]) dialog { width: var(--vui-dialog-inline-sm); }
       :host([size="large"]) dialog { width: var(--vui-dialog-inline-lg); }
-      header, .body, footer { padding: var(--vui-panel-padding); min-width: 0; }
+      header, .body, footer { padding: var(--vui-dialog-padding, var(--vui-panel-padding)); min-width: 0; }
       header {
         display: flex;
         align-items: center;
@@ -89,7 +89,8 @@ export class VDialog extends VuiElement {
         min-width: 0;
         overflow-wrap: anywhere;
         font-size: var(--vui-heading-3);
-        line-height: var(--vui-line-height);
+        line-height: var(--vui-line-height-heading, var(--vui-line-height));
+        letter-spacing: var(--vui-tracking-heading, 0);
         font-weight: var(--vui-font-weight-strong);
       }
       .body {

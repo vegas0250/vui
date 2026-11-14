@@ -54,7 +54,7 @@ export class VTab extends VuiElement {
       [part="label"] {
         display: flex;
         align-items: center;
-        gap: var(--vui-space-xs);
+        gap: var(--vui-icon-gap, var(--vui-space-xs));
         flex: 1 1 auto;
         min-width: 0;
         overflow: hidden;
@@ -78,13 +78,13 @@ export class VTab extends VuiElement {
         z-index: 1;
       }
       :host([selected]:not([disabled]):hover) { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
-      :host([disabled]) { opacity: 0.72; cursor: not-allowed; }
+      :host([disabled]) { opacity: var(--vui-opacity-disabled); cursor: not-allowed; }
       button {
         display: none;
         align-items: center;
         justify-content: center;
-        width: 1.25rem;
-        height: 1.25rem;
+        width: var(--vui-icon-size-lg);
+        height: var(--vui-icon-size-lg);
         margin-inline-start: var(--vui-space-2xs);
         padding: 0;
         border: 0;

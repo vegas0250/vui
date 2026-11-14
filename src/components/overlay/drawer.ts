@@ -74,7 +74,7 @@ export class VDrawer extends VuiElement {
         box-shadow: var(--vui-shadow-lg);
       }
       :host([placement="start"]) .surface { border-inline-start: 0; border-inline-end: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border)); }
-      header, .body, footer { padding: var(--vui-panel-padding); min-width: 0; }
+      header, .body, footer { padding: var(--vui-dialog-padding, var(--vui-panel-padding)); min-width: 0; }
       header {
         display: flex;
         align-items: center;
@@ -82,7 +82,15 @@ export class VDrawer extends VuiElement {
         gap: var(--vui-space-sm);
         border-bottom: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border));
       }
-      h2 { margin: 0; min-width: 0; overflow-wrap: anywhere; font-size: var(--vui-heading-3); }
+      h2 {
+        margin: 0;
+        min-width: 0;
+        overflow-wrap: anywhere;
+        font-size: var(--vui-heading-3);
+        line-height: var(--vui-line-height-heading, var(--vui-line-height));
+        letter-spacing: var(--vui-tracking-heading, 0);
+        font-weight: var(--vui-font-weight-strong);
+      }
       .body { overflow: auto; flex: 1 1 auto; min-height: 0; }
       footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--vui-space-sm); border-top: var(--vui-border-width) solid var(--vui-color-block-border, var(--vui-color-border)); }
       footer.hidden { display: none; }

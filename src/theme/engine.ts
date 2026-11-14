@@ -224,10 +224,10 @@ const modeDefaults: Record<
   }
 > = {
   web: {
-    radius: 2,
-    radiusBox: 4,
-    radiusField: 2,
-    radiusSelector: 0,
+    radius: 6,
+    radiusBox: 8,
+    radiusField: 6,
+    radiusSelector: 4,
     borderWidth: 1,
     shadowIntensity: 80,
   },

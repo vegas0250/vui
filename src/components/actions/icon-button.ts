@@ -51,12 +51,17 @@ export class VIconButton extends VuiElement {
         width: var(--vui-size-control-lg);
         min-width: var(--vui-size-control-lg);
       }
+      /* Icon-to-control ratio: sm 24→14/12, md 32→16, lg 40→20. */
+      :host([size="small"]) vui-icon {
+        width: var(--vui-icon-size-sm);
+        height: var(--vui-icon-size-sm);
+      }
       :host([size="large"]) vui-icon {
-        width: calc(var(--vui-icon-size) * 1.25);
-        height: calc(var(--vui-icon-size) * 1.25);
-        min-width: calc(var(--vui-icon-size) * 1.25);
-        max-width: calc(var(--vui-icon-size) * 1.25);
-        flex: 0 0 calc(var(--vui-icon-size) * 1.25);
+        width: var(--vui-icon-size-lg);
+        height: var(--vui-icon-size-lg);
+        min-width: var(--vui-icon-size-lg);
+        max-width: var(--vui-icon-size-lg);
+        flex: 0 0 var(--vui-icon-size-lg);
       }
       :host([variant="primary"]) button {
         background: var(--vui-color-primary);

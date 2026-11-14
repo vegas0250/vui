@@ -9,9 +9,10 @@ export { iconGroups, iconNames, registerIcon } from '../../icons/registry';
 export class VIcon extends VuiElement {
   declare name: string;
   declare label: string;
+  declare size: string;
 
   static get observedAttributes(): string[] {
-    return ['name', 'label'];
+    return ['name', 'label', 'size'];
   }
 
   protected template(): string {
@@ -29,11 +30,19 @@ export class VIcon extends VuiElement {
         color: inherit;
         vertical-align: middle;
       }
+      :host([size="small"]) { width: var(--vui-icon-size-sm); height: var(--vui-icon-size-sm); }
+      :host([size="large"]) { width: var(--vui-icon-size-lg); height: var(--vui-icon-size-lg); }
+      :host([size="xlarge"]) { width: var(--vui-icon-size-xl); height: var(--vui-icon-size-xl); }
       :host(:focus-visible) { outline: var(--vui-focus-ring); }
       .icon, .icon svg {
         width: 100%;
         height: 100%;
         display: block;
+      }
+      /* Stroke weight is a UI-mode token; CSS beats the SVG presentation attribute. */
+      .icon svg {
+        stroke-width: var(--vui-icon-stroke, 2);
+        overflow: visible;
       }
     `;
   }
@@ -55,7 +64,7 @@ export class VIcon extends VuiElement {
   }
 }
 
-reflectStrings(VIcon, ['name', 'label']);
+reflectStrings(VIcon, ['name', 'label', 'size']);
 defineElement('vui-icon', VIcon);
 
 registerContract({
@@ -64,6 +73,7 @@ registerContract({
   attributes: [
     { name: 'name', kind: 'string', reflected: true },
     { name: 'label', kind: 'string', reflected: true },
+    { name: 'size', kind: 'enum', values: ['small', 'medium', 'large', 'xlarge'], reflected: true },
   ],
   events: [],
   slots: [],

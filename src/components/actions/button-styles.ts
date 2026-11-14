@@ -9,7 +9,7 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--vui-space-xs);
+  gap: var(--vui-icon-gap, var(--vui-space-xs));
   width: 100%;
   max-width: 100%;
   min-width: 0;
@@ -21,7 +21,9 @@ button {
   background: var(--vui-color-primary);
   color: var(--vui-color-on-primary);
   font: inherit;
+  font-weight: var(--vui-font-weight-control, 500);
   line-height: 1;
+  touch-action: manipulation;
   cursor: pointer;
   user-select: none;
   text-decoration: none;
@@ -42,7 +44,7 @@ button:focus-visible {
 button:disabled,
 :host([disabled]) button,
 :host([loading]) button {
-  opacity: var(--vui-opacity-disabled, 0.55);
+  opacity: var(--vui-opacity-disabled, 0.5);
   color: var(--vui-color-text-disabled, var(--vui-color-on-primary));
   background: var(--vui-color-secondary, var(--vui-color-primary));
   cursor: not-allowed;
@@ -88,6 +90,12 @@ button:disabled,
 :host([size="large"]) button {
   min-height: var(--vui-size-control-lg);
   padding-inline: var(--vui-space-lg);
+  font-size: var(--vui-font-size-lg);
+}
+:host([size="large"]) vui-icon,
+:host([size="large"]) ::slotted(vui-icon) {
+  width: var(--vui-icon-size-lg);
+  height: var(--vui-icon-size-lg);
 }
 @media (forced-colors: active) {
   button {

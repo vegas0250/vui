@@ -72,7 +72,7 @@ export class VPagination extends VuiElement {
       button:not(:disabled):hover { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       button { transition: background-color var(--vui-duration) var(--vui-easing), border-color var(--vui-duration) var(--vui-easing); }
       button:focus-visible { outline: var(--vui-focus-ring); outline-offset: var(--vui-focus-offset); }
-      button:disabled { opacity: 0.55; cursor: not-allowed; }
+      button:disabled { opacity: var(--vui-opacity-disabled); cursor: not-allowed; }
     `;
   }
 

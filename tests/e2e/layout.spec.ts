@@ -117,7 +117,7 @@ test('ui modes change structure', async ({ page }) => {
   const desktop = await geometry(page);
   await open(page, 'dashboard', 'terminal', 'catppuccin-latte', 1280);
   const terminal = await geometry(page);
-  expect(web.radius).toBe('4px');
+  expect(web.radius).toBe('8px');
   expect(desktop.radius).toBe('8px');
   expect(terminal.radius).toBe('0px');
   expect(web.bar).toBe('44px');

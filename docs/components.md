@@ -47,16 +47,19 @@
 ```html
 <vui-icon name="folder"></vui-icon>
 <vui-icon name="folder" label="Папка"></vui-icon>
+<vui-icon name="settings" size="large"></vui-icon>
 ```
 
-| Attributes | `name`, `label` |
-| Properties | `name`, `label` |
+| Attributes | `name`, `label`, `size` (`small` · `medium` · `large` · `xlarge`) |
+| Properties | `name`, `label`, `size` |
 | Events | нет |
 | Slots | нет |
 | Parts | `base` |
 | Accessibility | без `label` иконка `aria-hidden`. С `label` — `role="img"` |
 
 `registerIcon(name, svg)` добавляет SVG-строку. Набор имён — `iconNames`.
+Размер берётся из `--vui-icon-size-sm|…|xl`, толщина линии — из `--vui-icon-stroke`
+(оба зависят от UI-режима); см. [design-system.md](design-system.md#icons).
 
 ## vui-input
 

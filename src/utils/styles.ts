@@ -9,6 +9,8 @@ export const baseStyles = `
   font-size: var(--vui-font-size);
   line-height: var(--vui-line-height);
   color: var(--vui-color-text);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
   scrollbar-width: thin;
   scrollbar-color: color-mix(in srgb, var(--vui-color-text) 35%, transparent) transparent;
 }
@@ -96,7 +98,7 @@ export const fieldStyles = `
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: var(--vui-space-2xs);
+  gap: var(--vui-field-gap, var(--vui-space-2xs));
   min-width: 0;
   width: 100%;
 }
@@ -105,19 +107,22 @@ export const fieldStyles = `
     display: grid;
     grid-template-columns: minmax(var(--vui-field-label-min), var(--vui-field-label-size)) minmax(0, 1fr);
     column-gap: var(--vui-space-md);
-    row-gap: var(--vui-space-2xs);
+    row-gap: var(--vui-field-gap, var(--vui-space-2xs));
     align-items: center;
   }
   .hint { grid-column: 2; }
 }
+/* Labels read as primary text (contrast), helper text stays muted. */
 .label {
-  color: var(--vui-color-text-muted);
+  color: var(--vui-color-text);
   font-size: var(--vui-font-size-sm);
-  line-height: var(--vui-line-height);
+  font-weight: var(--vui-font-weight-medium, 500);
+  line-height: var(--vui-line-height-sm, var(--vui-line-height));
 }
 .hint {
   color: var(--vui-color-text-muted);
   font-size: var(--vui-font-size-sm);
+  line-height: var(--vui-line-height-sm, var(--vui-line-height));
 }
 :host([invalid]) .hint,
 .error {
@@ -129,7 +134,7 @@ export const controlStyles = `
 .control {
   display: flex;
   align-items: center;
-  gap: var(--vui-space-xs);
+  gap: var(--vui-icon-gap, var(--vui-space-xs));
   min-height: var(--vui-size-control);
   padding-inline: var(--vui-space-sm);
   border: var(--vui-border-width) solid var(--vui-color-control-border, var(--vui-color-border));
@@ -158,7 +163,7 @@ export const controlStyles = `
   box-shadow: none;
 }
 :host([disabled]) .control {
-  opacity: 0.72;
+  opacity: var(--vui-opacity-disabled, 0.5);
   cursor: not-allowed;
 }
 :host([size="small"]) .control {

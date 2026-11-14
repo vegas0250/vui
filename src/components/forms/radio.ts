@@ -84,7 +84,7 @@ export class VRadio extends VuiElement {
         outline-offset: var(--vui-focus-offset);
       }
       :host([invalid]) .mark { border-color: var(--vui-color-danger); }
-      :host([disabled]) .field { opacity: 0.55; cursor: not-allowed; }
+      :host([disabled]) .field { opacity: var(--vui-opacity-disabled); cursor: not-allowed; }
       .text:empty { display: none; }
       @media (forced-colors: active) {
         .mark { border: var(--vui-border-width) solid ButtonText; background: Field; }

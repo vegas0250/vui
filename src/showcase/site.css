@@ -65,7 +65,7 @@
   color: var(--vui-color-text-muted);
   text-decoration: none;
   font-size: var(--vui-font-size-sm);
-  font-weight: 500;
+  font-weight: var(--vui-font-weight-medium);
   padding: var(--docs-space-1) var(--docs-space-2);
   border-radius: var(--vui-radius);
   line-height: 1.2;
@@ -112,7 +112,7 @@
   color: var(--vui-color-text-muted);
   text-decoration: none;
   font-size: var(--vui-font-size-sm);
-  font-weight: 600;
+  font-weight: var(--vui-font-weight-strong);
   padding: var(--docs-space-1) var(--docs-space-2);
   border-radius: 0.5rem;
   border: var(--vui-border-width) solid transparent;
@@ -172,7 +172,7 @@
   box-shadow: none !important;
   color: var(--vui-color-text);
   font-size: var(--vui-font-size-sm);
-  font-weight: 500;
+  font-weight: var(--vui-font-weight-medium);
   transition:
     background-color var(--vui-duration, 120ms) var(--vui-easing, ease),
     color var(--vui-duration, 120ms) var(--vui-easing, ease);
@@ -279,7 +279,7 @@
   align-items: baseline;
   flex-wrap: wrap;
   font-size: 0.8125rem;
-  font-weight: 700;
+  font-weight: var(--vui-font-weight-strong);
   color: var(--vui-color-text);
   text-decoration: none;
   line-height: 1.3;
@@ -289,7 +289,7 @@
 .docs-wordmark span {
   font-size: 0.75rem;
   color: var(--vui-color-text-muted);
-  font-weight: 400;
+  font-weight: var(--vui-font-weight);
 }
 
 .docs-sidebar .docs-section-menu,
@@ -319,7 +319,7 @@
 .docs-sidebar vui-menu-item::part(label),
 #docs-nav-drawer vui-menu-item::part(label) {
   font-size: var(--vui-font-size-sm);
-  font-weight: 500;
+  font-weight: var(--vui-font-weight-medium);
   line-height: 1.25;
 }
 
@@ -354,7 +354,7 @@
 #docs-nav-drawer vui-menu-item[selected]::part(label),
 #docs-nav-drawer vui-menu-item[selected]::part(icon) {
   color: var(--vui-color-interactive-text, var(--vui-color-primary));
-  font-weight: 600;
+  font-weight: var(--vui-font-weight-strong);
 }
 
 .docs-sidebar vui-menu-item[expanded]:not([selected])::part(label),
@@ -540,7 +540,7 @@
   color: var(--vui-color-text-muted);
   text-decoration: none;
   font-size: var(--vui-font-size-sm);
-  font-weight: 600;
+  font-weight: var(--vui-font-weight-strong);
 }
 
 .docs-page-nav a:hover {
@@ -685,7 +685,7 @@
   padding: var(--docs-space-2) var(--docs-space-4);
   border-radius: var(--vui-radius);
   text-decoration: none;
-  font-weight: 600;
+  font-weight: var(--vui-font-weight-strong);
   font-size: var(--vui-font-size-sm);
 }
 
@@ -719,7 +719,7 @@
 }
 
 .docs-page dt {
-  font-weight: 600;
+  font-weight: var(--vui-font-weight-strong);
   margin-top: var(--docs-space-2);
 }
 

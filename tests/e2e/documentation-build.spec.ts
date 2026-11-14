@@ -38,9 +38,14 @@ test('documentation uses VUI metrics and keeps content within responsive columns
       (element as HTMLElement & { value: string }).value = value;
       element.dispatchEvent(new Event('change'));
     }, mode);
+    // --vui-heading-1 may be a fluid clamp(); compare resolved pixel sizes.
     await expect.poll(() => page.locator('h1').evaluate((heading) => {
-      const styles = getComputedStyle(heading);
-      return styles.fontSize === styles.getPropertyValue('--vui-heading-1').trim();
+      const probe = document.createElement('span');
+      probe.style.fontSize = 'var(--vui-heading-1)';
+      heading.parentElement?.append(probe);
+      const expected = getComputedStyle(probe).fontSize;
+      probe.remove();
+      return getComputedStyle(heading).fontSize === expected;
     })).toBe(true);
   }
   for (const width of [1440, 900, 734, 640, 356]) {
