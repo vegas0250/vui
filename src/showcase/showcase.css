@@ -55,6 +55,12 @@ body {
   min-width: 0;
 }
 
+/* Legacy studio (?legacy=1): labelled selects fill 100% of an auto-sized row and collapse to 0px without a basis. */
+body:not(.documentation-site) .header-controls > vui-select:not([icon]) {
+  flex: 0 0 auto;
+  width: 11rem;
+}
+
 .documentation-site .docs-header {
   height: 3.75rem;
   min-height: 3.75rem;

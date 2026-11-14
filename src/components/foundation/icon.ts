@@ -30,6 +30,7 @@ export class VIcon extends VuiElement {
         color: inherit;
         vertical-align: middle;
       }
+      :host([hidden]) { display: none; }
       :host([size="small"]) { width: var(--vui-icon-size-sm); height: var(--vui-icon-size-sm); }
       :host([size="large"]) { width: var(--vui-icon-size-lg); height: var(--vui-icon-size-lg); }
       :host([size="xlarge"]) { width: var(--vui-icon-size-xl); height: var(--vui-icon-size-xl); }

@@ -68,15 +68,15 @@ test('full standalone example runs independently with its declared imports', asy
   await page.evaluate(({ code, imports }) => {
     const frame = document.createElement('iframe');
     frame.title = 'Copied example';
+    // A default 300x150 iframe squeezes the template so its footer and nav overlap the form buttons.
+    frame.style.cssText = 'display:block;width:100%;height:900px;border:0';
     frame.srcdoc = `<script type="importmap">${JSON.stringify({ imports })}</script>${code.replace(/^<!--[\s\S]*?-->\n?/, '')}`;
     document.querySelector('#docs-page')!.replaceChildren(frame);
   }, { code, imports });
   const frame = page.frameLocator('iframe[title="Copied example"]');
   await expect(frame.getByRole('textbox', { name: 'Name', exact: true })).toBeVisible();
   await frame.getByRole('textbox', { name: 'Name', exact: true }).fill('Independent');
-  await frame.locator('vui-button[type="submit"], button[type="submit"]').first().evaluate((el) => {
-    (el as HTMLElement).click();
-  });
+  await frame.locator('vui-button[data-save]').click();
   await expect(frame.locator('[data-result]')).toHaveText('Saved: Independent', { timeout: 15000 });
 });
 

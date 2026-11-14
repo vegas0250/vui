@@ -152,6 +152,7 @@ export class VMenuItem extends VuiElement {
         color: inherit;
         cursor: pointer;
       }
+      .caret[hidden] { display: none; }
       .caret:hover { background: var(--vui-color-hover, var(--vui-color-surface-hover)); }
       .caret:focus { outline: none; }
       .caret:focus-visible { outline: var(--vui-focus-ring); outline-offset: calc(var(--vui-focus-offset) * -1); }
