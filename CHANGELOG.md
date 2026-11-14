@@ -1,4 +1,4 @@
-﻿# Unreleased (proposed 1.4.0)
+﻿# 1.4.0
 
 Design system modernization. Specification: `docs/design-system.md`.
 
