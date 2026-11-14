@@ -27,7 +27,8 @@ test('optimized website registers every component and runs the real examples', a
   await page.screenshot({ path: test.info().outputPath('website-mobile.png') });
   expect(errors).toEqual([]);
   const html = await (await request.get('/')).text();
-  expect(html).not.toMatch(/<script(?![^>]*\bsrc=)[^>]*>/);
+  // No inline executable scripts (CSP). JSON-LD is a non-executable data block, exempt.
+  expect(html).not.toMatch(/<script(?![^>]*\b(?:src=|type="application\/ld\+json"))[^>]*>/);
   expect((await request.get('/theme-boot.js')).ok()).toBe(true);
 });
 

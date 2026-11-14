@@ -536,12 +536,12 @@ export function mountDocumentationSite(): void {
       const example = layouts().find(([id]) => id === path[1]);
       if (example) {
         name = example[1]!;
-        page.innerHTML = `<p class="docs-eyebrow">${link('layouts', text('Раскладки', 'Layouts'))}</p><h1 tabindex="-1">${name}</h1><p class="docs-lead">${example[2]}</p><p><a href="layout.html">${text('Галерея раскладок', 'Layout gallery')}</a> — ${text('web / desktop / terminal и ширины viewport.', 'web / desktop / terminal and viewport widths.')}</p>${showExample(interfaceExample(example[0]!))}`;
+        page.innerHTML = `<p class="docs-eyebrow">${link('layouts', text('Раскладки', 'Layouts'))}</p><h1 tabindex="-1">${name}</h1><p class="docs-lead">${example[2]}</p>${import.meta.env.DEV ? `<p><a href="layout.html">${text('Галерея раскладок', 'Layout gallery')}</a> — ${text('web / desktop / terminal и ширины viewport.', 'web / desktop / terminal and viewport widths.')}</p>` : ''}${showExample(interfaceExample(example[0]!))}`;
       } else {
         page.innerHTML = `<h1 tabindex="-1">${name}</h1><p class="docs-lead">${text(
           'Готовые раскладки приложений на опубликованных templates. Тема меняет цвета; режим UI — структурную шкалу.',
           'Application layouts built on published templates. Theme changes colors; UI mode changes the structural scale.',
-        )}</p><p><a href="layout.html">${text('Открыть галерею раскладок', 'Open layout gallery')}</a></p>${cards(layouts(), 'layouts')}`;
+        )}</p>${import.meta.env.DEV ? `<p><a href="layout.html">${text('Открыть галерею раскладок', 'Open layout gallery')}</a></p>` : ''}${cards(layouts(), 'layouts')}`;
       }
     } else if (section === 'patterns') {
       const example = patterns().find(([id]) => id === path[1]);
@@ -625,7 +625,7 @@ export function mountDocumentationSite(): void {
         )}</p><code>data-vui-ui="desktop"</code></div><div class="docs-card"><strong>Terminal</strong><p>${text(
           'Моноширинный TUI: плотная сетка, нулевой радиус, без теней.',
           'Monospace TUI: dense grid, square corners, no elevation.',
-        )}</p><code>data-vui-ui="terminal"</code></div></div><p><a href="layout.html">${text('Галерея раскладок', 'Layout gallery')}</a> — ${text('панель, настройки и рабочая область в трёх режимах.', 'dashboard, settings, and workspace in all three modes.')}</p>`,
+        )}</p><code>data-vui-ui="terminal"</code></div></div>${import.meta.env.DEV ? `<p><a href="layout.html">${text('Галерея раскладок', 'Layout gallery')}</a> — ${text('панель, настройки и рабочая область в трёх режимах.', 'dashboard, settings, and workspace in all three modes.')}</p>` : ''}`,
       )}${heading(
         'React / Next.js',
         `<pre><code>'use client';\n\nimport { Button } from 'vui/react';\n\nexport default function Page() {\n  return &lt;Button variant="primary"&gt;${text('Сохранить', 'Save')}&lt;/Button&gt;;\n}</code></pre><p>${text(

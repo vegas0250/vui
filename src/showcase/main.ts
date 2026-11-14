@@ -60,7 +60,7 @@ if (new URLSearchParams(location.search).get('legacy') === '1') {
         <a href="#/templates">${text('Шаблоны', 'Templates')}</a>
         <a href="#/themes">${text('Theme Studio', 'Theme Studio')}</a>
         <a href="#/icons">${text('Иконки', 'Icons')}</a>
-        <a href="layout.html">${text('Галерея', 'Gallery')}</a>
+        ${import.meta.env.DEV ? `<a href="layout.html">${text('Галерея', 'Gallery')}</a>` : '' /* layout.html is dev-only (404 on the docs site) */}
       </nav>
       <div class="site-footer-meta">
         <span>v${libraryVersion}</span>

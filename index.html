@@ -5,19 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>VUI — компоненты и темы интерфейса</title>
     <meta name="description" content="Библиотека компонентов VUI: рабочие примеры, документация и редактор тем." />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#1e1e2e" />
     <link rel="canonical" href="https://vui.vegas0250.ru/" />
     <link rel="alternate" hreflang="ru" href="https://vui.vegas0250.ru/" />
     <link rel="alternate" hreflang="en" href="https://vui.vegas0250.ru/?lang=en" />
     <link rel="alternate" hreflang="x-default" href="https://vui.vegas0250.ru/" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/favicon.svg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="VUI" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:url" content="https://vui.vegas0250.ru/" />
+    <meta property="og:title" content="VUI — компоненты и темы интерфейса" />
+    <meta property="og:description" content="Библиотека компонентов VUI: рабочие примеры, документация и редактор тем." />
+    <meta property="og:image" content="https://vui.vegas0250.ru/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="VUI" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="VUI — компоненты и темы интерфейса" />
+    <meta name="twitter:description" content="Библиотека компонентов VUI: рабочие примеры, документация и редактор тем." />
+    <meta name="twitter:image" content="https://vui.vegas0250.ru/og.png" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://vui.vegas0250.ru/#website",
+            "url": "https://vui.vegas0250.ru/",
+            "name": "VUI",
+            "description": "Библиотека компонентов VUI: рабочие примеры, документация и редактор тем.",
+            "inLanguage": ["ru", "en"]
+          },
+          {
+            "@type": "SoftwareSourceCode",
+            "name": "VUI",
+            "description": "Модульная библиотека веб-компонентов и тем интерфейса для Web, SPA и Desktop/Electron.",
+            "url": "https://vui.vegas0250.ru/",
+            "codeRepository": "https://github.com/vegas0250/vui",
+            "programmingLanguage": ["TypeScript", "CSS"],
+            "runtimePlatform": ["Web browser", "Electron"],
+            "isPartOf": { "@id": "https://vui.vegas0250.ru/#website" }
+          }
+        ]
+      }
+    </script>
     <!-- Yandex.Metrika counter -->
     <script src="./metrika.js" defer></script>
     <!-- /Yandex.Metrika counter -->
   </head>
   <body>
     <noscript><div><img src="https://mc.yandex.ru/watch/114225180" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <div id="app"></div>
+    <!-- Static fallback for crawlers without JS; replaced by src/showcase/main.ts on boot. -->
+    <div id="app">
+      <main>
+        <h1>VUI — компоненты и темы интерфейса</h1>
+        <p>Модульная библиотека веб-компонентов для Web, SPA и Desktop/Electron: рабочие примеры, документация, раскладки, паттерны, шаблоны, иконки и редактор тем Theme Studio.</p>
+        <ul>
+          <li><a href="#/getting-started">Начало работы</a></li>
+          <li><a href="#/components">Компоненты</a></li>
+          <li><a href="#/layouts">Раскладки</a></li>
+          <li><a href="#/patterns">Паттерны</a></li>
+          <li><a href="#/templates">Шаблоны</a></li>
+          <li><a href="#/themes">Theme Studio</a></li>
+          <li><a href="#/icons">Иконки</a></li>
+        </ul>
+        <p><a href="https://github.com/vegas0250/vui">Исходный код на GitHub</a> · <a href="https://vui.vegas0250.ru/?lang=en">English</a> · <a href="https://vegas0250.ru/">vegas0250</a></p>
+      </main>
+    </div>
     <script type="module" src="/src/showcase/main.ts"></script>
   </body>
 </html>
