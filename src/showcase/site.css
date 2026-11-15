@@ -135,6 +135,56 @@
   display: none;
 }
 
+/* Sun/moon theme switch: thumb slides under the active icon. */
+.documentation-site .docs-theme-toggle {
+  position: relative;
+  flex: 0 0 auto;
+  align-self: center;
+  display: inline-grid;
+  grid-template-columns: 1.5rem 1.5rem;
+  align-items: center;
+  justify-items: center;
+  width: 3.25rem;
+  height: 1.75rem;
+  padding: 0.125rem;
+  border: 1px solid var(--vui-color-border);
+  border-radius: 999px;
+  background: var(--vui-color-surface-hover, var(--vui-color-surface));
+  color: var(--vui-color-text-muted);
+  cursor: pointer;
+}
+.documentation-site .docs-theme-toggle:focus-visible {
+  outline: var(--vui-focus-ring);
+  outline-offset: var(--vui-focus-offset);
+}
+.documentation-site .docs-theme-toggle vui-icon {
+  position: relative;
+  z-index: 1;
+  width: 0.875rem;
+  height: 0.875rem;
+  transition: color var(--vui-duration, 120ms) var(--vui-easing, ease);
+}
+.documentation-site .docs-theme-thumb {
+  position: absolute;
+  top: 0.125rem;
+  left: 0.125rem;
+  width: 1.5rem;
+  height: 1.375rem;
+  border-radius: 999px;
+  background: var(--vui-color-primary);
+  transition: transform var(--vui-duration, 160ms) var(--vui-easing, ease);
+}
+.documentation-site .docs-theme-toggle[aria-checked='true'] .docs-theme-thumb {
+  transform: translateX(1.5rem);
+}
+.documentation-site .docs-theme-toggle[aria-checked='false'] vui-icon[name='sun'],
+.documentation-site .docs-theme-toggle[aria-checked='true'] vui-icon[name='moon'] {
+  color: var(--vui-color-primary-foreground, #fff);
+}
+@media (prefers-reduced-motion: reduce) {
+  .documentation-site .docs-theme-thumb { transition: none; }
+}
+
 .documentation-site .docs-theme-control::part(label),
 .documentation-site #ui-mode-select::part(label),
 .documentation-site #docs-lang::part(label) {
