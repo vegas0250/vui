@@ -95,7 +95,7 @@ same `--vui-*` tokens for every palette. The full spacing, geometry, typography,
 icon, responsive and state specification is [docs/design-system.md](docs/design-system.md). Presets provide validated values for
 those tokens; UI mode changes scale and spacing without changing theme state.
 Legacy theme entry points remain available. Explicit preferences win over OS
-preferences; documentation defaults to Tokyo Night for dark and Catppuccin Latte
+preferences; documentation defaults to VUI Dark for dark and VUI Light
 for light. Theme Studio draft state is separate from the documentation theme.
 
 The theme engine allowlists tokens, validates types and colors, bounds imported

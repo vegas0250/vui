@@ -71,8 +71,8 @@ describe('export matrix', () => {
   const targets = exportTargets(pkg.exports);
   const defined = definedElements();
 
-  it('publishes 1.4.0 and reaches every element from component, category, and full import', () => {
-    expect(pkg.version).toBe('1.4.0');
+  it('publishes 2.0.0 and reaches every element from component, category, and full import', () => {
+    expect(pkg.version).toBe('2.0.0');
     const seen = new Set<string>();
     for (const item of defined) {
       expect(seen.has(item.className), item.className).toBe(false);

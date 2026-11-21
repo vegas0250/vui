@@ -1,4 +1,21 @@
-﻿# 1.4.0
+# 2.0.0
+
+Own themes and brand. **Breaking:** the built-in theme set is reduced to two.
+
+- Themes: exactly two own palettes, **VUI Light** (`light`) and **VUI Dark** (`dark`), plus `system`
+  (follows `prefers-color-scheme`). Design rationale and roles: `docs/theme-semantics.md`.
+- Removed presets: Catppuccin Mocha/Latte, Tokyo Night/Day, Dracula, Nord, Rosé Pine/Dawn, Kanagawa Wave,
+  SynthWave, Midnight, Emerald, Minimal Light, Modern Light, Retro, Desktop (Fluent) Light/Dark, Radix Light/Dark,
+  `high-contrast`, `neon-green|magenta|cyan`, and the `vui/themes/high-contrast` export plus neon/hc palette primitives.
+- Compatibility: removed ids resolve to the theme of the same mode (`legacyThemeAliases`, `canonicalThemeId`)
+  in `setTheme`, `applyTheme`, `themeById`, stored preferences, custom-theme `baseTheme` and the docs head boot.
+- `themes/light.css`, `themes/dark.css`, `themes/system.css` are generated from the presets
+  (`src/theme/stylesheet.ts`, guarded by `tests/unit/theme-css.test.ts`); runtime installs these files.
+- Solid-fill text uses a tinted near-black ink instead of `#000`; shadow ink is opaque, strength per scheme.
+- Brand: new VUI logo (`public/logo.svg`, `public/vui-mark.svg`), favicon set (`favicon.svg`, `favicon.ico`,
+  `apple-touch-icon.png`, `icon-192/512.png`, maskable icon, `site.webmanifest`), new OG image;
+  `scripts/brand-assets.mjs` renders the rasters.
+# 1.4.0
 
 Design system modernization. Specification: `docs/design-system.md`.
 

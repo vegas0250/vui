@@ -81,7 +81,7 @@ const action = (id: string, label: string, variant = 'secondary') =>
   `<vui-button type="button" size="small" variant="${variant}" data-ts-action="${id}">${t(label)}</vui-button>`;
 
 export function mountThemeStudio(host: HTMLElement): void {
-  const history = new ThemeHistory(themeDocument('tokyo-night'));
+  const history = new ThemeHistory(themeDocument('dark'));
   let working = history.current,
     custom: ThemeDocument[] = [],
     selected: number | null = null,
@@ -122,13 +122,13 @@ export function mountThemeStudio(host: HTMLElement): void {
      <div class="ts-presets">${builtInThemes
        .map(
          (p) =>
-           `<vui-button type="button" class="ts-preset" variant="secondary" size="small" data-preset="${p.id}" aria-pressed="false"><span>${escapeHTML(p.name)} · ${t('VUI adaptation')}</span><span class="ts-mini-palette" aria-hidden="true">${['background', 'foreground', 'primary', 'accent', 'success']
+           `<vui-button type="button" class="ts-preset" variant="secondary" size="small" data-preset="${p.id}" aria-pressed="false"><span>${escapeHTML(p.name)}</span><span class="ts-mini-palette" aria-hidden="true">${['background', 'foreground', 'primary', 'accent', 'success']
              .map((key) => `<i style="background:${p.tokens[key as ThemeToken]}"></i>`)
              .join('')}</span></vui-button>`,
        )
        .join('')}</div>
      <vui-select id="ts-saved" label="${t('Custom themes')}" size="small" value=""><vui-option value="">${t('Choose a saved theme')}</vui-option></vui-select>
-     <vui-input id="ts-name" label="${t('Theme name')}" value="Tokyo Night custom"></vui-input>
+     <vui-input id="ts-name" label="${t('Theme name')}" value="VUI Dark custom"></vui-input>
      <div class="ts-actions">${[
        ['save', 'Save new'],
        ['rename', 'Rename'],

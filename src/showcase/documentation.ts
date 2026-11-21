@@ -176,7 +176,7 @@ export function mountDocumentation(): void {
   integration.className = 'category';
   integration.innerHTML = `<h2>${escapeHTML(tr('Theme integration'))}</h2><p>${escapeHTML(tr('Visual theme editor for VUI'))}: JSON / CSS</p><pre class="code"></pre><p><a href="#theme-studio">${escapeHTML(tr('Theme Studio'))}</a></p>`;
   integration.querySelector('pre')!.textContent =
-    `import { applyTheme, importThemeJSON, initializeTheme } from 'vui/theme';\ninitializeTheme(document.documentElement, documentationStorage);\napplyTheme('tokyo-night');\nconst theme = importThemeJSON(jsonText);\napplyTheme(theme, document.querySelector('#preview'));\n// CSS export: import './theme.css'; then data-vui-theme="custom".\n// Token reference and integration guide: docs/theme-studio.md`;
+    `import { applyTheme, importThemeJSON, initializeTheme } from 'vui/theme';\ninitializeTheme(document.documentElement, documentationStorage);\napplyTheme('dark');\nconst theme = importThemeJSON(jsonText);\napplyTheme(theme, document.querySelector('#preview'));\n// CSS export: import './theme.css'; then data-vui-theme="custom".\n// Token reference and integration guide: docs/theme-studio.md`;
   document.querySelector('main')?.append(integration);
   addCopy(integration.querySelector<HTMLPreElement>('pre')!);
   mountDocumentationSite();

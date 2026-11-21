@@ -17,13 +17,13 @@ function pick<T extends string>(value: string | null, allowed: readonly T[], fal
 const state = {
   app: pick(params.get('app'), apps, 'dashboard'),
   ui: pick(params.get('ui'), modes, 'web'),
-  theme: params.get('theme') || 'catppuccin-latte',
+  theme: params.get('theme') || 'light',
   width: pick(params.get('width'), widths, 'full'),
 };
 
 const themeIds = new Set(listThemes().map((theme) => theme.id));
-if (!themeIds.has(state.theme) && !['light', 'dark', 'high-contrast', 'system'].includes(state.theme)) {
-  state.theme = 'catppuccin-latte';
+if (!themeIds.has(state.theme) && !['light', 'dark', 'system'].includes(state.theme)) {
+  state.theme = 'light';
 }
 
 function remember(): void {

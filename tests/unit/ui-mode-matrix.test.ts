@@ -6,7 +6,7 @@ import { setTheme, setUIMode, type VuiUIMode } from '../../src/theme';
 import uiCss from '../../src/tokens/ui.css?raw';
 
 const modes: VuiUIMode[] = ['web', 'desktop', 'terminal'];
-const themes = ['light', 'dark', 'high-contrast', 'system'] as const;
+const themes = ['light', 'dark', 'system'] as const;
 
 describe('component × UI mode matrix', () => {
   beforeEach(() => {
@@ -25,7 +25,7 @@ describe('component × UI mode matrix', () => {
     }
   });
 
-  it('defines structural scales for every UI mode and HC focus overlay after modes', () => {
+  it('defines structural scales for every UI mode', () => {
     for (const mode of modes) {
       expect(uiCss).toContain(`[data-vui-ui="${mode}"]`);
     }
@@ -34,9 +34,7 @@ describe('component × UI mode matrix', () => {
     expect(uiCss).toContain('--vui-drawer-inline:');
     expect(uiCss).toContain('--vui-resizer-hit-size:');
     const terminalIndex = uiCss.indexOf('[data-vui-ui="terminal"]');
-    const hcIndex = uiCss.indexOf('[data-vui-theme="high-contrast"]');
     expect(terminalIndex).toBeGreaterThan(-1);
-    expect(hcIndex).toBeGreaterThan(terminalIndex);
   });
 
   it('mounts representative components in every theme × UI mode pair', () => {

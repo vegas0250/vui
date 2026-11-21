@@ -71,7 +71,7 @@ Pattern — не компонент. Это пример, как собрать 
 import 'vui';
 import { setTheme, setUIMode } from 'vui/theme';
 
-setTheme('catppuccin-latte');
+setTheme('light');
 setUIMode('web'); // 'desktop' | 'terminal'
 
 const save = document.querySelector('[data-save]');

@@ -1,52 +1,39 @@
 import { reportDeveloper } from '../utils/dev';
 import { installVuiStyles } from './install';
 import { applyTheme, clearTheme, listThemes } from './engine';
+import { canonicalThemeId } from './presets';
 export * from './engine';
 export * from './presets';
 export { normalizeColor, contrast, colorFormats } from './colors';
 
-export type VuiTheme =
-  | 'light'
-  | 'dark'
-  | 'high-contrast'
-  | 'system'
-  | 'neon-green'
-  | 'neon-magenta'
-  | 'neon-cyan'
-  | (string & {});
+/** VUI ships two themes (light, dark); system follows the OS. Registered custom ids are allowed. */
+export type VuiTheme = 'light' | 'dark' | 'system' | (string & {});
 /** Structural interface scale: web, desktop, or terminal (TUI). */
 export type VuiUIMode = 'web' | 'desktop' | 'terminal';
 /** @deprecated Use VuiUIMode. */
 export type VuiDensity = VuiUIMode;
 
-const themes = new Set<VuiTheme>([
-  'light',
-  'dark',
-  'high-contrast',
-  'system',
-  'neon-green',
-  'neon-magenta',
-  'neon-cyan',
-]);
+const themes = new Set<VuiTheme>(['light', 'dark', 'system']);
 const uiModes = new Set<VuiUIMode>(['web', 'desktop', 'terminal']);
 
 export function setTheme(
   theme: VuiTheme,
   root: HTMLElement = document.documentElement,
 ): void {
-  if (listThemes().some((item) => item.id === theme)) {
-    applyTheme(theme, root);
+  const id = listThemes().some((item) => item.id === theme) ? theme : canonicalThemeId(theme);
+  if (id !== 'system' && listThemes().some((item) => item.id === id)) {
+    applyTheme(id, root);
     return;
   }
-  if (!themes.has(theme)) {
+  if (!themes.has(id)) {
     reportDeveloper(
       'theme',
-      `Unknown theme "${String(theme)}". Expected light|dark|high-contrast|system|neon-green|neon-magenta|neon-cyan. The current theme stays.`,
+      `Unknown theme "${String(theme)}". Expected light|dark|system or a registered theme id. The current theme stays.`,
     );
     return;
   }
   clearTheme(root);
-  root.setAttribute('data-vui-theme', theme);
+  root.setAttribute('data-vui-theme', id);
 }
 
 export function setUIMode(

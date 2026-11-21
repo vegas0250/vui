@@ -83,22 +83,22 @@ test('full standalone example runs independently with its declared imports', asy
 test('standalone documentation persists preferences and fits a narrow viewport', async ({ page }) => {
   await page.goto('/?lang=en#/components/button');
   await page.locator('#docs-theme').evaluate((el) => {
-    (el as HTMLElement & { value: string }).value = 'nord';
+    (el as HTMLElement & { value: string }).value = 'dark';
     el.dispatchEvent(new Event('change', { bubbles: true }));
   });
-  await expect(page.locator('html')).toHaveAttribute('data-vui-theme', 'nord');
+  await expect(page.locator('html')).toHaveAttribute('data-vui-theme', 'dark');
   await expect(page.locator('[data-example-code]').first()).not.toContainText('applyTheme');
-  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('vui.theme.preference.v1')!))).toBe('nord');
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('vui.theme.preference.v1')!))).toBe('dark');
   await page.locator('#ui-mode-select button').click();
   await page.getByRole('option', { name: 'Desktop', exact: true }).click();
   await expect(page.locator('html')).toHaveAttribute('data-vui-ui', 'desktop');
   await expect(page.locator('[data-example-code]').first()).not.toContainText('setUIMode');
   await page.reload();
-  await expect(page.locator('html')).toHaveAttribute('data-vui-theme', 'nord');
+  await expect(page.locator('html')).toHaveAttribute('data-vui-theme', 'dark');
   await expect(page.locator('html')).toHaveAttribute('data-vui-ui', 'desktop');
   await page.evaluate(() => { location.hash = '#/themes'; });
   await page.locator('[data-value="primary"]').fill('#123456');
-  await expect(page.locator('html')).toHaveAttribute('data-vui-theme', 'nord');
+  await expect(page.locator('html')).toHaveAttribute('data-vui-theme', 'dark');
   await page.setViewportSize({ width: 390, height: 844 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });

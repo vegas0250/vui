@@ -32,8 +32,8 @@ beforeEach(() => {
   document.documentElement.removeAttribute('style');
 });
 describe('palette-independent theme engine', () => {
-  it('provides nineteen immutable complete palettes with readable semantic pairs', () => {
-    expect(builtInThemes).toHaveLength(19);
+  it('provides exactly two immutable VUI palettes with readable semantic pairs', () => {
+    expect(builtInThemes.map((t) => [t.id, t.name, t.mode])).toEqual([['light', 'VUI Light', 'light'], ['dark', 'VUI Dark', 'dark']]);
     for (const preset of builtInThemes) {
       expect(Object.isFrozen(preset.tokens)).toBe(true);
       expect(Object.keys(preset.tokens).sort()).toEqual([...tokenNames].sort());
@@ -68,7 +68,7 @@ describe('palette-independent theme engine', () => {
         [t.secondaryForeground, t.secondary],
         [t.accentForeground, t.accent],
       ])
-        if (preset.id !== 'retro') expect(
+        expect(
           contrast(fg, bg),
           preset.id + ' ' + fg + ' / ' + bg,
         ).toBeGreaterThanOrEqual(4.5);
@@ -86,18 +86,18 @@ describe('palette-independent theme engine', () => {
     }
   });
   it('keeps legacy themes and clears all overrides when switching back', () => {
-    applyTheme({ ...themeDocument('tokyo-night'), appearance: { radius: 24 } });
-    setTheme('high-contrast');
-    expect(getTheme()).toBe('high-contrast');
+    applyTheme({ ...themeDocument('dark'), appearance: { radius: 24 } });
+    setTheme('system');
+    expect(getTheme()).toBe('system');
     expect(
       document.documentElement.style.getPropertyValue('--vui-radius'),
     ).toBe('');
   });
   it('updates preview variables without changing the documentation theme', () => {
     const preview = document.createElement('section');
-    applyTheme('tokyo-night');
+    applyTheme('dark');
     const draft = updateToken(
-      themeDocument('catppuccin-latte'),
+      themeDocument('light'),
       'primary',
       '#123456',
     );
@@ -105,18 +105,19 @@ describe('palette-independent theme engine', () => {
     expect(preview.style.getPropertyValue('--vui-color-primary')).toBe(
       '#123456',
     );
-    expect(getTheme()).toBe('tokyo-night');
-    expect(themeById('catppuccin-latte').tokens.primary).toBe('#8839ef');
+    expect(getTheme()).toBe('dark');
+    expect(themeById('light').tokens.primary).toBe('#4f56d9');
   });
   it('supports programmatic registration but refuses built-in mutation', () => {
     registerTheme(
       'test-personal',
-      updateToken(themeDocument('tokyo-night'), 'primary', '#ffffff'),
+      updateToken(themeDocument('dark'), 'primary', '#ffffff'),
     );
     applyTheme('test-personal');
     expect(getTheme()).toBe('test-personal');
-    expect(() => registerTheme('tokyo-night', themeDocument('nord'))).toThrow();
-    expect(() => registerTheme('light', themeDocument('nord'))).toThrow();
+    expect(() => registerTheme('tokyo-night', themeDocument('dark'))).toThrow();
+    expect(() => registerTheme('light', themeDocument('dark'))).toThrow();
+    expect(() => registerTheme('system', themeDocument('dark'))).toThrow();
   });
   it('normalizes HEX, RGB and HSL with optional alpha', () => {
     expect(normalizeColor('#abc')).toBe('#aabbcc');
@@ -129,7 +130,7 @@ describe('palette-independent theme engine', () => {
   });
   it('round trips JSON and emits only allowlisted CSS properties', () => {
     const draft = updateToken(
-      themeDocument('dracula'),
+      themeDocument('dark'),
       'foreground',
       'rgb(255,255,255)',
     );
@@ -142,7 +143,7 @@ describe('palette-independent theme engine', () => {
     expect(css).not.toContain('undefined');
   });
   it('rejects hostile or unsupported imports', () => {
-    const base = themeDocument('nord');
+    const base = themeDocument('dark');
     for (const bad of [
       { ...base, schemaVersion: 99 },
       { ...base, tokens: { background: 'red;display:none' } },
@@ -159,9 +160,14 @@ describe('palette-independent theme engine', () => {
     expect(() => importThemeJSON('x'.repeat(65537))).toThrow();
   });
   it('persists, restores and ignores corrupted preferences', () => {
-    saveThemePreference('dracula');
-    expect(getThemePreference()).toBe('dracula');
-    const draft = updateToken(themeDocument('nord'), 'primary', '#ffffff');
+    saveThemePreference('dark');
+    expect(getThemePreference()).toBe('dark');
+    // Removed 1.x presets resolve to the VUI theme of the same mode.
+    localStorage.setItem('vui.theme.preference.v1', JSON.stringify('dracula'));
+    expect(getThemePreference()).toBe('dark');
+    localStorage.setItem('vui.theme.preference.v1', JSON.stringify({ ...themeDocument('light'), baseTheme: 'catppuccin-latte' }));
+    expect(getThemePreference()).toEqual(themeDocument('light'));
+    const draft = updateToken(themeDocument('dark'), 'primary', '#ffffff');
     saveThemePreference(draft);
     expect(getThemePreference()).toEqual(draft);
     localStorage.setItem('vui.theme.preference.v1', 'invalid json');
@@ -176,9 +182,9 @@ describe('palette-independent theme engine', () => {
     const stop = initializeTheme(document.documentElement, localStorage, media);
     expect(getTheme()).toBe(defaultThemes.dark);
     stop();
-    saveThemePreference('rose-pine-dawn');
+    saveThemePreference('light');
     initializeTheme(document.documentElement, localStorage, media)();
-    expect(getTheme()).toBe('rose-pine-dawn');
+    expect(getTheme()).toBe('light');
     localStorage.clear();
     initializeTheme(document.documentElement, localStorage, {
       ...media,
@@ -187,15 +193,15 @@ describe('palette-independent theme engine', () => {
     expect(getTheme()).toBe(defaultThemes.light);
   });
   it('saves independent custom themes and restores their base preset', () => {
-    const base = themeDocument('nord'),
-      custom = { ...updateToken(base, 'surface', '#123456'), name: 'My Nord' };
+    const base = themeDocument('dark'),
+      custom = { ...updateToken(base, 'surface', '#123456'), name: 'My Dark' };
     writeCustomThemes([custom]);
     expect(readCustomThemes()).toEqual([custom]);
-    expect(resolveTheme(base)).toEqual(themeById('nord').tokens);
+    expect(resolveTheme(base)).toEqual(themeById('dark').tokens);
     expect(resolveTheme(custom).surface).toBe('#123456');
   });
   it('undoes, redoes, branches and resets without aliasing snapshots', () => {
-    const base = themeDocument('tokyo-night'),
+    const base = themeDocument('dark'),
       history = new ThemeHistory(base);
     history.commit(updateToken(base, 'primary', '#123456'));
     history.commit(updateToken(history.current, 'surface', '#abcdef'));
@@ -209,8 +215,8 @@ describe('palette-independent theme engine', () => {
   });
 
   it('resolves independent shape families, source defaults and legacy global radius', () => {
-    const retro = themeDocument('retro');
-    expect(themeAppearance(retro)).toMatchObject({ radiusBox: 8, radiusField: 4, radiusSelector: 4, borderWidth: 1, shadowIntensity: 0 });
+    const retro = themeDocument('light');
+    expect(themeAppearance(retro)).toMatchObject({ radiusBox: 8, radiusField: 6, radiusSelector: 4, borderWidth: 1, shadowIntensity: 80 });
     const legacy = { ...retro, appearance: { radius: 18 } };
     expect(themeVariables(legacy)).toMatchObject({ '--vui-radius': '18px', '--vui-radius-box': '18px', '--vui-radius-field': '18px', '--vui-radius-selector': '18px' });
     const shaped = { ...retro, appearance: { radius: 18, radiusBox: 24, radiusField: 6, radiusSelector: 0, borderWidth: 2 } };
@@ -219,14 +225,14 @@ describe('palette-independent theme engine', () => {
     expect(themeVariables(restored)).toMatchObject({ '--vui-radius-box': '24px', '--vui-radius-field': '6px', '--vui-radius-selector': '0px', '--vui-border-width': '2px' });
     for (const key of ['radiusBox', 'radiusField', 'radiusSelector']) for (const value of [-1, 33, Infinity, '4', {}, null])
       expect(() => validateTheme({ ...retro, appearance: { [key]: value } })).toThrow();
-    expect(themeAppearance(retro).radiusField).toBe(4);
+    expect(themeAppearance(retro, 'desktop').radiusField).toBe(4);
     expect(themeVariables(updateToken(retro, 'blockBorder', '#123456'))['--vui-color-block-border']).toBe('#123456');
     expect(themeVariables(updateToken(retro, 'border', '#234567'))['--vui-color-block-border']).toBe('#234567');
   });
   it('exports appearance tokens within bounded ranges', () => {
     expect(
       themeVariables({
-        ...themeDocument('nord'),
+        ...themeDocument('dark'),
         appearance: {
           radius: 12,
           borderWidth: 2,
@@ -236,30 +242,14 @@ describe('palette-independent theme engine', () => {
       }),
     ).toMatchObject({ '--vui-radius': '12px', '--vui-border-width': '2px' });
   });
-  it('aligns desktop-preferred presets and Radix color deltas to soft radii on web chrome', () => {
-    expect(themeAppearance(themeDocument('fluent-light'))).toMatchObject({
-      uiMode: 'desktop',
-      radius: 4,
-      radiusBox: 8,
-      radiusField: 4,
-      radiusSelector: 2,
-    });
-    expect(themeAppearance(themeDocument('radix-dark'))).toMatchObject({
-      uiMode: 'web',
-      radius: 8,
-      radiusBox: 12,
-      radiusField: 8,
-      radiusSelector: 4,
-    });
-    expect(themeById('radix-dark').appearance?.uiMode).toBeUndefined();
-    expect(themeVariables(themeDocument('fluent-dark'))['--vui-shadow-sm']).toMatch(/^0 0\.5px/);
-    expect(themeVariables(themeDocument('radix-light'), { uiMode: 'web' })['--vui-radius']).toBe('8px');
-    expect(themeAppearance(themeDocument('nord'), 'desktop').radiusField).toBe(4);
-    expect(themeAppearance(themeDocument('nord'), 'web').radiusField).toBe(6);
-    expect(themeAppearance(themeDocument('nord'), 'web').radiusBox).toBe(8);
+  it('keeps VUI themes color-only so the host UI mode owns geometry', () => {
+    for (const preset of builtInThemes) expect(preset.appearance).toBeUndefined();
+    expect(themeAppearance(themeDocument('dark'), 'desktop').radiusField).toBe(4);
+    expect(themeAppearance(themeDocument('dark'), 'web').radiusField).toBe(6);
+    expect(themeAppearance(themeDocument('dark'), 'web').radiusBox).toBe(8);
   });
   it('resolves terminal mode independently from semantic colors', () => {
-    const nord = themeDocument('nord');
+    const nord = themeDocument('dark');
     expect(themeAppearance(nord, 'terminal')).toMatchObject({
       uiMode: 'terminal',
       radius: 0,
@@ -277,7 +267,7 @@ describe('palette-independent theme engine', () => {
     expect(root.getAttribute('data-vui-ui')).toBe('terminal');
     expect(root.style.getPropertyValue('--vui-color-background')).toBeTruthy();
     expect(root.style.getPropertyValue('--vui-radius')).toBe('');
-    applyTheme(themeDocument('fluent-light'), root);
+    applyTheme({ ...themeDocument('light'), appearance: { uiMode: 'desktop' } }, root);
     expect(root.getAttribute('data-vui-ui')).toBe('desktop');
     expect(
       validateTheme({

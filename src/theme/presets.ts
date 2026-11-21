@@ -1,6 +1,5 @@
 import { contrast, mix, readable } from './colors';
 import { palettes } from './palettes';
-import { retroColors } from './retro';
 import { referenceRoles, referenceSoft } from './reference-roles';
 export const tones = ['neutral', 'primary', 'secondary', 'accent', 'success', 'warning', 'danger', 'info'] as const;
 export type VuiTone = (typeof tones)[number];
@@ -61,67 +60,42 @@ export interface ThemePreset {
   readonly tokens: Readonly<ThemeTokens>;
   readonly appearance?: Readonly<ThemeAppearance>;
 }
+/** VUI ships exactly two own themes. Ids equal the color scheme they implement. */
 const definitions: Array<[string, string, ThemeMode]> = [
-  ['midnight', 'Midnight', 'dark'],
-  ['emerald', 'Emerald', 'dark'],
-  ['minimal-light', 'Minimal Light', 'light'],
-  ['tokyo-night', 'Tokyo Night', 'dark'],
-  ['catppuccin-mocha', 'Catppuccin Mocha', 'dark'],
-  ['dracula', 'Dracula', 'dark'],
-  ['nord', 'Nord', 'dark'],
-  ['rose-pine', 'Rosé Pine', 'dark'],
-  ['kanagawa-wave', 'Kanagawa Wave', 'dark'],
-  ['synthwave', 'SynthWave', 'dark'],
-  ['catppuccin-latte', 'Catppuccin Latte', 'light'],
-  ['tokyo-night-day', 'Tokyo Night Day', 'light'],
-  ['rose-pine-dawn', 'Rosé Pine Dawn', 'light'],
-  ['modern-light', 'Modern Light', 'light'],
-  ['retro', 'Retro', 'light'],
-  ['fluent-light', 'Desktop Light', 'light'],
-  ['fluent-dark', 'Desktop Dark', 'dark'],
-  ['radix-light', 'Radix Light', 'light'],
-  ['radix-dark', 'Radix Dark', 'dark'],
+  ['light', 'VUI Light', 'light'],
+  ['dark', 'VUI Dark', 'dark'],
 ];
-/* Structural presets prefer a UI mode; radii/shadows come from ui.css unless a delta is intentional. */
-const structuralAppearance: Record<string, Readonly<ThemeAppearance>> = {
-  retro: Object.freeze({
-    radiusBox: 8,
-    radiusField: 4,
-    radiusSelector: 4,
-    borderWidth: 1,
-    shadowIntensity: 0,
-  }),
-  /* Legacy ids fluent-light / fluent-dark keep preferred desktop chrome. */
-  'fluent-light': Object.freeze({ uiMode: 'desktop' }),
-  'fluent-dark': Object.freeze({ uiMode: 'desktop', shadowIntensity: 120 }),
-  /* Radix color packs keep soft radii as appearance deltas on the current UI mode. */
-  'radix-light': Object.freeze({
-    radius: 8,
-    radiusBox: 12,
-    radiusField: 8,
-    radiusSelector: 4,
-  }),
-  'radix-dark': Object.freeze({
-    radius: 8,
-    radiusBox: 12,
-    radiusField: 8,
-    radiusSelector: 4,
-    shadowIntensity: 90,
-  }),
-};
+/**
+ * Theme ids removed in 2.0 (third-party adaptations, neon, high contrast). Stored preferences,
+ * custom-theme base ids and setTheme() calls keep working: each maps to the VUI theme of its mode.
+ */
+export const legacyThemeAliases: Readonly<Record<string, ThemeMode>> = Object.freeze({
+  midnight: 'dark', emerald: 'dark', 'minimal-light': 'light', 'tokyo-night': 'dark',
+  'catppuccin-mocha': 'dark', dracula: 'dark', nord: 'dark', 'rose-pine': 'dark',
+  'kanagawa-wave': 'dark', synthwave: 'dark', 'catppuccin-latte': 'light',
+  'tokyo-night-day': 'light', 'rose-pine-dawn': 'light', 'modern-light': 'light',
+  retro: 'light', 'fluent-light': 'light', 'fluent-dark': 'dark', 'radix-light': 'light',
+  'radix-dark': 'dark', 'high-contrast': 'light', 'neon-green': 'dark',
+  'neon-magenta': 'dark', 'neon-cyan': 'dark', 'vui-light': 'light', 'vui-dark': 'dark',
+});
+/** Canonical built-in id for a current or legacy theme id; other ids are returned unchanged. */
+export function canonicalThemeId(id: string): string {
+  return Object.prototype.hasOwnProperty.call(legacyThemeAliases, id) ? legacyThemeAliases[id] : id;
+}
 export const builtInThemes: readonly ThemePreset[] = Object.freeze(
   definitions.map(([id, name, mode]) => {
     const roles = referenceRoles[id];
     const p = { ...palettes[id], ...roles,
       elevated: roles?.surfaceElevated ?? palettes[id].elevated },
       dark = mode === 'dark';
-    const source = id === 'retro' ? retroColors : undefined;
-    const primary = source?.primary ?? (roles ? p.primary : readable(p.primary, p.surface, 3)),
-      accent = source?.accent ?? (roles ? p.accent : readable(p.accent, p.surface, 3));
+    const primary = roles ? p.primary : readable(p.primary, p.surface, 3),
+      accent = roles ? p.accent : readable(p.accent, p.surface, 3);
+    // Text on solid fills: white, or a tinted near-black ink instead of pure #000.
+    const ink = dark ? '#0e1016' : '#11131a';
     const on = (color: string) =>
-      contrast('#ffffff', color) > contrast('#000000', color)
+      contrast('#ffffff', color) > contrast(ink, color)
         ? '#ffffff'
-        : '#000000';
+        : ink;
     const foreground = on(primary);
     const hoverEnd = foreground === '#ffffff' ? '#000000' : '#ffffff';
     const baseSurfaces = [p.background, p.surface, p.elevated, roles?.field ?? p.surface, roles?.surfaceHover ?? p.elevated, roles?.selection ?? p.surface];
@@ -171,10 +145,11 @@ export const builtInThemes: readonly ThemePreset[] = Object.freeze(
       ...states,
       focusRing: onSurfaces(primary, 3),
       selection,
-      overlay: dark ? '#000000b3' : '#18182580',
-      shadow: dark ? '#00000080' : '#4c4f6926',
+      overlay: dark ? '#05060ab3' : '#10131c73',
+      // Opaque ink: elevation strength comes from --vui-shadow-strength-* in the theme stylesheet.
+      shadow: dark ? '#000000' : '#151a2e',
     };
-    const resolved = { ...base, ...roles, neutral: base.foreground, ...source };
+    const resolved = { ...base, ...roles, neutral: base.foreground };
     const toneTokens = Object.fromEntries(tones.flatMap((tone) => {
       const color = tone === 'danger' ? resolved.error : resolved[tone];
       const soft = referenceSoft[id]?.[tone] ?? mix(resolved.surface, color, 0.08);
@@ -182,12 +157,12 @@ export const builtInThemes: readonly ThemePreset[] = Object.freeze(
         [`${tone}Soft`, soft],
         [`${tone}Text`, readable(color, soft, 4.5)],
         [`${tone}Border`, readable(color, soft, 3)],
-        [toneSolidTokens[tone], source?.[toneSolidTokens[tone]] ?? (tone === 'secondary' ? base.secondaryForeground : on(color))],
+        [toneSolidTokens[tone], tone === 'secondary' ? base.secondaryForeground : on(color)],
       ];
     }));
-    const tokens = { ...resolved, blockBorder: mix(resolved.card, resolved.foreground, 0.18), field: roles?.field ?? source?.field ?? resolved.surface,
-      surfaceHover: roles?.surfaceHover ?? source?.surfaceHover ?? resolved.secondary,
-      controlBorder: readable(resolved.borderHover, roles?.field ?? source?.field ?? resolved.surface, 3),
+    const tokens = { ...resolved, blockBorder: mix(resolved.card, resolved.foreground, 0.18), field: roles?.field ?? resolved.surface,
+      surfaceHover: roles?.surfaceHover ?? resolved.secondary,
+      controlBorder: readable(resolved.borderHover, roles?.field ?? resolved.surface, 3),
       ...toneTokens } as ThemeTokens;
     // Text must also work on selected rows, menus and the new soft surfaces.
     const actualSurfaces = [tokens.background, tokens.surface, tokens.surfaceElevated,
@@ -206,11 +181,10 @@ export const builtInThemes: readonly ThemePreset[] = Object.freeze(
       name,
       mode,
       tokens: Object.freeze(tokens),
-      ...(structuralAppearance[id] ? { appearance: structuralAppearance[id] } : {}),
     });
   }),
 );
 export const defaultThemes = Object.freeze({
-  dark: 'catppuccin-mocha',
-  light: 'catppuccin-latte',
+  dark: 'dark',
+  light: 'light',
 });

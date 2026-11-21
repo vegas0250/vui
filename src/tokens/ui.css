@@ -296,15 +296,3 @@
   scroll-behavior: auto;
 }
 
-/*
-  High-contrast accessibility overlays structural elevation/focus after UI mode.
-  Colors and border width stay in themes/high-contrast.css.
-*/
-[data-vui-theme="high-contrast"] {
-  --vui-shadow-sm: none;
-  --vui-shadow-md: none;
-  --vui-shadow-lg: none;
-  --vui-focus-ring: 3px solid var(--vui-color-focus);
-  --vui-focus-shadow: none;
-  --vui-opacity-disabled: 0.72;
-}

@@ -95,7 +95,6 @@ const publicExports = [
   './themes/density',
   './themes/light',
   './themes/dark',
-  './themes/high-contrast',
   './themes/system',
 ];
 

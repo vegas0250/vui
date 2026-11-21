@@ -1,10 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import darkCss from '../../themes/dark.css?raw';
-import highContrastCss from '../../themes/high-contrast.css?raw';
 import lightCss from '../../themes/light.css?raw';
-import neonCyanCss from '../../themes/neon-cyan.css?raw';
-import neonGreenCss from '../../themes/neon-green.css?raw';
-import neonMagentaCss from '../../themes/neon-magenta.css?raw';
 import systemCss from '../../themes/system.css?raw';
 import tokensCss from '../../src/tokens/tokens.css?raw';
 import uiCss from '../../src/tokens/ui.css?raw';
@@ -19,17 +15,19 @@ import type { VPanel } from '../../src/components/layout/panel';
 import type { VSplitPanel } from '../../src/components/layout/split-panel';
 
 describe('token contract', () => {
-  it('keeps theme files on the semantic palette instead of raw colors', () => {
-    for (const css of [lightCss, darkCss, highContrastCss, systemCss]) {
-      expect(css).not.toMatch(/#[0-9a-fA-F]{3,8}/);
-      expect(css).not.toMatch(/rgba?\(/);
-    }
-    expect(lightCss).toContain('--vui-color-primary: var(--vui-palette-blue-600)');
-    expect(darkCss).toContain('--vui-color-background: var(--vui-palette-ink-900)');
-    expect(systemCss).toContain('--vui-color-background: var(--vui-palette-ink-900)');
-    expect(highContrastCss).toContain('--vui-color-focus: var(--vui-palette-hc-yellow)');
-    for (const css of [lightCss, darkCss, highContrastCss, systemCss, neonGreenCss, neonMagentaCss, neonCyanCss]) {
+  it('keeps the two generated VUI theme files complete and free of structure', () => {
+    expect(lightCss).toMatch(/^:root,\s*\n\[data-vui-theme="light"\] \{/m);
+    expect(lightCss).toContain('--vui-color-primary: #4f56d9;');
+    expect(darkCss).toContain('[data-vui-theme="dark"] {');
+    expect(darkCss).toContain('--vui-color-background: #0e1016;');
+    expect(systemCss).toContain('--vui-color-background: #0e1016;');
+    expect(systemCss).toContain('--vui-color-background: #f5f6f8;');
+    expect(systemCss).not.toContain(':root[data-vui-theme="system"]');
+    for (const css of [lightCss, darkCss, systemCss]) {
       expect(css).toContain('--vui-color-selected:');
+      expect(css).not.toContain('--vui-focus-ring:');
+      expect(css).not.toContain('--vui-focus-shadow:');
+      expect(css).not.toMatch(/url\(|expression\(/);
     }
     expect(uiCss.match(/--vui-panel-padding: var\(--vui-space-lg\)/g)).toHaveLength(3);
     expect(uiCss).toContain('[data-vui-ui="terminal"]');
@@ -39,35 +37,28 @@ describe('token contract', () => {
     expect(uiCss).toContain('--vui-font-sans: var(--vui-font-mono)');
     expect(uiCss).toContain('--vui-shadow-sm: none');
     expect(uiCss).toContain('--vui-opacity-disabled:');
-    expect(uiCss).toContain('[data-vui-theme="high-contrast"]');
-    for (const css of [lightCss, darkCss, highContrastCss, systemCss, neonGreenCss, neonMagentaCss, neonCyanCss]) {
-      expect(css).not.toContain('--vui-focus-ring:');
-      expect(css).not.toContain('--vui-focus-shadow:');
-    }
-    expect(systemCss).toContain('--vui-color-background: var(--vui-palette-slate-50)');
-    expect(systemCss).not.toContain(':root[data-vui-theme="system"]');
+    expect(uiCss).not.toContain('high-contrast');
   });
 
   it('keeps elevation geometry in ui.css and only ink in themes', () => {
-    const themes = { lightCss, darkCss, systemCss, neonGreenCss, neonMagentaCss, neonCyanCss, highContrastCss };
+    const themes = { lightCss, darkCss, systemCss };
     for (const [name, css] of Object.entries(themes)) {
       expect(css, name).toContain('--vui-shadow-ink:');
       expect(css, name).not.toMatch(/--vui-shadow-(sm|md|lg):/);
       expect(css, name).not.toContain('palette-shadow-light-');
       expect(css, name).not.toContain('palette-shadow-dark-');
     }
-    for (const css of [lightCss, darkCss, systemCss, neonGreenCss, neonMagentaCss, neonCyanCss]) {
+    for (const css of [lightCss, darkCss, systemCss]) {
       for (const size of ['sm', 'md', 'lg']) expect(css).toContain(`--vui-shadow-strength-${size}:`);
     }
-    for (const css of [neonGreenCss, neonMagentaCss, neonCyanCss]) expect(css).toContain('--vui-shadow-glow:');
-    for (const css of [lightCss, darkCss, systemCss, highContrastCss]) expect(css).not.toContain('--vui-shadow-glow');
+    for (const css of [lightCss, darkCss, systemCss]) expect(css).not.toContain('--vui-shadow-glow');
     expect(tokensCss).toContain('--vui-palette-shadow-ink-light:');
     expect(tokensCss).toContain('--vui-palette-shadow-ink-dark:');
     expect(tokensCss).not.toMatch(/--vui-palette-shadow-(light|dark|neon-[a-z]+)-(sm|md|lg):/);
 
     const web = uiCss.slice(uiCss.indexOf(':root,'), uiCss.indexOf('[data-vui-ui="desktop"]'));
     const desktop = uiCss.slice(uiCss.indexOf('[data-vui-ui="desktop"]'), uiCss.indexOf('[data-vui-ui="terminal"]'));
-    const terminal = uiCss.slice(uiCss.indexOf('[data-vui-ui="terminal"]'), uiCss.indexOf('[data-vui-theme="high-contrast"]'));
+    const terminal = uiCss.slice(uiCss.indexOf('[data-vui-ui="terminal"]'));
     for (const size of ['sm', 'md', 'lg']) {
       for (const block of [web, desktop]) {
         expect(block).toMatch(new RegExp(`--vui-shadow-${size}: var\\(--vui-shadow-offset-${size}\\) color-mix\\(.*var\\(--vui-shadow-ink`));
@@ -78,7 +69,6 @@ describe('token contract', () => {
     expect(web).toContain('var(--vui-shadow-glow, transparent)');
     expect(desktop).toContain('var(--vui-shadow-ambient-sm)');
     expect(terminal).not.toContain('--vui-shadow-glow');
-    expect(uiCss.slice(uiCss.indexOf('[data-vui-theme="high-contrast"]'))).toContain('--vui-shadow-lg: none');
   });
 
   it('matches Studio elevation overrides to the ui.css recipes', () => {
@@ -88,7 +78,7 @@ describe('token contract', () => {
     const web = start(':root,');
     const desktop = start('[data-vui-ui="desktop"]');
     const strip = (value: string) => value.replace(/color-mix\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\)/g, 'C');
-    const nord = themeDocument('nord');
+    const nord = themeDocument('dark');
     for (const size of ['sm', 'md', 'lg'] as const) {
       const webVars = themeVariables(nord, { uiMode: 'web' });
       expect(strip(webVars[`--vui-shadow-${size}`])).toBe(

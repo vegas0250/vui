@@ -75,7 +75,7 @@ describe('theme and UI mode', () => {
 
     const css = document.getElementById('vui-styles')?.textContent ?? '';
     expect(css).toContain('--vui-color-primary');
-    expect(css).toContain('[data-vui-theme="high-contrast"]');
+    expect(css).toContain('[data-vui-theme="dark"]');
     expect(css).toContain('[data-vui-ui="desktop"]');
     expect(css).toContain('[data-vui-ui="terminal"]');
     expect(css).toContain('prefers-color-scheme: dark');

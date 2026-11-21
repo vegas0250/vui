@@ -1,5 +1,5 @@
 import { normalizeColor, readable, contrast, mix } from './colors';
-import { builtInThemes, defaultThemes, tokenNames, tones, toneSolidTokens } from './presets';
+import { builtInThemes, canonicalThemeId, defaultThemes, tokenNames, tones, toneSolidTokens } from './presets';
 import type {
   ThemeAppearance,
   ThemeMode,
@@ -69,14 +69,16 @@ export function listThemes(): readonly ThemePreset[] {
   return [...registry.values()];
 }
 export function themeById(id: string): ThemePreset {
-  const theme = registry.get(id);
+  const theme = registry.get(id) ?? registry.get(canonicalThemeId(id));
   if (!theme) throw new Error('Unknown theme');
   return theme;
 }
 export function validateTheme(input: unknown): ThemeDocument {
   if (!input || typeof input !== 'object' || Array.isArray(input))
     throw new Error('Invalid theme document');
-  const v = input as Record<string, unknown>;
+  const v = { ...(input as Record<string, unknown>) };
+  // Documents saved against removed 1.x presets rebase onto the VUI theme of the same mode.
+  if (typeof v.baseTheme === 'string') v.baseTheme = canonicalThemeId(v.baseTheme);
   if (
     Object.keys(v).some(
       (k) =>
@@ -189,15 +191,8 @@ export function registerTheme(id: string, input: ThemeDocument): void {
   if (
     !/^[a-z][a-z0-9-]{0,79}$/.test(id) ||
     builtInThemes.some((t) => t.id === id) ||
-    [
-      'light',
-      'dark',
-      'system',
-      'high-contrast',
-      'neon-green',
-      'neon-magenta',
-      'neon-cyan',
-    ].includes(id)
+    id === 'system' ||
+    canonicalThemeId(id) !== id
   )
     throw new Error('Reserved or invalid theme identifier');
   const document = validateTheme(input);
@@ -474,6 +469,7 @@ export function applyTheme(
 ): void {
   let d: ThemeDocument;
   if (typeof input === 'string') {
+    if (!registry.has(input)) input = canonicalThemeId(input);
     const preset = themeById(input);
     d = builtInThemes.some((t) => t.id === input)
       ? themeDocument(input)
@@ -532,7 +528,7 @@ export function exportThemeCSS(input: ThemeDocument): string {
   const modeNote = modeHint
     ? ` Set data-vui-ui="${normalizeAppearanceUIMode(String(modeHint))}" for the preferred structural scale.`
     : ' Structural scales come from data-vui-ui (web|desktop|terminal) in vui/themes/ui.';
-  return `/* VUI adaptation: ${d.baseTheme}; schema 1. See VUI THIRD_PARTY_NOTICES.md.${modeNote} */\n[data-vui-theme="custom"] {\n  color-scheme: ${d.mode};\n${Object.entries(
+  return `/* VUI custom theme based on ${d.baseTheme}; schema 1.${modeNote} */\n[data-vui-theme="custom"] {\n  color-scheme: ${d.mode};\n${Object.entries(
     themeExportVariables(d),
   )
     .map(([k, v]) => `  ${k}: ${v};`)
@@ -555,7 +551,7 @@ export function getThemePreference(
     const parsed = JSON.parse(value);
     if (typeof parsed === 'string') {
       themeById(parsed);
-      return parsed;
+      return registry.has(parsed) ? parsed : canonicalThemeId(parsed);
     }
     return validateTheme(parsed);
   } catch {

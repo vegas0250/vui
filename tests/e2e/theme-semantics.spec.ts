@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 
 test.setTimeout(90_000);
 
-for (const id of ['catppuccin-mocha', 'catppuccin-latte', 'tokyo-night', 'tokyo-night-day', 'dracula', 'nord']) {
+for (const id of ['light', 'dark']) {
   test(`${id}: the same dashboard, form, table, menu and dialog`, async ({ page }) => {
     await page.goto('/?lang=en&legacy=1');
     await page.locator(`[data-preset="${id}"]`).click();

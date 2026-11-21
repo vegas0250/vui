@@ -35,29 +35,12 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/?lang=en&legacy=1');
   await expect(page.locator(studio)).toBeVisible();
 });
-test('nineteen palettes switch instantly; documentation preference is independent and persistent', async ({
+test('both VUI palettes switch instantly; documentation preference is independent and persistent', async ({
   page,
 }) => {
-  await expect(page.locator('.ts-preset')).toHaveCount(19);
-  await setSelect(page, '#docs-theme', 'nord');
-  for (const id of [
-    'tokyo-night',
-    'catppuccin-mocha',
-    'dracula',
-    'nord',
-    'rose-pine',
-    'kanagawa-wave',
-    'synthwave',
-    'catppuccin-latte',
-    'tokyo-night-day',
-    'rose-pine-dawn',
-    'modern-light',
-    'retro',
-    'fluent-light',
-    'fluent-dark',
-    'radix-light',
-    'radix-dark',
-  ]) {
+  await expect(page.locator('.ts-preset')).toHaveCount(2);
+  await setSelect(page, '#docs-theme', 'dark');
+  for (const id of ['light', 'dark']) {
     await page.locator(`[data-preset="${id}"]`).click();
     await expect(page.locator('#ts-live-preview')).toHaveAttribute(
       'data-vui-theme',
@@ -65,14 +48,14 @@ test('nineteen palettes switch instantly; documentation preference is independen
     );
     await expect(page.locator('html')).toHaveAttribute(
       'data-vui-theme',
-      'nord',
+      'dark',
     );
     await expect(
       page.locator('#ts-live-preview vui-button').first(),
     ).toBeVisible();
   }
   await page.reload();
-  await expect(page.locator('html')).toHaveAttribute('data-vui-theme', 'nord');
+  await expect(page.locator('html')).toHaveAttribute('data-vui-theme', 'dark');
 });
 test('color input updates real components, validates, undoes, redoes and resets', async ({
   page,
@@ -94,25 +77,25 @@ test('color input updates real components, validates, undoes, redoes and resets'
     .toBe('rgb(18, 52, 86)');
   await expect(page.locator('#ts-live-preview')).toHaveAttribute(
     'data-vui-theme',
-    'tokyo-night',
+    'dark',
   );
   await expect(page.locator('html')).not.toHaveAttribute(
     'data-vui-theme',
-    'tokyo-night',
+    'dark',
   );
   await page.locator('[data-ts-action=undo]').click();
-  await expect(primary).toHaveValue('#7aa2f7');
+  await expect(primary).toHaveValue('#8d95ff');
   await page.locator('[data-ts-action=redo]').click();
   await expect(primary).toHaveValue('#123456');
   await primary.fill('url(https://evil.example)');
   await expect(primary).toHaveAttribute('aria-invalid', 'true');
   await page.locator('[data-reset=primary]').click();
-  await expect(primary).toHaveValue('#7aa2f7');
+  await expect(primary).toHaveValue('#8d95ff');
   await page.locator(token('foreground')).fill('#1a1b26');
   await page.locator(token('foreground')).blur();
   await expect(page.locator('#ts-contrast')).toContainText('Low contrast');
   await page.locator('[data-ts-action=reset]').click();
-  await expect(page.locator(token('foreground'))).toHaveValue('#c0caf5');
+  await expect(page.locator(token('foreground'))).toHaveValue('#e7e9f0');
 });
 test('custom themes save, reload, rename, apply, export, import and delete', async ({
   page,
@@ -216,7 +199,7 @@ test('all interface templates use actual VUI and original comparison stays isola
             getComputedStyle(el).getPropertyValue('--vui-color-surface').trim(),
           ),
       )
-      .toBe('#1a1b26');
+      .toBe('#151821');
   }
   await setSelect(page, '#ts-template', 'components');
   await page.locator('#ts-live-preview [data-preview-modal]').click();
@@ -257,35 +240,35 @@ test('system mode initializes defaults, explicit choice wins, and initial head b
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute(
     'data-vui-theme',
-    'catppuccin-mocha',
+    'dark',
   );
   await page.emulateMedia({ colorScheme: 'light' });
   await expect(page.locator('html')).toHaveAttribute(
     'data-vui-theme',
-    'catppuccin-latte',
+    'light',
   );
-  await setSelect(page, '#docs-theme', 'dracula');
+  await setSelect(page, '#docs-theme', 'dark');
   await page.emulateMedia({ colorScheme: 'dark' });
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute(
     'data-vui-theme',
-    'dracula',
+    'dark',
   );
   await page.route('**/src/showcase/main.ts', (route) => route.abort());
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute(
     'data-vui-theme',
-    'dracula',
+    'dark',
   );
   expect(
     await page
       .locator('html')
       .evaluate((el) => el.style.getPropertyValue('--vui-color-background')),
-  ).toBe('#21222c');
+  ).toBe('#0e1016');
 });
 
 test('developer preview has spaced controls and a textarea resizer at the control edge', async ({ page }) => {
-  await page.locator('[data-preset="retro"]').click();
+  await page.locator('[data-preset="light"]').click();
   await setSelect(page, '#ts-template', 'developer');
   for (const width of [1280, 390]) {
     await page.setViewportSize({ width, height: 844 });
@@ -318,10 +301,10 @@ test('developer preview has spaced controls and a textarea resizer at the contro
 });
 
 test('shape families style real tabs, boxes and selectors independently', async ({ page }) => {
-  await page.locator('[data-preset="retro"]').click();
+  await page.locator('[data-preset="light"]').click();
   await setSelect(page, '#ts-template', 'tabs');
   expect(await appearanceValue(page, 'radiusBox')).toBe('8');
-  expect(await appearanceValue(page, 'radiusField')).toBe('4');
+  expect(await appearanceValue(page, 'radiusField')).toBe('6');
   expect(await appearanceValue(page, 'radiusSelector')).toBe('4');
   await setChecked(page, '#ts-compare');
   for (const [key, value] of [['radiusBox', '20'], ['radiusField', '12'], ['radiusSelector', '2'], ['borderWidth', '2']]) {

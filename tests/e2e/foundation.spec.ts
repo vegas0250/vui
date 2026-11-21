@@ -7,7 +7,7 @@ test('foundation, theme, and UI mode share one token contract', async ({ page })
   await expect(page.getByRole('heading', { name: 'Tokens' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Пороги контейнера' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Contract', exact: true })).toBeVisible();
-  await expect(page.locator('#foundation-snapshot')).toContainText('catppuccin-latte');
+  await expect(page.locator('#foundation-snapshot')).toContainText('light');
   await expect(page.locator('#compliance-table')).toContainText('vui-button');
 
   const lifecycle = page.locator('#lifecycle-readout');
@@ -25,13 +25,13 @@ test('foundation, theme, and UI mode share one token contract', async ({ page })
   expect(await read('--vui-row-height')).toBe('40px');
 
   await page.locator('#docs-theme').evaluate((el) => {
-    (el as HTMLElement & { value: string }).value = 'tokyo-night';
+    (el as HTMLElement & { value: string }).value = 'dark';
     el.dispatchEvent(new Event('change', { bubbles: true }));
   });
-  await expect(page.locator('html')).toHaveAttribute('data-vui-theme', 'tokyo-night');
+  await expect(page.locator('html')).toHaveAttribute('data-vui-theme', 'dark');
   const darkBackground = await read('--vui-color-background');
   expect(darkBackground).not.toBe(lightBackground);
-  expect(darkBackground === '#16161e').toBe(true);
+  expect(darkBackground).toBe('#0e1016');
 
   const uiMode = page.locator('#ui-mode-select');
   await uiMode.locator('button').click();

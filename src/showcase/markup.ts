@@ -6,7 +6,6 @@ export const showcaseMarkup = `
         <vui-select id="theme-select" label="Тема" size="small" value="light">
           <vui-option value="light">Светлая</vui-option>
           <vui-option value="dark">Тёмная</vui-option>
-          <vui-option value="high-contrast">Контрастная</vui-option>
           <vui-option value="system">Системная</vui-option>
         </vui-select>
         <vui-select id="ui-mode-select" label="UI mode" size="small" value="web">
@@ -665,7 +664,7 @@ grid.addEventListener("change", () =&gt; grid.selectedId);</pre>
                   <vui-tree-item label="themes" kind="folder">
                     <vui-tree-item label="light.css" kind="file"></vui-tree-item>
                     <vui-tree-item label="dark.css" kind="file"></vui-tree-item>
-                    <vui-tree-item label="high-contrast.css" kind="file"></vui-tree-item>
+                    <vui-tree-item label="system.css" kind="file"></vui-tree-item>
                   </vui-tree-item>
                   <vui-tree-item label="package.json" kind="file"></vui-tree-item>
                 </vui-file-tree>

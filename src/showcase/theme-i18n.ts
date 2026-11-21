@@ -1,7 +1,6 @@
 export const docsLocale =
   new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'ru';
 const ru: Record<string, string> = {
-  'VUI adaptation': 'адаптация VUI',
   Neutral: 'Нейтральный',
   Tabs: 'Вкладки',
   'Tabs preview description': 'Переключайте вкладки мышью или стрелками клавиатуры. Цвета, границы и радиусы обновляются вместе с темой.',

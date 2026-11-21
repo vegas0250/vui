@@ -3,7 +3,7 @@ import { VDataGrid } from '../components/data/data-grid';
 import { VDialog } from '../components/overlay/dialog';
 import { VDrawer } from '../components/overlay/drawer';
 
-const themes = new Set(['light', 'dark', 'high-contrast', 'system', 'neon-green', 'neon-magenta', 'neon-cyan']);
+const themes = new Set(['light', 'dark', 'system']);
 const uiModes = new Set(['web', 'desktop', 'terminal']);
 const params = new URLSearchParams(location.search);
 const theme = params.get('theme') ?? 'light';

@@ -68,7 +68,7 @@ area or split.
 ## Integration example
 
 ```html
-<html data-vui-theme="catppuccin-latte" data-vui-ui="desktop">
+<html data-vui-theme="light" data-vui-ui="desktop">
   <body style="height:100vh;margin:0">
     <vui-template-settings label="Application" content-label="Settings">
       <vui-toolbar slot="toolbar" label="Commands">
@@ -91,7 +91,7 @@ area or split.
       import 'vui/input';
       import 'vui/status-bar';
       import { setTheme, setUIMode } from 'vui/theme';
-      setTheme('catppuccin-latte');
+      setTheme('light');
       setUIMode('desktop');
     </script>
   </body>

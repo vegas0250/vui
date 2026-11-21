@@ -14,10 +14,10 @@ test('showcase switches theme and UI mode', async ({ page }) => {
   await expect(page.locator('#platform-loading')).toHaveAttribute('loading', '');
 
   await page.locator('#docs-theme').evaluate((el) => {
-    (el as HTMLElement & { value: string }).value = 'tokyo-night';
+    (el as HTMLElement & { value: string }).value = 'dark';
     el.dispatchEvent(new Event('change', { bubbles: true }));
   });
-  await expect(page.locator('html')).toHaveAttribute('data-vui-theme', 'tokyo-night');
+  await expect(page.locator('html')).toHaveAttribute('data-vui-theme', 'dark');
 
   const uiMode = page.locator('#ui-mode-select');
   await uiMode.locator('button').click();

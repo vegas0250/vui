@@ -9,15 +9,7 @@ import {
 } from '../../src/foundation/index';
 import type { VuiTheme, VuiUIMode } from '../../src/foundation/index';
 
-const themes: VuiTheme[] = [
-  'light',
-  'dark',
-  'high-contrast',
-  'system',
-  'neon-green',
-  'neon-magenta',
-  'neon-cyan',
-];
+const themes: VuiTheme[] = ['light', 'dark', 'system'];
 const modes: VuiUIMode[] = ['web', 'desktop', 'terminal'];
 
 describe('foundation runtime', () => {

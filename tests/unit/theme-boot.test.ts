@@ -36,6 +36,6 @@ it('does not inject CSS expressions from persisted token values', () => {
   new Function(themeBootScript())();
   expect(
     document.documentElement.style.getPropertyValue('--vui-color-background'),
-  ).toBe('#16161e');
+  ).toBe('#0e1016');
   expect(document.documentElement.style.cssText).not.toContain('evil.invalid');
 });

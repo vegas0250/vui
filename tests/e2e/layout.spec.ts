@@ -1,7 +1,7 @@
 import { expect, type Page, test } from '@playwright/test';
 
 const modes = ['web', 'desktop', 'terminal'] as const;
-const themes = ['catppuccin-latte', 'catppuccin-mocha'] as const;
+const themes = ['light', 'dark'] as const;
 const widths = [375, 768, 1280, 1920] as const;
 const apps = ['dashboard', 'settings', 'workspace'] as const;
 
@@ -100,9 +100,9 @@ for (const ui of modes) {
 }
 
 test('theme switch keeps geometry', async ({ page }) => {
-  await open(page, 'dashboard', 'web', 'catppuccin-latte', 1280);
+  await open(page, 'dashboard', 'web', 'light', 1280);
   const light = await geometry(page);
-  await open(page, 'dashboard', 'web', 'catppuccin-mocha', 1280);
+  await open(page, 'dashboard', 'web', 'dark', 1280);
   const dark = await geometry(page);
   expect(dark.radius).toBe(light.radius);
   expect(dark.bar).toBe(light.bar);
@@ -111,11 +111,11 @@ test('theme switch keeps geometry', async ({ page }) => {
 });
 
 test('ui modes change structure', async ({ page }) => {
-  await open(page, 'dashboard', 'web', 'catppuccin-latte', 1280);
+  await open(page, 'dashboard', 'web', 'light', 1280);
   const web = await geometry(page);
-  await open(page, 'dashboard', 'desktop', 'catppuccin-latte', 1280);
+  await open(page, 'dashboard', 'desktop', 'light', 1280);
   const desktop = await geometry(page);
-  await open(page, 'dashboard', 'terminal', 'catppuccin-latte', 1280);
+  await open(page, 'dashboard', 'terminal', 'light', 1280);
   const terminal = await geometry(page);
   expect(web.radius).toBe('8px');
   expect(desktop.radius).toBe('8px');
@@ -128,7 +128,7 @@ test('ui modes change structure', async ({ page }) => {
 });
 
 test('dashboard filter, nested scroll, and keyboard', async ({ page }) => {
-  await open(page, 'dashboard', 'web', 'catppuccin-latte', 1280);
+  await open(page, 'dashboard', 'web', 'light', 1280);
   await page.locator('#frame [data-filter] input').fill('zzzz-no-match');
   await expect(page.locator('#frame vui-data-grid')).toContainText('No matching orders');
   const scrolled = await page.locator('[data-nested-scroll]').evaluate((element) => {
@@ -144,7 +144,7 @@ test('dashboard filter, nested scroll, and keyboard', async ({ page }) => {
 });
 
 test('template forwards collapse and exposes shell skip link', async ({ page }) => {
-  await open(page, 'dashboard', 'desktop', 'catppuccin-latte', 1280);
+  await open(page, 'dashboard', 'desktop', 'light', 1280);
   const host = page.locator('#frame vui-template-dashboard');
   await expect(host).not.toHaveAttribute('collapsed');
   await page.locator('#frame [data-collapse]').click();
@@ -162,7 +162,7 @@ test('template forwards collapse and exposes shell skip link', async ({ page }) 
 });
 
 test('workspace split resizes and scrolls', async ({ page }) => {
-  await open(page, 'workspace', 'desktop', 'catppuccin-mocha', 1280);
+  await open(page, 'workspace', 'desktop', 'dark', 1280);
   const separator = page.locator('#frame vui-split-panel [part="separator"]');
   await separator.focus();
   const before = Number(await separator.getAttribute('aria-valuenow'));
@@ -188,10 +188,10 @@ for (const ui of modes) {
 }
 
 test('snapshot workspace and narrow settings', async ({ page }) => {
-  await open(page, 'workspace', 'desktop', 'catppuccin-latte', 1280);
+  await open(page, 'workspace', 'desktop', 'light', 1280);
   await expect(page.locator('#frame vui-split-panel')).toBeVisible();
   await expect(page.locator('#frame')).toHaveScreenshot('workspace-desktop-light.png');
-  await open(page, 'settings', 'terminal', 'catppuccin-mocha', 375);
+  await open(page, 'settings', 'terminal', 'dark', 375);
   await expect(page.locator('#frame vui-input[invalid]')).toBeVisible();
   await expect(page.locator('#frame')).toHaveScreenshot('settings-terminal-dark-375.png');
 });

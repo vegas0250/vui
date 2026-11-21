@@ -35,7 +35,7 @@ Custom Elements. Подробно: [integration.md](integration.md).
 <vui-button variant="primary">Save</vui-button>
 ```
 
-Импорт компонента регистрирует элемент и ставит стили. Отдельный CSS нужен только если тема подключается файлом: `vui/themes/tokens`, `vui/themes/ui`, плюс `light` / `dark` / `high-contrast` / `system`.
+Импорт компонента регистрирует элемент и ставит стили. Отдельный CSS нужен только если тема подключается файлом: `vui/themes/tokens`, `vui/themes/ui`, плюс `light` / `dark` / `system` (две собственные темы VUI Light / VUI Dark и следование ОС).
 
 Направление текста — атрибут документа, не тема:
 
@@ -81,7 +81,7 @@ Pattern — страница из этих primitive для типового с�
 
 ## Accessibility
 
-Имя, видимый `:focus-visible`, нативный контрол, `prefers-reduced-motion`, `forced-colors` у кнопок и флажков. High-contrast тема не держит смысл только на тени. `dir` на документе меняет направление; новые layout-правила пишутся через logical properties (`padding-inline`, `inset-inline`, `border-inline`).
+Имя, видимый `:focus-visible`, нативный контрол, `prefers-reduced-motion`, `forced-colors` у кнопок и флажков. Смысл не держится только на тени или цвете. `dir` на документе меняет направление; новые layout-правила пишутся через logical properties (`padding-inline`, `inset-inline`, `border-inline`).
 
 Отдельной i18n-системы нет. Подписи по умолчанию английские. Showcase на русском передаёт свои `label`. Форматирование дат и чисел остаётся у приложения.
 

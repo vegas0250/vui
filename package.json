@@ -1,6 +1,6 @@
 {
   "name": "vui",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "description": "Универсальная модульная UI-система готовых визуальных компонентов для Web, SPA и Desktop/Electron с поддержкой тем и различной плотности интерфейса.",
   "type": "module",
   "license": "UNLICENSED",
@@ -440,7 +440,6 @@
     "./themes/density": "./src/tokens/ui.css",
     "./themes/light": "./themes/light.css",
     "./themes/dark": "./themes/dark.css",
-    "./themes/high-contrast": "./themes/high-contrast.css",
     "./themes/system": "./themes/system.css",
     "./react": {
       "types": "./dist/react.d.ts",

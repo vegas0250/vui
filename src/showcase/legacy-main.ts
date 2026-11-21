@@ -30,7 +30,7 @@ const app = document.querySelector('#app');
 if (!app) throw new Error('Showcase root is missing');
 app.innerHTML = showcaseMarkup.replace('</main>', `${studioMarkup}</main>`);
 
-const themes = new Set<VuiTheme>(['light', 'dark', 'high-contrast', 'system', 'neon-green', 'neon-magenta', 'neon-cyan']);
+const themes = new Set<VuiTheme>(['light', 'dark', 'system']);
 const uiModes = new Set<VuiUIMode>(['web', 'desktop', 'terminal']);
 
 const themeSelect = document.querySelector('#theme-select');
@@ -38,13 +38,7 @@ const uiModeSelect = document.querySelector('#ui-mode-select');
 
 const themeLabels: Record<string, string> = {
   ...Object.fromEntries(builtInThemes.map(theme => [theme.id,theme.name])),
-  light: 'Light',
-  dark: 'Dark',
-  'high-contrast': 'High Contrast',
   system: 'System',
-  'neon-green': 'Cyberpunk',
-  'neon-magenta': 'Neon Magenta',
-  'neon-cyan': 'Neon Cyan',
 };
 const uiModeLabels: Record<VuiUIMode, string> = {
   web: 'Web design',
