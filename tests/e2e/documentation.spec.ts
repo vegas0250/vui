@@ -24,8 +24,27 @@ test('bilingual catalog has a direct, complete page for every visual component',
   await page.locator('#docs-lang button').click();
   await page.getByRole('option', { name: 'RU', exact: true }).click();
   await expect(page.locator('#component-search').getByRole('searchbox')).toBeVisible();
-  await expect(page.locator('#docs-sidebar .docs-section-menu > vui-menu-item')).toHaveCount(7);
+  await expect(page.locator('#docs-sidebar .docs-section-menu > vui-menu-item')).toHaveCount(8);
   await expect(page).toHaveURL(/lang=ru.*#\/components\//);
+});
+
+test('tokens page lists both themes and the playground overrides only its preview', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  await page.goto('/?lang=en#/tokens');
+  await expect(page.getByRole('heading', { name: 'Tokens & themes', level: 1 })).toBeVisible();
+  for (const key of ['colors', 'design', 'type', 'components']) {
+    expect(await page.locator(`[data-tk-table="${key}"] tbody tr:not(.tk-group)`).count()).toBeGreaterThan(10);
+  }
+  await expect(page.locator('[data-tk-table="colors"] thead')).toContainText('VUI Dark');
+  const unresolved = await page.locator('.tk-table td code').evaluateAll((codes) => codes.filter((c) => c.textContent === '—').length);
+  expect(unresolved).toBe(0);
+  await page.locator('[data-ctl="radius"]').fill('14');
+  const preview = page.locator('[data-tk-preview]');
+  expect(await preview.evaluate((el) => getComputedStyle(el).getPropertyValue('--vui-radius').trim())).toBe('14px');
+  await expect(page.locator('[data-tk-css]')).toContainText('--vui-radius: 14px;');
+  expect(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--vui-radius').trim())).not.toBe('14px');
+  expect(errors).toEqual([]);
 });
 
 test('settings, filters, dialog and shell are working compositions', async ({ page }) => {

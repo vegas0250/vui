@@ -29,6 +29,7 @@ if (new URLSearchParams(location.search).get('legacy') === '1') {
           <a href="#/getting-started" data-nav="getting-started">${text('Начало', 'Start')}</a>
           <a href="#/components" data-nav="components">${text('Компоненты', 'Components')}</a>
           <a href="#/layouts" data-nav="layouts">${text('Раскладки', 'Layouts')}</a>
+          <a href="#/tokens" data-nav="tokens">${text('Токены', 'Tokens')}</a>
           <a href="#/themes" data-nav="themes">${text('Темы', 'Themes')}</a>
         </nav>
       </div>

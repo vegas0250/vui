@@ -26,6 +26,7 @@ import { setUIMode } from '../theme';
 import type { VuiUIMode } from '../theme';
 import { docsLocale, escapeHTML } from './theme-i18n';
 import { documentationStorage } from './preferences';
+import { tokensPageHTML, wireTokensPage } from './tokens-page';
 import './site.css';
 import './examples.css';
 
@@ -37,6 +38,7 @@ const sections = (): NavItem[] => [
   ['layouts', text('Раскладки', 'Layouts'), 'columns-2'],
   ['patterns', text('Паттерны', 'Patterns'), 'command'],
   ['templates', text('Шаблоны', 'Templates'), 'layout-template'],
+  ['tokens', text('Токены и темы', 'Tokens & themes'), 'sliders-horizontal'],
   ['themes', text('Theme Studio', 'Theme Studio'), 'palette'],
   ['icons', text('Иконки', 'Icons'), 'images'],
 ];
@@ -583,6 +585,9 @@ export function mountDocumentationSite(): void {
         text('Все имена', 'All names'),
         `<div class="docs-icon-grid">${iconNames.map((icon) => `<div class="docs-icon-card"><vui-icon name="${icon}" label="${icon}"></vui-icon><code>${icon}</code></div>`).join('')}</div>`,
       )}`;
+    } else if (section === 'tokens') {
+      page.innerHTML = tokensPageHTML();
+      wireTokensPage(page);
     } else if (section === 'themes') {
       page.innerHTML = `<h1 tabindex="-1">${name}</h1><p class="docs-lead">${text(
         'Тема документации меняется на верхней панели. Черновик редактора применяется только к просмотру, пока вы явно не примените его к документации.',
@@ -648,7 +653,8 @@ export function mountDocumentationSite(): void {
         nav === section ||
         (nav === 'components' && (section === 'components' || section === 'icons')) ||
         (nav === 'layouts' && (section === 'layouts' || section === 'patterns' || section === 'templates')) ||
-        (nav === 'themes' && section === 'themes');
+        (nav === 'themes' && section === 'themes') ||
+        (nav === 'tokens' && section === 'tokens');
       anchor.toggleAttribute('aria-current', active);
       anchor.classList.toggle('is-active', active);
     }
