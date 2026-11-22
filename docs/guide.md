@@ -40,7 +40,7 @@ Custom Elements. Подробно: [integration.md](integration.md).
 Направление текста — атрибут документа, не тема:
 
 ```html
-<html dir="rtl" data-vui-theme="light" data-vui-ui="web"><!-- data-vui-ui: web | desktop | terminal -->
+<html dir="rtl" data-vui-theme="light" data-vui-ui="web"><!-- data-vui-ui: web | desktop -->
 ```
 
 ## Architecture
@@ -53,7 +53,7 @@ Foundation: tokens, theme, UI mode, responsive, motion, a11y runtime. Interactio
 
 ## Foundation, tokens, themes, UI mode, responsive, layout
 
-Три слоя токенов: primitive (`src/tokens/tokens.css`), semantic (`themes/`), component (высоты chrome). UI mode (`web` | `desktop` | `terminal`) меняет структурную шкалу в `ui.css`, не палитру. Responsive читает ширину контейнера. Пороги 22rem, 36rem и 40rem не зависят от темы. Layout-словарь: `gap`, `padding`, `align`, `justify`, `overflow`.
+Три слоя токенов: primitive (`src/tokens/tokens.css`), semantic (`themes/`), component (высоты chrome). UI mode (`web` | `desktop`) меняет структурную шкалу в `ui.css`, не палитру. Responsive читает ширину контейнера. Пороги 22rem, 36rem и 40rem не зависят от темы. Layout-словарь: `gap`, `padding`, `align`, `justify`, `overflow`.
 
 Своя тема переопределяет semantic properties (`--vui-color-*`, `--vui-shadow-ink`, `--vui-shadow-strength-*`, `--vui-focus-ring`), а не имена компонентов.
 
@@ -117,7 +117,7 @@ vui/themes/*
 
 ## Theming, customization
 
-`setTheme` / `setUIMode` или атрибуты `data-vui-theme` и `data-vui-ui` (`web` | `desktop` | `terminal`). Тема задаёт semantic colors; UI mode — structural scale в `vui/themes/ui`. Своя тема — тот же набор semantic properties. `part` — точка внешней стилизации. Внутренние классы shadow контрактом не являются.
+`setTheme` / `setUIMode` или атрибуты `data-vui-theme` и `data-vui-ui` (`web` | `desktop`). Тема задаёт semantic colors; UI mode — structural scale в `vui/themes/ui`. Своя тема — тот же набор semantic properties. `part` — точка внешней стилизации. Внутренние классы shadow контрактом не являются.
 
 ## Migration / versioning
 

@@ -175,7 +175,6 @@ export function mountThemeStudio(host: HTMLElement): void {
          ['', 'Inherit'],
          ['web', 'Web design'],
          ['desktop', 'Desktop design'],
-         ['terminal', 'Terminal design'],
        ]
          .map(([v, l]) => option(v!, l!))
          .join('')}</vui-select>
@@ -349,12 +348,10 @@ export function mountThemeStudio(host: HTMLElement): void {
       working.appearance?.density === 'dense' ||
       working.appearance?.density === 'desktop'
         ? 'desktop'
-        : working.appearance?.density === 'terminal'
-          ? 'terminal'
-          : working.appearance?.density === 'web' ||
-              working.appearance?.density === 'comfortable'
-            ? 'web'
-            : '');
+        : working.appearance?.density === 'web' ||
+            working.appearance?.density === 'comfortable'
+          ? 'web'
+          : '');
     paint();
   }
 

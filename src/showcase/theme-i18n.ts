@@ -70,7 +70,6 @@ const ru: Record<string, string> = {
   'UI mode': 'Режим UI',
   'Web design': 'Web design',
   'Desktop design': 'Desktop design',
-  'Terminal design': 'Terminal design',
   Inherit: 'Как на сайте',
   Comfortable: 'Свободная',
   Compact: 'Компактная',

@@ -57,7 +57,7 @@ applyTheme("my-brand");
 const css = exportThemeCSS(draft);
 ```
 
-CSS export contains a `[data-vui-theme="custom"]` selector with semantic colors and optional appearance deltas only. Import it **after** VUI's standard token CSS and set `data-vui-theme="custom"` on your app root. Structural scales live on `[data-vui-ui]` (`web` | `desktop` | `terminal`) from `vui/themes/ui` — they are not duplicated in the export. Set `data-vui-ui` when using an appearance UI mode override; the JS API does this automatically. Scope a custom selector further if the application contains several independent theme roots.
+CSS export contains a `[data-vui-theme="custom"]` selector with semantic colors and optional appearance deltas only. Import it **after** VUI's standard token CSS and set `data-vui-theme="custom"` on your app root. Structural scales live on `[data-vui-ui]` (`web` | `desktop`) from `vui/themes/ui` — they are not duplicated in the export. Set `data-vui-ui` when using an appearance UI mode override; the JS API does this automatically. Scope a custom selector further if the application contains several independent theme roots.
 
 JSON stores `schemaVersion`, 
 ame`, `baseTheme`, `mode`, only changed `tokens`, and optional `appearance`. Presets remain frozen and are never modified by imported data. Unknown versions, unknown fields, unknown tokens, CSS URLs and arbitrary CSS expressions are rejected. Keep JSON as the source of truth for later editing; CSS is the runtime artifact.
@@ -73,8 +73,6 @@ The documentation website owns its grouped component menu, bilingual search and 
 ## Palette design
 
 VUI Light and VUI Dark are original palettes; see [theme-semantics.md](theme-semantics.md) for the design principles borrowed from established themes and the role table.
-
-- Terminal UI mode is structural only (monospace, dense, square, no elevation). Any color theme can pair with `data-vui-ui="terminal"`.
 
 The `interactiveText` token separates readable link/tab text from the specified solid primary button color. Text and muted colors are checked against the canvas, all surfaces, selection and state surfaces. Custom colors can violate contrast. The editor reports normal-text contrast below 4.5:1; disabled text is deliberately exempt. Preset tests enforce normal-text pairs and primary button hover/active states for contrast-adjusted presets. All eight semantic tones, including secondary and an independent neutral color, support solid, soft, outline and ghost variants. Alpha foregrounds are composited against the checked background. Translucent backgrounds are evaluated over white; verify consumer-specific underlays separately.
 

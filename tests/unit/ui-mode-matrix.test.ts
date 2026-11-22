@@ -5,7 +5,7 @@ import { installVuiStyles } from '../../src/theme/install';
 import { setTheme, setUIMode, type VuiUIMode } from '../../src/theme';
 import uiCss from '../../src/tokens/ui.css?raw';
 
-const modes: VuiUIMode[] = ['web', 'desktop', 'terminal'];
+const modes: VuiUIMode[] = ['web', 'desktop'];
 const themes = ['light', 'dark', 'system'] as const;
 
 describe('component × UI mode matrix', () => {
@@ -33,8 +33,6 @@ describe('component × UI mode matrix', () => {
     expect(uiCss).toContain('--vui-scrollbar-size:');
     expect(uiCss).toContain('--vui-drawer-inline:');
     expect(uiCss).toContain('--vui-resizer-hit-size:');
-    const terminalIndex = uiCss.indexOf('[data-vui-ui="terminal"]');
-    expect(terminalIndex).toBeGreaterThan(-1);
   });
 
   it('mounts representative components in every theme × UI mode pair', () => {

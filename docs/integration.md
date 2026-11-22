@@ -58,7 +58,7 @@ still uses the repo Vite lib build; that is unrelated to application tooling.
 
 Working reference: [examples/next](../examples/next). Details: [react.md](react.md).
 
-## Web / Desktop / Terminal UI modes
+## Web / Desktop UI modes
 
 Theme (`data-vui-theme`) and UI mode (`data-vui-ui`) are independent.
 
@@ -66,12 +66,11 @@ Theme (`data-vui-theme`) and UI mode (`data-vui-ui`) are independent.
 | --- | --- | --- |
 | Web | `data-vui-ui="web"` | Sites and browser SPAs (default structural scale) |
 | Desktop | `data-vui-ui="desktop"` | Electron / dense app chrome |
-| Terminal | `data-vui-ui="terminal"` | Monospace TUI look — not a shell |
 
 ```ts
 import { setTheme, setUIMode } from 'vui/theme';
 setTheme('system');      // or a preset / custom theme id
-setUIMode('desktop');    // 'web' | 'desktop' | 'terminal'
+setUIMode('desktop');    // 'web' | 'desktop'
 ```
 
 Recommendations:
@@ -81,7 +80,6 @@ Recommendations:
 - **Desktop (VUT Vortex-style):** Electron renderer with CE or React; prefer
   `data-vui-ui="desktop"`; `vui-shell` / `vui-template-*` / `vui-window` /
   `vui-titlebar` for chrome; same tokens as web.
-- **Terminal look:** same components; only switch UI mode. Do not fork components.
 
 Templates stay opt-in: import `vui/template-dashboard` (etc.) or use
 `TemplateDashboard` from `vui/react`. See [templates.md](templates.md).

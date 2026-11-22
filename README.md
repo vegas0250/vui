@@ -41,7 +41,7 @@ export function Name() {
 
 Import `vui/themes/tokens`, `vui/themes/ui`, and `vui/themes/system` in
 `app/layout.tsx` for initial token styles. Set `data-vui-theme="system"` and
-`data-vui-ui="web"` (or `desktop` / `terminal`) on `<html>`. Components install
+`data-vui-ui="web"` (or `desktop`) on `<html>`. Components install
 the complete theme stylesheet when they mount. No provider, `transpilePackages`,
 webpack flag, or `ssr: false` is required.
 
@@ -71,11 +71,11 @@ available. Components work in Electron's renderer with the same tokens and API.
 // Browser code
 import { setTheme, setUIMode } from 'vui/theme';
 setTheme('dark'); // 'light' | 'dark' | 'system'
-setUIMode('desktop'); // or 'web' | 'terminal'
+setUIMode('desktop'); // or 'web'
 ```
 
 Theme (semantic colors) and UI mode (structural scale) are independent axes.
-`terminal` is a monospace TUI-inspired visual mode, not a shell. Override
+Override
 `--vui-*` CSS custom properties for application customization. VUI ships two own
 themes, VUI Light (`light`) and VUI Dark (`dark`); `system` follows the OS. Theme Studio
 supports live preview, color editing and validated JSON import/export; it is

@@ -1,6 +1,6 @@
 import { expect, type Page, test } from '@playwright/test';
 
-const modes = ['web', 'desktop', 'terminal'] as const;
+const modes = ['web', 'desktop'] as const;
 const themes = ['light', 'dark'] as const;
 const widths = [375, 768, 1280, 1920] as const;
 const apps = ['dashboard', 'settings', 'workspace'] as const;
@@ -115,16 +115,10 @@ test('ui modes change structure', async ({ page }) => {
   const web = await geometry(page);
   await open(page, 'dashboard', 'desktop', 'light', 1280);
   const desktop = await geometry(page);
-  await open(page, 'dashboard', 'terminal', 'light', 1280);
-  const terminal = await geometry(page);
   expect(web.radius).toBe('8px');
   expect(desktop.radius).toBe('8px');
-  expect(terminal.radius).toBe('0px');
   expect(web.bar).toBe('44px');
   expect(desktop.bar).toBe('40px');
-  expect(terminal.bar).toBe('28px');
-  expect(terminal.nav).not.toBe(web.nav);
-  expect(terminal.font.toLowerCase()).toMatch(/mono|consolas|courier/);
 });
 
 test('dashboard filter, nested scroll, and keyboard', async ({ page }) => {
@@ -191,7 +185,7 @@ test('snapshot workspace and narrow settings', async ({ page }) => {
   await open(page, 'workspace', 'desktop', 'light', 1280);
   await expect(page.locator('#frame vui-split-panel')).toBeVisible();
   await expect(page.locator('#frame')).toHaveScreenshot('workspace-desktop-light.png');
-  await open(page, 'settings', 'terminal', 'dark', 375);
+  await open(page, 'settings', 'desktop', 'dark', 375);
   await expect(page.locator('#frame vui-input[invalid]')).toBeVisible();
-  await expect(page.locator('#frame')).toHaveScreenshot('settings-terminal-dark-375.png');
+  await expect(page.locator('#frame')).toHaveScreenshot('settings-desktop-dark-375.png');
 });

@@ -11,8 +11,8 @@ import { escapeHTML } from './theme-i18n';
 import './tokens-page.css';
 
 type ThemeId = 'light' | 'dark';
-type Mode = 'web' | 'desktop' | 'terminal';
-const modes: Mode[] = ['web', 'desktop', 'terminal'];
+type Mode = 'web' | 'desktop';
+const modes: Mode[] = ['web', 'desktop'];
 
 const parseVars = (css: string): Record<string, string> => {
   const out: Record<string, string> = {};
@@ -123,7 +123,7 @@ function modeTable(groups: [string, string[]][], probes: Record<Mode, HTMLElemen
       .map((v, i) => `<td title="${escapeHTML(v)}"><code>${escapeHTML(v)}</code>${specimen ? specimen(name, `var(--vui-${name})`).replace('data-mode', `data-vui-ui="${modes[i]}"`) : ''}</td>`)
       .join('')}</tr>`;
   };
-  return `<div class="tk-table-wrap"><table class="tk-table tk-modes"><thead><tr><th>${text('Токен', 'Token')}</th><th>Web</th><th>Desktop</th><th>Terminal</th></tr></thead><tbody>${groups
+  return `<div class="tk-table-wrap"><table class="tk-table tk-modes"><thead><tr><th>${text('Токен', 'Token')}</th><th>Web</th><th>Desktop</th></tr></thead><tbody>${groups
     .map(([label, names]) => `<tr class="tk-group"><th colspan="4">${label} <span>${names.length}</span></th></tr>${names.map(row).join('')}`)
     .join('')}</tbody></table></div>`;
 }
@@ -199,7 +199,7 @@ function previewHTML(): string {
   return `<div class="tk-preview-grid">
   <section class="tk-card"><h3>${t('Типографика', 'Typography')}</h3>
     <h1 class="tk-h1">${t('Заголовок H1', 'Heading H1')}</h1><h2 class="tk-h2">${t('Заголовок H2', 'Heading H2')}</h2><h3 class="tk-h3">${t('Заголовок H3', 'Heading H3')}</h3>
-    <p>${t('Основной текст абзаца: интерфейсы из понятных компонентов, единые токены для Web, Desktop и Terminal.', 'Body paragraph: interfaces from clear components, shared tokens for Web, Desktop, and Terminal.')}</p>
+    <p>${t('Основной текст абзаца: интерфейсы из понятных компонентов, единые токены для Web и Desktop.', 'Body paragraph: interfaces from clear components, shared tokens for Web and Desktop.')}</p>
     <p class="tk-muted">${t('Вторичный текст и', 'Muted text and')} <a href="#/tokens">${t('ссылка', 'a link')}</a> · <code>inline code</code> · <vui-kbd>Ctrl</vui-kbd>+<vui-kbd>K</vui-kbd></p>
   </section>
   <section class="tk-card"><h3>${t('Кнопки', 'Buttons')}</h3>
@@ -238,8 +238,8 @@ function previewHTML(): string {
 export function tokensPageHTML(): string {
   return `<h1 tabindex="-1">${text('Токены и темы', 'Tokens & themes')}</h1>
 <p class="docs-lead">${text(
-    'Все настройки двух встроенных тем VUI Light и VUI Dark. Цвета задаёт тема; размеры, типографику и метрики компонентов — режим UI (Web / Desktop / Terminal), они общие для обеих тем.',
-    'Every setting of the two built-in themes, VUI Light and VUI Dark. The theme owns colors; sizes, typography and component metrics follow UI mode (Web / Desktop / Terminal) and are shared by both themes.',
+    'Все настройки двух встроенных тем VUI Light и VUI Dark. Цвета задаёт тема; размеры, типографику и метрики компонентов — режим UI (Web / Desktop), они общие для обеих тем.',
+    'Every setting of the two built-in themes, VUI Light and VUI Dark. The theme owns colors; sizes, typography and component metrics follow UI mode (Web / Desktop) and are shared by both themes.',
   )}</p>
 <p class="tk-jump"><a href="#tk-grid">${text('Сетка настроек', 'Settings grid')}</a> · <a href="#tk-playground">${text('Интерактивный dashboard', 'Interactive dashboard')}</a></p>
 <div class="tk-probes" aria-hidden="true">${modes.map((m) => `<div data-vui-ui="${m}" data-tk-probe="${m}"></div>`).join('')}</div>

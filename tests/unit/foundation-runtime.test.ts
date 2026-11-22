@@ -10,7 +10,7 @@ import {
 import type { VuiTheme, VuiUIMode } from '../../src/foundation/index';
 
 const themes: VuiTheme[] = ['light', 'dark', 'system'];
-const modes: VuiUIMode[] = ['web', 'desktop', 'terminal'];
+const modes: VuiUIMode[] = ['web', 'desktop'];
 
 describe('foundation runtime', () => {
   beforeEach(() => {

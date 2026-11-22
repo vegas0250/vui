@@ -312,17 +312,13 @@ export function mountDocumentationSite(): void {
   for (const option of uiMode?.querySelectorAll('vui-option') ?? []) {
     const value = option.getAttribute('value');
     option.textContent =
-      value === 'desktop'
-        ? text('Desktop', 'Desktop')
-        : value === 'terminal'
-          ? text('Terminal', 'Terminal')
-          : text('Web', 'Web');
+      value === 'desktop' ? text('Desktop', 'Desktop') : text('Web', 'Web');
   }
   try {
     const saved = documentationStorage.getItem('vui.docs.ui');
     const legacyDensity = documentationStorage.getItem('vui.docs.density');
     const next =
-      saved === 'web' || saved === 'desktop' || saved === 'terminal'
+      saved === 'web' || saved === 'desktop'
         ? saved
         : legacyDensity === 'compact' || legacyDensity === 'dense' || legacyDensity === 'desktop'
           ? 'desktop'
@@ -526,8 +522,8 @@ export function mountDocumentationSite(): void {
       } else page.innerHTML = `<h1>${name}</h1>${link('components', text('Открыть каталог', 'Open catalog'))}`;
     } else if (section === 'components') {
       page.innerHTML = `<h1 tabindex="-1">${name}</h1><p class="docs-lead">${text(
-        'Единый каталог для Web, Desktop и Terminal. Режим UI и тема меняют токены, но не состав компонентов. Дочерние части остаются в API родителя.',
-        'One catalog for Web, Desktop, and Terminal. UI mode and theme change tokens, not the component set. Child parts stay on the parent API.',
+        'Единый каталог для Web и Desktop. Режим UI и тема меняют токены, но не состав компонентов. Дочерние части остаются в API родителя.',
+        'One catalog for Web and Desktop. UI mode and theme change tokens, not the component set. Child parts stay on the parent API.',
       )}</p><p class="docs-lead">${catalog.length} ${text('хостов в каталоге.', 'hosts in the catalog.')}</p><div class="docs-cards">${catalog
         .map(
           (c) =>
@@ -538,7 +534,7 @@ export function mountDocumentationSite(): void {
       const example = layouts().find(([id]) => id === path[1]);
       if (example) {
         name = example[1]!;
-        page.innerHTML = `<p class="docs-eyebrow">${link('layouts', text('Раскладки', 'Layouts'))}</p><h1 tabindex="-1">${name}</h1><p class="docs-lead">${example[2]}</p>${import.meta.env.DEV ? `<p><a href="layout.html">${text('Галерея раскладок', 'Layout gallery')}</a> — ${text('web / desktop / terminal и ширины viewport.', 'web / desktop / terminal and viewport widths.')}</p>` : ''}${showExample(interfaceExample(example[0]!))}`;
+        page.innerHTML = `<p class="docs-eyebrow">${link('layouts', text('Раскладки', 'Layouts'))}</p><h1 tabindex="-1">${name}</h1><p class="docs-lead">${example[2]}</p>${import.meta.env.DEV ? `<p><a href="layout.html">${text('Галерея раскладок', 'Layout gallery')}</a> — ${text('web / desktop и ширины viewport.', 'web / desktop and viewport widths.')}</p>` : ''}${showExample(interfaceExample(example[0]!))}`;
       } else {
         page.innerHTML = `<h1 tabindex="-1">${name}</h1><p class="docs-lead">${text(
           'Готовые раскладки приложений на опубликованных templates. Тема меняет цвета; режим UI — структурную шкалу.',
@@ -604,8 +600,8 @@ export function mountDocumentationSite(): void {
         'Интерфейсы из понятных компонентов',
         'Build interfaces from clear components',
       )}</h1><p class="docs-lead">${text(
-        'Один каталог компонентов. Режим UI (Web / Desktop / Terminal) и цветовая тема независимы и не меняют состав API.',
-        'One component catalog. UI mode (Web / Desktop / Terminal) and color theme are independent and do not change the API set.',
+        'Один каталог компонентов. Режим UI (Web / Desktop) и цветовая тема независимы и не меняют состав API.',
+        'One component catalog. UI mode (Web / Desktop) and color theme are independent and do not change the API set.',
       )}</p><div class="docs-actions">${link('components', text('Открыть каталог', 'Browse components'), 'class="docs-action-primary"')}${link(
         'layouts',
         text('Собрать интерфейс', 'Build an interface'),
@@ -617,20 +613,17 @@ export function mountDocumentationSite(): void {
           'Catalog HTML examples show only the component and required logic. Imports and theme setup live separately, as shown here.',
         )}</p>`,
       )}${heading(text('Первый компонент', 'Your first component'), showExample(exampleFor('vui-button')), 'docs-preview')}${heading(
-        text('Три режима UI', 'Three UI modes'),
+        text('Два режима UI', 'Two UI modes'),
         `<p class="docs-lead">${text(
-          'Цветовая тема и структурный режим независимы. Переключатель сверху меняет Web, Desktop или Terminal для всей документации.',
-          'Color theme and structural mode are independent. The top switch applies Web, Desktop, or Terminal to the whole documentation site.',
+          'Цветовая тема и структурный режим независимы. Переключатель сверху меняет Web или Desktop для всей документации.',
+          'Color theme and structural mode are independent. The top switch applies Web or Desktop to the whole documentation site.',
         )}</p><div class="docs-cards docs-ui-modes"><div class="docs-card"><strong>Web</strong><p>${text(
           'Браузерная шкала: свободные отступы, мягкие радиусы, плавные заголовки, многослойная тень.',
           'Browser scale: roomy spacing, soft radii, fluid headings, multi-layer elevation.',
         )}</p><code>data-vui-ui="web"</code></div><div class="docs-card"><strong>Desktop</strong><p>${text(
           'Сетка Fluent 2: плотный chrome, фиксированная типографика, key+ambient elevation.',
           'Fluent 2 grid: denser chrome, fixed type ramp, key+ambient elevation.',
-        )}</p><code>data-vui-ui="desktop"</code></div><div class="docs-card"><strong>Terminal</strong><p>${text(
-          'Моноширинный TUI: плотная сетка, нулевой радиус, без теней.',
-          'Monospace TUI: dense grid, square corners, no elevation.',
-        )}</p><code>data-vui-ui="terminal"</code></div></div>${import.meta.env.DEV ? `<p><a href="layout.html">${text('Галерея раскладок', 'Layout gallery')}</a> — ${text('панель, настройки и рабочая область в трёх режимах.', 'dashboard, settings, and workspace in all three modes.')}</p>` : ''}`,
+        )}</p><code>data-vui-ui="desktop"</code></div></div>${import.meta.env.DEV ? `<p><a href="layout.html">${text('Галерея раскладок', 'Layout gallery')}</a> — ${text('панель, настройки и рабочая область в обоих режимах.', 'dashboard, settings, and workspace in both modes.')}</p>` : ''}`,
       )}${heading(
         'React / Next.js',
         `<pre><code>'use client';\n\nimport { Button } from 'vui/react';\n\nexport default function Page() {\n  return &lt;Button variant="primary"&gt;${text('Сохранить', 'Save')}&lt;/Button&gt;;\n}</code></pre><p>${text(

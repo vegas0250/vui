@@ -11,7 +11,6 @@ export const showcaseMarkup = `
         <vui-select id="ui-mode-select" label="UI mode" size="small" value="web">
           <vui-option value="web">Web design</vui-option>
           <vui-option value="desktop">Desktop design</vui-option>
-          <vui-option value="terminal">Terminal design</vui-option>
         </vui-select>
         <vui-select id="dir-select" label="Направление" size="small" value="ltr">
           <vui-option value="ltr">LTR</vui-option>
@@ -141,7 +140,7 @@ export const showcaseMarkup = `
 
           <h3 id="foundation-density">UI mode</h3>
           <vui-panel heading="UI mode">
-            <p class="demo-note">Web, Desktop и Terminal меняют структурную шкалу (тип, отступы, радиусы, chrome). Палитра темы не меняется. Пороги контейнера от UI mode не зависят.</p>
+            <p class="demo-note">Web и Desktop меняют структурную шкалу (тип, отступы, радиусы, chrome). Палитра темы не меняется. Пороги контейнера от UI mode не зависят.</p>
           </vui-panel>
 
           <h3 id="foundation-responsive">Responsive</h3>
@@ -672,7 +671,7 @@ grid.addEventListener("change", () =&gt; grid.selectedId);</pre>
                   <vui-tabs label="Редактор">
                     <vui-tab panel="readme" selected>README.md</vui-tab>
                     <vui-tab panel="button-file">button.ts</vui-tab>
-                    <vui-tab-panel name="readme">Персональная библиотека компонентов. Темы и UI mode общие для Web, Desktop и Terminal.</vui-tab-panel>
+                    <vui-tab-panel name="readme">Персональная библиотека компонентов. Темы и UI mode общие для Web и Desktop.</vui-tab-panel>
                     <vui-tab-panel name="button-file">export class VButton extends VuiElement {}</vui-tab-panel>
                   </vui-tabs>
                 </div>
@@ -709,7 +708,7 @@ grid.addEventListener("change", () =&gt; grid.selectedId);</pre>
         <p class="section-lead">
           Тема, UI mode и доступная ширина независимы. Компонент подстраивается под свой контейнер:
           широкий, средний и узкий. Перетащите правый край или выберите ширину. Сочетания Light, Dark,
-          High Contrast и Web, Desktop, Terminal переключаются на панели сверху и действуют на этот блок.
+          High Contrast и Web, Desktop переключаются на панели сверху и действуют на этот блок.
         </p>
         <p id="responsive-readout" class="demo-note">Light + Web design</p>
         <vui-hstack gap="sm" wrap>

@@ -34,18 +34,10 @@ const modeScaleTokens = [
 
 describe('design system specification', () => {
   it('defines the complete structural scale in every UI mode', () => {
-    for (const selector of ['[data-vui-ui="web"]', '[data-vui-ui="desktop"]', '[data-vui-ui="terminal"]']) {
+    for (const selector of ['[data-vui-ui="web"]', '[data-vui-ui="desktop"]']) {
       const body = block(uiCss, selector);
       for (const token of modeScaleTokens) expect(body, `${selector} ${token}`).toContain(token);
     }
-  });
-
-  it('keeps terminal compact, square and motionless', () => {
-    const terminal = block(uiCss, '[data-vui-ui="terminal"]');
-    expect(terminal).toContain('--vui-radius: 0px');
-    expect(terminal).toContain('--vui-shadow-md: none');
-    expect(terminal).toContain('--vui-duration: 0ms');
-    expect(terminal).toContain('--vui-font-sans: var(--vui-font-mono)');
   });
 
   it('publishes mode-independent breakpoints, containers and touch minimums', () => {
@@ -59,7 +51,7 @@ describe('design system specification', () => {
     expect(aliases).toContain('--vui-gap-related');
     expect(aliases).toContain('--vui-gap-section');
     const coarse = uiCss.slice(uiCss.indexOf('@media (pointer: coarse)'));
-    expect(coarse).toContain(':root:not([data-vui-ui="terminal"])');
+    expect(coarse).toContain('[data-vui-ui="desktop"]');
     expect(coarse).toContain('--vui-size-control: 40px');
   });
 

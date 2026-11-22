@@ -41,7 +41,6 @@ if (new URLSearchParams(location.search).get('legacy') === '1') {
         <vui-select id="ui-mode-select" icon="monitor" label="${text('Режим UI', 'UI mode')}" value="${uiMode}">
           <vui-option value="web">${text('Web', 'Web')}</vui-option>
           <vui-option value="desktop">${text('Desktop', 'Desktop')}</vui-option>
-          <vui-option value="terminal">${text('Terminal', 'Terminal')}</vui-option>
         </vui-select>
       </div>
     </div>

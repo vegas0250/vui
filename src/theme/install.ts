@@ -18,7 +18,7 @@ export function installVuiStyles(): void {
 
   const style = document.createElement('style');
   style.id = STYLE_ID;
-  // ui.css last so mode structure (focus, terminal elevation) wins over theme colors.
+  // ui.css last so mode structure (focus, elevation) wins over theme colors.
   style.textContent = [tokensCss, lightCss, darkCss, systemCss, uiCss].join('\n');
   document.head.append(style);
   installed = true;

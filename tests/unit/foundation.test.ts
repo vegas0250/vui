@@ -4,7 +4,6 @@ import lightCss from '../../themes/light.css?raw';
 import systemCss from '../../themes/system.css?raw';
 import tokensCss from '../../src/tokens/tokens.css?raw';
 import uiCss from '../../src/tokens/ui.css?raw';
-import { baseStyles } from '../../src/utils/styles';
 import { themeDocument, themeVariables } from '../../src/theme';
 import '../../src/components/layout/grid';
 import '../../src/components/layout/panel';
@@ -29,13 +28,8 @@ describe('token contract', () => {
       expect(css).not.toContain('--vui-focus-shadow:');
       expect(css).not.toMatch(/url\(|expression\(/);
     }
-    expect(uiCss.match(/--vui-panel-padding: var\(--vui-space-lg\)/g)).toHaveLength(3);
-    expect(uiCss).toContain('[data-vui-ui="terminal"]');
-    expect(uiCss.match(/--vui-layout-nav:/g)).toHaveLength(3);
-    expect(uiCss).toContain('animation: none');
-    expect(baseStyles).toContain(':host-context([data-vui-ui="terminal"])');
-    expect(uiCss).toContain('--vui-font-sans: var(--vui-font-mono)');
-    expect(uiCss).toContain('--vui-shadow-sm: none');
+    expect(uiCss.match(/--vui-panel-padding: var\(--vui-space-lg\)/g)).toHaveLength(2);
+    expect(uiCss.match(/--vui-layout-nav:/g)).toHaveLength(2);
     expect(uiCss).toContain('--vui-opacity-disabled:');
     expect(uiCss).not.toContain('high-contrast');
   });
@@ -57,18 +51,15 @@ describe('token contract', () => {
     expect(tokensCss).not.toMatch(/--vui-palette-shadow-(light|dark|neon-[a-z]+)-(sm|md|lg):/);
 
     const web = uiCss.slice(uiCss.indexOf(':root,'), uiCss.indexOf('[data-vui-ui="desktop"]'));
-    const desktop = uiCss.slice(uiCss.indexOf('[data-vui-ui="desktop"]'), uiCss.indexOf('[data-vui-ui="terminal"]'));
-    const terminal = uiCss.slice(uiCss.indexOf('[data-vui-ui="terminal"]'));
+    const desktop = uiCss.slice(uiCss.indexOf('[data-vui-ui="desktop"]'));
     for (const size of ['sm', 'md', 'lg']) {
       for (const block of [web, desktop]) {
         expect(block).toMatch(new RegExp(`--vui-shadow-${size}: var\\(--vui-shadow-offset-${size}\\) color-mix\\(.*var\\(--vui-shadow-ink`));
       }
-      expect(terminal).toContain(`--vui-shadow-${size}: none`);
     }
     expect(web).toContain('var(--vui-shadow-ambient-sm)');
     expect(web).toContain('var(--vui-shadow-glow, transparent)');
     expect(desktop).toContain('var(--vui-shadow-ambient-sm)');
-    expect(terminal).not.toContain('--vui-shadow-glow');
   });
 
   it('matches Studio elevation overrides to the ui.css recipes', () => {
@@ -88,7 +79,6 @@ describe('token contract', () => {
       expect(strip(deskVars[`--vui-shadow-${size}`])).toBe(
         `${offsets(desktop, 'offset', size)} C, ${offsets(desktop, 'ambient', size)} C`,
       );
-      expect(themeVariables(nord, { uiMode: 'terminal' })[`--vui-shadow-${size}`]).toBe('none');
     }
   });
 });

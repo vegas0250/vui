@@ -38,7 +38,7 @@ VUI owns:
 
 - Design tokens and visual foundations.
 - Color themes.
-- UI modes: `web`, `desktop`, `terminal`.
+- UI modes: `web`, `desktop`.
 - Reusable components and interaction patterns.
 - Layout primitives and responsive behavior.
 - Application templates and composition patterns.
@@ -78,7 +78,6 @@ VUI supports three independent UI modes:
 - `web`: modern responsive web interfaces.
 - `desktop`: native-like application interfaces based on Fluent 2 structural
   principles.
-- `terminal`: dense, minimal, keyboard-oriented interfaces.
 
 UI modes control typography, density, spacing, geometry, elevation, animation
 and relevant interaction conventions.
@@ -159,8 +158,7 @@ VUI
 │   ├── Color Themes
 │   └── UI Modes
 │       ├── Web
-│       ├── Desktop
-│       └── Terminal
+│       └── Desktop
 │
 ├── Components
 │   ├── Buttons / Inputs

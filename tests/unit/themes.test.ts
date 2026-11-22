@@ -248,34 +248,6 @@ describe('palette-independent theme engine', () => {
     expect(themeAppearance(themeDocument('dark'), 'web').radiusField).toBe(6);
     expect(themeAppearance(themeDocument('dark'), 'web').radiusBox).toBe(8);
   });
-  it('resolves terminal mode independently from semantic colors', () => {
-    const nord = themeDocument('dark');
-    expect(themeAppearance(nord, 'terminal')).toMatchObject({
-      uiMode: 'terminal',
-      radius: 0,
-      radiusBox: 0,
-      radiusField: 0,
-      radiusSelector: 0,
-      shadowIntensity: 0,
-    });
-    expect(themeVariables(nord, { uiMode: 'terminal' })['--vui-shadow-md']).toBe(
-      'none',
-    );
-    const root = document.createElement('div');
-    root.setAttribute('data-vui-ui', 'terminal');
-    applyTheme(nord, root);
-    expect(root.getAttribute('data-vui-ui')).toBe('terminal');
-    expect(root.style.getPropertyValue('--vui-color-background')).toBeTruthy();
-    expect(root.style.getPropertyValue('--vui-radius')).toBe('');
-    applyTheme({ ...themeDocument('light'), appearance: { uiMode: 'desktop' } }, root);
-    expect(root.getAttribute('data-vui-ui')).toBe('desktop');
-    expect(
-      validateTheme({
-        ...nord,
-        appearance: { uiMode: 'terminal' },
-      }).appearance?.uiMode,
-    ).toBe('terminal');
-  });
 });
 
 describe('contrast computation with repeated colors',()=>{

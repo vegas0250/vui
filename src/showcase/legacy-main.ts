@@ -31,7 +31,7 @@ if (!app) throw new Error('Showcase root is missing');
 app.innerHTML = showcaseMarkup.replace('</main>', `${studioMarkup}</main>`);
 
 const themes = new Set<VuiTheme>(['light', 'dark', 'system']);
-const uiModes = new Set<VuiUIMode>(['web', 'desktop', 'terminal']);
+const uiModes = new Set<VuiUIMode>(['web', 'desktop']);
 
 const themeSelect = document.querySelector('#theme-select');
 const uiModeSelect = document.querySelector('#ui-mode-select');
@@ -43,7 +43,6 @@ const themeLabels: Record<string, string> = {
 const uiModeLabels: Record<VuiUIMode, string> = {
   web: 'Web design',
   desktop: 'Desktop design',
-  terminal: 'Terminal design',
 };
 
 const updateResponsiveReadout = (): void => {

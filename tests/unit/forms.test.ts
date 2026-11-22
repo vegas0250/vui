@@ -77,11 +77,6 @@ describe('theme and UI mode', () => {
     expect(css).toContain('--vui-color-primary');
     expect(css).toContain('[data-vui-theme="dark"]');
     expect(css).toContain('[data-vui-ui="desktop"]');
-    expect(css).toContain('[data-vui-ui="terminal"]');
     expect(css).toContain('prefers-color-scheme: dark');
-
-    setUIMode('terminal');
-    expect(getUIMode()).toBe('terminal');
-    expect(document.documentElement.getAttribute('data-vui-ui')).toBe('terminal');
   });
 });

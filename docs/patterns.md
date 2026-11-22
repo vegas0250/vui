@@ -34,7 +34,7 @@ Pattern — не компонент. Это пример, как собрать 
 
 ## Раскладки
 
-Одна и та же разметка работает в Web, Desktop и Terminal. Режим задаёт структурные токены в `src/tokens/ui.css` (`--vui-layout-nav`, отступы, радиус, шрифт, тень, движение). Тема задаёт только цвета. Ветки `if (mode)` в приложении не нужны.
+Одна и та же разметка работает в Web и Desktop. Режим задаёт структурные токены в `src/tokens/ui.css` (`--vui-layout-nav`, отступы, радиус, шрифт, тень, движение). Тема задаёт только цвета. Ветки `if (mode)` в приложении не нужны.
 
 Родителю нужен ограниченный размер: высота окна или flex-ребёнок с `min-height: 0`. Дальше `vui-shell`, `vui-split-panel`, `vui-panel` и `vui-scroll-area` прокручивают своё тело сами.
 
@@ -72,7 +72,7 @@ import 'vui';
 import { setTheme, setUIMode } from 'vui/theme';
 
 setTheme('light');
-setUIMode('web'); // 'desktop' | 'terminal'
+setUIMode('web'); // 'desktop'
 
 const save = document.querySelector('[data-save]');
 const name = document.querySelector('vui-input');

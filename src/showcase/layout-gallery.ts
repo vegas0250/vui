@@ -6,7 +6,7 @@ import './examples.css';
 import './layout-gallery.css';
 
 const apps: LayoutId[] = ['dashboard', 'settings', 'workspace'];
-const modes: VuiUIMode[] = ['web', 'desktop', 'terminal'];
+const modes: VuiUIMode[] = ['web', 'desktop'];
 const widths = ['375', '768', '1280', '1920', 'full'] as const;
 const params = new URLSearchParams(location.search);
 
@@ -76,7 +76,7 @@ const widthButtons = widths
 
 const app = document.querySelector('#app');
 if (!app) throw new Error('Layout gallery root is missing');
-app.innerHTML = `<div id="chrome"><vui-toolbar label="Layout gallery"><strong slot="start">Layouts</strong><vui-select id="layout-app" label="Layout" value="${state.app}"><vui-option value="dashboard">Dashboard</vui-option><vui-option value="settings">Settings</vui-option><vui-option value="workspace">Workspace</vui-option></vui-select><vui-select id="layout-ui" label="UI mode" value="${state.ui}"><vui-option value="web">Web</vui-option><vui-option value="desktop">Desktop</vui-option><vui-option value="terminal">Terminal</vui-option></vui-select><vui-select id="layout-theme" label="Theme" value="${state.theme}">${themeOptions}</vui-select></vui-toolbar><vui-toolbar label="Viewport"><vui-button-group slot="start" label="Viewport">${widthButtons}</vui-button-group></vui-toolbar></div><div id="stage"><div id="frame"></div></div>`;
+app.innerHTML = `<div id="chrome"><vui-toolbar label="Layout gallery"><strong slot="start">Layouts</strong><vui-select id="layout-app" label="Layout" value="${state.app}"><vui-option value="dashboard">Dashboard</vui-option><vui-option value="settings">Settings</vui-option><vui-option value="workspace">Workspace</vui-option></vui-select><vui-select id="layout-ui" label="UI mode" value="${state.ui}"><vui-option value="web">Web</vui-option><vui-option value="desktop">Desktop</vui-option></vui-select><vui-select id="layout-theme" label="Theme" value="${state.theme}">${themeOptions}</vui-select></vui-toolbar><vui-toolbar label="Viewport"><vui-button-group slot="start" label="Viewport">${widthButtons}</vui-button-group></vui-toolbar></div><div id="stage"><div id="frame"></div></div>`;
 
 const read = (id: string) => document.querySelector<HTMLElement & { value: string }>(id)?.value ?? '';
 for (const id of ['#layout-app', '#layout-ui', '#layout-theme']) {

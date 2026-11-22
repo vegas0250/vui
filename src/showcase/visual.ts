@@ -4,16 +4,12 @@ import { VDialog } from '../components/overlay/dialog';
 import { VDrawer } from '../components/overlay/drawer';
 
 const themes = new Set(['light', 'dark', 'system']);
-const uiModes = new Set(['web', 'desktop', 'terminal']);
+const uiModes = new Set(['web', 'desktop']);
 const params = new URLSearchParams(location.search);
 const theme = params.get('theme') ?? 'light';
 const rawUI = params.get('ui') ?? params.get('density') ?? 'web';
 const uiMode =
-  rawUI === 'terminal'
-    ? 'terminal'
-    : rawUI === 'desktop' || rawUI === 'compact' || rawUI === 'dense'
-      ? 'desktop'
-      : 'web';
+  rawUI === 'desktop' || rawUI === 'compact' || rawUI === 'dense' ? 'desktop' : 'web';
 const dir = params.get('dir');
 document.documentElement.setAttribute('data-vui-theme', themes.has(theme) ? theme : 'light');
 document.documentElement.setAttribute('data-vui-ui', uiModes.has(uiMode) ? uiMode : 'web');

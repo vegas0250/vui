@@ -8,13 +8,13 @@ export { normalizeColor, contrast, colorFormats } from './colors';
 
 /** VUI ships two themes (light, dark); system follows the OS. Registered custom ids are allowed. */
 export type VuiTheme = 'light' | 'dark' | 'system' | (string & {});
-/** Structural interface scale: web, desktop, or terminal (TUI). */
-export type VuiUIMode = 'web' | 'desktop' | 'terminal';
+/** Structural interface scale: web or desktop. */
+export type VuiUIMode = 'web' | 'desktop';
 /** @deprecated Use VuiUIMode. */
 export type VuiDensity = VuiUIMode;
 
 const themes = new Set<VuiTheme>(['light', 'dark', 'system']);
-const uiModes = new Set<VuiUIMode>(['web', 'desktop', 'terminal']);
+const uiModes = new Set<VuiUIMode>(['web', 'desktop']);
 
 export function setTheme(
   theme: VuiTheme,
@@ -43,13 +43,13 @@ export function setUIMode(
   if (!uiModes.has(mode)) {
     reportDeveloper(
       'ui',
-      `Unknown UI mode "${String(mode)}". Expected web|desktop|terminal. The current UI mode stays.`,
+      `Unknown UI mode "${String(mode)}". Expected web|desktop. The current UI mode stays.`,
     );
     return;
   }
   root.setAttribute('data-vui-ui', mode);
   root.removeAttribute('data-vui-density');
-  // Drop inline elevation so ui.css mode recipes (especially terminal: none) can apply.
+  // Drop inline elevation so ui.css mode recipes apply.
   for (const key of ['--vui-shadow-sm', '--vui-shadow-md', '--vui-shadow-lg']) {
     root.style.removeProperty(key);
   }
@@ -98,7 +98,6 @@ export function getDensity(
 export function normalizeUIMode(
   value: string | null | undefined,
 ): VuiUIMode {
-  if (value === 'terminal') return 'terminal';
   if (value === 'desktop' || value === 'compact' || value === 'dense') return 'desktop';
   return 'web';
 }

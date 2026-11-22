@@ -49,9 +49,9 @@ export interface ThemeAppearance {
   borderWidth?: number;
   shadowIntensity?: number;
   /** Preferred structural scale. Color-only themes omit this and keep the host mode. */
-  uiMode?: 'web' | 'desktop' | 'terminal';
+  uiMode?: 'web' | 'desktop';
   /** @deprecated Use uiMode. */
-  density?: 'web' | 'desktop' | 'terminal' | 'comfortable' | 'compact' | 'dense';
+  density?: 'web' | 'desktop' | 'comfortable' | 'compact' | 'dense';
 }
 export interface ThemePreset {
   readonly id: string;

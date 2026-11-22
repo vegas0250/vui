@@ -8,7 +8,7 @@ import type {
   ThemeTokens,
 } from './presets';
 
-type AppearanceUIMode = 'web' | 'desktop' | 'terminal';
+type AppearanceUIMode = 'web' | 'desktop';
 export interface ThemeDocument {
   schemaVersion: 1;
   name: string;
@@ -129,7 +129,7 @@ export function validateTheme(input: unknown): ThemeDocument {
       if (key === 'uiMode' || key === 'density') {
         if (
           typeof value !== 'string' ||
-          !['web', 'desktop', 'terminal', 'comfortable', 'compact', 'dense'].includes(value)
+          !['web', 'desktop', 'comfortable', 'compact', 'dense'].includes(value)
         )
           throw new Error('Invalid UI mode');
       } else if (
@@ -234,14 +234,6 @@ const modeDefaults: Record<
     borderWidth: 1,
     shadowIntensity: 100,
   },
-  terminal: {
-    radius: 0,
-    radiusBox: 0,
-    radiusField: 0,
-    radiusSelector: 0,
-    borderWidth: 1,
-    shadowIntensity: 0,
-  },
 };
 
 /** Explicit appearance keys from the document and its structural preset (no mode defaults). */
@@ -291,7 +283,6 @@ export function themeAppearance(
 }
 
 function normalizeAppearanceUIMode(value: string | undefined): AppearanceUIMode {
-  if (value === 'terminal') return 'terminal';
   if (value === 'desktop' || value === 'compact' || value === 'dense') return 'desktop';
   return 'web';
 }
@@ -310,7 +301,7 @@ function hoverColor(background: string, foreground: string): string {
 
 /**
  * Studio appearance override. Geometry mirrors --vui-shadow-* in src/tokens/ui.css.
- * web = soft multi-layer depth; desktop = key+ambient; terminal = none.
+ * web = soft multi-layer depth; desktop = key+ambient.
  * Keep both in sync (tests compare them). `strength` stands in for per-size ink steps.
  */
 function elevationShadows(
@@ -318,7 +309,7 @@ function elevationShadows(
   shadow: string,
   strength: number,
 ): Record<'sm' | 'md' | 'lg', string> {
-  if (uiMode === 'terminal' || strength <= 0) {
+  if (strength <= 0) {
     return { sm: 'none', md: 'none', lg: 'none' };
   }
   const ink = `color-mix(in srgb, ${shadow} ${strength}%, transparent)`;
@@ -393,9 +384,7 @@ function appearanceDeltaVariables(
   if (overrides.borderWidth != null)
     vars['--vui-border-width'] = `${overrides.borderWidth}px`;
   if (overrides.shadowIntensity != null) {
-    // Non-zero shadows are mode recipes; skip them when the active mode is terminal
-    // so `[data-vui-ui="terminal"]` can clear elevation without inline fights.
-    if (uiMode === 'terminal' || overrides.shadowIntensity <= 0) {
+    if (overrides.shadowIntensity <= 0) {
       vars['--vui-shadow-sm'] = 'none';
       vars['--vui-shadow-md'] = 'none';
       vars['--vui-shadow-lg'] = 'none';
@@ -527,7 +516,7 @@ export function exportThemeCSS(input: ThemeDocument): string {
   const modeHint = overrides.uiMode ?? overrides.density;
   const modeNote = modeHint
     ? ` Set data-vui-ui="${normalizeAppearanceUIMode(String(modeHint))}" for the preferred structural scale.`
-    : ' Structural scales come from data-vui-ui (web|desktop|terminal) in vui/themes/ui.';
+    : ' Structural scales come from data-vui-ui (web|desktop) in vui/themes/ui.';
   return `/* VUI custom theme based on ${d.baseTheme}; schema 1.${modeNote} */\n[data-vui-theme="custom"] {\n  color-scheme: ${d.mode};\n${Object.entries(
     themeExportVariables(d),
   )

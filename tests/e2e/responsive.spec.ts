@@ -56,7 +56,6 @@ test('theme and UI mode stay valid for every combination', async ({ page }) => {
   const modes = [
     ['Web design', 'web'],
     ['Desktop design', 'desktop'],
-    ['Terminal design', 'terminal'],
   ] as const;
 
   for (const [themeLabel, theme, themeReadout] of themes) {
